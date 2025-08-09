@@ -1,0 +1,17 @@
+[
+    {
+        "name": "neck",
+        "parents": "spine_05, root",
+        "point_orient": true
+    },
+    {
+        "name": "leg_left",
+        "parents": "spine, root",
+        "point_orient": true
+    },
+    {
+        "name": "leg_right",
+        "parents": "spine, root",
+        "point_orient": true
+    }  
+]
