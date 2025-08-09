@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-maya/nlol/defaults/rig_human/rig_helpers.ma linguist-ignore
+*.ma linguist-vendored
+*.mb linguist-vendored
