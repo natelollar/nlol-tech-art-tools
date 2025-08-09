@@ -1,4 +1,4 @@
-## nLol Tech Art Tools
+# nLol Tech Art Tools
 - Easily build same rig on multiple versions of a character.
 - Easily adjust joints and rebuild the rig.
 - Setup rig modules via custom json file.
@@ -6,6 +6,8 @@
 - Setup parent spaces via custom json file.
   - `rig_parent_spaces.json`
 - Easily edit adapt rig build script to custom rigs. 
+
+----------
 
 #### Maya Object Naming
 - `<name>_<direction>_<id>_<type>`

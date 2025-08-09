@@ -1,4 +1,6 @@
-"""Remove nLol Tools from Maya."""
+"""Remove nLol Tools from Maya.
+Drag and drop me into Maya viewport.
+"""
 
 import sys
 from pathlib import Path
