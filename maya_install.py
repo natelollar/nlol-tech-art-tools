@@ -1,5 +1,5 @@
 """Drag and drop me into Maya viewport.
-Installs nLol Maya shelves.
+Installs nLol Maya shelves and menu.
 Adds project path to Maya.env.
 Tested in Maya 2025 on Windows 11.
 """

@@ -28,7 +28,7 @@ def onMayaDroppedPythonFile(*args) -> None:
     # unload shelves
     unload_shelves.remove_nlol_shelves()
 
-    # unload shelves
+    # unload menu
     unload_menus.remove_nlol_menus()
 
     # remove project path from env
