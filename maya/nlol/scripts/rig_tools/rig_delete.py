@@ -19,7 +19,7 @@ def remove_nlol_rig(skinned_mesh: str | None = None, delete_objects: tuple | Non
         if not delete_objects:
             delete_objects = current_delete_objects
 
-        # ----- delete rig objects -----
+        # ---------- delete rig objects ----------
         all_parentConstraint = cmds.ls(type="parentConstraint")
         all_scaleConstraint = cmds.ls(type="scaleConstraint")
         all_ikEffector = cmds.ls(type="ikEffector")
@@ -44,10 +44,21 @@ def remove_nlol_rig(skinned_mesh: str | None = None, delete_objects: tuple | Non
             if cmds.objExists(obj):
                 cmds.delete(obj)
 
-        # ----- delete unused nodes -----
+        # ---------- delete unused nodes ----------
         mel.eval("MLdeleteUnused;")
 
-        # ----- reset bind pose -----
+        # ---------- reset bind pose ----------
+        # query joints scale compensate
+        skinned_jnts = cmds.skinCluster(skinned_mesh, query=True, influence=True)
+        scale_compensate_attr_query = []
+        for jnt in skinned_jnts:
+            scale_compensate_attr = cmds.getAttr(f"{jnt}.segmentScaleCompensate")
+            scale_compensate_attr_query.append(scale_compensate_attr)
+
         cmds.dagPose(skinned_mesh, restore=True, g=True, bindPose=True)
+
+        # set scale compensate to value from before restore bind pose
+        for attr_query, jnt in zip(scale_compensate_attr_query, skinned_jnts):
+            cmds.setAttr(f"{jnt}.segmentScaleCompensate", attr_query)
     finally:
         cmds.undoInfo(closeChunk=True)

@@ -30,11 +30,11 @@ class BipedLegModule(BipedLimbModule):
         """Initialize leg rig module.
 
         Args:
-            rig_data_filepath: Json filepath containing name strings and
+            rig_data_filepath: Toml filepath containing name strings and
                 joint selection metadata for rig module.
-            rig_module: Name of rig module being used in the json file.
+            rig_module: Name of rig module being used in the toml file.
             rig_module_name: Custom name for the rig module.
-            mirror_direction: The mirror direction string in the json file.
+            mirror_direction: The mirror direction string in the toml file.
             main_joints: The main skinned joints.
             upper_twist_joints: Main skinned twist joints for upper segment.
             lower_twist_joints: Main skinned twist joints for lower segment.

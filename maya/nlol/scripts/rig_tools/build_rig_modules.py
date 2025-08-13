@@ -1,8 +1,8 @@
-"""Run through rig modules in rig selection json file.
+"""Run through rig modules in rig object data toml file.
 Take in module args. Run the modules to build the different rig parts.
 """
 
-import json
+import tomllib
 from importlib import reload
 from pathlib import Path
 
@@ -19,14 +19,14 @@ def build_modules(rig_data_filepath: str | Path):
     Also, create top rig group and tag controllers for parallel evalution.
 
     Args:
-        rig_data_filepath: Json filepath with name and joint data for rig.
+        rig_data_filepath: Toml filepath with name and joint data for rig.
 
     """
     logger = get_logger()
 
-    # ----- query json file list -----
-    with open(rig_data_filepath, encoding="utf-8") as f:
-        rig_object_data = json.load(f)
+    # ----- query rig module data -----
+    with open(rig_data_filepath, "rb") as f:
+        rig_object_data = tomllib.load(f)["rig_module"]
 
     # ----------
     top_groups = []
@@ -69,10 +69,10 @@ def build_modules(rig_data_filepath: str | Path):
                 case _:
                     logger.warning(f"Unknown rig module: {rig_module}")
         except Exception:
-            mirr_side = f"_{mirror_direction}" if mirror_direction else ""
-            error_msg = f"Error building rig module: {rig_module}{mirr_side}"
+            mirr_side = mirror_direction if mirror_direction else ""
+            error_msg = f"Error building rig module: {rig_module} {mirr_side}"
             logger.exception(error_msg)
-            raise
+            raise RuntimeError(error_msg)
 
     # ----------
     main_rig_group = cmds.group(empty=True, name="rig_allGrp")
@@ -89,7 +89,3 @@ def build_modules(rig_data_filepath: str | Path):
         and not any(word in ctrl.lower() for word in ("switch", "swch"))
     ]
     cmds.controller(rig_ctrls)
-
-    # ----------
-    cmds.select(clear=True)
-    cmds.flushUndo()  # file import restricts undo. use delete rig script to undo.

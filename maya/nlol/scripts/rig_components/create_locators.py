@@ -78,8 +78,8 @@ def locator_snap_parent(
 
     for loc, obj in zip(locator_list, objects, strict=False):
         cmds.parent(loc, world=True)
-        cmds.parentConstraint(obj, loc)
-        cmds.scaleConstraint(obj, loc)
+        cmds.parentConstraint(obj, loc, name=f"{loc}ParentConstraint")
+        cmds.scaleConstraint(obj, loc, name=f"{loc}ScaleConstraint")
 
     return locator_list
 

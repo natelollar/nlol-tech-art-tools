@@ -2,13 +2,20 @@ from importlib import reload
 from pathlib import Path
 
 from maya import cmds
-from nlol.scripts.rig_components import create_control_groups, create_nurbs_curves
+from nlol.scripts.rig_components import (
+    clean_constraints,
+    create_control_groups,
+    create_nurbs_curves,
+)
 
 reload(create_nurbs_curves)
 reload(create_control_groups)
+reload(clean_constraints)
 
 CreateCurves = create_nurbs_curves.CreateCurves
 create_ctrl_grps = create_control_groups.create_ctrl_grps
+parent_constr = clean_constraints.parent_constr
+scale_constr = clean_constraints.scale_constr
 
 
 class FkControlModule:
@@ -47,7 +54,7 @@ class FkControlModule:
         cmds.matchTransform(fk_control_group, self.main_joints[0])
 
         # parent constrain joint to control
-        cmds.parentConstraint(fk_control, self.main_joints[0])
-        cmds.scaleConstraint(fk_control, self.main_joints[0])
+        parent_constr(fk_control, self.main_joints[0])
+        scale_constr(fk_control, self.main_joints[0])
 
         return fk_control_group

@@ -7,6 +7,7 @@ from pathlib import Path
 
 from maya import cmds
 from nlol.scripts.rig_components import (
+    clean_constraints,
     create_control_groups,
     create_joint,
     create_locators,
@@ -23,16 +24,20 @@ reload(create_control_groups)
 reload(create_joint)
 reload(create_locators)
 reload(create_nurbs_curves)
-
+reload(clean_constraints)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 cap = utils_maya.cap
 snake_to_camel = utils_maya.snake_to_camel
 add_divider_attribue = utils_maya.add_divider_attribue
+parent_constr = clean_constraints.parent_constr
+point_constr = clean_constraints.point_constr
+orient_constr = clean_constraints.orient_constr
+scale_constr = clean_constraints.scale_constr
 
 
 class BipedLimbModule:
-    """Create biped style limb rig based on joint selection in rig data json file.
+    """Create biped style limb rig based on joint selection in rig data toml file.
     Supports four main joints and twist joints.
     """
 
@@ -59,7 +64,7 @@ class BipedLimbModule:
         """Initialize limb rig module.
 
         Args:
-            rig_data_filepath Json containing rig object data.
+            rig_data_filepath Toml containing rig object data.
             rig_module: Name of rig module being used.
             rig_module_name: Custom name for the rig module.
             mirror_direction: Extra string describing mirror side. Ex. "left", "right".
@@ -108,7 +113,7 @@ class BipedLimbModule:
             Top group for all the limb objects.
 
         """
-        failed_build_string = f'Rig module "{self.mod_name}{self.mirr_side}" failed to build.'
+        failed_build_string = f'Rig module "{self.mod_name}{self.mirr_side.rstrip("_")}" failed to build.'
 
         # ---------- build rig module ----------
         try:
@@ -214,8 +219,8 @@ class BipedLimbModule:
 
             # scale constraint instead of blendColors scale
             # for proper control and global scale
-            cmds.scaleConstraint(fk_jnt, jnt)
-            cmds.scaleConstraint(ik_jnt, jnt)
+            scale_constr(fk_jnt, jnt)
+            scale_constr(ik_jnt, jnt)
 
             fk_jnts.append(fk_jnt)
             ik_jnts.append(ik_jnt)
@@ -308,8 +313,8 @@ class BipedLimbModule:
             fk_ctrls.append(fk_ctrl)
 
             # parent and scale constrain controls to fk joints
-            cmds.parentConstraint(fk_ctrl, jnt)
-            cmds.scaleConstraint(fk_ctrl, jnt)
+            parent_constr(fk_ctrl, jnt)
+            scale_constr(fk_ctrl, jnt)
 
             # lock and hide attributes
             cmds.setAttr(f"{fk_ctrl}.visibility", lock=True, keyable=False, channelBox=False)
@@ -359,9 +364,9 @@ class BipedLimbModule:
         cmds.matchTransform(ik_ctrl_grp, self.ik_jnts[2])
 
         # constrain to ikHandle and ik end joint
-        limb_ik_handle_const = cmds.pointConstraint(ik_ctrl, limb_ik_handle[0])[0]
-        limb_ik_end_rot_const = cmds.orientConstraint(ik_ctrl, self.ik_jnts[2])[0]
-        limb_ik_end_scale_const = cmds.scaleConstraint(ik_ctrl, self.ik_jnts[2])[0]
+        limb_ik_handle_const = point_constr(ik_ctrl, limb_ik_handle[0])
+        limb_ik_end_rot_const = orient_constr(ik_ctrl, self.ik_jnts[2])
+        limb_ik_end_scale_const = scale_constr(ik_ctrl, self.ik_jnts[2])
 
         # parent to top group to organize
         cmds.parent(ik_ctrl_grp, self.ik_limb_top_grp)
@@ -385,8 +390,8 @@ class BipedLimbModule:
         cmds.parent(ik_hip_ctrl_grp, self.ik_limb_top_grp)
 
         # constrain hip joint to control
-        cmds.pointConstraint(ik_hip_ctrl, self.ik_jnts[0])
-        cmds.scaleConstraint(ik_hip_ctrl, self.ik_jnts[0])
+        point_constr(ik_hip_ctrl, self.ik_jnts[0])
+        scale_constr(ik_hip_ctrl, self.ik_jnts[0])
 
         # ----------------------------------------------------------------------
         # -------------------- create simple ik toe control --------------------
@@ -407,8 +412,8 @@ class BipedLimbModule:
 
             cmds.parent(ik_toe_ctrl_grp, ik_ctrl)
 
-            cmds.orientConstraint(ik_toe_ctrl, self.ik_jnts[3])
-            cmds.scaleConstraint(ik_toe_ctrl, self.ik_jnts[3])
+            orient_constr(ik_toe_ctrl, self.ik_jnts[3])
+            scale_constr(ik_toe_ctrl, self.ik_jnts[3])
 
         # -----------------------------------------------------------------------
         # -------------------- create ik pole vector control --------------------
@@ -494,8 +499,8 @@ class BipedLimbModule:
         cmds.matchTransform(switch_ctrl_grp, self.main_joints[2])
 
         # parent and scale constrain switch ctrl to end limb joint
-        cmds.parentConstraint(self.main_joints[2], switch_ctrl_grp)
-        cmds.scaleConstraint(self.main_joints[2], switch_ctrl_grp)
+        parent_constr(self.main_joints[2], switch_ctrl_grp)
+        scale_constr(self.main_joints[2], switch_ctrl_grp)
 
         # ---------- add fk ik blend attribute ----------
         add_divider_attribue(control_name=switch_ctrl, divider_amount=5)
@@ -554,26 +559,26 @@ class BipedLimbModule:
         # ----- connect switch control scale constraints -----
         for fk_jnt, ik_jnt, jnt in zip(self.fk_jnts, self.ik_jnts, self.main_joints, strict=False):
             cmds.setAttr(f"{switch_ctrl}.fkIkBlend", 1)
-            cmds.setAttr(f"{jnt}_scaleConstraint1.{fk_jnt}W0", 1)
-            cmds.setAttr(f"{jnt}_scaleConstraint1.{ik_jnt}W1", 0)
+            cmds.setAttr(f"{jnt}ScaleConstraint.{fk_jnt}W0", 1)
+            cmds.setAttr(f"{jnt}ScaleConstraint.{ik_jnt}W1", 0)
             cmds.setDrivenKeyframe(
-                f"{jnt}_scaleConstraint1.{fk_jnt}W0",
+                f"{jnt}ScaleConstraint.{fk_jnt}W0",
                 currentDriver=f"{switch_ctrl}.fkIkBlend",
             )
             cmds.setDrivenKeyframe(
-                f"{jnt}_scaleConstraint1.{ik_jnt}W1",
+                f"{jnt}ScaleConstraint.{ik_jnt}W1",
                 currentDriver=f"{switch_ctrl}.fkIkBlend",
             )
 
             cmds.setAttr(f"{switch_ctrl}.fkIkBlend", 0)
-            cmds.setAttr(f"{jnt}_scaleConstraint1.{fk_jnt}W0", 0)
-            cmds.setAttr(f"{jnt}_scaleConstraint1.{ik_jnt}W1", 1)
+            cmds.setAttr(f"{jnt}ScaleConstraint.{fk_jnt}W0", 0)
+            cmds.setAttr(f"{jnt}ScaleConstraint.{ik_jnt}W1", 1)
             cmds.setDrivenKeyframe(
-                f"{jnt}_scaleConstraint1.{fk_jnt}W0",
+                f"{jnt}ScaleConstraint.{fk_jnt}W0",
                 currentDriver=f"{switch_ctrl}.fkIkBlend",
             )
             cmds.setDrivenKeyframe(
-                f"{jnt}_scaleConstraint1.{ik_jnt}W1",
+                f"{jnt}ScaleConstraint.{ik_jnt}W1",
                 currentDriver=f"{switch_ctrl}.fkIkBlend",
             )
 
@@ -656,7 +661,7 @@ class BipedLimbModule:
             parent_snap=start_segment_jnt,
         )
         # constrain to first joint of the limb segment
-        cmds.parentConstraint(start_segment_jnt, start_twist_jnt)
+        parent_constr(start_segment_jnt, start_twist_jnt)
 
         # ---------- end twist joint ----------
         end_twist_jnt = create_joint.single_joint(
@@ -672,20 +677,19 @@ class BipedLimbModule:
         cmds.parent(end_twist_jnt, start_twist_jnt)
 
         # point constraint to last joint of the limb segment
-        cmds.pointConstraint(end_segment_jnt, end_twist_jnt)
-        # parent rotate constraint blend for controlling twist weight
-        # orient constr blend had issue. stuck with parent constr skipTranslate.
-        end_twist_jnt_rot_const = cmds.parentConstraint(
-            start_segment_jnt,
+        point_constr(end_segment_jnt, end_twist_jnt)
+        # rotate parent constraint blend for controlling twist weight
+        end_twist_jnt_rot_const = parent_constr(
+            start_segment_jnt,  # default static rotation
             end_twist_jnt,
-            skipTranslate=("x", "y", "z"),
-            maintainOffset=True,
-        )[0]
-        cmds.parentConstraint(
-            end_segment_jnt,
+            skip_tran=True,
+            offset=True,
+        )
+        parent_constr(
+            end_segment_jnt,  # end limb rotation
             end_twist_jnt,
-            skipTranslate=("x", "y", "z"),
-            maintainOffset=True,
+            skip_tran=True,
+            offset=True,
         )
         cmds.setAttr(f"{end_twist_jnt_rot_const}.interpType", 2)  # shortest
 
@@ -713,7 +717,7 @@ class BipedLimbModule:
         for spline_jnt, limb_jnt in zip(spline_jnts, limb_segment_jnts, strict=False):
             # first and last limb segment joint are already constrained
             if spline_jnt not in (spline_jnts[0], spline_jnts[-1]):
-                cmds.parentConstraint(spline_jnt, limb_jnt, maintainOffset=True)
+                parent_constr(spline_jnt, limb_jnt, offset=True)
 
         # -------------------- create ik spline for arm twist --------------------
         twist_crv_start = cmds.xform(
@@ -910,8 +914,8 @@ class BipedLimbModule:
         ruler_loc_01 = cmds.rename(ruler_locators[0], f"{name}01_loc")
         ruler_loc_02 = cmds.rename(ruler_locators[1], f"{name}02_loc")
         # constrain ruler locators to measure between two objects
-        ruler_loc_01_const = cmds.pointConstraint(ruler_start_object, ruler_loc_01)[0]
-        ruler_loc_02_const = cmds.pointConstraint(ruler_end_object, ruler_loc_02)[0]
+        ruler_loc_01_const = point_constr(ruler_start_object, ruler_loc_01)
+        ruler_loc_02_const = point_constr(ruler_end_object, ruler_loc_02)
 
         return (
             ruler_shape,
@@ -979,11 +983,11 @@ class BipedLimbModule:
             translation=True,
         )
         cmds.xform(soft_ik_handle[0], worldSpace=True, translation=ik_ctrl_position)
-        soft_ik_handle_const = cmds.pointConstraint(
+        soft_ik_handle_const = point_constr(
             self.ik_ctrl,
             soft_ik_handle[0],
-            maintainOffset=True,
-        )[0]
+            offset=True,
+        )
 
         # ----- position soft ik end joint -----
         # straight distance from start to end limb joint
@@ -991,13 +995,13 @@ class BipedLimbModule:
         cmds.setAttr(f"{soft_ik_jnts[1]}.translateX", ik_limb_span)
         # ----- constrain limb ik handle to soft ik end joint -----
         cmds.delete(self.limb_ik_handle_const)
-        ik_handle_constraint = cmds.pointConstraint(
+        ik_handle_constraint = point_constr(
             soft_ik_jnts[1],
             self.limb_ik_handle,
-            maintainOffset=True,
-        )[0]
+            offset=True,
+        )
         # ----- constrain soft ik start joint to ik hip control -----
-        cmds.pointConstraint(self.ik_hip_ctrl, soft_ik_jnts[0], maintainOffset=True)
+        point_constr(self.ik_hip_ctrl, soft_ik_jnts[0], offset=True)
 
         # ---------- create soft ik attributes ----------
         soft_ik_divider_name = "____Soft_Ik____"

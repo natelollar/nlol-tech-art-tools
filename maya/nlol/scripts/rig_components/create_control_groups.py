@@ -13,12 +13,14 @@ def create_ctrl_grps(control: str) -> str:
         Group names.
 
     """
-    control_group = cmds.group(empty=True, name=f"{control}_grp")
-    switch_group = cmds.group(empty=True, name=f"{control}_prntSwchGrp", relative=True)
-    offset_group = cmds.group(empty=True, name=f"{control}_offsetGrp", relative=True)
+    control_group = cmds.group(empty=True, name=f"{control}Grp")
+    global_group = cmds.group(empty=True, name=f"{control}PrntGrp", relative=True)
+    switch_group = cmds.group(empty=True, name=f"{control}PrntSwchGrp", relative=True)
+    offset_group = cmds.group(empty=True, name=f"{control}OffsetGrp", relative=True)
 
     cmds.parent(control, offset_group)
     cmds.parent(offset_group, switch_group)
-    cmds.parent(switch_group, control_group)
+    cmds.parent(switch_group, global_group)
+    cmds.parent(global_group, control_group)
 
     return control_group, switch_group, offset_group

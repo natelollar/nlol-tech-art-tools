@@ -2,6 +2,7 @@ from importlib import reload
 
 from maya import cmds
 from nlol.scripts.rig_components import (
+    clean_constraints,
     create_control_groups,
     create_joint,
     create_locators,
@@ -16,10 +17,15 @@ reload(create_control_groups)
 reload(create_joint)
 reload(create_locators)
 reload(create_nurbs_curves)
+reload(clean_constraints)
 
 CreateCurves = create_nurbs_curves.CreateCurves
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 cap = utils_maya.cap
+parent_constr = clean_constraints.parent_constr
+point_constr = clean_constraints.point_constr
+orient_constr = clean_constraints.orient_constr
+scale_constr = clean_constraints.scale_constr
 
 
 class BipedFootModule:
@@ -53,7 +59,7 @@ class BipedFootModule:
             warning_msg = (
                 f'Rig module "{self.mod_name}{self.mirr_side}" failed to build.\n'
                 f'Less than 4 "{self.limb_mod.mod_name}{self.mirr_side}" joints.'
-                " Likely, toe joint missing in rig selection json file.",
+                " Likely, toe joint missing in rig object data toml.",
             )
             self.logger.warning(warning_msg)
             return None
@@ -168,49 +174,29 @@ class BipedFootModule:
 
         # ----- translate constrain -----
         # attach limb length ruler end to foot ankle control
-        cmds.pointConstraint(foot_ctrls[0], self.limb_mod.soft_ik_ruler_end)
+        point_constr(foot_ctrls[0], self.limb_mod.soft_ik_ruler_end)
         # ----- translate constrain -----
         # limb ik control > foot pivot grp, ankle foot control > soft ik handle
         # ik soft end joint > limb ik handle
-        cmds.pointConstraint(
-            self.limb_mod.ik_ctrl,
-            foot_pivot_grp,
-            maintainOffset=True,
-        )
-        cmds.pointConstraint(
-            foot_ctrls[0],
-            self.limb_mod.soft_ik_handle,
-            maintainOffset=True,
-        )
-        cmds.pointConstraint(
-            self.limb_mod.soft_ik_jnts[1],
-            self.limb_mod.limb_ik_handle,
-            maintainOffset=True,
-        )
+        point_constr(self.limb_mod.ik_ctrl, foot_pivot_grp, offset=True)
+        point_constr(foot_ctrls[0], self.limb_mod.soft_ik_handle, offset=True)
+        point_constr(self.limb_mod.soft_ik_jnts[1], self.limb_mod.limb_ik_handle, offset=True)
         # ----- rotate constrain -----
         # limb ik control > foot pivot grp, ankle foot control > ik ankle joint
-        cmds.orientConstraint(
-            self.limb_mod.ik_ctrl,
-            foot_pivot_grp,
-            maintainOffset=True,
-        )
-        self.foot_ankle_orient_const = cmds.orientConstraint(
+        orient_constr(self.limb_mod.ik_ctrl, foot_pivot_grp, offset=True)
+        self.foot_ankle_orient_const = orient_constr(
             foot_ctrls[0],
             self.limb_mod.ik_jnts[2],
-            maintainOffset=True,
+            offset=True,
         )
         # toe wiggle constrain
-        self.foot_toe_orient_const = cmds.orientConstraint(
-            toe_wiggle_ctrl,
-            self.limb_mod.ik_jnts[3],
-            maintainOffset=True,
-        )
+        orient_constr(toe_wiggle_ctrl, self.limb_mod.ik_jnts[3], offset=True)
         # ----- scale constrain -----
         # limb ik control > foot pivot grp, ankle foot control > ik ankle joint
-        cmds.scaleConstraint(self.limb_mod.ik_ctrl, foot_pivot_grp)
-        cmds.scaleConstraint(foot_ctrls[0], self.limb_mod.ik_jnts[2])
+        scale_constr(self.limb_mod.ik_ctrl, foot_pivot_grp)
+        scale_constr(foot_ctrls[0], self.limb_mod.ik_jnts[2])
         # toe wiggle to joint
-        cmds.scaleConstraint(toe_wiggle_ctrl, self.limb_mod.ik_jnts[3])
+        scale_constr(toe_wiggle_ctrl, self.limb_mod.ik_jnts[3])
 
         # ---------- lock and hide attributes ----------
         # hide reverse foot ankle control
@@ -290,23 +276,15 @@ class BipedFootModule:
         cmds.rename(aim_ik_handle_02[1], f"{aim_ik_handle_02[0]}Effector")
 
         # ----- constrain ik handles to foot controls  -----
-        cmds.parentConstraint(self.foot_ctrls[1], aim_ik_handle_01[0])
-        cmds.parentConstraint(self.foot_ctrls[2], aim_ik_handle_02[0])
+        parent_constr(self.foot_ctrls[1], aim_ik_handle_01[0])
+        parent_constr(self.foot_ctrls[2], aim_ik_handle_02[0])
         # ----- point and scale constrain top foot joint  -----
-        cmds.pointConstraint(self.limb_mod.ik_jnts[2], foot_aim_jnts[0])
-        cmds.scaleConstraint(self.foot_ctrls[0], foot_aim_jnts[0])
+        point_constr(self.limb_mod.ik_jnts[2], foot_aim_jnts[0])
+        scale_constr(self.foot_ctrls[0], foot_aim_jnts[0])
         # ----- orient constrain foot joints -----
         cmds.delete(self.foot_ankle_orient_const)  # remove default foot constraint
-        cmds.orientConstraint(
-            foot_aim_jnts[0],
-            self.limb_mod.ik_jnts[2],
-            maintainOffset=True,
-        )
-        cmds.orientConstraint(
-            foot_aim_jnts[1],
-            self.toe_wiggle_ctrl_grp,
-            maintainOffset=True,
-        )
+        orient_constr(foot_aim_jnts[0], self.limb_mod.ik_jnts[2], offset=True)
+        orient_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp, offset=True)
 
         # ---------- top parent group ----------
         cmds.parent(foot_aim_jnts[0], self.foot_top_grp)
@@ -322,7 +300,7 @@ class BipedFootModule:
         Also, add nodes and setup attributes.
         """
         # ---------- add foot attributes ----------
-        soft_ik_divider_name = "____Foot_Attrs____"
+        soft_ik_divider_name = "____Foot____"
         cmds.addAttr(
             self.limb_mod.ik_ctrl,
             longName=soft_ik_divider_name,

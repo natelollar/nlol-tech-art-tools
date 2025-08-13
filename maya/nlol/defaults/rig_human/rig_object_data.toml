@@ -1,0 +1,111 @@
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "root" 
+joints = "root"
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "pelvis" 
+joints = "pelvis"
+
+[[rig_module]]
+rig_module = "spine_mod" 
+rig_module_name = "spine" 
+joints = "pelvis, spine_01, spine_02, spine_03, spine_04, spine_05"
+
+# [[rig_module]]
+# rig_module = "fk_chain_mod" 
+# rig_module_name = "neck" 
+# joints = "neck_01  neck_02  head"
+
+[[rig_module]]
+rig_module = "biped_leg_mod" 
+rig_module_name = "leg" 
+mirror_direction = "left" 
+joints = "thigh_l, calf_l, foot_l, ball_l" 
+upper_twist_joints = "thigh_twist_01_l, thigh_twist_02_l" 
+lower_twist_joints = "calf_twist_02_l, calf_twist_01_l"
+
+[[rig_module]]
+rig_module = "biped_leg_mod" 
+rig_module_name = "leg" 
+mirror_direction = "right" 
+joints = "thigh_r, calf_r, foot_r, ball_r" 
+upper_twist_joints = "thigh_twist_01_r, thigh_twist_02_r" 
+lower_twist_joints = "calf_twist_02_r, calf_twist_01_r"
+
+# [[rig_module]]
+# rig_module = "biped_arm_mod" 
+# rig_module_name = "arm" 
+# mirror_direction = "left" 
+# joints = "clavicle_l  upperarm_l  lowerarm_l  hand_l" 
+# upper_twist_joints = "upperarm_twist_01_l  upperarm_twist_02_l" 
+# lower_twist_joints = "lowerarm_twist_02_l  lowerarm_twist_01_l"
+
+# [[rig_module]]
+# rig_module = "biped_arm_mod" 
+# rig_module_name = "arm" 
+# mirror_direction = "right" 
+# joints = "clavicle_r  upperarm_r  lowerarm_r  hand_r" 
+# upper_twist_joints = "upperarm_twist_01_r  upperarm_twist_02_r" 
+# lower_twist_joints = "lowerarm_twist_02_r  lowerarm_twist_01_r"
+
+# [[rig_module]]
+# rig_module = "thumb_mod" 
+# rig_module_name = "thumb" 
+# mirror_direction = "left" 
+# joints = "thumb_01_l  thumb_02_l  thumb_03_l"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "indexFinger" 
+# mirror_direction = "left" 
+# joints = "index_metacarpal_l  index_01_l  index_02_l  index_03_l"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "middleFinger" 
+# mirror_direction = "left" 
+# joints = "middle_metacarpal_l  middle_01_l  middle_02_l  middle_03_l"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "ringFinger" 
+# mirror_direction = "left" 
+# joints = "ring_metacarpal_l  ring_01_l  ring_02_l  ring_03_l"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "pinkyFinger" 
+# mirror_direction = "left" 
+# joints = "pinky_metacarpal_l  pinky_01_l  pinky_02_l  pinky_03_l"
+
+# [[rig_module]]
+# rig_module = "thumb_mod" 
+# rig_module_name = "thumb" 
+# mirror_direction = "right" 
+# joints = "thumb_01_r  thumb_02_r  thumb_03_r"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "indexFinger" 
+# mirror_direction = "right" 
+# joints = "index_metacarpal_r  index_01_r  index_02_r  index_03_r"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "middleFinger" 
+# mirror_direction = "right" 
+# joints = "middle_metacarpal_r  middle_01_r  middle_02_r  middle_03_r"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "ringFinger" 
+# mirror_direction = "right" 
+# joints = "ring_metacarpal_r  ring_01_r  ring_02_r  ring_03_r"
+
+# [[rig_module]]
+# rig_module = "finger_mod" 
+# rig_module_name = "pinkyFinger" 
+# mirror_direction = "right" 
+# joints = "pinky_metacarpal_r  pinky_01_r  pinky_02_r  pinky_03_r"
