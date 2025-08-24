@@ -28,6 +28,7 @@ class ShowAttributes:
             "wireColorG",
             "wireColorB",
             "useObjectColor",
+            "objectColor",
             "rotateAxisX",
             "rotateAxisY",
             "rotateAxisZ",
@@ -58,6 +59,8 @@ class ShowAttributes:
             "wireColorG",
             "wireColorB",
             "useObjectColor",
+            "objectColor",
+            "lineWidth",
         ]
 
         if not isinstance(self.target_objects, list):
@@ -67,4 +70,5 @@ class ShowAttributes:
                 try:
                     cmds.setAttr(f"{obj}.{attr}", channelBox=self.show_attrs)
                 except Exception:
-                    print(f"Failed to show/ hide: {obj}.{attr}")
+                    #print(f"Failed to show/ hide: {obj}.{attr}")
+                    pass

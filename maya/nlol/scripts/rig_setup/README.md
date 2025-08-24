@@ -11,6 +11,11 @@ Notes for rigging setup.
 - Enter joints in order, down the chain.  
   Example: Hip to toe. Shoulder to wrist.
 
+- "x" or "-x" axis should be main joint pointing down chain.
+  Specifically, for limb, leg, or arm rig modules.
+
+- scene "y" up. (default Maya)
+
 - Build rig first to get control names, then setup parent spaces.  
   Then, directly name parent spaces off of controls.
 
@@ -71,6 +76,7 @@ Notes for rigging setup.
 #### Common Abbreviations Defined
 - attr = attribute
 - const = constraint
+- clr = color
 - ctrl = control
 - dict = dictionary
 - dir = direction

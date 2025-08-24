@@ -1,0 +1,13 @@
+{
+    "locator_crvShape": {
+        "curve": "locator_crv",
+        "useObjectColor": 1,
+        "objectColor": 7,
+        "wireColorRGB": "(0.0, 0.0, 0.0)",
+        "lineWidth": -1.0,
+        "curve_degree": 1,
+        "curve_spans": 8,
+        "curve_form": 0,
+        "cv_positions": "[(0.0, 0.0, 5.0), (0.0, 0.0, -5.0), (0.0, 0.0, 0.0), (-5.0, 0.0, 0.0), (5.0, 0.0, 0.0), (0.0, 0.0, 0.0), (0.0, 5.0, 0.0), (0.0, 0.0, 0.0), (0.0, -5.0, 0.0)]"
+    }
+}

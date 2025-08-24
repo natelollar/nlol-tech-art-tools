@@ -1,5 +1,9 @@
+from importlib import reload
+
 from maya import cmds
-from nlol.shelves_menus.rigging_list import RIGGING_LIST
+from nlol.shelves_menus import rigging_list
+
+reload(rigging_list)
 
 
 def update_rigging_shelf():
@@ -15,7 +19,8 @@ def update_rigging_shelf():
     # create shelf
     cmds.shelfLayout(shelf_name, parent=top_shelf)
 
-    for shelf in RIGGING_LIST:
+    shelf_list = rigging_list.build_rigging_list()
+    for shelf in shelf_list:
         # dict comprehension to account for some shelf buttons not needing all the args
         kwargs = {
             key: shelf[key]

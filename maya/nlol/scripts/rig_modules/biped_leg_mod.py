@@ -1,13 +1,12 @@
 from importlib import reload
-from pathlib import Path
 
-from nlol.scripts.rig_modules import biped_foot_mod, biped_limb_mod
+from nlol.scripts.rig_modules import biped_foot_submod, biped_limb_mod
 
 reload(biped_limb_mod)
-reload(biped_foot_mod)
+reload(biped_foot_submod)
 
 BipedLimbModule = biped_limb_mod.BipedLimbModule
-BipedFootModule = biped_foot_mod.BipedFootModule
+BipedFootModule = biped_foot_submod.BipedFootModule
 
 main_new_names = "upperLeg, lowerLeg, ankle, toe"
 upper_twist_new_name = "upperLegTwist"
@@ -19,8 +18,6 @@ class BipedLegModule(BipedLimbModule):
 
     def __init__(
         self,
-        rig_data_filepath: str | Path,
-        rig_module: str,
         rig_module_name: str,
         mirror_direction: str,
         main_joints: list,
@@ -30,9 +27,6 @@ class BipedLegModule(BipedLimbModule):
         """Initialize leg rig module.
 
         Args:
-            rig_data_filepath: Toml filepath containing name strings and
-                joint selection metadata for rig module.
-            rig_module: Name of rig module being used in the toml file.
             rig_module_name: Custom name for the rig module.
             mirror_direction: The mirror direction string in the toml file.
             main_joints: The main skinned joints.
@@ -41,8 +35,6 @@ class BipedLegModule(BipedLimbModule):
 
         """
         super().__init__(
-            rig_data_filepath=rig_data_filepath,
-            rig_module=rig_module,
             rig_module_name=rig_module_name,
             mirror_direction=mirror_direction,
             main_joints=main_joints,

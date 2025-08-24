@@ -1,8 +1,14 @@
+from importlib import reload
+
 from maya import cmds
-from nlol.shelves_menus.nurbs_curve_list import NURBS_CURVE_LIST
+from nlol.shelves_menus import nurbs_curve_list
+from nlol.utilities.nlol_maya_logger import get_logger
+reload(nurbs_curve_list)
 
 
 def update_nurbs_curve_shelf():
+    logger = get_logger()
+
     shelf_name = "nlNurbsCurves"
 
     # get top shelf layout
@@ -15,16 +21,25 @@ def update_nurbs_curve_shelf():
     # create shelf
     cmds.shelfLayout(shelf_name, parent=top_shelf)
 
-    for shelf in NURBS_CURVE_LIST:
-        cmds.shelfButton(
-            label=shelf["label"],
-            image=shelf["image"],
-            annotation=shelf["annotation"],
-            imageOverlayLabel=shelf["imageOverlayLabel"],
-            backgroundColor=shelf["backgroundColor"],
-            command=shelf["command"],
-            sourceType=shelf["sourceType"],
-            parent=shelf_name,
-        )
+    shelf_list = nurbs_curve_list.build_curve_list()
+    for shelf in shelf_list:
+        kwargs = {
+            key: shelf[key]
+            for key in [
+                "label",
+                "image",
+                "annotation",
+                "imageOverlayLabel",
+                "flexibleWidthType",
+                "flexibleWidthValue",
+                "backgroundColor",
+                "highlightColor",
+                "command",
+                "sourceType",
+            ]
+            if key in shelf and shelf[key] not in (None, "")
+        }
+        kwargs["parent"] = shelf_name
+        cmds.shelfButton(**kwargs)
 
-    print(f"Created shelf: {shelf_name}")
+    logger.info(f"Created shelf: {shelf_name}")

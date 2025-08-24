@@ -24,7 +24,7 @@ def onMayaDroppedPythonFile(*args) -> None:
 
     from importlib import reload
 
-    from nlol.shelves_menus import reload_shelves, reload_menus
+    from nlol.shelves_menus import reload_menus, reload_shelves
     from nlol.utilities import utils_install
 
     reload(reload_shelves)
@@ -39,9 +39,3 @@ def onMayaDroppedPythonFile(*args) -> None:
 
     # add project directory path to MAYA_MODULE_PATH Maya.env
     utils_install.update_project_env_path(project_path=nlol_path, install=True)
-
-
-# NOTE:
-# Adjusted this file:
-# C:\Program Files\Autodesk\Maya2025\Python\Lib\site-packages\maya\app\general\executeDroppedPythonFile.py
-# Added "importlib.reload(loadedModule)" to line 64.

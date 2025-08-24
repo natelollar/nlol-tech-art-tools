@@ -14,7 +14,7 @@ def apply_hinge_vector(
     Used on leg or arm limbs, for example.
 
     Args:
-        limb_joints: Three joints. Start, middle hinge, and end joints.
+        limb_joints: Three joints. Start, middle hinge, and end joint.
         control_object: The control curve or control group
             to apply middle hinge vector transforms to.
         control_object_distance: The distance away from the middle hinge joint
@@ -41,26 +41,58 @@ def apply_hinge_vector(
         cmds.xform(limb_joints[2], query=True, rotatePivot=True, worldSpace=True),
     )
 
-    # find vector of pole vector hinge
+    # ----- find vector of pole vector hinge ------
     start_to_end_vector = end_joint_vector - start_joint_vector
     start_to_end_mid = start_to_end_vector / limb_length_mid_value
     mid_vector = start_joint_vector + start_to_end_mid
+    # mid point to hinge joint
     mid_vector_to_mid_joint_vector = mid_joint_vector - mid_vector
-    mid_vector_to_mid_joint_vector_scaled = (
-        mid_vector_to_mid_joint_vector * control_object_distance
-    )  # control distance from hinge joint
-    mid_point_to_knee_point = mid_vector + mid_vector_to_mid_joint_vector_scaled
+    # arbitrary distance scaled from hinge joint
+    mid_vector_to_mid_joint_vector_scaled = mid_vector_to_mid_joint_vector * 100
 
-    # final vector. avoids knee changing position on creation.
-    cmds.xform(control_object, translation=mid_point_to_knee_point)
+    mid_to_knee_scaled = mid_vector + mid_vector_to_mid_joint_vector_scaled
+    mid_to_knee = mid_vector + mid_vector_to_mid_joint_vector
 
-    # point the control group at the middle hinge joint
+    # position control object directly at hinge joint
+    cmds.xform(control_object, translation=mid_to_knee)
+
+    # ---------- final position -----
+    # perfectly aligned to the triangular plane between start, mid, and end joints
+
+    # create locator to move towards without altering initial hinge joint position
+    # allows a standard distance to be given instead of an arbitrary vector scalar
+    # create "tmp locator" to aim and move the "control object" towards
+    tmp_position_loc = cmds.spaceLocator(name="tmp_position_loc")
+    cmds.xform(tmp_position_loc, translation=mid_to_knee_scaled)
+    # aim the "control object" at the "tmp locator" in "+ Z"
+    myAimConst = cmds.aimConstraint(
+        tmp_position_loc,
+        control_object,
+        offset=(0, 0, 0),
+        weight=1,
+        aimVector=(0, 0, 1),
+        upVector=(0, 1, 0),
+        worldUpType="vector",
+        worldUpVector=(0, 1, 0),
+    )
+    cmds.delete(myAimConst)
+    cmds.delete(tmp_position_loc)
+    # translate the "control object" directly towards the "tmp locator" in "+ Z"
+    cmds.xform(
+        control_object,
+        relative=True,
+        objectSpace=True,
+        translation=[0, 0, control_object_distance],
+    )
+
+    # ----- aim the control object at the middle hinge joint -----
+    # aim in "+ Z"
     myAimConst = cmds.aimConstraint(
         limb_joints[1],
         control_object,
         offset=(0, 0, 0),
         weight=1,
-        aimVector=(0, 0, -1),
+        aimVector=(0, 0, 1),
         upVector=(0, 1, 0),
         worldUpType="vector",
         worldUpVector=(0, 1, 0),

@@ -1,35 +1,3 @@
-# Setup custom rig parent spaces for its rig modules. 
-# Also, set up base parent or single parent space when no parent spaces needed.
-# Use a single control name for each child control and other control or object names for parents.
-#
-# Keys:
-    # control (str): Child contrl to set up parent spaces for.
-    # parents (str): Parent objects. Usually other controls but may be any Maya transform. 
-    # separate_transforms (bool): Create seperate attributes for translate, rotate, and scale.
-    # base_parent (str): Parent and scale constrain the base parent group, above the parent switch group. 
-        # May be used instead of a single "parents" object for a regular parent relationship. 
-        # Also, used when a point constraint needs full rotate parent constraint above, like for "use_point_constraint".
-        # May add multiple base_parent values.
-    # mirror_right (str): Use left control data for the right side. 
-        # Currently works with any "_left_" or parents with suffix "_l".
-    # use_point_constraint (bool): Use point constraint instead of parent translate constraint. Requires "base_parent". 
-    # skip_translate, skip_rotate, skip_scale (bool): Skip translate (or point), rotate or scale parent switch setup. 
-        # Requires "separate_transforms" and "base_parent". 
-        # False value is the same as not including the key, so the transform won't be skipped.
-        # Skip only works for translate and rotate if separate_transforms is on.
-        # Skip scale does work for regular "parents" if "base_parent" value is also given.
-# Example:
-    # [[control]]
-    # control = "ikLegPoleVector_left_ctrl"
-    # parents = "root_ctrl, pelvis_ctrl, ikAnkle_left_ctrl"
-    # separate_transforms = true
-    # skip_translate = false
-    # skip_rotate = true
-    # skip_scale = true
-    # use_point_constraint = true
-    # base_parent = "root_ctrl"
-    # mirror_right = true
-
 [[control]]
 control = "global_ctrl"
 parents = "world_ctrl"

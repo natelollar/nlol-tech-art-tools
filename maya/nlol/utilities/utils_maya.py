@@ -1,4 +1,5 @@
 import sys
+from functools import wraps
 
 from PySide6 import QtWidgets
 from shiboken6 import wrapInstance
@@ -63,3 +64,42 @@ def add_divider_attribue(
         enumName=divider_string,
     )
     cmds.setAttr(f"{control_name}.{divider_string}", channelBox=True)
+
+
+def maya_undo(func):
+    """Groups executed maya commands into single undo chunk.
+    Wrap functions or methods, not classes.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        cmds.undoInfo(openChunk=True)
+        try:
+            return func(*args, **kwargs)
+        finally:
+            cmds.undoInfo(closeChunk=True)
+
+    return wrapper
+
+
+def left_to_right_str(text_str: str) -> str:
+    """Replace left string characters with right characters.
+    Currently, replaces any `_left_` with `_right_` and the suffix `_l` with `_r`.
+    Example: Replaces `_left_` with `_right_` in `ikHand_left_ctrl`.
+    Specifically works with a string or string list.
+    Example: `hand_l` or `indexFinger_left_01_ctrl` or
+    `pinky_metacarpal_l, pinky_01_l, pinky_02_l, pinky_03_l`
+
+    Args:
+        text_str: Input string text containing left characters.
+
+    Returns:
+        New string text for right side.
+
+    """
+    if not text_str:
+        return text_str
+    text_str = text_str.replace("_left_", "_right_")
+    text_str = text_str.replace("_l,", "_r,")
+    text_str = f"{text_str[:-2]}_r" if text_str.endswith("_l") else text_str
+    return text_str

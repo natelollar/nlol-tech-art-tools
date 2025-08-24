@@ -40,3 +40,23 @@ def random_color(seed_string: str) -> tuple[tuple[float, float, float], tuple[fl
     r_dull, g_dull, b_dull = colorsys.hsv_to_rgb(h_clr, s_clr, v_clr)
 
     return (r_clr, g_clr, b_clr), (r_dull, g_dull, b_dull)
+
+
+def random_colors_dull(seed_string_prefix: str = "") -> list[tuple]:
+    """Create list of consistent random dull colors.
+    Useful for shelf button colors.
+
+    Args:
+        seed_string_prefix: Optional seed string prefix to vary random colors
+            from another group of random colors.
+
+    Returns:
+        Output list of consistent random dull colors.
+
+    """
+    random_colors_dull = []
+    for i in range(30):
+        color_dull = random_color(seed_string=f"{seed_string_prefix}{i}")[1]
+        random_colors_dull.append(color_dull)
+
+    return random_colors_dull

@@ -2,28 +2,34 @@ from importlib import reload
 
 from maya import cmds
 from nlol.shelves_menus import nurbs_curve_list, rigging_list
+from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(nurbs_curve_list)
 reload(rigging_list)
 
 
 def main_menu():
+    """Create nLol Maya menu equivilent to the nLol Maya shelf.
+    Contains tech are tools, including rigging tools.
+    """
+    logger = get_logger()
+
     nlol_menu_name = "nlol_tools_menu"
 
     # check if menu already exists
     if cmds.menu(nlol_menu_name, exists=True):
         cmds.deleteUI(nlol_menu_name)
 
-    # nlol menu
+    # ----- nlol menu -----
     nlol_menu = cmds.menu(nlol_menu_name, label="nLol Tools", parent="MayaWindow", tearOff=True)
-    # divider
+    # ----- divider -----
     cmds.menuItem(
         "rigging_tools_divider",
         divider=True,
         dividerLabel="Rig Tools",
         parent=nlol_menu,
     )
-    # nurbs curve menu
+    # ----- submenus -----
     nurbs_curve_submenu = cmds.menuItem(
         "nurbs_curve_submenu",
         label="Nurbs Curves",
@@ -40,18 +46,19 @@ def main_menu():
     )
 
     # add the nurbs curve menu items
-    for menu in nurbs_curve_list.NURBS_CURVE_LIST:
-        cmds.menuItem(
-            label=menu["label"],
-            annotation=menu["annotation"],
-            image=menu["image"],
-            command=menu["command"],
-            parent=nurbs_curve_submenu,
-        )
+    curve_menu_list = nurbs_curve_list.build_curve_list()
+    for menu in curve_menu_list:
+        kwargs = {
+            key: menu[key]
+            for key in ["label", "annotation", "image", "command"]
+            if key in menu and menu[key] not in (None, "")
+        }
+        kwargs["parent"] = nurbs_curve_submenu
+        cmds.menuItem(**kwargs)
 
     # add the rigging menu items
-    for menu in rigging_list.RIGGING_LIST:
-        # dict comp to account for menu items not needing all the args
+    rigging_menu_list = rigging_list.build_rigging_list()
+    for menu in rigging_menu_list:
         kwargs = {
             key: menu[key]
             for key in ["label", "annotation", "image", "command"]
@@ -60,4 +67,4 @@ def main_menu():
         kwargs["parent"] = rigging_submenu
         cmds.menuItem(**kwargs)
 
-    print(f"Reloaded menu: {nlol_menu_name}")
+    logger.info(f"Reloaded menu: {nlol_menu_name}")

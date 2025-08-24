@@ -114,7 +114,7 @@ class BipedFootModule:
             # ----- create control -----
             foot_ctrl = CreateCurves(
                 name=f"{self.mod_name}{cap(ctrl_name)}",
-                size=0.5,
+                size=0.25,
                 color_rgb=(0.2, 1.0, 0.0),
             ).sphere_curve()
 
@@ -140,7 +140,7 @@ class BipedFootModule:
         # ---------- create extra toe offset control ----------
         toe_wiggle_ctrl = CreateCurves(
             name=f"{self.mod_name}ToeWiggle{self.mirr_side}ctrl",
-            size=3,
+            size=1,
             color_rgb=(1, 0, 1),
         ).box_curve()
 

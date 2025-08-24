@@ -27,7 +27,7 @@ class NlolMayaLogger:
             file_handler.setFormatter(file_formatter)
             self.logger.addHandler(file_handler)
 
-            self.logger.setLevel(logging.DEBUG)
+            self.logger.setLevel(logging.INFO)
 
 
 _logger_instance = None

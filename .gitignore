@@ -8,6 +8,7 @@ scratch.py
 .vscode/
 *.code-workspace
 docs/
+other_control_curves.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

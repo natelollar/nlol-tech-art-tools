@@ -3,7 +3,6 @@ Works with human arms and legs, and other bipedal creatures.
 """
 
 from importlib import reload
-from pathlib import Path
 
 from maya import cmds
 from nlol.scripts.rig_components import (
@@ -12,6 +11,7 @@ from nlol.scripts.rig_components import (
     create_joint,
     create_locators,
     create_nurbs_curves,
+    create_ruler,
 )
 from nlol.scripts.rig_tools import get_aligned_axis, limb_hinge_vector
 from nlol.utilities import utils_maya
@@ -25,6 +25,7 @@ reload(create_joint)
 reload(create_locators)
 reload(create_nurbs_curves)
 reload(clean_constraints)
+reload(create_ruler)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 cap = utils_maya.cap
@@ -34,6 +35,7 @@ parent_constr = clean_constraints.parent_constr
 point_constr = clean_constraints.point_constr
 orient_constr = clean_constraints.orient_constr
 scale_constr = clean_constraints.scale_constr
+create_attached_ruler = create_ruler.create_attached_ruler
 
 
 class BipedLimbModule:
@@ -43,29 +45,26 @@ class BipedLimbModule:
 
     def __init__(
         self,
-        rig_data_filepath: str | Path,
-        rig_module: str,
         rig_module_name: str,
         mirror_direction: str,
         main_joints: list,
         upper_twist_joints: list,
         lower_twist_joints: list,
-        main_object_names: str,
-        upper_twist_name: str,
-        lower_twist_name: str,
-        fk_ctrl_size: float = 5,
-        ik_ctrl_size: float = 5,
-        ik_hip_ctrl_size: float = 6,
+        main_object_names: str = "",
+        upper_twist_name: str = "",
+        lower_twist_name: str = "",
+        fk_ctrl_size: float = 1,
+        ik_ctrl_size: float = 1,
+        ik_hip_ctrl_size: float = 1.5,
         polevector_ctrl_size: float = 0.5,
-        polevector_ctrl_distance: float = 35,
-        switch_ctrl_size: float = 0.3,
+        polevector_ctrl_distance: float = 75,
+        switch_ctrl_size: float = 0.13,
         switch_ctrl_distance: float = 17,
+        switch_ctrl_constraint: bool = False,
     ):
         """Initialize limb rig module.
 
         Args:
-            rig_data_filepath Toml containing rig object data.
-            rig_module: Name of rig module being used.
             rig_module_name: Custom name for the rig module.
             mirror_direction: Extra string describing mirror side. Ex. "left", "right".
             main_joints: The main skinned joints.
@@ -79,13 +78,11 @@ class BipedLimbModule:
             fk_ctrl_size: Size of fk controls.
             ik_ctrl_size: Size of main end limb ik control.
             polevector_ctrl_size: Size of ik hinge control (knee, elbow).
-            polevector_ctrl_distance: Default distance hinge control placed from hinge.
+            polevector_ctrl_distance: Default distance hinge control placed from hinge joint.
             switch_ctrl_size: Fk ik blend control size.
             switch_ctrl_distance: Fk ik blend control distance from end limb joint.
 
         """
-        self.rig_data_filepath = rig_data_filepath
-        self.rig_module = rig_module
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.main_joints = main_joints
@@ -96,6 +93,18 @@ class BipedLimbModule:
         self.upper_twist_name = upper_twist_name
         self.lower_twist_name = lower_twist_name
 
+        if not main_object_names.strip():
+            self.main_object_names = [
+                f"upper{cap(self.mod_name)}",
+                f"lower{cap(self.mod_name)}",
+                f"end{cap(self.mod_name)}",
+                f"extremity{cap(self.mod_name)}",
+            ]
+        if not self.upper_twist_name:
+            self.upper_twist_name = f"upper{cap(self.mod_name)}Twist"
+        if not self.lower_twist_name:
+            self.lower_twist_name = f"lower{cap(self.mod_name)}Twist"
+
         self.fk_ctrl_size = fk_ctrl_size
         self.ik_ctrl_size = ik_ctrl_size
         self.ik_hip_ctrl_size = ik_hip_ctrl_size
@@ -103,6 +112,7 @@ class BipedLimbModule:
         self.polevector_ctrl_distance = polevector_ctrl_distance
         self.switch_ctrl_size = switch_ctrl_size
         self.switch_ctrl_distance = switch_ctrl_distance
+        self.switch_ctrl_constraint = switch_ctrl_constraint
 
         self.logger = get_logger()
 
@@ -113,7 +123,9 @@ class BipedLimbModule:
             Top group for all the limb objects.
 
         """
-        failed_build_string = f'Rig module "{self.mod_name}{self.mirr_side.rstrip("_")}" failed to build.'
+        failed_build_string = (
+            f'Rig module "{self.mod_name}{self.mirr_side.rstrip("_")}" failed to build.'
+        )
 
         # ---------- build rig module ----------
         try:
@@ -155,7 +167,7 @@ class BipedLimbModule:
                 f'Rig module "{self.mod_name}{self.mirr_side}" did not build.',
             )
             self.logger.error(error_msg)
-            cmds.error(error_msg)
+            raise ValueError(error_msg)
         return self.down_chain_axis
 
     def _build_top_groups(self):
@@ -167,11 +179,11 @@ class BipedLimbModule:
         )
         self.fk_limb_top_grp = cmds.group(
             empty=True,
-            name=f"fk_{self.mod_name}{self.mirr_side}grp",
+            name=f"fk{cap(self.mod_name)}{self.mirr_side}grp",
         )
         self.ik_limb_top_grp = cmds.group(
             empty=True,
-            name=f"ik_{self.mod_name}{self.mirr_side}grp",
+            name=f"ik{cap(self.mod_name)}{self.mirr_side}grp",
         )
         self.twist_top_grp = cmds.group(
             empty=True,
@@ -247,9 +259,12 @@ class BipedLimbModule:
             # create blend color nodes
             tran_blend_node = cmds.createNode(
                 "blendColors",
-                name=f"{obj_name}Tran_blendColors",
+                name=f"{obj_name}Tran{self.mirr_side}blendColors",
             )
-            rot_blend_node = cmds.createNode("blendColors", name=f"{obj_name}Rot_blendColors")
+            rot_blend_node = cmds.createNode(
+                "blendColors",
+                name=f"{obj_name}Rot{self.mirr_side}blendColors",
+            )
             # translate blend
             cmds.connectAttr(f"{fk_jnt}.translate", f"{tran_blend_node}.color1", force=True)
             cmds.connectAttr(f"{ik_jnt}.translate", f"{tran_blend_node}.color2", force=True)
@@ -308,16 +323,16 @@ class BipedLimbModule:
             # ----- snap control group to joint -----
             cmds.matchTransform(fk_ctrl_grp, jnt)
 
-            # create a list of groups for parenting
-            fk_ctrl_grps.append(fk_ctrl_grp)
-            fk_ctrls.append(fk_ctrl)
-
             # parent and scale constrain controls to fk joints
             parent_constr(fk_ctrl, jnt)
             scale_constr(fk_ctrl, jnt)
 
             # lock and hide attributes
             cmds.setAttr(f"{fk_ctrl}.visibility", lock=True, keyable=False, channelBox=False)
+
+            # create a list of groups for parenting
+            fk_ctrl_grps.append(fk_ctrl_grp)
+            fk_ctrls.append(fk_ctrl)
 
         # parent controls and groups together
         # parent 2nd group to 1st control, 3rd group to 2nd control, etc.
@@ -400,7 +415,7 @@ class BipedLimbModule:
         if len(self.ik_jnts) > 3:
             ik_toe_ctrl = create_nurbs_curves.CreateCurves(
                 name=f"ik{cap(self.main_object_names[3])}{self.mirr_side}ctrl",
-                size=4,
+                size=1,
                 color_rgb=(0.1, 1.0, 0.0),
             ).box_curve()
 
@@ -480,27 +495,29 @@ class BipedLimbModule:
         # ----- control group -----
         switch_ctrl_grp = create_ctrl_grps(switch_ctrl)[0]
 
-        # ---------- move control in rear joint axis direction ----------
-        rear_facing_axis = get_aligned_axis.axis_facing_direction(
-            object=self.main_joints[2],
-            world_space_direction="-z",
-        )
-        direction_multiplier = -1 if rear_facing_axis[0] == "-" else 1
-        rear_facing_axis = rear_facing_axis.lstrip("-").upper()
-        cmds.setAttr(
-            f"{switch_ctrl}.translate{rear_facing_axis}",
-            direction_multiplier * self.switch_ctrl_distance,
-        )
-        # pivot to origin
-        cmds.xform(switch_ctrl, worldSpace=True, pivots=(0, 0, 0))
-        cmds.makeIdentity(switch_ctrl, apply=True)
+        # ---------- setup twist ctrl position and constraint ----------
+        if self.switch_ctrl_constraint:
+            # move control in rear joint axis direction
+            rear_facing_axis = get_aligned_axis.axis_facing_direction(
+                object=self.main_joints[2],
+                world_space_direction="-z",
+            )
+            direction_multiplier = -1 if rear_facing_axis[0] == "-" else 1
+            rear_facing_axis = rear_facing_axis.lstrip("-").upper()
+            cmds.setAttr(
+                f"{switch_ctrl}.translate{rear_facing_axis}",
+                direction_multiplier * self.switch_ctrl_distance,
+            )
+            # pivot to origin
+            cmds.xform(switch_ctrl, worldSpace=True, pivots=(0, 0, 0))
+            cmds.makeIdentity(switch_ctrl, apply=True)
 
-        # ----- snap to end limb joint -----
-        cmds.matchTransform(switch_ctrl_grp, self.main_joints[2])
+            # snap to end limb joint
+            cmds.matchTransform(switch_ctrl_grp, self.main_joints[2])
 
-        # parent and scale constrain switch ctrl to end limb joint
-        parent_constr(self.main_joints[2], switch_ctrl_grp)
-        scale_constr(self.main_joints[2], switch_ctrl_grp)
+            # parent and scale constrain switch ctrl to end limb joint
+            parent_constr(self.main_joints[2], switch_ctrl_grp)
+            scale_constr(self.main_joints[2], switch_ctrl_grp)
 
         # ---------- add fk ik blend attribute ----------
         add_divider_attribue(control_name=switch_ctrl, divider_amount=5)
@@ -765,11 +782,22 @@ class BipedLimbModule:
         )
 
         # ---------- skin spline curve to start end joints ----------
-        cmds.skinCluster(
+        twist_skin_cluster = cmds.skinCluster(
             start_twist_jnt,
             end_twist_jnt,
             twist_crv,
             n=f"{twist_name}{self.mirr_side}skinCluster",
+        )[0]
+        # reskin curve to avoid maya skinning anomalies
+        cmds.skinPercent(
+            twist_skin_cluster,
+            f"{twist_crv}.cv[0]",
+            transformValue=[(start_twist_jnt, 1.0), (end_twist_jnt, 0.0)],
+        )
+        cmds.skinPercent(
+            twist_skin_cluster,
+            f"{twist_crv}.cv[1]",
+            transformValue=[(start_twist_jnt, 0.0), (end_twist_jnt, 1.0)],
         )
 
         # ---------- setup rotate blend for twist weight control ----------
@@ -782,7 +810,7 @@ class BipedLimbModule:
         cmds.addAttr(
             self.switch_ctrl,
             longName=twist_weight_attr,
-            defaultValue=0.25,
+            defaultValue=0.5,
             minValue=0.0,
             maxValue=1.0,
             keyable=True,
@@ -843,7 +871,7 @@ class BipedLimbModule:
 
         """
         # ----- create upper limb ruler -----
-        ruler_shape, ruler_transform, ruler_loc_01, ruler_loc_02, *_ = self.create_attached_ruler(
+        ruler_shape, ruler_transform, ruler_loc_01, ruler_loc_02, *_ = create_attached_ruler(
             name=f"{twist_name}Ruler{self.mirr_side}",
             ruler_start_object=start_segment_jnt,
             ruler_end_object=end_segment_jnt,
@@ -890,42 +918,6 @@ class BipedLimbModule:
         cmds.parent(ruler_loc_02, self.twist_stretch_top_grp)
         cmds.setAttr(f"{self.twist_stretch_top_grp}.visibility", 0)
 
-    def create_attached_ruler(self, name: str, ruler_start_object: str, ruler_end_object: str):
-        """Create distance dimension shape node and constrain start and end points
-        between two object.  Useful for finding joint lengeth for stretching.
-
-        Args:
-            name: Ruler name.
-            ruler_start_object: First object to contraint ruler to.
-            ruler_end_object: Second object to constrain ruler to.
-
-        Returns:
-            Ruler shape, transform, locators, and locator constraints.
-
-        """
-        # create ruler tool and get shape of distanceDimension node
-        ruler_shape = cmds.distanceDimension(startPoint=(0, 0, 0), endPoint=(0, 0, 10))
-        ruler_shape = cmds.rename(ruler_shape, f"{name}distanceDimensionShape")
-        # get transform of distanceDimesion node
-        ruler_transform = cmds.listRelatives(ruler_shape, allParents=True, type="transform")
-        ruler_transform = cmds.rename(ruler_transform, f"{name}distanceDimension")
-        # get distanceDimension locators
-        ruler_locators = cmds.listConnections(ruler_shape, type="locator")
-        ruler_loc_01 = cmds.rename(ruler_locators[0], f"{name}01_loc")
-        ruler_loc_02 = cmds.rename(ruler_locators[1], f"{name}02_loc")
-        # constrain ruler locators to measure between two objects
-        ruler_loc_01_const = point_constr(ruler_start_object, ruler_loc_01)
-        ruler_loc_02_const = point_constr(ruler_end_object, ruler_loc_02)
-
-        return (
-            ruler_shape,
-            ruler_transform,
-            ruler_loc_01,
-            ruler_loc_02,
-            ruler_loc_01_const,
-            ruler_loc_02_const,
-        )
-
     def _build_soft_ik_setup(self, use_expression: bool = False) -> None:
         """Create soft ik setup.
 
@@ -936,7 +928,7 @@ class BipedLimbModule:
         """
         # ----- distance between start joint and ik control -----
         ruler_shape, ruler_transform, ruler_loc_01, ruler_loc_02, _, ruler_loc_02_const = (
-            self.create_attached_ruler(
+            create_attached_ruler(
                 name=f"{self.mod_name}SoftIkRuler{self.mirr_side}",
                 ruler_start_object=self.ik_hip_ctrl,
                 ruler_end_object=self.ik_ctrl,

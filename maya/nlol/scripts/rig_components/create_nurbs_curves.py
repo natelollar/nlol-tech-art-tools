@@ -3,13 +3,19 @@ for rig controls and other needs.
 """
 
 from importlib import reload
+from pathlib import Path
 
 from maya import cmds
-from nlol.scripts.rig_tools import show_attributes
+from nlol.scripts.rig_components import curve_library
+from nlol.scripts.rig_tools import show_attributes, load_curves
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(show_attributes)
+reload(load_curves)
 ShowAttributes = show_attributes.ShowAttributes
+LoadCurves = load_curves.LoadCurves
+
+curve_lib_folderpath = Path(curve_library.__file__).parent
 
 
 class CreateCurves:
@@ -22,6 +28,7 @@ class CreateCurves:
         color_rgb: tuple = (1.0, 0.4, 0.0),
         thickness: float = -1.0,
         show_attrs: bool = False,
+        use_curve_defaults: bool = False,
         curve_type: str = "",
     ) -> None:
         self.name = name
@@ -29,6 +36,7 @@ class CreateCurves:
         self.color_rgb = color_rgb
         self.thickness = thickness
         self.show_attrs = show_attrs
+        self.use_curve_defaults = use_curve_defaults
         self.nurbs_curve = None
         self.logger = get_logger()
 
@@ -48,9 +56,16 @@ class CreateCurves:
                     self.nurbs_curve = self.tri_circle_curve()
                 case "locator_curve":
                     self.nurbs_curve = self.locator_curve()
+                case "arrow_twist_curve":
+                    self.nurbs_curve = self.arrow_twist_curve()
+                case "cylinder_curve":
+                    self.nurbs_curve = self.cylinder_curve()
+                case "four_arrow_curve":
+                    self.nurbs_curve = self.four_arrow_curve()
                 case _:
                     warning_msg = f"Unkown curve type: {curve_type}"
                     self.logger.warning(warning_msg)
+
     def show_channel_box_attrs(self, curve_shape: str) -> None:
         """Whether to show useful curve attributes in channel box."""
         if self.show_attrs:
@@ -58,318 +73,103 @@ class CreateCurves:
 
     def box_curve(self) -> str:
         """Create box shaped curve."""
-        # create curve. set curve point locations in world space.
-        nurbs_curve = cmds.curve(
-            degree=1,
-            point=[
-                (-1, 1, 1),
-                (-1, 1, -1),
-                (1, 1, -1),
-                (1, 1, 1),
-                (-1, 1, 1),
-                (-1, -1, 1),
-                (-1, -1, -1),
-                (1, -1, -1),
-                (1, -1, 1),
-                (-1, -1, 1),
-                (-1, 1, 1),
-                (1, 1, 1),
-                (1, -1, 1),
-                (1, -1, -1),
-                (1, 1, -1),
-                (-1, 1, -1),
-                (-1, -1, -1),
-            ],
-        )
-        # adjust scale
-        cmds.setAttr(f"{nurbs_curve}.scale", *[self.size] * 3)
-        # freeze transforms
-        cmds.makeIdentity(nurbs_curve, apply=True)
-        # access nurbs curve shape
-        nurbs_curve_shape = cmds.listRelatives(nurbs_curve, shapes=True)[0]
-        # enable wire color
-        cmds.setAttr(f"{nurbs_curve_shape}.useObjectColor", 2)
-        # change wire color
-        cmds.setAttr(
-            f"{nurbs_curve_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        # adjust visible curve thickness
-        cmds.setAttr(f"{nurbs_curve_shape}.lineWidth", self.thickness)
-        # show useful curve attrs
-        self.show_channel_box_attrs(nurbs_curve_shape)
-        # name shape
-        nurbs_curve = cmds.rename(nurbs_curve, self.name)
-        # return curve name string
+        nurbs_curve = self.curve_generator("box_curve.json")
         return nurbs_curve
 
-    def circle_curve(
-        self,
-        normal: tuple[float, float, float] = (0, 1, 0),
-    ) -> str:
+    def circle_curve(self) -> str:
         """Create circle curve."""
-        nurbs_curve = cmds.circle(
-            constructionHistory=False,
-            radius=10,
-            normal=normal,
-        )[0]
-        cmds.setAttr(f"{nurbs_curve}.scale", *[self.size] * 3)
-        cmds.makeIdentity(nurbs_curve, apply=True)
-        nurbs_curve_shape = cmds.listRelatives(nurbs_curve, shapes=True)[0]
-        cmds.setAttr(f"{nurbs_curve_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{nurbs_curve_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{nurbs_curve_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(nurbs_curve_shape)
-        nurbs_curve = cmds.rename(nurbs_curve, self.name)
-
+        nurbs_curve = self.curve_generator("circle_curve.json")
         return nurbs_curve
 
     def global_curve(self) -> str:
         """Create global curve."""
-        nurbs_curve = cmds.curve(
-            degree=1,
-            point=[
-                (5.0, 0.0, 110.0),
-                (75.0, 0.0, 45.0),
-                (85.0, 0.0, 15.0),
-                (80.0, 0.0, -30.0),
-                (60.0, 0.0, -50.0),
-                (-60.0, 0.0, -50.0),
-                (-80.0, 0.0, -30.0),
-                (-85.0, 0.0, 15.0),
-                (-75.0, 0.0, 45.0),
-                (-5.0, 0.0, 110.0),
-                (5.0, 0.0, 110.0),
-            ],
-        )
-        cmds.setAttr((nurbs_curve + ".scale"), *[self.size] * 3)
-        cmds.makeIdentity(nurbs_curve, apply=True)
-
-        nurbs_curve_shape = cmds.listRelatives(nurbs_curve, shapes=True)[0]
-        cmds.setAttr(f"{nurbs_curve_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{nurbs_curve_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{nurbs_curve_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(nurbs_curve_shape)
-        nurbs_curve = cmds.rename(nurbs_curve, self.name)
-
+        nurbs_curve = self.curve_generator("global_curve.json")
         return nurbs_curve
 
     def pyramid_curve(self) -> str:
         """Create pyramid shaped curve."""
-        nurbs_curve = cmds.curve(
-            degree=1,
-            point=[
-                (0, 5, -5),
-                (-5, 0, -5),
-                (0, -5, -5),
-                (5, 0, -5),
-                (0, 5, -5),
-                (0, 0, 5),
-                (5, 0, -5),
-                (0, -5, -5),
-                (0, 0, 5),
-                (-5, 0, -5),
-            ],
-        )
-        cmds.setAttr((nurbs_curve + ".scale"), *[self.size] * 3)
-        cmds.makeIdentity(nurbs_curve, apply=True)
-
-        nurbs_curve_shape = cmds.listRelatives(nurbs_curve, shapes=True)[0]
-        cmds.setAttr(f"{nurbs_curve_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{nurbs_curve_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{nurbs_curve_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(nurbs_curve_shape)
-        nurbs_curve = cmds.rename(nurbs_curve, self.name)
-
+        nurbs_curve = self.curve_generator("pyramid_curve.json")
         return nurbs_curve
 
     def sphere_curve(self) -> str:
         """Create sphere shaped curve object."""
-        # circle curve a
-        curve_a = cmds.circle(
-            constructionHistory=False,
-            radius=3,
-            normal=(0, 1, 0),
-        )[0]
-        curve_a_shape = cmds.listRelatives(curve_a, s=True)[0]
-        cmds.setAttr(f"{curve_a_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{curve_a_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{curve_a_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(curve_a_shape)
-
-        # circle curve b
-        curve_b = cmds.circle(constructionHistory=False, radius=3, normal=(0, 0, 0))[0]
-        curve_b_shape = cmds.listRelatives(curve_b, shapes=True)[0]
-        cmds.setAttr(f"{curve_b_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{curve_b_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{curve_b_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(curve_b_shape)
-        # parent shape to main transform
-        cmds.parent(curve_b_shape, curve_a, relative=True, shape=True)
-        # delete circle curve b transform
-        cmds.delete(curve_b)
-
-        # create 3rd nurbs circle
-        curve_c = cmds.circle(constructionHistory=False, radius=3, normal=(1, 0, 0))[0]
-        curve_c_shape = cmds.listRelatives(curve_c, shapes=True)[0]
-        cmds.setAttr(f"{curve_c_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{curve_c_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{curve_c_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(curve_c_shape)
-        # parent shape to main transform
-        cmds.parent(curve_c_shape, curve_a, relative=True, shape=True)
-        # delete circle curve c transform
-        cmds.delete(curve_c)
-
-        # renaming curve transform renames all its shapes
-        curve_main = cmds.rename(curve_a, self.name)
-        # rename shapes cleanup.
-        shape_list = cmds.listRelatives(curve_main, shapes=True)
-        cmds.rename(shape_list[0], f"{curve_main}_aShape")
-        cmds.rename(shape_list[1], f"{curve_main}_bShape")
-        cmds.rename(shape_list[2], f"{curve_main}_cShape")
-        # user scale
-        cmds.setAttr(f"{curve_main}.scale", *[self.size] * 3)
-        cmds.makeIdentity(curve_main, apply=True)
-        # select curve to replace shape selection
-        cmds.select(curve_main)
-
-        return curve_main
+        nurbs_curve = self.curve_generator("sphere_curve.json")
+        return nurbs_curve
 
     def tri_circle_curve(self) -> str:
         """Create tri circle curve object."""
-        # create circle a
-        curve_a = cmds.circle(constructionHistory=False, radius=3, normal=(0, 1, 0))[0]
-        curve_a_shape = cmds.listRelatives(curve_a, shapes=True)[0]
-        cmds.setAttr(f"{curve_a_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{curve_a_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{curve_a_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(curve_a_shape)
-
-        # circle curve b
-        curve_b = cmds.circle(constructionHistory=False, radius=3, normal=(0, 1, 0))[0]
-        cmds.move(0, 5, 0, curve_b, relative=True)
-        cmds.makeIdentity(curve_b, apply=True)
-        curve_b_shape = cmds.listRelatives(curve_b, shapes=True)[0]
-        cmds.setAttr(f"{curve_b_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{curve_b_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{curve_b_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(curve_b_shape)
-        # parent shape to main transform
-        cmds.parent(curve_b_shape, curve_a, relative=True, shape=True)
-        # delete circle curve b transform
-        cmds.delete(curve_b)
-
-        # create 3rd nurbs circle
-        curve_c = cmds.circle(constructionHistory=False, radius=3, normal=(0, 1, 0))[0]
-        curve_c_shape = cmds.listRelatives(curve_c, shapes=True)[0]
-        cmds.move(0, -5, 0, curve_c, relative=True)
-        cmds.makeIdentity(curve_c, apply=True)
-        cmds.setAttr(f"{curve_c_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{curve_c_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{curve_c_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(curve_c_shape)
-        # parent shape to main transform
-        cmds.parent(curve_c_shape, curve_a, relative=True, shape=True)
-        # delete circle curve c transform
-        cmds.delete(curve_c)
-
-        # renaming curve transform renames all its shapes
-        curve_main = cmds.rename(curve_a, self.name)
-        # rename shapes cleanup.
-        shape_list = cmds.listRelatives(curve_main, shapes=True)
-        cmds.rename(shape_list[0], f"{curve_main}_aShape")
-        cmds.rename(shape_list[1], f"{curve_main}_bShape")
-        cmds.rename(shape_list[2], f"{curve_main}_cShape")
-        # scale to reshape points
-        cmds.scale(2.5, 1, 2.5, curve_main, relative=True)
-        cmds.makeIdentity(curve_main, apply=True)
-        # user scale
-        cmds.setAttr(f"{curve_main}.scale", *[self.size] * 3)
-        cmds.makeIdentity(curve_main, apply=True)
-        # select curve to replace shape selection
-        cmds.select(curve_main)
-
-        return curve_main
+        nurbs_curve = self.curve_generator("tri_circle_curve.json")
+        return nurbs_curve
 
     def locator_curve(self) -> str:
         """Create a locator shaped curve object."""
-        nurbs_curve = cmds.curve(
-            degree=1,
-            point=[
-                (0.0, 0.0, 5.0),
-                (0.0, 0.0, -5.0),
-                (0.0, 0.0, 0.0),
-                (-5.0, 0.0, 0.0),
-                (5.0, 0.0, 0.0),
-                (0.0, 0.0, 0.0),
-                (0.0, 5.0, 0.0),
-                (0.0, 0.0, 0.0),
-                (0.0, -5.0, 0.0),
-            ],
-        )
-        cmds.setAttr((nurbs_curve + ".scale"), *[self.size] * 3)
-        cmds.makeIdentity(nurbs_curve, apply=True)
+        nurbs_curve = self.curve_generator("locator_curve.json")
+        return nurbs_curve
 
-        nurbs_curve_shape = cmds.listRelatives(nurbs_curve, shapes=True)[0]
-        cmds.setAttr(f"{nurbs_curve_shape}.useObjectColor", 2)
-        cmds.setAttr(
-            f"{nurbs_curve_shape}.wireColorRGB",
-            self.color_rgb[0],
-            self.color_rgb[1],
-            self.color_rgb[2],
-        )
-        cmds.setAttr(f"{nurbs_curve_shape}.lineWidth", self.thickness)
-        self.show_channel_box_attrs(nurbs_curve_shape)
-        nurbs_curve = cmds.rename(nurbs_curve, self.name)
+    def arrow_twist_curve(self) -> str:
+        """Create an arrow twist shaped curve object."""
+        nurbs_curve = self.curve_generator("arrow_twist_curve.json")
+        return nurbs_curve
 
+    def cylinder_curve(self) -> str:
+        """Create a cylinder shaped curve object."""
+        nurbs_curve = self.curve_generator("cylinder_curve.json")
+        return nurbs_curve
+
+    def four_arrow_curve(self) -> str:
+        """Create a curve object with four arrows pointing outward."""
+        nurbs_curve = self.curve_generator("four_arrow_curve.json")
+        return nurbs_curve
+
+    def square_curve(self) -> str:
+        """Create curve object with specified shape."""
+        nurbs_curve = self.curve_generator("square_curve.json")
+        return nurbs_curve
+
+    def octagon_curve(self) -> str:
+        """Create curve object with specified shape."""
+        nurbs_curve = self.curve_generator("octagon_curve.json")
+        return nurbs_curve
+
+    def dodecagon_curve(self) -> str:
+        """Create curve object with specified shape."""
+        nurbs_curve = self.curve_generator("dodecagon_curve.json")
+        return nurbs_curve
+
+    def hexadecagon_curve(self) -> str:
+        """Create curve object with specified shape."""
+        nurbs_curve = self.curve_generator("hexadecagon_curve.json")
+        return nurbs_curve
+
+    def curve_generator(self, curve_filename) -> str:
+        """Generate curve shape from the "curve_library" folder.
+
+        Args:
+            curve_filename: The name of the json file in
+                "maya/nlol/scripts/rig_components/curve_library/".
+                Ex. "octagon_curve.json"
+
+        """
+        crv_filepath = curve_lib_folderpath / curve_filename
+        nurbs_curve = LoadCurves(crv_filepath).load_curve_attributes()
+        nurbs_curve_shapes = cmds.listRelatives(nurbs_curve, shapes=True)
+
+        if not self.use_curve_defaults:
+            cmds.setAttr((nurbs_curve + ".scale"), *[self.size] * 3)
+            cmds.makeIdentity(nurbs_curve, apply=True)
+
+            for shp in nurbs_curve_shapes:
+                cmds.setAttr(f"{shp}.useObjectColor", 2)
+                cmds.setAttr(f"{shp}.wireColorRGB", *self.color_rgb)
+                cmds.setAttr(f"{shp}.lineWidth", self.thickness)
+
+            nurbs_curve = cmds.rename(nurbs_curve, self.name)
+            nurbs_curve_shapes = cmds.listRelatives(nurbs_curve, shapes=True)
+
+        for shp in nurbs_curve_shapes:
+            self.show_channel_box_attrs(shp)
+
+        cmds.select(nurbs_curve)
         return nurbs_curve
 
 
@@ -387,24 +187,47 @@ class CreateNurbs:
         self.size = size
         self.color_rgb = color_rgb
         self.material_name = material_name
+        self.logger = get_logger()
 
     def sphere_nurbs(self) -> str:
         """Create nurbs sphere object."""
-        nurbs_sphere = cmds.sphere(n=self.name, axis=(0, 1, 0), radius=1, ch=False)[0]
-        cmds.setAttr(f"{nurbs_sphere}.scale", *[self.size] * 3)
-        cmds.makeIdentity(nurbs_sphere, apply=True)
+        nurbs_object = self.nurbs_generator("sphere")
+        return nurbs_object
+    
+    def cube_nurbs(self) -> str:
+        """Create nurbs cube object."""
+        nurbs_object = self.nurbs_generator("cube")
+        return nurbs_object
+
+    def nurbs_generator(self, nurbs_object_key: str) -> str:
+        """Generate a nurbs object.
+
+        Args:
+            nurbs_object_key: Keyword string for the nurbs object.
+
+        Returns:
+            Nurbs object name.
+
+        """
+        match nurbs_object_key:
+            case "sphere":
+                nurbs_object = cmds.sphere(n=self.name, axis=(0, 1, 0), radius=7, ch=False)[0]
+            case "cube":
+                nurbs_object = cmds.nurbsCube(n=self.name, width=10, ch=False)[0]
+            case _:
+                warning_msg = f"Unkown nurbs object: {nurbs_object}"
+                self.logger.warning(warning_msg)
+
+        cmds.setAttr(f"{nurbs_object}.scale", *[self.size] * 3)
+        cmds.makeIdentity(nurbs_object, apply=True)
+
         if cmds.objExists(self.material_name):
-            cmds.select(nurbs_sphere)
+            cmds.select(nurbs_object)
             cmds.hyperShade(assign=self.material_name)
         else:
             cmds.shadingNode("standardSurface", asShader=True, name=self.material_name)
-            cmds.setAttr(
-                f"{self.material_name}.baseColor",
-                self.color_rgb[0],
-                self.color_rgb[1],
-                self.color_rgb[2],
-            )
-            cmds.select(nurbs_sphere)
+            cmds.setAttr(f"{self.material_name}.baseColor", *self.color_rgb)
+            cmds.select(nurbs_object)
             cmds.hyperShade(assign=self.material_name)
 
-        return nurbs_sphere
+        return nurbs_object
