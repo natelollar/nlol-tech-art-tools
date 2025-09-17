@@ -1,23 +1,30 @@
+"""Import "model.ma", "skeleton.ma", and "rig_helpers.ma" from asset's rig folder.
+Also, setup skinning between skeleton and geo.
+"""
+
 import tomllib
 from importlib import reload
 from pathlib import Path
 
+from maya import cmds
 from nlol.defaults import rig_folder_path
+from nlol.scripts.rig_tools import skin_export_import
 from nlol.utilities.nlol_maya_logger import get_logger
 
-from maya import cmds
-
+reload(skin_export_import)
 reload(rig_folder_path)
 
 rig_folderpath = rig_folder_path.rig_folderpath
 
 mesh_filepath = rig_folderpath / "model.ma"
 skeleton_filepath = rig_folderpath / "skeleton.ma"
-skin_weights_filepath = rig_folderpath / "skin_weights.xml"
+rig_helpers_filepath = rig_folderpath / "rig_helpers.ma"
 
 
 class BuildMeshSkeleton:
-    """Import mesh and skeleton, then build into skeletal mesh."""
+    """Import mesh and skeleton, then build into skeletal mesh.
+    Also, import rig helpers file.
+    """
 
     def __init__(self, rig_data_filepath: str | Path):
         self.rig_data_filepath = rig_data_filepath
@@ -44,31 +51,38 @@ class BuildMeshSkeleton:
         return self.rig_data.get("unreal_rig")
 
     def import_mesh_skeleton(self):
-        """Import model geometry and skeleton into new Maya scene."""
+        """Import model geometry and skeleton into new Maya scene.
+        Also, import rig helpers file. Containing foot locators, flexi surface, etc.
+        """
         cmds.file(mesh_filepath, i=True)
         cmds.file(skeleton_filepath, i=True)
+        cmds.file(rig_helpers_filepath, i=True)
 
     def build_skeletalmesh(self):
         """Skin the model geometry to the skeleton.
         Create parent group for this new skeletal mesh.
         """
         if not mesh_filepath.is_file() or not skeleton_filepath.is_file():
-            msg = '"model.ma" and/or "skeleton.ma" not in rig folder. '
-            "Skipping import. Proceeding to rig phase."
+            msg = (
+                '"model.ma", "skeleton.ma", and/or "rig_helpers.ma" not in rig folder. '
+                "Skipping import. Proceeding to rig phase."
+            )
             self.logger.info(msg)
             return
 
+        yes_string = "Yes"
+        no_string = "Use Current"
         dialog_result = cmds.confirmDialog(
             title="Confirm",
-            message="Create New \nCharacter Scene?",
-            button=["Yes", "No"],
+            message="Create New Character Scene?",
+            button=[yes_string, no_string],
             defaultButton="Yes",
-            cancelButton="No",
-            dismissString="No",
+            cancelButton=no_string,
+            dismissString=no_string,
             icon="question",
             bgc=(0.2, 0.2, 0.2),
         )
-        if dialog_result == "No":
+        if dialog_result == no_string:
             msg = 'Canceling import for "model.ma" and "skeleton.ma". Proceeding to rig phase.'
             self.logger.info(msg)
             return
@@ -79,55 +93,64 @@ class BuildMeshSkeleton:
         # import mesh and skeleton
         self.import_mesh_skeleton()
 
-        # get root skeleton joint
+        # get root skeleton joint and other top joints
         top_nodes = cmds.ls(assemblies=True)
-        root_joint = [nd for nd in top_nodes if cmds.objectType(nd) == "joint"]
-        skeleton_root = root_joint[0]
+        top_joints = [nd for nd in top_nodes if cmds.objectType(nd) == "joint"]
+        if len(top_joints) == 1:
+            skeleton_root = top_joints[0]
+            other_top_joints = []
+        else:
+            skeleton_roots = [rt_jnt for rt_jnt in top_joints if "root" in rt_jnt.lower()]
+            if not skeleton_roots:
+                msg = f'No top joints with "root" string: {top_joints}'
+                self.logger.error(msg)
+                raise ValueError(msg)
+            if len(skeleton_roots) > 1:
+                msg = f"More than one root joint: {skeleton_roots}"
+                self.logger.error(msg)
+                raise ValueError(msg)
+            skeleton_root = skeleton_roots[0]
+            top_joints.remove(skeleton_root)
+            other_top_joints = top_joints
 
         # get model geometry
         mesh_shapes = cmds.ls(type="mesh")
+        mesh_shapes.extend(cmds.ls(type="nurbsSurface"))
         meshes = cmds.listRelatives(mesh_shapes, parent=True)
         meshes = list(set(meshes))  # remove duplicates (from Origin geo)
 
-        # ---------- create top skeletal mesh group ----------
+        # --------------- top group parenting ---------------
+        # create top skeletal mesh group
         if self.rig_name:
-            skeletalmesh_grp_name = f"{self.rig_name}_skeletalMeshGrp"
+            skeletalmesh_grp = f"{self.rig_name}_skeletalMeshGrp"
         else:
-            skeletalmesh_grp_name = "main_skeletalMeshGrp"
-
-        skeletalmesh_grp = cmds.group(empty=True, name=skeletalmesh_grp_name)
+            skeletalmesh_grp = "main_skeletalMeshGrp"
+        if not cmds.objExists(skeletalmesh_grp):
+            skeletalmesh_grp = cmds.group(empty=True, name=skeletalmesh_grp)
         if self.unreal_rig:
             cmds.setAttr(f"{skeletalmesh_grp}.rotateX", -90)
+        # create top rig group
+        if self.rig_name:
+            main_rig_group = f"{self.rig_name}_rigGrp"
+        else:
+            main_rig_group = "main_rigGrp"
+        if not cmds.objExists(main_rig_group):
+            main_rig_group = cmds.group(empty=True, name=main_rig_group)
 
-        # parent meshes and skeleton to top group
+        # parent meshes and skeletons to top groups
         cmds.parent(skeleton_root, skeletalmesh_grp)
+        if other_top_joints:
+            cmds.parent(other_top_joints, main_rig_group)
         for mesh in meshes:
-            cmds.parent(mesh, skeletalmesh_grp)
+            if "flexiSurface" in mesh:
+                cmds.parent(mesh, main_rig_group)
+            else:
+                cmds.parent(mesh, skeletalmesh_grp)
 
         # --------------- bind skin ---------------
-        for mesh in meshes:
-            # create default bind skin between root joint and mesh
-            new_skin_cluster = cmds.skinCluster(skeleton_root, mesh)
-            # weight all joints to root joint to simplify and avoid skin transfer glitches
-            cmds.skinPercent(
-                new_skin_cluster[0],
-                mesh,
-                transformValue=(skeleton_root, 1.0),
-            )
+        skin_export_import.import_skin_weights()
 
-            # import and apply user pre-saved weights
-            cmds.deformerWeights(
-                skin_weights_filepath.name,
-                im=True,
-                method="index",
-                deformer=new_skin_cluster[0],
-                path=skin_weights_filepath.parent,
-            )
-
-            # apply normalize weights (default for "Import Weights...")
-            cmds.skinCluster(new_skin_cluster, edit=True, forceNormalizeWeights=True)
-
-        # ---------- all joints scale compensate off ----------
+        # ----- all joints scale compensate off -----
         # prevents double scaling issues later on
         all_rig_joints = [skeleton_root]
         skeleton_root_children = cmds.listRelatives(skeleton_root, allDescendents=True)

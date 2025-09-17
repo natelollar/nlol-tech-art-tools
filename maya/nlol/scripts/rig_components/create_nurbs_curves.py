@@ -26,7 +26,7 @@ class CreateCurves:
         name: str = "example_curve",
         size: float = 1.0,
         color_rgb: tuple = (1.0, 0.4, 0.0),
-        thickness: float = -1.0,
+        line_width: float = -1.0,
         show_attrs: bool = False,
         use_curve_defaults: bool = False,
         curve_type: str = "",
@@ -34,7 +34,7 @@ class CreateCurves:
         self.name = name
         self.size = size
         self.color_rgb = color_rgb
-        self.thickness = thickness
+        self.line_width = line_width
         self.show_attrs = show_attrs
         self.use_curve_defaults = use_curve_defaults
         self.nurbs_curve = None
@@ -63,8 +63,8 @@ class CreateCurves:
                 case "four_arrow_curve":
                     self.nurbs_curve = self.four_arrow_curve()
                 case _:
-                    warning_msg = f"Unkown curve type: {curve_type}"
-                    self.logger.warning(warning_msg)
+                    msg = f'Unkown curve type: "{curve_type}". Defaulting to box curve.'
+                    self.logger.debug(msg)
 
     def show_channel_box_attrs(self, curve_shape: str) -> None:
         """Whether to show useful curve attributes in channel box."""
@@ -161,7 +161,7 @@ class CreateCurves:
             for shp in nurbs_curve_shapes:
                 cmds.setAttr(f"{shp}.useObjectColor", 2)
                 cmds.setAttr(f"{shp}.wireColorRGB", *self.color_rgb)
-                cmds.setAttr(f"{shp}.lineWidth", self.thickness)
+                cmds.setAttr(f"{shp}.lineWidth", self.line_width)
 
             nurbs_curve = cmds.rename(nurbs_curve, self.name)
             nurbs_curve_shapes = cmds.listRelatives(nurbs_curve, shapes=True)

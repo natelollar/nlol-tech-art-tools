@@ -6271,8 +6271,8 @@
     <point index="6266" value=" -29.681486 128.196609 -8.042613"/>
     <point index="6267" value=" -30.324678 129.477753 -7.343871"/>
   </shape>
-  <weights deformer="skinCluster1" source="root" shape="puppet_geoShape" layer="0" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="pelvis" shape="puppet_geoShape" layer="1" defaultValue="0.000" size="127" max="4739">
+  <weights deformer="puppet_skinCluster" source="root" shape="puppet_geoShape" layer="0" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="pelvis" shape="puppet_geoShape" layer="1" defaultValue="0.000" size="127" max="4739">
     <point index="4613" value="1.000"/>
     <point index="4614" value="1.000"/>
     <point index="4615" value="1.000"/>
@@ -6401,7 +6401,7 @@
     <point index="4738" value="1.000"/>
     <point index="4739" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="spine_01" shape="puppet_geoShape" layer="2" defaultValue="0.000" size="84" max="283">
+  <weights deformer="puppet_skinCluster" source="spine_01" shape="puppet_geoShape" layer="2" defaultValue="0.000" size="84" max="283">
     <point index="200" value="1.000"/>
     <point index="201" value="1.000"/>
     <point index="202" value="1.000"/>
@@ -6487,7 +6487,7 @@
     <point index="282" value="1.000"/>
     <point index="283" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="spine_02" shape="puppet_geoShape" layer="3" defaultValue="0.000" size="84" max="3100">
+  <weights deformer="puppet_skinCluster" source="spine_02" shape="puppet_geoShape" layer="3" defaultValue="0.000" size="84" max="3100">
     <point index="3017" value="1.000"/>
     <point index="3018" value="1.000"/>
     <point index="3019" value="1.000"/>
@@ -6573,7 +6573,7 @@
     <point index="3099" value="1.000"/>
     <point index="3100" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="spine_03" shape="puppet_geoShape" layer="4" defaultValue="0.000" size="84" max="4823">
+  <weights deformer="puppet_skinCluster" source="spine_03" shape="puppet_geoShape" layer="4" defaultValue="0.000" size="84" max="4823">
     <point index="4740" value="1.000"/>
     <point index="4741" value="1.000"/>
     <point index="4742" value="1.000"/>
@@ -6659,7 +6659,7 @@
     <point index="4822" value="1.000"/>
     <point index="4823" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="spine_04" shape="puppet_geoShape" layer="5" defaultValue="0.000" size="244" max="811">
+  <weights deformer="puppet_skinCluster" source="spine_04" shape="puppet_geoShape" layer="5" defaultValue="0.000" size="244" max="811">
     <point index="568" value="1.000"/>
     <point index="569" value="1.000"/>
     <point index="570" value="1.000"/>
@@ -6905,8 +6905,8 @@
     <point index="810" value="1.000"/>
     <point index="811" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="spine_05" shape="puppet_geoShape" layer="6" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="neck_01" shape="puppet_geoShape" layer="7" defaultValue="0.000" size="84" max="4427">
+  <weights deformer="puppet_skinCluster" source="spine_05" shape="puppet_geoShape" layer="6" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="neck_01" shape="puppet_geoShape" layer="7" defaultValue="0.000" size="84" max="4427">
     <point index="4344" value="1.000"/>
     <point index="4345" value="1.000"/>
     <point index="4346" value="1.000"/>
@@ -6992,7 +6992,7 @@
     <point index="4426" value="1.000"/>
     <point index="4427" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="neck_02" shape="puppet_geoShape" layer="8" defaultValue="0.000" size="84" max="6129">
+  <weights deformer="puppet_skinCluster" source="neck_02" shape="puppet_geoShape" layer="8" defaultValue="0.000" size="84" max="6129">
     <point index="6046" value="1.000"/>
     <point index="6047" value="1.000"/>
     <point index="6048" value="1.000"/>
@@ -7078,7 +7078,7 @@
     <point index="6128" value="1.000"/>
     <point index="6129" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="head" shape="puppet_geoShape" layer="9" defaultValue="0.000" size="351" max="1288">
+  <weights deformer="puppet_skinCluster" source="head" shape="puppet_geoShape" layer="9" defaultValue="0.000" size="351" max="1288">
     <point index="938" value="1.000"/>
     <point index="939" value="1.000"/>
     <point index="940" value="1.000"/>
@@ -7431,7 +7431,7 @@
     <point index="1287" value="1.000"/>
     <point index="1288" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="clavicle_l" shape="puppet_geoShape" layer="10" defaultValue="0.000" size="95" max="1794">
+  <weights deformer="puppet_skinCluster" source="clavicle_l" shape="puppet_geoShape" layer="10" defaultValue="0.000" size="95" max="1794">
     <point index="1700" value="1.000"/>
     <point index="1701" value="1.000"/>
     <point index="1702" value="1.000"/>
@@ -7528,8 +7528,8 @@
     <point index="1793" value="1.000"/>
     <point index="1794" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="upperarm_l" shape="puppet_geoShape" layer="11" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="lowerarm_l" shape="puppet_geoShape" layer="12" defaultValue="0.000" size="90" max="2623">
+  <weights deformer="puppet_skinCluster" source="upperarm_l" shape="puppet_geoShape" layer="11" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="lowerarm_l" shape="puppet_geoShape" layer="12" defaultValue="0.000" size="90" max="2623">
     <point index="2534" value="1.000"/>
     <point index="2535" value="1.000"/>
     <point index="2536" value="1.000"/>
@@ -7621,7 +7621,7 @@
     <point index="2622" value="1.000"/>
     <point index="2623" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="lowerarm_twist_02_l" shape="puppet_geoShape" layer="13" defaultValue="0.000" size="145" max="5768">
+  <weights deformer="puppet_skinCluster" source="lowerarm_twist_02_l" shape="puppet_geoShape" layer="13" defaultValue="0.000" size="145" max="5768">
     <point index="5624" value="1.000"/>
     <point index="5625" value="1.000"/>
     <point index="5626" value="1.000"/>
@@ -7768,7 +7768,7 @@
     <point index="5767" value="1.000"/>
     <point index="5768" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="lowerarm_twist_01_l" shape="puppet_geoShape" layer="14" defaultValue="0.000" size="176" max="5381">
+  <weights deformer="puppet_skinCluster" source="lowerarm_twist_01_l" shape="puppet_geoShape" layer="14" defaultValue="0.000" size="176" max="5381">
     <point index="5206" value="1.000"/>
     <point index="5207" value="1.000"/>
     <point index="5208" value="1.000"/>
@@ -7946,7 +7946,7 @@
     <point index="5380" value="1.000"/>
     <point index="5381" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="hand_l" shape="puppet_geoShape" layer="15" defaultValue="0.000" size="88" max="4194">
+  <weights deformer="puppet_skinCluster" source="hand_l" shape="puppet_geoShape" layer="15" defaultValue="0.000" size="88" max="4194">
     <point index="4107" value="1.000"/>
     <point index="4108" value="1.000"/>
     <point index="4109" value="1.000"/>
@@ -8036,7 +8036,7 @@
     <point index="4193" value="1.000"/>
     <point index="4194" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_metacarpal_l" shape="puppet_geoShape" layer="16" defaultValue="0.000" size="39" max="5040">
+  <weights deformer="puppet_skinCluster" source="index_metacarpal_l" shape="puppet_geoShape" layer="16" defaultValue="0.000" size="39" max="5040">
     <point index="5002" value="1.000"/>
     <point index="5003" value="1.000"/>
     <point index="5004" value="1.000"/>
@@ -8077,7 +8077,7 @@
     <point index="5039" value="1.000"/>
     <point index="5040" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_01_l" shape="puppet_geoShape" layer="17" defaultValue="0.000" size="66" max="5001">
+  <weights deformer="puppet_skinCluster" source="index_01_l" shape="puppet_geoShape" layer="17" defaultValue="0.000" size="66" max="5001">
     <point index="4936" value="1.000"/>
     <point index="4937" value="1.000"/>
     <point index="4938" value="1.000"/>
@@ -8145,7 +8145,7 @@
     <point index="5000" value="1.000"/>
     <point index="5001" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_02_l" shape="puppet_geoShape" layer="18" defaultValue="0.000" size="40" max="4234">
+  <weights deformer="puppet_skinCluster" source="index_02_l" shape="puppet_geoShape" layer="18" defaultValue="0.000" size="40" max="4234">
     <point index="4195" value="1.000"/>
     <point index="4196" value="1.000"/>
     <point index="4197" value="1.000"/>
@@ -8187,7 +8187,7 @@
     <point index="4233" value="1.000"/>
     <point index="4234" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_03_l" shape="puppet_geoShape" layer="19" defaultValue="0.000" size="57" max="5139">
+  <weights deformer="puppet_skinCluster" source="index_03_l" shape="puppet_geoShape" layer="19" defaultValue="0.000" size="57" max="5139">
     <point index="5083" value="1.000"/>
     <point index="5084" value="1.000"/>
     <point index="5085" value="1.000"/>
@@ -8246,7 +8246,7 @@
     <point index="5138" value="1.000"/>
     <point index="5139" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_metacarpal_l" shape="puppet_geoShape" layer="20" defaultValue="0.000" size="36" max="847">
+  <weights deformer="puppet_skinCluster" source="middle_metacarpal_l" shape="puppet_geoShape" layer="20" defaultValue="0.000" size="36" max="847">
     <point index="812" value="1.000"/>
     <point index="813" value="1.000"/>
     <point index="814" value="1.000"/>
@@ -8284,7 +8284,7 @@
     <point index="846" value="1.000"/>
     <point index="847" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_01_l" shape="puppet_geoShape" layer="21" defaultValue="0.000" size="76" max="1522">
+  <weights deformer="puppet_skinCluster" source="middle_01_l" shape="puppet_geoShape" layer="21" defaultValue="0.000" size="76" max="1522">
     <point index="1447" value="1.000"/>
     <point index="1448" value="1.000"/>
     <point index="1449" value="1.000"/>
@@ -8362,7 +8362,7 @@
     <point index="1521" value="1.000"/>
     <point index="1522" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_02_l" shape="puppet_geoShape" layer="22" defaultValue="0.000" size="40" max="2267">
+  <weights deformer="puppet_skinCluster" source="middle_02_l" shape="puppet_geoShape" layer="22" defaultValue="0.000" size="40" max="2267">
     <point index="2228" value="1.000"/>
     <point index="2229" value="1.000"/>
     <point index="2230" value="1.000"/>
@@ -8404,7 +8404,7 @@
     <point index="2266" value="1.000"/>
     <point index="2267" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_03_l" shape="puppet_geoShape" layer="23" defaultValue="0.000" size="57" max="3553">
+  <weights deformer="puppet_skinCluster" source="middle_03_l" shape="puppet_geoShape" layer="23" defaultValue="0.000" size="57" max="3553">
     <point index="3497" value="1.000"/>
     <point index="3498" value="1.000"/>
     <point index="3499" value="1.000"/>
@@ -8463,7 +8463,7 @@
     <point index="3552" value="1.000"/>
     <point index="3553" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thumb_01_l" shape="puppet_geoShape" layer="24" defaultValue="0.000" size="48" max="5429">
+  <weights deformer="puppet_skinCluster" source="thumb_01_l" shape="puppet_geoShape" layer="24" defaultValue="0.000" size="48" max="5429">
     <point index="5382" value="1.000"/>
     <point index="5383" value="1.000"/>
     <point index="5384" value="1.000"/>
@@ -8513,7 +8513,7 @@
     <point index="5428" value="1.000"/>
     <point index="5429" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thumb_02_l" shape="puppet_geoShape" layer="25" defaultValue="0.000" size="62" max="3232">
+  <weights deformer="puppet_skinCluster" source="thumb_02_l" shape="puppet_geoShape" layer="25" defaultValue="0.000" size="62" max="3232">
     <point index="3171" value="1.000"/>
     <point index="3172" value="1.000"/>
     <point index="3173" value="1.000"/>
@@ -8577,7 +8577,7 @@
     <point index="3231" value="1.000"/>
     <point index="3232" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thumb_03_l" shape="puppet_geoShape" layer="26" defaultValue="0.000" size="72" max="5897">
+  <weights deformer="puppet_skinCluster" source="thumb_03_l" shape="puppet_geoShape" layer="26" defaultValue="0.000" size="72" max="5897">
     <point index="5826" value="1.000"/>
     <point index="5827" value="1.000"/>
     <point index="5828" value="1.000"/>
@@ -8651,7 +8651,7 @@
     <point index="5896" value="1.000"/>
     <point index="5897" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_metacarpal_l" shape="puppet_geoShape" layer="27" defaultValue="0.000" size="42" max="5082">
+  <weights deformer="puppet_skinCluster" source="pinky_metacarpal_l" shape="puppet_geoShape" layer="27" defaultValue="0.000" size="42" max="5082">
     <point index="5041" value="1.000"/>
     <point index="5042" value="1.000"/>
     <point index="5043" value="1.000"/>
@@ -8695,7 +8695,7 @@
     <point index="5081" value="1.000"/>
     <point index="5082" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_01_l" shape="puppet_geoShape" layer="28" defaultValue="0.000" size="66" max="5205">
+  <weights deformer="puppet_skinCluster" source="pinky_01_l" shape="puppet_geoShape" layer="28" defaultValue="0.000" size="66" max="5205">
     <point index="5140" value="1.000"/>
     <point index="5141" value="1.000"/>
     <point index="5142" value="1.000"/>
@@ -8763,7 +8763,7 @@
     <point index="5204" value="1.000"/>
     <point index="5205" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_02_l" shape="puppet_geoShape" layer="29" defaultValue="0.000" size="40" max="4935">
+  <weights deformer="puppet_skinCluster" source="pinky_02_l" shape="puppet_geoShape" layer="29" defaultValue="0.000" size="40" max="4935">
     <point index="4896" value="1.000"/>
     <point index="4897" value="1.000"/>
     <point index="4898" value="1.000"/>
@@ -8805,7 +8805,7 @@
     <point index="4934" value="1.000"/>
     <point index="4935" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_03_l" shape="puppet_geoShape" layer="30" defaultValue="0.000" size="57" max="2918">
+  <weights deformer="puppet_skinCluster" source="pinky_03_l" shape="puppet_geoShape" layer="30" defaultValue="0.000" size="57" max="2918">
     <point index="2862" value="1.000"/>
     <point index="2863" value="1.000"/>
     <point index="2864" value="1.000"/>
@@ -8864,7 +8864,7 @@
     <point index="2917" value="1.000"/>
     <point index="2918" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_metacarpal_l" shape="puppet_geoShape" layer="31" defaultValue="0.000" size="36" max="4895">
+  <weights deformer="puppet_skinCluster" source="ring_metacarpal_l" shape="puppet_geoShape" layer="31" defaultValue="0.000" size="36" max="4895">
     <point index="4860" value="1.000"/>
     <point index="4861" value="1.000"/>
     <point index="4862" value="1.000"/>
@@ -8902,7 +8902,7 @@
     <point index="4894" value="1.000"/>
     <point index="4895" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_01_l" shape="puppet_geoShape" layer="32" defaultValue="0.000" size="68" max="67">
+  <weights deformer="puppet_skinCluster" source="ring_01_l" shape="puppet_geoShape" layer="32" defaultValue="0.000" size="68" max="67">
     <point index="0" value="1.000"/>
     <point index="1" value="1.000"/>
     <point index="2" value="1.000"/>
@@ -8972,7 +8972,7 @@
     <point index="66" value="1.000"/>
     <point index="67" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_02_l" shape="puppet_geoShape" layer="33" defaultValue="0.000" size="40" max="421">
+  <weights deformer="puppet_skinCluster" source="ring_02_l" shape="puppet_geoShape" layer="33" defaultValue="0.000" size="40" max="421">
     <point index="382" value="1.000"/>
     <point index="383" value="1.000"/>
     <point index="384" value="1.000"/>
@@ -9014,7 +9014,7 @@
     <point index="420" value="1.000"/>
     <point index="421" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_03_l" shape="puppet_geoShape" layer="34" defaultValue="0.000" size="57" max="1699">
+  <weights deformer="puppet_skinCluster" source="ring_03_l" shape="puppet_geoShape" layer="34" defaultValue="0.000" size="57" max="1699">
     <point index="1643" value="1.000"/>
     <point index="1644" value="1.000"/>
     <point index="1645" value="1.000"/>
@@ -9073,7 +9073,7 @@
     <point index="1698" value="1.000"/>
     <point index="1699" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="upperarm_twist_01_l" shape="puppet_geoShape" layer="35" defaultValue="0.000" size="208" max="6045">
+  <weights deformer="puppet_skinCluster" source="upperarm_twist_01_l" shape="puppet_geoShape" layer="35" defaultValue="0.000" size="208" max="6045">
     <point index="2766" value="1.000"/>
     <point index="2767" value="1.000"/>
     <point index="2768" value="1.000"/>
@@ -9283,7 +9283,7 @@
     <point index="6044" value="1.000"/>
     <point index="6045" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="upperarm_twist_02_l" shape="puppet_geoShape" layer="36" defaultValue="0.000" size="105" max="2013">
+  <weights deformer="puppet_skinCluster" source="upperarm_twist_02_l" shape="puppet_geoShape" layer="36" defaultValue="0.000" size="105" max="2013">
     <point index="1909" value="1.000"/>
     <point index="1910" value="1.000"/>
     <point index="1911" value="1.000"/>
@@ -9390,7 +9390,7 @@
     <point index="2012" value="1.000"/>
     <point index="2013" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="clavicle_r" shape="puppet_geoShape" layer="37" defaultValue="0.000" size="95" max="3688">
+  <weights deformer="puppet_skinCluster" source="clavicle_r" shape="puppet_geoShape" layer="37" defaultValue="0.000" size="95" max="3688">
     <point index="3594" value="1.000"/>
     <point index="3595" value="1.000"/>
     <point index="3596" value="1.000"/>
@@ -9487,8 +9487,8 @@
     <point index="3687" value="1.000"/>
     <point index="3688" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="upperarm_r" shape="puppet_geoShape" layer="38" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="lowerarm_r" shape="puppet_geoShape" layer="39" defaultValue="0.000" size="90" max="937">
+  <weights deformer="puppet_skinCluster" source="upperarm_r" shape="puppet_geoShape" layer="38" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="lowerarm_r" shape="puppet_geoShape" layer="39" defaultValue="0.000" size="90" max="937">
     <point index="848" value="1.000"/>
     <point index="849" value="1.000"/>
     <point index="850" value="1.000"/>
@@ -9580,7 +9580,7 @@
     <point index="936" value="1.000"/>
     <point index="937" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="lowerarm_twist_02_r" shape="puppet_geoShape" layer="40" defaultValue="0.000" size="145" max="4572">
+  <weights deformer="puppet_skinCluster" source="lowerarm_twist_02_r" shape="puppet_geoShape" layer="40" defaultValue="0.000" size="145" max="4572">
     <point index="4428" value="1.000"/>
     <point index="4429" value="1.000"/>
     <point index="4430" value="1.000"/>
@@ -9727,7 +9727,7 @@
     <point index="4571" value="1.000"/>
     <point index="4572" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="lowerarm_twist_01_r" shape="puppet_geoShape" layer="41" defaultValue="0.000" size="176" max="3496">
+  <weights deformer="puppet_skinCluster" source="lowerarm_twist_01_r" shape="puppet_geoShape" layer="41" defaultValue="0.000" size="176" max="3496">
     <point index="3321" value="1.000"/>
     <point index="3322" value="1.000"/>
     <point index="3323" value="1.000"/>
@@ -9905,7 +9905,7 @@
     <point index="3495" value="1.000"/>
     <point index="3496" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="hand_r" shape="puppet_geoShape" layer="42" defaultValue="0.000" size="88" max="3320">
+  <weights deformer="puppet_skinCluster" source="hand_r" shape="puppet_geoShape" layer="42" defaultValue="0.000" size="88" max="3320">
     <point index="3233" value="1.000"/>
     <point index="3234" value="1.000"/>
     <point index="3235" value="1.000"/>
@@ -9995,7 +9995,7 @@
     <point index="3319" value="1.000"/>
     <point index="3320" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_metacarpal_r" shape="puppet_geoShape" layer="43" defaultValue="0.000" size="42" max="6171">
+  <weights deformer="puppet_skinCluster" source="pinky_metacarpal_r" shape="puppet_geoShape" layer="43" defaultValue="0.000" size="42" max="6171">
     <point index="6130" value="1.000"/>
     <point index="6131" value="1.000"/>
     <point index="6132" value="1.000"/>
@@ -10039,7 +10039,7 @@
     <point index="6170" value="1.000"/>
     <point index="6171" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_01_r" shape="puppet_geoShape" layer="44" defaultValue="0.000" size="66" max="199">
+  <weights deformer="puppet_skinCluster" source="pinky_01_r" shape="puppet_geoShape" layer="44" defaultValue="0.000" size="66" max="199">
     <point index="134" value="1.000"/>
     <point index="135" value="1.000"/>
     <point index="136" value="1.000"/>
@@ -10107,7 +10107,7 @@
     <point index="198" value="1.000"/>
     <point index="199" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_02_r" shape="puppet_geoShape" layer="45" defaultValue="0.000" size="40" max="1446">
+  <weights deformer="puppet_skinCluster" source="pinky_02_r" shape="puppet_geoShape" layer="45" defaultValue="0.000" size="40" max="1446">
     <point index="1407" value="1.000"/>
     <point index="1408" value="1.000"/>
     <point index="1409" value="1.000"/>
@@ -10149,7 +10149,7 @@
     <point index="1445" value="1.000"/>
     <point index="1446" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="pinky_03_r" shape="puppet_geoShape" layer="46" defaultValue="0.000" size="57" max="1851">
+  <weights deformer="puppet_skinCluster" source="pinky_03_r" shape="puppet_geoShape" layer="46" defaultValue="0.000" size="57" max="1851">
     <point index="1795" value="1.000"/>
     <point index="1796" value="1.000"/>
     <point index="1797" value="1.000"/>
@@ -10208,7 +10208,7 @@
     <point index="1850" value="1.000"/>
     <point index="1851" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_metacarpal_r" shape="puppet_geoShape" layer="47" defaultValue="0.000" size="36" max="5933">
+  <weights deformer="puppet_skinCluster" source="ring_metacarpal_r" shape="puppet_geoShape" layer="47" defaultValue="0.000" size="36" max="5933">
     <point index="5898" value="1.000"/>
     <point index="5899" value="1.000"/>
     <point index="5900" value="1.000"/>
@@ -10246,7 +10246,7 @@
     <point index="5932" value="1.000"/>
     <point index="5933" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_01_r" shape="puppet_geoShape" layer="48" defaultValue="0.000" size="68" max="4106">
+  <weights deformer="puppet_skinCluster" source="ring_01_r" shape="puppet_geoShape" layer="48" defaultValue="0.000" size="68" max="4106">
     <point index="4039" value="1.000"/>
     <point index="4040" value="1.000"/>
     <point index="4041" value="1.000"/>
@@ -10316,7 +10316,7 @@
     <point index="4105" value="1.000"/>
     <point index="4106" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_02_r" shape="puppet_geoShape" layer="49" defaultValue="0.000" size="40" max="3593">
+  <weights deformer="puppet_skinCluster" source="ring_02_r" shape="puppet_geoShape" layer="49" defaultValue="0.000" size="40" max="3593">
     <point index="3554" value="1.000"/>
     <point index="3555" value="1.000"/>
     <point index="3556" value="1.000"/>
@@ -10358,7 +10358,7 @@
     <point index="3592" value="1.000"/>
     <point index="3593" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ring_03_r" shape="puppet_geoShape" layer="50" defaultValue="0.000" size="57" max="5825">
+  <weights deformer="puppet_skinCluster" source="ring_03_r" shape="puppet_geoShape" layer="50" defaultValue="0.000" size="57" max="5825">
     <point index="5769" value="1.000"/>
     <point index="5770" value="1.000"/>
     <point index="5771" value="1.000"/>
@@ -10417,7 +10417,7 @@
     <point index="5824" value="1.000"/>
     <point index="5825" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_metacarpal_r" shape="puppet_geoShape" layer="51" defaultValue="0.000" size="36" max="4859">
+  <weights deformer="puppet_skinCluster" source="middle_metacarpal_r" shape="puppet_geoShape" layer="51" defaultValue="0.000" size="36" max="4859">
     <point index="4824" value="1.000"/>
     <point index="4825" value="1.000"/>
     <point index="4826" value="1.000"/>
@@ -10455,7 +10455,7 @@
     <point index="4858" value="1.000"/>
     <point index="4859" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_01_r" shape="puppet_geoShape" layer="52" defaultValue="0.000" size="76" max="497">
+  <weights deformer="puppet_skinCluster" source="middle_01_r" shape="puppet_geoShape" layer="52" defaultValue="0.000" size="76" max="497">
     <point index="422" value="1.000"/>
     <point index="423" value="1.000"/>
     <point index="424" value="1.000"/>
@@ -10533,7 +10533,7 @@
     <point index="496" value="1.000"/>
     <point index="497" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_02_r" shape="puppet_geoShape" layer="53" defaultValue="0.000" size="40" max="2053">
+  <weights deformer="puppet_skinCluster" source="middle_02_r" shape="puppet_geoShape" layer="53" defaultValue="0.000" size="40" max="2053">
     <point index="2014" value="1.000"/>
     <point index="2015" value="1.000"/>
     <point index="2016" value="1.000"/>
@@ -10575,7 +10575,7 @@
     <point index="2052" value="1.000"/>
     <point index="2053" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="middle_03_r" shape="puppet_geoShape" layer="54" defaultValue="0.000" size="57" max="1908">
+  <weights deformer="puppet_skinCluster" source="middle_03_r" shape="puppet_geoShape" layer="54" defaultValue="0.000" size="57" max="1908">
     <point index="1852" value="1.000"/>
     <point index="1853" value="1.000"/>
     <point index="1854" value="1.000"/>
@@ -10634,7 +10634,7 @@
     <point index="1907" value="1.000"/>
     <point index="1908" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_metacarpal_r" shape="puppet_geoShape" layer="55" defaultValue="0.000" size="39" max="4273">
+  <weights deformer="puppet_skinCluster" source="index_metacarpal_r" shape="puppet_geoShape" layer="55" defaultValue="0.000" size="39" max="4273">
     <point index="4235" value="1.000"/>
     <point index="4236" value="1.000"/>
     <point index="4237" value="1.000"/>
@@ -10675,7 +10675,7 @@
     <point index="4272" value="1.000"/>
     <point index="4273" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_01_r" shape="puppet_geoShape" layer="56" defaultValue="0.000" size="66" max="133">
+  <weights deformer="puppet_skinCluster" source="index_01_r" shape="puppet_geoShape" layer="56" defaultValue="0.000" size="66" max="133">
     <point index="68" value="1.000"/>
     <point index="69" value="1.000"/>
     <point index="70" value="1.000"/>
@@ -10743,7 +10743,7 @@
     <point index="132" value="1.000"/>
     <point index="133" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_02_r" shape="puppet_geoShape" layer="57" defaultValue="0.000" size="40" max="4612">
+  <weights deformer="puppet_skinCluster" source="index_02_r" shape="puppet_geoShape" layer="57" defaultValue="0.000" size="40" max="4612">
     <point index="4573" value="1.000"/>
     <point index="4574" value="1.000"/>
     <point index="4575" value="1.000"/>
@@ -10785,7 +10785,7 @@
     <point index="4611" value="1.000"/>
     <point index="4612" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="index_03_r" shape="puppet_geoShape" layer="58" defaultValue="0.000" size="57" max="2533">
+  <weights deformer="puppet_skinCluster" source="index_03_r" shape="puppet_geoShape" layer="58" defaultValue="0.000" size="57" max="2533">
     <point index="2477" value="1.000"/>
     <point index="2478" value="1.000"/>
     <point index="2479" value="1.000"/>
@@ -10844,7 +10844,7 @@
     <point index="2532" value="1.000"/>
     <point index="2533" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thumb_01_r" shape="puppet_geoShape" layer="59" defaultValue="0.000" size="48" max="1406">
+  <weights deformer="puppet_skinCluster" source="thumb_01_r" shape="puppet_geoShape" layer="59" defaultValue="0.000" size="48" max="1406">
     <point index="1359" value="1.000"/>
     <point index="1360" value="1.000"/>
     <point index="1361" value="1.000"/>
@@ -10894,7 +10894,7 @@
     <point index="1405" value="1.000"/>
     <point index="1406" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thumb_02_r" shape="puppet_geoShape" layer="60" defaultValue="0.000" size="62" max="2115">
+  <weights deformer="puppet_skinCluster" source="thumb_02_r" shape="puppet_geoShape" layer="60" defaultValue="0.000" size="62" max="2115">
     <point index="2054" value="1.000"/>
     <point index="2055" value="1.000"/>
     <point index="2056" value="1.000"/>
@@ -10958,7 +10958,7 @@
     <point index="2114" value="1.000"/>
     <point index="2115" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thumb_03_r" shape="puppet_geoShape" layer="61" defaultValue="0.000" size="72" max="2695">
+  <weights deformer="puppet_skinCluster" source="thumb_03_r" shape="puppet_geoShape" layer="61" defaultValue="0.000" size="72" max="2695">
     <point index="2624" value="1.000"/>
     <point index="2625" value="1.000"/>
     <point index="2626" value="1.000"/>
@@ -11032,7 +11032,7 @@
     <point index="2694" value="1.000"/>
     <point index="2695" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="upperarm_twist_01_r" shape="puppet_geoShape" layer="62" defaultValue="0.000" size="208" max="6267">
+  <weights deformer="puppet_skinCluster" source="upperarm_twist_01_r" shape="puppet_geoShape" layer="62" defaultValue="0.000" size="208" max="6267">
     <point index="2116" value="1.000"/>
     <point index="2117" value="1.000"/>
     <point index="2118" value="1.000"/>
@@ -11242,7 +11242,7 @@
     <point index="6266" value="1.000"/>
     <point index="6267" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="upperarm_twist_02_r" shape="puppet_geoShape" layer="63" defaultValue="0.000" size="105" max="5534">
+  <weights deformer="puppet_skinCluster" source="upperarm_twist_02_r" shape="puppet_geoShape" layer="63" defaultValue="0.000" size="105" max="5534">
     <point index="5430" value="1.000"/>
     <point index="5431" value="1.000"/>
     <point index="5432" value="1.000"/>
@@ -11349,8 +11349,8 @@
     <point index="5533" value="1.000"/>
     <point index="5534" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thigh_r" shape="puppet_geoShape" layer="64" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="calf_r" shape="puppet_geoShape" layer="65" defaultValue="0.000" size="70" max="4038">
+  <weights deformer="puppet_skinCluster" source="thigh_r" shape="puppet_geoShape" layer="64" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="calf_r" shape="puppet_geoShape" layer="65" defaultValue="0.000" size="70" max="4038">
     <point index="3969" value="1.000"/>
     <point index="3970" value="1.000"/>
     <point index="3971" value="1.000"/>
@@ -11422,7 +11422,7 @@
     <point index="4037" value="1.000"/>
     <point index="4038" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="foot_r" shape="puppet_geoShape" layer="66" defaultValue="0.000" size="120" max="2387">
+  <weights deformer="puppet_skinCluster" source="foot_r" shape="puppet_geoShape" layer="66" defaultValue="0.000" size="120" max="2387">
     <point index="2268" value="1.000"/>
     <point index="2269" value="1.000"/>
     <point index="2270" value="1.000"/>
@@ -11544,7 +11544,7 @@
     <point index="2386" value="1.000"/>
     <point index="2387" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ball_r" shape="puppet_geoShape" layer="67" defaultValue="0.000" size="89" max="2476">
+  <weights deformer="puppet_skinCluster" source="ball_r" shape="puppet_geoShape" layer="67" defaultValue="0.000" size="89" max="2476">
     <point index="2388" value="1.000"/>
     <point index="2389" value="1.000"/>
     <point index="2390" value="1.000"/>
@@ -11635,7 +11635,7 @@
     <point index="2475" value="1.000"/>
     <point index="2476" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="calf_twist_02_r" shape="puppet_geoShape" layer="68" defaultValue="0.000" size="70" max="3828">
+  <weights deformer="puppet_skinCluster" source="calf_twist_02_r" shape="puppet_geoShape" layer="68" defaultValue="0.000" size="70" max="3828">
     <point index="3759" value="1.000"/>
     <point index="3760" value="1.000"/>
     <point index="3761" value="1.000"/>
@@ -11707,7 +11707,7 @@
     <point index="3827" value="1.000"/>
     <point index="3828" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="calf_twist_01_r" shape="puppet_geoShape" layer="69" defaultValue="0.000" size="98" max="381">
+  <weights deformer="puppet_skinCluster" source="calf_twist_01_r" shape="puppet_geoShape" layer="69" defaultValue="0.000" size="98" max="381">
     <point index="284" value="1.000"/>
     <point index="285" value="1.000"/>
     <point index="286" value="1.000"/>
@@ -11807,7 +11807,7 @@
     <point index="380" value="1.000"/>
     <point index="381" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thigh_twist_01_r" shape="puppet_geoShape" layer="70" defaultValue="0.000" size="140" max="3898">
+  <weights deformer="puppet_skinCluster" source="thigh_twist_01_r" shape="puppet_geoShape" layer="70" defaultValue="0.000" size="140" max="3898">
     <point index="3689" value="1.000"/>
     <point index="3690" value="1.000"/>
     <point index="3691" value="1.000"/>
@@ -11949,7 +11949,7 @@
     <point index="3897" value="1.000"/>
     <point index="3898" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thigh_twist_02_r" shape="puppet_geoShape" layer="71" defaultValue="0.000" size="70" max="3968">
+  <weights deformer="puppet_skinCluster" source="thigh_twist_02_r" shape="puppet_geoShape" layer="71" defaultValue="0.000" size="70" max="3968">
     <point index="3899" value="1.000"/>
     <point index="3900" value="1.000"/>
     <point index="3901" value="1.000"/>
@@ -12021,8 +12021,8 @@
     <point index="3967" value="1.000"/>
     <point index="3968" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thigh_l" shape="puppet_geoShape" layer="72" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="calf_l" shape="puppet_geoShape" layer="73" defaultValue="0.000" size="70" max="567">
+  <weights deformer="puppet_skinCluster" source="thigh_l" shape="puppet_geoShape" layer="72" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="calf_l" shape="puppet_geoShape" layer="73" defaultValue="0.000" size="70" max="567">
     <point index="498" value="1.000"/>
     <point index="499" value="1.000"/>
     <point index="500" value="1.000"/>
@@ -12094,7 +12094,7 @@
     <point index="566" value="1.000"/>
     <point index="567" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="foot_l" shape="puppet_geoShape" layer="74" defaultValue="0.000" size="120" max="1642">
+  <weights deformer="puppet_skinCluster" source="foot_l" shape="puppet_geoShape" layer="74" defaultValue="0.000" size="120" max="1642">
     <point index="1523" value="1.000"/>
     <point index="1524" value="1.000"/>
     <point index="1525" value="1.000"/>
@@ -12216,7 +12216,7 @@
     <point index="1641" value="1.000"/>
     <point index="1642" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ball_l" shape="puppet_geoShape" layer="75" defaultValue="0.000" size="89" max="5623">
+  <weights deformer="puppet_skinCluster" source="ball_l" shape="puppet_geoShape" layer="75" defaultValue="0.000" size="89" max="5623">
     <point index="5535" value="1.000"/>
     <point index="5536" value="1.000"/>
     <point index="5537" value="1.000"/>
@@ -12307,7 +12307,7 @@
     <point index="5622" value="1.000"/>
     <point index="5623" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="calf_twist_02_l" shape="puppet_geoShape" layer="76" defaultValue="0.000" size="70" max="4343">
+  <weights deformer="puppet_skinCluster" source="calf_twist_02_l" shape="puppet_geoShape" layer="76" defaultValue="0.000" size="70" max="4343">
     <point index="4274" value="1.000"/>
     <point index="4275" value="1.000"/>
     <point index="4276" value="1.000"/>
@@ -12379,7 +12379,7 @@
     <point index="4342" value="1.000"/>
     <point index="4343" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="calf_twist_01_l" shape="puppet_geoShape" layer="77" defaultValue="0.000" size="98" max="3016">
+  <weights deformer="puppet_skinCluster" source="calf_twist_01_l" shape="puppet_geoShape" layer="77" defaultValue="0.000" size="98" max="3016">
     <point index="2919" value="1.000"/>
     <point index="2920" value="1.000"/>
     <point index="2921" value="1.000"/>
@@ -12479,7 +12479,7 @@
     <point index="3015" value="1.000"/>
     <point index="3016" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thigh_twist_01_l" shape="puppet_geoShape" layer="78" defaultValue="0.000" size="140" max="2765">
+  <weights deformer="puppet_skinCluster" source="thigh_twist_01_l" shape="puppet_geoShape" layer="78" defaultValue="0.000" size="140" max="2765">
     <point index="1289" value="1.000"/>
     <point index="1290" value="1.000"/>
     <point index="1291" value="1.000"/>
@@ -12621,7 +12621,7 @@
     <point index="2764" value="1.000"/>
     <point index="2765" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="thigh_twist_02_l" shape="puppet_geoShape" layer="79" defaultValue="0.000" size="70" max="3170">
+  <weights deformer="puppet_skinCluster" source="thigh_twist_02_l" shape="puppet_geoShape" layer="79" defaultValue="0.000" size="70" max="3170">
     <point index="3101" value="1.000"/>
     <point index="3102" value="1.000"/>
     <point index="3103" value="1.000"/>
@@ -12693,13 +12693,13 @@
     <point index="3169" value="1.000"/>
     <point index="3170" value="1.000"/>
   </weights>
-  <weights deformer="skinCluster1" source="ik_foot_root" shape="puppet_geoShape" layer="80" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="ik_foot_l" shape="puppet_geoShape" layer="81" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="ik_foot_r" shape="puppet_geoShape" layer="82" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="ik_hand_root" shape="puppet_geoShape" layer="83" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="ik_hand_gun" shape="puppet_geoShape" layer="84" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="ik_hand_l" shape="puppet_geoShape" layer="85" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="ik_hand_r" shape="puppet_geoShape" layer="86" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="interaction" shape="puppet_geoShape" layer="87" defaultValue="0.000" size="0" max="0"/>
-  <weights deformer="skinCluster1" source="center_of_mass" shape="puppet_geoShape" layer="88" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_foot_root" shape="puppet_geoShape" layer="80" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_foot_l" shape="puppet_geoShape" layer="81" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_foot_r" shape="puppet_geoShape" layer="82" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_hand_root" shape="puppet_geoShape" layer="83" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_hand_gun" shape="puppet_geoShape" layer="84" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_hand_l" shape="puppet_geoShape" layer="85" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="ik_hand_r" shape="puppet_geoShape" layer="86" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="interaction" shape="puppet_geoShape" layer="87" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="puppet_skinCluster" source="center_of_mass" shape="puppet_geoShape" layer="88" defaultValue="0.000" size="0" max="0"/>
 </deformerWeight>

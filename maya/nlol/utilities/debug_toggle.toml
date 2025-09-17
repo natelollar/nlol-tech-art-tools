@@ -1,0 +1,4 @@
+# Sets logging level to DEBUG mode via "nlol_maya_logger.py".
+# Restart Maya after changing.
+
+debug_mode = false

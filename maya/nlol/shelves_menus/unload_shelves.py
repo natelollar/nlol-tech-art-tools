@@ -6,6 +6,7 @@ def remove_nlol_shelves():
     reload_shelf = "nlReload"
     rigging_shelf = "nlRigTools"
     nurbs_curves_shelf = "nlNurbsCurves"
+    utility_shelf = "nlUtils"
 
     try:
         mel.eval(f"deleteShelfTab {reload_shelf};")
@@ -18,4 +19,8 @@ def remove_nlol_shelves():
     try:
         mel.eval(f"deleteShelfTab {nurbs_curves_shelf};")
     except Exception:
-        print(f"Failed to delete shelf: {nurbs_curves_shelf}.  Likely does not exist.")
+        print(f"Failed to delete shelf: {nurbs_curves_shelf}.")
+    try:
+        mel.eval(f"deleteShelfTab {utility_shelf};")
+    except Exception:
+        print(f"Failed to delete shelf: {utility_shelf}.")

@@ -19,6 +19,8 @@ Notes for rigging setup.
 - Build rig first to get control names, then setup parent spaces.  
   Then, directly name parent spaces off of controls.
 
+- Uniform scale only when scale is exposed on controls.
+
 
 #### Maya Object Naming
 - `<name>_<direction>_<id>_<type>`
@@ -38,9 +40,11 @@ Notes for rigging setup.
     - `rig_grp`
 
 - `<direction>` conventions in this order
+  - `start, mid, end`
   - `front, back`
+  - `inner, middle, outer`
   - `top, bot`
-  - `left, center, right`  
+  - `left, center, right`
   - Examples:
     - `frontTopLeft`
     - `backBotRight`
@@ -98,9 +102,11 @@ Notes for rigging setup.
 - prnt = parent
 - rot = rotate
 - scl = scale
+- shp = shape
 - str = string
 - strt = start
 - swch = switch
 - twst = twist
 - tran = translate
+- trans = transform
 - vis = visibility

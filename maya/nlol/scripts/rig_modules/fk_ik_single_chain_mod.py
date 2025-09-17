@@ -61,8 +61,9 @@ class FkIkSingleChainModule:
 
         self.logger = get_logger()
 
-    def build_module(self) -> str:
+    def build(self) -> str:
         """Build the rig module.
+        --------------------------------------------------
 
         Returns:
             Top group for all the rig module objects.
@@ -77,15 +78,17 @@ class FkIkSingleChainModule:
             if all(cmds.objExists(jnt) for jnt in self.main_joints):
                 if len(self.main_joints) == 2:
                     self.query_main_axis()
-                    self._build_top_groups()
-                    self._build_fk_ik_joints()
-                    self._build_fk_controls()
-                    self._build_ik_controls()
-                    self._build_ik_stretch()
-                    self._build_fk_ik_switch()
+                    self.build_top_groups()
+                    self.build_fk_ik_joints()
+                    self.build_fk_controls()
+                    self.build_ik_controls()
+                    self.build_ik_stretch()
+                    self.build_fk_ik_switch()
                 else:
-                    error_msg = 'The "single_chain_fk_ik_mod" requires exactly 2 joints.\n'
-                    f"{failed_build_string}"
+                    error_msg = (
+                        'The "single_chain_fk_ik_mod" requires exactly 2 joints.\n'
+                        f"{failed_build_string}"
+                    )
                     self.logger.error(error_msg)
                     raise ValueError(error_msg)
             else:
@@ -99,7 +102,7 @@ class FkIkSingleChainModule:
         else:
             return self.mod_top_grp
 
-    def _build_top_groups(self):
+    def build_top_groups(self):
         """Create top rig module groups to parent controls and joints under."""
         # groups for organization
         self.mod_top_grp = cmds.group(
@@ -118,7 +121,7 @@ class FkIkSingleChainModule:
         cmds.parent(self.fk_mod_top_grp, self.mod_top_grp)
         cmds.parent(self.ik_mod_top_grp, self.mod_top_grp)
 
-    def _build_fk_ik_joints(self):
+    def build_fk_ik_joints(self):
         """An fk ik blended joint chain.
         Create fk ik joint chains and blend with an offset joint chain
         which is then constrained to the main joint chain for a single
@@ -185,15 +188,7 @@ class FkIkSingleChainModule:
         # -------------------- blend joint chains together --------------------
         translate_blend_nodes = []
         rotate_blend_nodes = []
-        for i, (fk_jnt, ik_jnt, jnt) in enumerate(
-            zip(
-                fk_jnts,
-                ik_jnts,
-                offset_jnts,
-                # self.main_joints,
-                strict=False,
-            ),
-        ):
+        for i, (fk_jnt, ik_jnt, jnt) in enumerate(zip(fk_jnts, ik_jnts, offset_jnts, strict=False)):
             # create blend color nodes
             tran_blend_node = cmds.createNode(
                 "blendColors",
@@ -245,7 +240,7 @@ class FkIkSingleChainModule:
         self.rotate_blend_nodes = rotate_blend_nodes
         self.main_joints_parent = main_joints_parent
 
-    def _build_fk_controls(self):
+    def build_fk_controls(self):
         """Create fk controls. Constrain fk controls to fk joints."""
         fk_ctrl_grps = []
         fk_ctrls = []
@@ -292,7 +287,7 @@ class FkIkSingleChainModule:
         cmds.setAttr(f"{fk_ctrls[1]}.visibility", 0)
         cmds.setAttr(f"{fk_ctrls[1]}.visibility", lock=True)
 
-    def _build_ik_controls(self):
+    def build_ik_controls(self):
         """Create ik controls. Create ik handle."""
         # ----- ik handles with single-chain solver -----
         ik_handle = cmds.ikHandle(
@@ -328,7 +323,7 @@ class FkIkSingleChainModule:
             color_rgb=(0.1, 1.0, 0.0),
         ).box_curve()
 
-        ik_start_ctrl_grp, ik_start_prntswtch_ctrl_grp, _ = create_ctrl_grps(ik_start_ctrl)
+        ik_start_ctrl_grp, _, ik_start_prntswtch_ctrl_grp, _ = create_ctrl_grps(ik_start_ctrl)
 
         cmds.matchTransform(ik_start_ctrl_grp, self.ik_jnts[0])  # snap to position
 
@@ -346,7 +341,7 @@ class FkIkSingleChainModule:
         # -------------------- lock and hide attributes --------------------
         lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
         for axis in "XYZ":
-            # cmds.setAttr(f"{ik_start_ctrl}.rotate{axis}", **lock_hide_kwargs)
+            cmds.setAttr(f"{ik_start_ctrl}.rotate{axis}", **lock_hide_kwargs)
             cmds.setAttr(f"{ik_start_ctrl}.scale{axis}", **lock_hide_kwargs)
             cmds.setAttr(f"{ik_ctrl}.rotate{axis}", **lock_hide_kwargs)
             cmds.setAttr(f"{ik_ctrl}.scale{axis}", **lock_hide_kwargs)
@@ -359,7 +354,7 @@ class FkIkSingleChainModule:
         self.ik_start_ctrl = ik_start_ctrl
         self.ik_start_prntswtch_ctrl_grp = ik_start_prntswtch_ctrl_grp
 
-    def _build_ik_stretch(self):
+    def build_ik_stretch(self):
         """Create ik stretch with the help of a distanceDimension ruler.
         Create stretch attribute on ik ctrl.
         """
@@ -372,7 +367,7 @@ class FkIkSingleChainModule:
             keyable=True,
         )
         ruler_shape, ruler_transform, ruler_loc_01, ruler_loc_02, *_ = create_attached_ruler(
-            name=f"{self.mod_name}Stretch{self.mirr_side}",
+            name=f"{self.mod_name}StretchRuler{self.mirr_side}",
             ruler_start_object=self.ik_start_ctrl,
             ruler_end_object=self.ik_ctrl,
         )
@@ -417,7 +412,7 @@ class FkIkSingleChainModule:
         cmds.setAttr(f"{ruler_loc_01}.visibility", 0)
         cmds.setAttr(f"{ruler_loc_02}.visibility", 0)
 
-    def _build_fk_ik_switch(self):
+    def build_fk_ik_switch(self):
         """Create fk ik switch control."""
         # ---------- create control curve object ----------
         switch_ctrl = create_nurbs_curves.CreateCurves(

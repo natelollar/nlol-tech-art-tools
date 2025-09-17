@@ -2,7 +2,7 @@ from importlib import reload
 
 from maya import cmds
 from nlol.scripts.rig_tools import better_duplicate
-from nlol.utilities.utils_maya import maya_undo
+from nlol.utilities.utils_maya import left_to_right_str, maya_undo
 
 reload(better_duplicate)
 
@@ -11,13 +11,18 @@ duplicate_curve = better_duplicate.duplicate_curve
 
 @maya_undo
 def mirror_curves(
-    original_side: str = "left",
-    flipped_side: str = "right",
+    original_side: str | None = None,
+    flipped_side: str | None = None,
     mirror_axis: str = "x",
 ) -> None:
     """Mirror rig control curve shapes across axis.
     Mirrors to absolute position, so controls with
     non-perfect mirroring will have to be adjusted.
+
+    Args:
+        original_side: The string to replace for the selected object.  Example "left".
+        flipped_side: The string replacing the original.  Example "right".
+
     """
     selection = cmds.ls(selection=True)
 
@@ -44,7 +49,10 @@ def mirror_curves(
         cmds.delete(world_grp)
 
         # find opposite side ctrl of orignal duplicated
-        crv_opp = crv.replace(original_side, flipped_side)
+        if not original_side:
+            crv_opp = left_to_right_str(crv)
+        else:
+            crv_opp = crv.replace(original_side, flipped_side)
 
         # unlock all attributes
         if crv_locked_attr:

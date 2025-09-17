@@ -4,6 +4,7 @@ import random as rd
 
 from maya import cmds
 from nlol.scripts.rig_tools.show_attributes import ShowAttributes
+from nlol.utilities.utils_maya import cap
 
 
 def axis_locator(
@@ -37,7 +38,7 @@ def axis_locator(
             color_rgb if color_rgb else (rd.uniform(0, 1.0), rd.uniform(0, 1.0), rd.uniform(0, 1.0))
         )
         if not original_locator_name:
-            current_locator_name = "localAxis_" + obj
+            current_locator_name = f"localAxis{cap(obj)}"
         elif len(objects) > 1:
             current_locator_name = f"{original_locator_name}{i}"
         else:
@@ -104,7 +105,7 @@ def locator_snap(
     locator_list, objects = axis_locator(objects, locator_name, local_scale, color_rgb)
 
     for loc in locator_list:
-        cmds.parent(loc, world=True) #unparent
+        cmds.parent(loc, world=True)  # unparent
         if translate_only:
             cmds.setAttr(f"{loc}.rotate", 0, 0, 0)
 
@@ -113,8 +114,45 @@ def locator_snap(
 
 def axis_locator_del():
     """Delete locators used for manual axis alignment."""
-    loc_shapes = cmds.ls("localAxis_*", type="locator")
-    loc_transforms = cmds.listRelatives(loc_shapes, parent=1)
+    loc_shapes = cmds.ls("localAxis*", type="locator")
+    loc_transforms = cmds.listRelatives(loc_shapes, parent=1) or []
+    loc_groups = cmds.listRelatives(loc_transforms, parent=1) or []
 
     for loc in loc_transforms:
-        cmds.delete(loc)
+        if cmds.objExists(loc):
+            cmds.delete(loc)
+    for grp in loc_groups:
+        if cmds.objExists(grp):
+            cmds.delete(grp)
+
+
+def locator_constrain_joints(
+    objects: str | list[str] | None = None,
+    locator_name: str | None = None,
+    local_scale: tuple[float, float, float] = (10, 10, 10),
+    color_rgb: tuple[float, float, float] | None = None,
+    group_locator: bool = False,
+) -> list[str]:
+    """Match locators transform to object, then constrain object to locator.
+    Useful to control joints as if outside chain hierarchy when skinning.
+
+    Args:
+        objects, locator_name, local_scale, color_rgb: Same as axis_locator().
+        group_locator: Create group to zero out locator transforms.
+
+    Returns:
+        List of locator names.
+
+    """
+    locator_list, objects = axis_locator(objects, locator_name, local_scale, color_rgb)
+
+    for loc, obj in zip(locator_list, objects, strict=False):
+        cmds.parent(loc, world=True)
+        if group_locator:
+            loc_grp = cmds.group(empty=True, name=f"{loc}Grp")
+            cmds.matchTransform(loc_grp, loc)
+            cmds.parent(loc, loc_grp)
+        cmds.parentConstraint(loc, obj, name=f"{obj}ParentConstraint")
+        cmds.scaleConstraint(loc, obj, name=f"{obj}ScaleConstraint")
+
+    return locator_list

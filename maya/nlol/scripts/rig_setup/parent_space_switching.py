@@ -6,10 +6,10 @@ import tomllib
 from importlib import reload
 from pathlib import Path
 
-from nlol.scripts.rig_components import clean_constraints, multi_point_constraint
-from nlol.utilities.nlol_maya_logger import get_logger
-
 from maya import cmds
+from nlol.scripts.rig_components import clean_constraints, multi_point_constraint
+from nlol.utilities import utils_maya
+from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(multi_point_constraint)
 reload(clean_constraints)
@@ -17,6 +17,7 @@ reload(clean_constraints)
 multi_point_const = multi_point_constraint.multi_point_const
 parent_constr = clean_constraints.parent_constr
 scale_constr = clean_constraints.scale_constr
+left_to_right_str = utils_maya.left_to_right_str
 
 
 class ParentSpacing:
@@ -35,8 +36,19 @@ class ParentSpacing:
 
         self.logger = get_logger()
 
-    def build_parent_spaces(self):
-        """Build parent space switching for rig controls."""
+    def build(self):
+        """Build process entry point for ParentSpacing class.
+        --------------------------------------------------
+        Get data from "rig_parent_spaces.toml" first.  Then setup parent spaces.
+        """
+        if not Path(self.rig_ps_filepath).is_file():
+            msg = (
+                '"rig_parent_spaces.toml" not in rig folder. Skipping parent space setup.\n'
+                f'File not found: "{self.rig_ps_filepath}".'
+            )
+            self.logger.warning(msg)
+            return
+
         # query parent space data
         with open(self.rig_ps_filepath, "rb") as f:
             rig_ps_data = tomllib.load(f)["control"]
@@ -45,13 +57,17 @@ class ParentSpacing:
         right_controls = []
         for ps_dict in rig_ps_data:
             mirror_right = ps_dict.get("mirror_right")
-            if mirror_right and "_left_" in ps_dict["control"]:
-                control = ps_dict["control"].replace("_left_", "_right_")
+            if mirror_right and "left" in ps_dict["control"].lower():
+                control = left_to_right_str(ps_dict["control"])
+
                 parents = ps_dict.get("parents")
-                if parents:
-                    parents = parents.replace("_left_", "_right_")
-                    parents = parents.replace("_l,", "_r,")
-                    parents = f"{parents[:-2]}_r" if parents.endswith("_l") else parents
+                if parents:  # may be only base_parent exists
+                    parents = left_to_right_str(parents)
+
+                base_parent = ps_dict.get("base_parent")
+                if base_parent:
+                    base_parent = left_to_right_str(base_parent)
+
                 right_dict = {
                     "control": control,
                     "parents": parents,
@@ -60,115 +76,151 @@ class ParentSpacing:
                     "skip_rotate": ps_dict.get("skip_rotate"),
                     "skip_scale": ps_dict.get("skip_scale"),
                     "use_point_constraint": ps_dict.get("use_point_constraint"),
-                    "base_parent": ps_dict.get("base_parent"),
+                    "base_parent": base_parent,
                 }
                 right_controls.append(right_dict)
         rig_ps_data.extend(right_controls)
 
-        # ----------
+        # ---------- iterate through parent space dictionaries ----------
         for ps_dict in rig_ps_data:
-            # ----- get variables for child control -----
+            # ----- get variables for child control/s -----
             control = ps_dict["control"]
+            control = control.split(",")
+            control = [str.strip() for str in control]
+
             parents = ps_dict.get("parents")
-            if parents:
+            if parents:  # may be only base_parent exists
                 parents = parents.split(",")
                 parents = [str.strip() for str in parents]
+
             separate_transforms = ps_dict.get("separate_transforms")
             skip_translate = ps_dict.get("skip_translate")
             skip_rotate = ps_dict.get("skip_rotate")
             skip_scale = ps_dict.get("skip_scale")
+
             use_point_constraint = ps_dict.get("use_point_constraint")
+
             base_parent = ps_dict.get("base_parent")
             if base_parent:
                 base_parent = base_parent.split(",")
                 base_parent = [str.strip() for str in base_parent]
 
-            # ----- check if control and parent objects exist in scene -----
-            if not cmds.objExists(control):
-                self.logger.warning(f"{control}: Skipping, control does not exist in Maya scene.")
-                continue
-            for obj in parents:
+            # check if parent objects exist in scene
+            for obj in parents or []:
                 if not cmds.objExists(obj):
                     error_msg = f"{obj}: Parent object does not exist in Maya scene."
                     self.logger.warning(error_msg)
                     raise ValueError(error_msg)
 
-            # ----- get parent switch group -----
-            cmds.select(control)
-            for _ in range(2):
-                cmds.pickWalk(direction="up")
-            ps_grp = cmds.ls(selection=True)[0]
-            if "PrntSwchGrp" not in ps_grp:
-                error_msg = f'Failed to find "PrntSwchGrp" for: "{control}"\n'
-                f'Instead found:"{ps_grp}"'
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
-            # ----- get base parent group -----
-            cmds.select(control)
-            for _ in range(3):
-                cmds.pickWalk(direction="up")
-            bp_grp = cmds.ls(selection=True)[0]
-            if "PrntGrp" not in bp_grp:
-                error_msg = f'Failed to find "PrntGrp" for: "{control}"\n'
-                f'Instead found:"{bp_grp}"'
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
-
-            # ---------- check values ----------
-            # check "parents" values
-            errors = []
-            if not parents and not base_parent:
-                errors.append(f'{control}: Must have "base_parent" if no "parents" object/s.')
-            if separate_transforms and not parents:
-                errors.append(f'{control}: "separate_transforms" requires "parents".')
-            # require "base_parent" for "use_point_constraint"
-            if use_point_constraint and not base_parent:
-                errors.append(f'{control}: "base_parent" value required for "use_point_constraint"')
-            # do not allow separate_transforms with only one object in parents
-            if len(parents) < 2 and separate_transforms:
-                errors.append(
-                    f'{control}: "separate_transforms" not needed if only one object in "parents"',
-                )
-            # ----------
-            if not separate_transforms and use_point_constraint:
-                errors.append(f'{control}: "separate_transforms" needed for "use_point_constraint"')
-            # ---------- check skip values ----------
-            # check that base_parent exists if skip values exist
-            if parents and (skip_translate or skip_rotate or skip_scale) and not base_parent:
-                errors.append(
-                    f'{control}: Must have "base_parent" to skip transforms for parent switching.',
-                )
-            # ---------- log errors ----------
-            if errors:
-                error_msg = "\n".join(errors)
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
-
-            # ---------- assign instance variables ----------
-            self.control = control
+            # ----- assign instance variables -----
             self.parents = parents
             self.separate_transforms = separate_transforms
-            self.ps_grp = ps_grp
-            self.bp_grp = bp_grp
             self.skip_translate = skip_translate
             self.skip_rotate = skip_rotate
             self.skip_scale = skip_scale
             self.use_point_constraint = use_point_constraint
             self.base_parent = base_parent
 
-            # --------------------------------------------------
-            if self.parents:
-                self._setup_main_parents()
+            # ---------- apply parent spaces ----------
+            for ctrl in control:  # check if multiple controls listed
+                if not cmds.objExists(ctrl):  # check if control object exist in scene
+                    self.logger.warning(f"{ctrl}: Skipping, control does not exist in Maya scene.")
+                    continue
 
-            # --------------- base_parent setup ---------------
-            if self.base_parent and len(self.base_parent) == 1:
-                parent_constr(self.base_parent[0], bp_grp, offset=True)
-                scale_constr(self.base_parent[0], bp_grp)
-            # ----- multiple base_parent setup -----
-            elif self.base_parent and len(self.base_parent) > 1:
-                self._setup_multiple_base_parents()
+                self.control = ctrl
+                self.build_parent_spaces()
 
-    def _setup_main_parents(self):
+    def build_parent_spaces(self):
+        """Check parent space parameters first.
+        Then, build parent space switching for rig controls.
+        """
+        # ----- get parent switch group -----
+        # used for main parent space connections
+        cmds.select(self.control)
+        ps_grp_search = []  # search groups incase hierarchy moves
+        for _ in range(3):
+            cmds.pickWalk(direction="up")
+            grp = cmds.ls(selection=True)[0]
+            ps_grp_search.append(grp)
+        ps_grp_matches = [grp for grp in ps_grp_search if "PrntSwchGrp" in grp]
+        if not ps_grp_matches:
+            error_msg = f'Failed to find "PrntSwchGrp" for: "{self.control}"\n'
+            f'Instead found:"{ps_grp_search}"'
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
+        ps_grp = ps_grp_matches[0]
+
+        # ----- get base parent group -----
+        # sits right above parent switch group
+        cmds.select(self.control)
+        bp_grp_search = []
+        for _ in range(4):
+            cmds.pickWalk(direction="up")
+            grp = cmds.ls(selection=True)[0]
+            bp_grp_search.append(grp)
+        bp_grp_matches = [grp for grp in bp_grp_search if "PrntGrp" in grp]
+        if not bp_grp_matches:
+            error_msg = f'Failed to find "PrntGrp" for: "{self.control}"\n'
+            f'Instead found:"{bp_grp_search}"'
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
+        bp_grp = bp_grp_matches[0]
+
+        # ---------- check values ----------
+        # check "parents" values
+        errors = []
+        if not self.parents and not self.base_parent:
+            errors.append(f'{self.control}: Must have "base_parent" if no "parents" object/s.')
+        if self.separate_transforms and not self.parents:
+            errors.append(f'{self.control}: "separate_transforms" requires "parents".')
+        # require "base_parent" for "use_point_constraint"
+        if self.use_point_constraint and not self.base_parent:
+            errors.append(
+                f'{self.control}: "base_parent" value required for "use_point_constraint"',
+            )
+        # do not allow separate_transforms with only one object in parents
+        if self.parents and len(self.parents) == 1 and self.separate_transforms:
+            errors.append(
+                f'{self.control}: "separate_transforms" not needed if only one object in "parents"',
+            )
+        # ----------
+        if not self.separate_transforms and self.use_point_constraint:
+            errors.append(
+                f'{self.control}: "separate_transforms" needed for "use_point_constraint"',
+            )
+        # ---------- check skip values ----------
+        # check that base_parent exists if skip values exist
+        if (
+            self.parents
+            and (self.skip_translate or self.skip_rotate or self.skip_scale)
+            and not self.base_parent
+        ):
+            errors.append(
+                f'{self.control}: Must have "base_parent" to skip transforms for parent switching.',
+            )
+        # ---------- log errors ----------
+        if errors:
+            error_msg = "\n".join(errors)
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
+
+        # ---------- assign instance variables ----------
+        self.ps_grp = ps_grp
+        self.bp_grp = bp_grp
+
+        # ---------- main parent space setup ----------
+        if self.parents:
+            self.setup_main_parents()
+
+        # --------------- base_parent setup ---------------
+        if self.base_parent and len(self.base_parent) == 1:
+            parent_constr(self.base_parent[0], self.bp_grp, offset=True)
+            scale_constr(self.base_parent[0], self.bp_grp)
+        # ----- multiple base_parent setup -----
+        elif self.base_parent and len(self.base_parent) > 1:
+            self.setup_multiple_base_parents()
+
+    def setup_main_parents(self):
         """Setup parent space switching for main parents."""
         # ----- divider attribute for organization -----
         # add if more than one "parents" value
@@ -244,8 +296,10 @@ class ParentSpacing:
             ]
             # check that not all transforms are skipped and base_parent is being used if skipping
             if transform_attrs == [None, None, None]:
-                error_msg = f"{self.control}: No attributes available for parent switching."
-                " All attributes skipped."
+                error_msg = (
+                    f"{self.control}: No attributes available for parent switching."
+                    " All attributes skipped."
+                )
                 self.logger.error(error_msg)
                 raise ValueError(error_msg)
 
@@ -321,7 +375,7 @@ class ParentSpacing:
                         force=True,
                     )
 
-    def _setup_multiple_base_parents(self):
+    def setup_multiple_base_parents(self):
         """Create a secondary space switching for the base parent group.
         This is the group right above the parent switch group.
         Multiple base parents useful to maintain a master parent if skipping

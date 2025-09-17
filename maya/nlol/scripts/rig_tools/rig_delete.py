@@ -1,24 +1,26 @@
 from maya import cmds, mel
-
-current_rig = "body_original_low"
-current_delete_objects = ["rig_allGrp"]
+from nlol.utilities.nlol_maya_logger import get_logger
 
 
-def remove_nlol_rig(skinned_mesh: str | None = None, delete_objects: tuple | None = None) -> None:
+def remove_nlol_rig(
+    rig_group_string: str = "_rigGrp",
+    skeletalmesh_group_string: str = "_skeletalMeshGrp",
+) -> None:
     """Delete current nLol rig in scene, but leave the skeletal mesh.  Reset bind pose.
 
     Args:
         skinned_mesh: Character mesh in scene to reset bind pose for.
         delete_objects: Extra rig objects to delete.
+        rig_group_string: Either main rig group name or
+            string within main rig group identifying it.
+        rig_group_string: Either main skeletal mesh group name or
+            string within main skeletal mesh group identifying it.
 
     """
+    logger = get_logger()
+
     cmds.undoInfo(openChunk=True)
     try:
-        if not skinned_mesh:
-            skinned_mesh = current_rig
-        if not delete_objects:
-            delete_objects = current_delete_objects
-
         # ---------- delete rig objects ----------
         all_parentConstraint = cmds.ls(type="parentConstraint")
         all_scaleConstraint = cmds.ls(type="scaleConstraint")
@@ -40,25 +42,58 @@ def remove_nlol_rig(skinned_mesh: str | None = None, delete_objects: tuple | Non
         )
         cmds.delete()
 
-        for obj in delete_objects:
-            if cmds.objExists(obj):
-                cmds.delete(obj)
+        # ---------- delete top rig group/s ----------
+        top_nodes = cmds.ls(assemblies=True)
+        top_rig_groups = [node for node in top_nodes if rig_group_string in node]
+        for grp in top_rig_groups:
+            if cmds.objExists(grp):
+                cmds.delete(grp)
 
         # ---------- delete unused nodes ----------
         mel.eval("MLdeleteUnused;")
 
-        # ---------- reset bind pose ----------
-        # query joints scale compensate
-        skinned_jnts = cmds.skinCluster(skinned_mesh, query=True, influence=True)
-        scale_compensate_attr_query = []
-        for jnt in skinned_jnts:
-            scale_compensate_attr = cmds.getAttr(f"{jnt}.segmentScaleCompensate")
-            scale_compensate_attr_query.append(scale_compensate_attr)
+        # ---------- reset bind poses ----------
+        # for meshes in skeletal mesh group/s
+        skeletalmesh_groups = [node for node in top_nodes if skeletalmesh_group_string in node]
+        for grp in skeletalmesh_groups:
+            grp_children = cmds.listRelatives(grp, allDescendents=True)
+            mesh_shapes = cmds.listRelatives(grp_children, shapes=True, type="mesh")
+            meshes = cmds.listRelatives(mesh_shapes, parent=True)
+            meshes = list(set(meshes))  # remove duplicates
 
-        cmds.dagPose(skinned_mesh, restore=True, g=True, bindPose=True)
+            for mesh in meshes:
+                logger.debug(f"mesh: {mesh}")
+                try:
+                    # query joints scale compensate
+                    skinned_jnts = cmds.skinCluster(mesh, query=True, influence=True)
+                    logger.debug(f"skinned_jnts: {skinned_jnts}")
+                    scale_compensate_attr_query = []
+                    for jnt in skinned_jnts:
+                        scale_compensate_attr = cmds.getAttr(f"{jnt}.segmentScaleCompensate")
+                        scale_compensate_attr_query.append(scale_compensate_attr)
 
-        # set scale compensate to value from before restore bind pose
-        for attr_query, jnt in zip(scale_compensate_attr_query, skinned_jnts):
-            cmds.setAttr(f"{jnt}.segmentScaleCompensate", attr_query)
+                    # ----- reset bind pose -----
+                    mesh_history = cmds.listHistory(mesh)
+                    skincluster = cmds.ls(mesh_history, type="skinCluster")
+                    if skincluster:
+                        dag_pose_nodes = cmds.listConnections(
+                            f"{skincluster[0]}.bindPose",
+                            type="dagPose",
+                        )
+                        cmds.dagPose(dag_pose_nodes, restore=True, g=True)
+                    else:
+                        logger.warning(f'Likely "{mesh}" not skinned, skipping reset bindpose.')
+
+                    # set scale compensate to value from before restore bind pose
+                    for attr_query, jnt in zip(
+                        scale_compensate_attr_query,
+                        skinned_jnts,
+                        strict=False,
+                    ):
+                        cmds.setAttr(f"{jnt}.segmentScaleCompensate", attr_query)
+
+                except Exception:
+                    raise
+
     finally:
         cmds.undoInfo(closeChunk=True)

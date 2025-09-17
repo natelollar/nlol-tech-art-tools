@@ -10,7 +10,7 @@ random_colors_dull = random_generator.random_colors_dull
 
 
 def build_rigging_list():
-    """Create a dictionary list of rigging shelves and their attributes."""
+    """Create a dictionary list of rigging men and shelf buttons, and their attributes."""
     random_clrs = random_colors_dull()
 
     shelf_separator = {
@@ -81,6 +81,21 @@ def build_rigging_list():
             "doubleClickCommand": "from nlol.scripts.rig_components import create_locators\n"
             "from importlib import reload\n"
             "reload(create_locators)\n"
+            "create_locators.axis_locator_del()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Locator Constrain Joints",
+            "image": "pythonFamily.png",
+            "annotation": "Snap locators to objects, then constrain those objects to locators. "
+            "Double click to delete locators.",
+            "imageOverlayLabel": "LocCons",
+            "backgroundColor": (0.3, 0.2, 0.0),
+            "command": "from nlol.scripts.rig_components import create_locators\n"
+            "from importlib import reload\nreload(create_locators)\n"
+            "create_locators.locator_constrain_joints(group_locator=True)",
+            "doubleClickCommand": "from nlol.scripts.rig_components import create_locators\n"
+            "from importlib import reload\nreload(create_locators)\n"
             "create_locators.axis_locator_del()",
             "sourceType": "python",
         },
@@ -203,13 +218,46 @@ def build_rigging_list():
             "command": "GoToBindPose",
             "sourceType": "mel",
         },
+        {
+            "label": "Print Object Type",
+            "image": "pythonFamily.png",
+            "annotation": "Print Maya Object type for selected.",
+            "imageOverlayLabel": "ObjTyp",
+            "backgroundColor": random_clrs[6],
+            "command": "from nlol.scripts.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.get_selection_type()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Print Selected List",
+            "image": "pythonFamily.png",
+            "annotation": "Print Python list of selected Maya objects.",
+            "imageOverlayLabel": "PrnLst",
+            "backgroundColor": random_clrs[5],
+            "command": "from nlol.scripts.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.print_selected_list()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Print Selected String List",
+            "image": "pythonFamily.png",
+            "annotation": "Print string list of selected Maya objects.",
+            "imageOverlayLabel": "StrLst",
+            "backgroundColor": random_clrs[4],
+            "command": "from nlol.scripts.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.print_selected_list(string_format=True)",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Build Rig",
             "image": "pythonFamily.png",
             "annotation": 'Build rig files from "maya/nlol/defaults/rig_folder_path.py"'
             'Change folder path in "rig_folder_path.py" to change rig setup.',
-            "imageOverlayLabel": "HRig",
+            "imageOverlayLabel": "BRig",
             "backgroundColor": random_clrs[7],
             "command": "from nlol.scripts.rig_setup import rig_build\n"
             "from importlib import reload\n"
@@ -243,16 +291,27 @@ def build_rigging_list():
             "rig_delete.remove_nlol_rig()",
             "sourceType": "python",
         },
+        # {
+        #     "label": "Test Function",
+        #     "image": "pythonFamily.png",
+        #     "annotation": "Run test code from here. Add your code to this python function.",
+        #     "imageOverlayLabel": "Tst",
+        #     "backgroundColor": random_clrs[10],
+        #     "command": "from nlol.scripts.standalone import run_test\n"
+        #     "from importlib import reload\n"
+        #     "reload(run_test)\n"
+        #     "run_test.test()",
+        #     "sourceType": "python",
+        # },
         {
             "label": "Test Function",
             "image": "pythonFamily.png",
             "annotation": "Run test code from here. Add your code to this python function.",
             "imageOverlayLabel": "Tst",
             "backgroundColor": random_clrs[10],
-            "command": "from nlol.scripts.standalone import run_test\n"
-            "from importlib import reload\n"
-            "reload(run_test)\n"
-            "run_test.test()",
+            "command": "from nlol.scripts.rig_modules import flexi_surface_submod\n"
+            "from importlib import reload\nreload(flexi_surface_submod)\n"
+            "flexi_surface_submod.FlexiSurfaceSubmod().build_flexi_surface()",
             "sourceType": "python",
         },
         shelf_separator,
@@ -299,7 +358,7 @@ def build_rigging_list():
             "label": "Select All Controls",
             "image": "pythonFamily.png",
             "annotation": "Select all controls under rig group. "
-            'Defaults to "rig_allGrp" if nothing selected.',
+            'Defaults to the "_rigGrp" if nothing selected.',
             "imageOverlayLabel": "SlCtrl",
             "backgroundColor": random_clrs[14],
             "command": "from nlol.scripts.standalone import small_functions\n"
@@ -317,6 +376,68 @@ def build_rigging_list():
             "command": "from nlol.scripts.standalone import assign_random_materials\n"
             "from importlib import reload\nreload(assign_random_materials)\n"
             "assign_random_materials.assign_rand_mat()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Create Follicle At Surface",
+            "image": "pythonFamily.png",
+            "annotation": 'Create and attach follicle at nearest "example_surface" point '
+            'to "example joint". Surface may be a regular polygonal mesh or nurbs surface.',
+            "imageOverlayLabel": "JntFol",
+            "backgroundColor": random_clrs[16],
+            "command": "from nlol.scripts.rig_components import follicle_at_surface\n"
+            "from importlib import reload\nreload(follicle_at_surface)\n"
+            "follicle_at_surface.create_joint_follicle()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Export Skin Clusters",
+            "image": "pythonFamily.png",
+            "annotation": "Select one or more skinned meshes and export their skin clusters to xml."
+            " Uses the index method. Exports to current nLol rig folder.",
+            "imageOverlayLabel": "ExpSkn",
+            "backgroundColor": random_clrs[12],
+            "command": "from nlol.scripts.rig_tools import skin_export_import\n"
+            "from importlib import reload\nreload(skin_export_import)\n"
+            "skin_export_import.export_skin_weights()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Import Skin Clusters",
+            "image": "pythonFamily.png",
+            "annotation": "Import xml skinCluster files from nLol rig folderpath and apply them. "
+            "No mesh selection required. "
+            "Mesh (shape) names and vertex order should be same as exported.",
+            "imageOverlayLabel": "ImpSkn",
+            "backgroundColor": random_clrs[13],
+            "command": "from nlol.scripts.rig_tools import skin_export_import\n"
+            "from importlib import reload\nreload(skin_export_import)\n"
+            "skin_export_import.import_skin_weights()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Import Skin Selected Only",
+            "image": "pythonFamily.png",
+            "annotation": "For selected geometry only. "
+            "Import xml skinCluster files from nLol rig folderpath and apply them. "
+            "Mesh (shape) names and vertex order should be same as exported.",
+            "imageOverlayLabel": "ISknSl",
+            "backgroundColor": random_clrs[14],
+            "command": "from nlol.scripts.rig_tools import skin_export_import\n"
+            "from importlib import reload\nreload(skin_export_import)\n"
+            "skin_export_import.import_skin_weights(selected_only=True)",
+            "sourceType": "python",
+        },
+        {
+            "label": "Select Skinned Joints",
+            "image": "pythonFamily.png",
+            "annotation": "Select skinned joints from first selected mesh object.",
+            "imageOverlayLabel": "SkdJts",
+            "backgroundColor": random_clrs[15],
+            "command": "from nlol.scripts.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.query_skinned_joints()",
             "sourceType": "python",
         },
     ]

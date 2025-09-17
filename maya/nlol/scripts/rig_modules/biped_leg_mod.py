@@ -45,18 +45,19 @@ class BipedLegModule(BipedLimbModule):
             lower_twist_name=lower_twist_new_name,
         )
 
-    def build_leg_module(self) -> str:
+    def build(self) -> str:
         """Build the leg rig module.
+        --------------------------------------------------
 
         Returns:
             Top most group for leg rig module.
 
         """
-        self.limb_module = super().build_limb_module()
+        self.limb_module = super().build()
         if self.limb_module:
             self.foot_module = BipedFootModule(
                 limb_module=self,
             )
-            self.foot_module.build_foot_module()
+            self.foot_module.build()
 
         return self.limb_top_grp

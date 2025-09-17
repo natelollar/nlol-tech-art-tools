@@ -8,11 +8,10 @@ import ast
 import json
 from pathlib import Path
 
+from maya import cmds
 from nlol import defaults
 from nlol.defaults import rig_folder_path
 from nlol.utilities.nlol_maya_logger import get_logger
-
-from maya import cmds
 
 rig_folderpath = rig_folder_path.rig_folderpath
 rig_ctrl_crvs_filepath = rig_folderpath / "rig_control_curves.json"
@@ -98,6 +97,14 @@ class SaveControlCurves:
         """Iterate through curve shape attribute data in json file. Apply data to control curves.
         Replace current control or create new ones if curve shape transforms don't exist.
         """
+        if not Path(self.filepath).is_file():
+            msg = (
+                'Skipping curve shape load. Maybe "rig_control_curves.json" not in rig folder.\n'
+                f'File not found: "{self.filepath}".'
+            )
+            self.logger.warning(msg)
+            return
+
         old_curve_shapes = []
         curves = []
         for shape, attr_list in self.read_curve_attributes().items():

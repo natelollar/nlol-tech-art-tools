@@ -20,13 +20,14 @@ class WorldControlModule(FkControlModule):
 
         self.logger = get_logger()
 
-    def create_world_ctrl(self) -> str:
-        """Build the world control rig module.
+    def build(self) -> str:
+        """Create the world control rig module.
+        --------------------------------------------------
 
         Returns:
             Top control group.
 
         """
-        super().create_fk_ctrl()
+        super().build()
 
-        return self.fk_control_group
+        return self.fkctrl_grp

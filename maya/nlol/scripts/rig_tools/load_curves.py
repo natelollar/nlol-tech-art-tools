@@ -21,7 +21,7 @@ class LoadCurves:
         """Read curve shape attributes from json file."""
         with open(self.filepath) as f:
             curve_attributes = json.load(f)
-            self.logger.debug(f'Control shapes read: "{self.filepath}"')
+            # self.logger.debug(f'Control shapes read: "{self.filepath}"')
             return curve_attributes
 
     def load_curve_attributes(self):

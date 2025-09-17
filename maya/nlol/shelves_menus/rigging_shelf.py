@@ -2,11 +2,15 @@ from importlib import reload
 
 from maya import cmds
 from nlol.shelves_menus import rigging_list
+from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(rigging_list)
 
 
 def update_rigging_shelf():
+    """Update or add the rigging shelf."""
+    logger = get_logger()
+
     shelf_name = "nlRigTools"
 
     # get top shelf layout
@@ -44,4 +48,4 @@ def update_rigging_shelf():
         kwargs["parent"] = shelf_name
         cmds.shelfButton(**kwargs)
 
-    print(f"Created shelf: {shelf_name}")
+    logger.info(f"Created shelf: {shelf_name}")

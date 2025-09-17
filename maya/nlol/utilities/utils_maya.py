@@ -6,6 +6,9 @@ from shiboken6 import wrapInstance
 
 from maya import OpenMayaUI as omui
 from maya import cmds
+from nlol.utilities.nlol_maya_logger import get_logger
+
+logger = get_logger()
 
 
 def query_maya_windows():
@@ -83,9 +86,9 @@ def maya_undo(func):
 
 
 def left_to_right_str(text_str: str) -> str:
-    """Replace left string characters with right characters.
-    Currently, replaces any `_left_` with `_right_` and the suffix `_l` with `_r`.
-    Example: Replaces `_left_` with `_right_` in `ikHand_left_ctrl`.
+    """Replace left character strings with right character strings.
+    Such as, replace any `left` with `right` and suffix `_l` with `_r`.
+    Example: Replaces `left` with `right` in `ikHand_left_ctrl`.
     Specifically works with a string or string list.
     Example: `hand_l` or `indexFinger_left_01_ctrl` or
     `pinky_metacarpal_l, pinky_01_l, pinky_02_l, pinky_03_l`
@@ -99,7 +102,32 @@ def left_to_right_str(text_str: str) -> str:
     """
     if not text_str:
         return text_str
-    text_str = text_str.replace("_left_", "_right_")
-    text_str = text_str.replace("_l,", "_r,")
+
+    original_text = text_str
+
+    text_str = text_str.replace("left", "right")
+    text_str = text_str.replace("Left", "Right")
+
+    text_str = text_str.replace("_l,", "_r,")  # note commas in strings
+    text_str = text_str.replace(" l_,", " r_,")  # note whitespace in strings
+
+    text_str = text_str.replace("_l_", "_r_")
+
     text_str = f"{text_str[:-2]}_r" if text_str.endswith("_l") else text_str
+    text_str = f"r_{text_str[2:]}" if text_str.startswith("l_") else text_str
+
+    if original_text == text_str:
+        logger.debug(f"Text string unchanged: {original_text}")
+
     return text_str
+
+
+def invert_axis_string(text_str: str) -> str:
+    """Invert axis "x", "y", or "z" to negative,
+        or make negative axis positive.
+
+    Args:
+        text_str: Axis string.
+
+    """
+    return text_str.replace("-", "") if "-" in text_str else f"-{text_str}"

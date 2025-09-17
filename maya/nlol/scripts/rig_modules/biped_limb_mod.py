@@ -116,8 +116,9 @@ class BipedLimbModule:
 
         self.logger = get_logger()
 
-    def build_limb_module(self) -> str:
+    def build(self) -> str:
         """Build the limb rig module.
+        --------------------------------------------------
 
         Returns:
             Top group for all the limb objects.
@@ -132,13 +133,13 @@ class BipedLimbModule:
             if all(cmds.objExists(jnt) for jnt in self.main_joints):
                 if self.query_main_axis() is None:
                     return None
-                self._build_top_groups()
-                self._build_fk_ik_joints()
-                self._build_fk_controls()
-                self._build_ik_controls()
-                self._build_fk_ik_switch()
-                self._build_twist_setup()
-                self._build_soft_ik_setup()
+                self.build_top_groups()
+                self.build_fk_ik_joints()
+                self.build_fk_controls()
+                self.build_ik_controls()
+                self.build_fk_ik_switch()
+                self.build_twist_setup()
+                self.build_soft_ik_setup()
             else:
                 missing_jnts = [jnt for jnt in self.main_joints if not cmds.objExists(jnt)]
                 error_msg = f"Missing main joints: {missing_jnts}\n{failed_build_string}"
@@ -170,7 +171,7 @@ class BipedLimbModule:
             raise ValueError(error_msg)
         return self.down_chain_axis
 
-    def _build_top_groups(self):
+    def build_top_groups(self):
         """Create top limb groups to parent controls and joints to."""
         # groups for organization
         self.limb_top_grp = cmds.group(
@@ -203,7 +204,7 @@ class BipedLimbModule:
         cmds.parent(self.twist_stretch_top_grp, self.limb_top_grp)
         cmds.parent(self.soft_ik_top_grp, self.limb_top_grp)
 
-    def _build_fk_ik_joints(self):
+    def build_fk_ik_joints(self):
         """An fk ik blended joint chain.
         Create fk ik joint chains and blend with main joint chain.
         """
@@ -294,9 +295,9 @@ class BipedLimbModule:
             cmds.parent(parent_loc, self.limb_top_grp)
             cmds.setAttr(f"{parent_loc}.visibility", 0)
         else:
-            for attr in [fk_jnts[0], ik_jnts[0]]:
-                cmds.parent(attr, self.limb_top_grp)
-                cmds.setAttr(f"{attr}.visibility", 0)
+            for jnt in [fk_jnts[0], ik_jnts[0]]:
+                cmds.parent(jnt, self.limb_top_grp)
+                cmds.setAttr(f"{jnt}.visibility", 0)
 
         # assign instance variables
         self.fk_jnts = fk_jnts
@@ -304,7 +305,7 @@ class BipedLimbModule:
         self.translate_blend_nodes = translate_blend_nodes
         self.rotate_blend_nodes = rotate_blend_nodes
 
-    def _build_fk_controls(self):
+    def build_fk_controls(self):
         """Create fk limb controls. Constrain fk controls to fk joints."""
         fk_ctrl_grps = []
         fk_ctrls = []
@@ -345,7 +346,7 @@ class BipedLimbModule:
         # assign instance variables
         self.fk_ctrls = fk_ctrls
 
-    def _build_ik_controls(self):
+    def build_ik_controls(self):
         """Create ik limb controls. Create ik handle. Create pole vector constraint."""
         # ----------------------------------------------------------
         # -------------------- create ik handle --------------------
@@ -396,7 +397,7 @@ class BipedLimbModule:
         ).box_curve()
 
         # ----- control group -----
-        ik_hip_ctrl_grp, ik_hip_ctrl_prntswtch_grp, _ = create_ctrl_grps(ik_hip_ctrl)
+        ik_hip_ctrl_grp, _, ik_hip_ctrl_prntswtch_grp, _ = create_ctrl_grps(ik_hip_ctrl)
 
         # ----- snap control group to joint -----
         cmds.matchTransform(ik_hip_ctrl_grp, self.ik_jnts[0])
@@ -482,7 +483,7 @@ class BipedLimbModule:
         self.polevector_ctrl = polevector_ctrl
         self.ik_toe_ctrl_grp = ik_toe_ctrl_grp
 
-    def _build_fk_ik_switch(self):
+    def build_fk_ik_switch(self):
         """Create fk ik switch control."""
         # ---------- create control curve object ----------
         # create sphere curve
@@ -614,7 +615,7 @@ class BipedLimbModule:
         # assign instance variables
         self.switch_ctrl = switch_ctrl
 
-    def _build_twist_setup(self):
+    def build_twist_setup(self):
         """Verify twist joints exist then execute main twist setup."""
         # ----- build twist joint setup -----
         twist_setup_objects = [
@@ -634,7 +635,7 @@ class BipedLimbModule:
         for twist_jnts, twist_name, strt_jnt, end_jnt in twist_setup_objects:
             if [jnt for jnt in twist_jnts if jnt]:  # check for empty string
                 if all(cmds.objExists(jnt) for jnt in twist_jnts):  # check if in scene
-                    self._build_main_twist_setup(twist_jnts, twist_name, strt_jnt, end_jnt)
+                    self.build_main_twist_setup(twist_jnts, twist_name, strt_jnt, end_jnt)
                 else:
                     missing_jnts = [jnt for jnt in twist_jnts if not cmds.objExists(jnt)]
                     warning_msg = (
@@ -646,7 +647,7 @@ class BipedLimbModule:
                     cmds.delete(self.twist_stretch_top_grp)
                     return
 
-    def _build_main_twist_setup(
+    def build_main_twist_setup(
         self,
         twist_jnts: list[str],
         twist_name: str,
@@ -730,11 +731,13 @@ class BipedLimbModule:
             if jnt != spline_jnts[0]:
                 cmds.parent(jnt, spline_jnts[i - 1])
 
-        # parent constrain spline joints to limb segment twist joints
+        # constrain spline joints to limb segment twist joints
         for spline_jnt, limb_jnt in zip(spline_jnts, limb_segment_jnts, strict=False):
             # first and last limb segment joint are already constrained
             if spline_jnt not in (spline_jnts[0], spline_jnts[-1]):
-                parent_constr(spline_jnt, limb_jnt, offset=True)
+                # point and orient constraint work better than parent constraint for global scaling
+                point_constr(spline_jnt, limb_jnt, offset=True)
+                orient_constr(spline_jnt, limb_jnt, offset=True)
 
         # -------------------- create ik spline for arm twist --------------------
         twist_crv_start = cmds.xform(
@@ -846,14 +849,14 @@ class BipedLimbModule:
 
         # ---------- add stretch ----------
         # main axis twist joint stretch
-        self._build_twist_stretch(
+        self.build_twist_stretch(
             twist_name,
             start_segment_jnt,
             end_segment_jnt,
             spline_jnts,
         )
 
-    def _build_twist_stretch(
+    def build_twist_stretch(
         self,
         twist_name: str,
         start_segment_jnt: str,
@@ -918,7 +921,7 @@ class BipedLimbModule:
         cmds.parent(ruler_loc_02, self.twist_stretch_top_grp)
         cmds.setAttr(f"{self.twist_stretch_top_grp}.visibility", 0)
 
-    def _build_soft_ik_setup(self, use_expression: bool = False) -> None:
+    def build_soft_ik_setup(self, use_expression: bool = False) -> None:
         """Create soft ik setup.
 
         Args:
@@ -1047,11 +1050,11 @@ class BipedLimbModule:
         ik_jnt_end_pos_x = cmds.getAttr(f"{self.ik_jnts[2]}.translateX")
         self.limb_chain_length = abs(ik_jnt_mid_pos_x + ik_jnt_end_pos_x)
         if use_expression:
-            self._soft_ik_expression()
+            self.soft_ik_expression()
         else:
-            self._soft_ik_nodes()
+            self.soft_ik_nodes()
 
-    def _soft_ik_expression(self):
+    def soft_ik_expression(self):
         """Create soft ik exponential curve logic with expression."""
         cmds.expression(
             s=f"float $limb_dist = {self.limb_chain_length};\n"
@@ -1068,7 +1071,7 @@ class BipedLimbModule:
             n=f"{self.mod_name}SoftIk{self.mirr_side}expression",
         )
 
-    def _soft_ik_nodes(self):
+    def soft_ik_nodes(self):
         """Create soft ik exponential curve logic with nodes.
         Also, added global scale ratio nodes not in expression.
         """

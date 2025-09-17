@@ -43,8 +43,9 @@ class BipedFootModule:
         self.mod_name = f"{limb_module.mod_name}Foot"
         self.logger = get_logger()
 
-    def build_foot_module(self, base_foot_aim: bool = True, reverse_foot_attrs: bool = True):
+    def build(self, base_foot_aim: bool = True, reverse_foot_attrs: bool = True):
         """Create foot rig module.
+        --------------------------------------------------
         Based on locators establishing reverse foot rotation points.
         Position locators in "rig_helpers.ma" file.
 
@@ -119,7 +120,7 @@ class BipedFootModule:
             ).sphere_curve()
 
             # ----- control group -----
-            foot_ctrl_grp, _, foot_offs_ctrl_grp = create_ctrl_grps(foot_ctrl)
+            foot_ctrl_grp, _, _, foot_offs_ctrl_grp = create_ctrl_grps(foot_ctrl)
 
             # ----- snap control group to locator -----
             cmds.matchTransform(foot_ctrl_grp, loc)
@@ -145,7 +146,7 @@ class BipedFootModule:
         ).box_curve()
 
         # ----- control group -----
-        toe_wiggle_ctrl_grp, _, toe_wiggle_offs_ctrl_grp = create_ctrl_grps(toe_wiggle_ctrl)
+        toe_wiggle_ctrl_grp, _, _, toe_wiggle_offs_ctrl_grp = create_ctrl_grps(toe_wiggle_ctrl)
 
         # ----- snap control to locator -----
         cmds.matchTransform(toe_wiggle_ctrl_grp, foot_locators[1])
