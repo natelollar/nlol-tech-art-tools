@@ -1,0 +1,16 @@
+# flexi_surface_fk_ctrl_mod: Create basic standalone fk ctrls along flexi surface geo.
+
+# parent space entry object: "fk<rig_module_name>Parent_ctrl". Controls global scale.
+    # In addition, skin the flexi surface to another module to control this modules flexi surface ctrls.
+# parent exit point: .
+
+[[rig_module]]
+rig_module = "flexi_surface_fk_ctrl_mod" 
+rig_module_name = "sling" 
+#mirror_direction = "left" 
+#mirror_right = true
+joints = "slingMain_01_jnt"
+get_joint_chain = true
+flexi_surface = "flexiSurfaceSling_geo"
+hide_end_ctrl = true
+

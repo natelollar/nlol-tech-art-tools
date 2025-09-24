@@ -1,7 +1,9 @@
 from maya import cmds
 from nlol.scripts.rig_tools import show_attributes
 from nlol.utilities.nlol_maya_logger import get_logger
+
 logger = get_logger()
+
 
 def select_all_controls(rig_group_string: str = "_rigGrp") -> None:
     """Select all control curves underneath selected group
@@ -111,6 +113,7 @@ def print_selected_list(string_format: bool = False):
         for obj in selection:
             obj_list.append(obj)
         print(f"\n{obj_list}")
+
 
 def query_skinned_joints():
     """Select skinned joints from first selected mesh object."""

@@ -1,0 +1,12 @@
+[[display_layer]]
+display_layer = "worldRootAux_ctrlLyr"
+objects = "root_ctrl, global_ctrl"
+
+[[display_layer]]
+display_layer = "worldRootAux_ctrlLyr" # same as root & global ctrls
+objects = """
+shoulderSwch_left_ctrl, 
+armSwch_left_ctrl, 
+legSwch_left_ctrl
+"""
+mirror_right = true

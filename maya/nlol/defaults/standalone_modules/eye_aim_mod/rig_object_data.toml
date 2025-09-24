@@ -1,9 +1,13 @@
-# eye_aim_mod: creates a standard "eye aim at" rig module
+# eye_aim_mod: Creates a standard "eye aim at" rig module.
 
 [[rig_module]]
 rig_module = "eye_aim_mod" 
 rig_module_name = "eyes" 
 joints = "eye_left_jnt, eye_right_jnt"  # left eye first. a single eye works too.
-# aim_vector = "z"  # optional. for left eye. right eye may be same or inverse axis
+# aim_vector = "z"  # optional. for left eye. right eye may be same or inverse axis. defaults to world space direction if not included.
 # up_vector = "y"  # same description as aim_vector
 # reverse_right_vectors = true  # optional. if right eye has inverse axis'
+
+# parent spacing: Eye offset ctrls automatically constrain to eye joint parents if avaliable.  
+    # For eye aim ctrl parenting use `<rig_module_name>AimParent_ctrl`.
+

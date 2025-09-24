@@ -46,7 +46,7 @@ class ParentSpacing:
                 '"rig_parent_spaces.toml" not in rig folder. Skipping parent space setup.\n'
                 f'File not found: "{self.rig_ps_filepath}".'
             )
-            self.logger.warning(msg)
+            self.logger.info(msg)
             return
 
         # query parent space data
@@ -124,7 +124,7 @@ class ParentSpacing:
             # ---------- apply parent spaces ----------
             for ctrl in control:  # check if multiple controls listed
                 if not cmds.objExists(ctrl):  # check if control object exist in scene
-                    self.logger.warning(f"{ctrl}: Skipping, control does not exist in Maya scene.")
+                    self.logger.warning(f'Skipping, control does not exist in Maya scene: "{ctrl}"')
                     continue
 
                 self.control = ctrl

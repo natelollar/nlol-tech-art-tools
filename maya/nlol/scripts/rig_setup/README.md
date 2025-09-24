@@ -79,7 +79,7 @@ Notes for rigging setup.
 
 #### Common Abbreviations Defined
 - attr = attribute
-- const = constraint
+- const / constr = constraint
 - clr = color
 - ctrl = control
 - dict = dictionary

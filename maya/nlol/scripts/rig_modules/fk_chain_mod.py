@@ -26,16 +26,16 @@ class FkChainModule:
         mirror_direction: str,
         main_joints: list,
         iteration_id: str = "",
-        aux_offset_group: bool = False,
-        return_all_groups: bool = False,
+        aux_offset_grp: bool = False,
+        return_all_grps: bool = False,
     ):
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.mirr_side = self.mirr_side.replace("__", "_")
         self.main_joints = main_joints
         self.iteration_id = iteration_id
-        self.aux_offset_group = aux_offset_group
-        self.return_all_groups = return_all_groups
+        self.aux_offset_grp = aux_offset_grp
+        self.return_all_grps = return_all_grps
 
     def build(self) -> str | tuple[list[str], list[str], list[str], list[str]]:
         """Build fk control chain rig module.
@@ -49,8 +49,8 @@ class FkChainModule:
                 and then parent and scale constrain to controls.
             iteration_id: Optional id if multiple fk chains being created.
                 String that goes before number id.  Example: "a".
-            aux_offset_group: An additional offset group useful for extra connections.
-            return_all_groups: Return all the groups instead of just very top group.
+            aux_offset_grp: An additional offset group useful for extra connections.
+            return_all_grps: Return all the groups instead of just very top group.
                 Helpful if using as rig sub-module.
 
         Returns:
@@ -72,18 +72,18 @@ class FkChainModule:
                 color_rgb=(1, 0, 0),
             ).box_curve()
 
-            fkctrl_groups = create_ctrl_grps(control=fkctrl, aux_offset_group=self.aux_offset_group)
+            fkctrl_grps = create_ctrl_grps(control=fkctrl, aux_offset_grp=self.aux_offset_grp)
             fkctrl_aux_grp = None
-            if len(fkctrl_groups) == 5:
+            if len(fkctrl_grps) == 5:
                 (
                     fkctrl_top_grp,
                     fkctrl_prnt_grp,
                     fkctrl_swch_grp,
                     fkctrl_offs_grp,
                     fkctrl_aux_grp,
-                ) = fkctrl_groups
+                ) = fkctrl_grps
             else:
-                fkctrl_top_grp, fkctrl_prnt_grp, fkctrl_swch_grp, fkctrl_offs_grp = fkctrl_groups
+                fkctrl_top_grp, fkctrl_prnt_grp, fkctrl_swch_grp, fkctrl_offs_grp = fkctrl_grps
 
             cmds.matchTransform(fkctrl_top_grp, jnt)
 
@@ -104,7 +104,7 @@ class FkChainModule:
         for grp, ctrl in zip(fkctrl_top_grps[1:], fkctrls, strict=False):
             cmds.parent(grp, ctrl)
 
-        if self.return_all_groups:
+        if self.return_all_grps:
             return (
                 fkctrl_top_grps,
                 fkctrl_prnt_grps,

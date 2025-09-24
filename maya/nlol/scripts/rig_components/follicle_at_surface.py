@@ -30,21 +30,21 @@ def create_joint_follicle(
 
     if flexi_surface_type == "nurbsSurface":
         cmds.connectAttr(f"{flexi_surface_shape}.local", f"{follicle_shape}.inputSurface")
-        closestPointOnMesh_nd = cmds.createNode("closestPointOnSurface")
-        cmds.connectAttr(f"{flexi_surface_shape}.local", f"{closestPointOnMesh_nd}.inputSurface")
+        closestpointonmesh_nd = cmds.createNode("closestPointOnSurface")
+        cmds.connectAttr(f"{flexi_surface_shape}.local", f"{closestpointonmesh_nd}.inputSurface")
     else:
         cmds.connectAttr(f"{flexi_surface_shape}.outMesh", f"{follicle_shape}.inputMesh")
-        closestPointOnMesh_nd = cmds.createNode("closestPointOnMesh")
-        cmds.connectAttr(f"{flexi_surface_shape}.outMesh", f"{closestPointOnMesh_nd}.inMesh")
+        closestpointonmesh_nd = cmds.createNode("closestPointOnMesh")
+        cmds.connectAttr(f"{flexi_surface_shape}.outMesh", f"{closestpointonmesh_nd}.inMesh")
 
     cmds.connectAttr(f"{flexi_surface_shape}.worldMatrix[0]", f"{follicle_shape}.inputWorldMatrix")
     joint_position = cmds.xform(joint, query=True, worldSpace=True, translation=True)
-    cmds.setAttr(f"{closestPointOnMesh_nd}.inPosition", *joint_position)
+    cmds.setAttr(f"{closestpointonmesh_nd}.inPosition", *joint_position)
 
     # ----- query position and uv data -----
-    surface_position = cmds.getAttr(f"{closestPointOnMesh_nd}.position")[0]
-    u_pos = cmds.getAttr(f"{closestPointOnMesh_nd}.parameterU")
-    v_pos = cmds.getAttr(f"{closestPointOnMesh_nd}.parameterV")
+    surface_position = cmds.getAttr(f"{closestpointonmesh_nd}.position")[0]
+    u_pos = cmds.getAttr(f"{closestpointonmesh_nd}.parameterU")
+    v_pos = cmds.getAttr(f"{closestpointonmesh_nd}.parameterV")
     # normalize nurbs surface UVs
     if flexi_surface_type == "nurbsSurface":
         u_min, u_max = cmds.getAttr(f"{flexi_surface}.minMaxRangeU")[0]
@@ -73,7 +73,7 @@ def create_joint_follicle(
         cmds.parent(locator_curve, follicle_transform, relative=True)
 
     # ----- cleanup -----
-    cmds.delete(closestPointOnMesh_nd)
+    cmds.delete(closestpointonmesh_nd)
     for axis in "XYZ":
         cmds.setAttr(f"{follicle_transform}.translate{axis}", lock=True)
         cmds.setAttr(f"{follicle_transform}.rotate{axis}", lock=True)

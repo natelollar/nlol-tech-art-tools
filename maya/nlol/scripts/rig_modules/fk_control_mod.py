@@ -34,6 +34,9 @@ class FkControlModule:
         use_joint_names: bool = False,
         blend_joints: list | None = None,
         hide_and_lock: bool = False,
+        hide_translate: bool = False,
+        hide_rotate: bool = False,
+        hide_scale: bool = False,
     ):
         """Args:
         rig_module_name: Custom name for the rig module.
@@ -49,15 +52,20 @@ class FkControlModule:
             For example, blend mouth corner control between head and jaw joints.
         hide_and_lock: Whether to hide the control and lock the attributes.
             Used by world_control_mod to hide and lock at world origin.
+        hide_translate, hide_rotate, hide scale: Lock and hide control attribute.
         """
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.main_joints = main_joints
+
         self.constraint = constraint
         self.use_joint_names = use_joint_names
-        # --------------------
         self.hide_and_lock = hide_and_lock
         self.blend_joints = blend_joints
+
+        self.hide_translate = hide_translate
+        self.hide_rotate = hide_rotate
+        self.hide_scale = hide_scale
 
         self.logger = get_logger()
 
@@ -94,7 +102,7 @@ class FkControlModule:
             if self.blend_joints:
                 self.fkctrl_grp, _, _, _, self.fkctrl_aux_grp = create_ctrl_grps(
                     self.fkctrl,
-                    aux_offset_group=True,
+                    aux_offset_grp=True,
                 )
             else:
                 self.fkctrl_grp = create_ctrl_grps(self.fkctrl)[0]
@@ -128,8 +136,18 @@ class FkControlModule:
                 cmds.setAttr(f"{self.fkctrl}.rotate", lock=True)
                 cmds.setAttr(f"{self.fkctrl}.scale", lock=True)
                 cmds.setAttr(f"{self.fkctrl}.visibility", 0)
+
+            lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
+            if self.hide_translate or self.hide_rotate or self.hide_scale:
+                for axis in "XYZ":
+                    if self.hide_translate:
+                        cmds.setAttr(f"{self.fkctrl}.translate{axis}", **lock_hide_kwargs)
+                    if self.hide_rotate:
+                        cmds.setAttr(f"{self.fkctrl}.rotate{axis}", **lock_hide_kwargs)
+                    if self.hide_scale:
+                        cmds.setAttr(f"{self.fkctrl}.scale{axis}", **lock_hide_kwargs)
             # hide visibility attribute
-            cmds.setAttr(f"{self.fkctrl}.visibility", lock=True, keyable=False, channelBox=False)
+            cmds.setAttr(f"{self.fkctrl}.visibility", **lock_hide_kwargs)
 
             # ----- return single control top group -----
             # if only one object
@@ -169,7 +187,7 @@ class FkControlModule:
         cmds.addAttr(
             self.fkctrl,
             longName="parentBlend",
-            defaultValue=0.75,
+            defaultValue=0.5,
             minValue=0.0,
             maxValue=1.0,
             keyable=True,

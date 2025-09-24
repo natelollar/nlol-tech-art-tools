@@ -32,7 +32,6 @@ class FlexiSurfaceIkChainModule:
     Requires "x" or "-x" down the chain.
     These chains are attached via follicles and ik single-chain solvers.
     Also, there is an fk ctrl chain offset for these attach chains.
-    TODO: Add support for standalone fk controls.
     """
 
     def __init__(
@@ -40,7 +39,8 @@ class FlexiSurfaceIkChainModule:
         rig_module_name: str,
         mirror_direction: str,
         joint_chains: list[list],
-        flexi_surface: str = "flexiSurface_geo",
+        flexi_surface: str,
+        hide_end_ctrl: bool = False,
     ):
         """Initialize rig module.
 
@@ -52,12 +52,15 @@ class FlexiSurfaceIkChainModule:
                 A function will later find the entire chain.
             flexi_surface: Polygonal or nurbs mesh object to attach Maya (hair) follicles to.
                 This mesh object would be skinned to some joints for base movement.
+                Should contain the string "flexiSurface".
+            hide_end_ctrl: Hide last of the created fk controls.
 
         """
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.joint_chains = joint_chains
-        self.flexi_surface = flexi_surface
+        self.flexi_surface = flexi_surface if flexi_surface else "flexiSurface_geo"
+        self.hide_end_ctrl = hide_end_ctrl
 
         self.logger = get_logger()
 
@@ -153,16 +156,19 @@ class FlexiSurfaceIkChainModule:
                     mirror_direction=self.mirr_side,
                     main_joints=joint_chain,
                     iteration_id=letter_index,
-                    aux_offset_group=True,
-                    return_all_groups=True,
+                    aux_offset_grp=True,
+                    return_all_grps=True,
                 ).build()
             )
+
             # hide and lock last fk contrl
-            cmds.setAttr(f"{fkctrl_top_grps[-1]}.visibility", 0)  # hide last fk top control group
-            for axis in "XYZ":  # lock last fk control attributes
-                cmds.setAttr(f"{fkctrls[-1]}.translate{axis}", lock=True)
-                cmds.setAttr(f"{fkctrls[-1]}.rotate{axis}", lock=True)
-                cmds.setAttr(f"{fkctrls[-1]}.scale{axis}", lock=True)
+            if self.hide_end_ctrl: 
+                for axis in "XYZ":  # lock last fk control attributes
+                    cmds.setAttr(f"{fkctrls[-1]}.translate{axis}", lock=True)
+                    cmds.setAttr(f"{fkctrls[-1]}.rotate{axis}", lock=True)
+                    cmds.setAttr(f"{fkctrls[-1]}.scale{axis}", lock=True)
+                # hide last fk top control group
+                cmds.setAttr(f"{fkctrl_top_grps[-1]}.visibility", 0)  
 
             # ----- create plusMinus average offsets -----
             # for joint direct connections

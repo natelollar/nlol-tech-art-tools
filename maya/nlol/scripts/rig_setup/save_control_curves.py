@@ -102,7 +102,7 @@ class SaveControlCurves:
                 'Skipping curve shape load. Maybe "rig_control_curves.json" not in rig folder.\n'
                 f'File not found: "{self.filepath}".'
             )
-            self.logger.warning(msg)
+            self.logger.info(msg)
             return
 
         old_curve_shapes = []

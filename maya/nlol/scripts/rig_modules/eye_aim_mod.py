@@ -104,7 +104,7 @@ class EyeAimModule:
             ).box_curve()
             fkctrl_top_grp, fkctrl_prnt_grp, _, _, fkctrl_aux_grp = create_ctrl_grps(
                 fkctrl,
-                aux_offset_group=True,
+                aux_offset_grp=True,
             )
             cmds.matchTransform(fkctrl_top_grp, jnt)  # snap control to joint
             # constrain joint to control

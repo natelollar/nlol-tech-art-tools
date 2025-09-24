@@ -8,14 +8,17 @@ from pathlib import Path
 
 from maya import cmds
 from nlol.defaults import rig_folder_path
+from nlol.scripts.rig_components import create_display_layers
 from nlol.scripts.rig_tools import skin_export_import
 from nlol.utilities.nlol_maya_logger import get_logger
 
-reload(skin_export_import)
 reload(rig_folder_path)
+reload(create_display_layers)
+reload(skin_export_import)
+
+objects_display_lyr = create_display_layers.objects_display_lyr
 
 rig_folderpath = rig_folder_path.rig_folderpath
-
 mesh_filepath = rig_folderpath / "model.ma"
 skeleton_filepath = rig_folderpath / "skeleton.ma"
 rig_helpers_filepath = rig_folderpath / "rig_helpers.ma"
@@ -137,15 +140,32 @@ class BuildMeshSkeleton:
         if not cmds.objExists(main_rig_group):
             main_rig_group = cmds.group(empty=True, name=main_rig_group)
 
-        # parent meshes and skeletons to top groups
+        # parent meshes and skeletons to top groups. hide joints and flexi meshes.
         cmds.parent(skeleton_root, skeletalmesh_grp)
+        cmds.setAttr(f"{skeleton_root}.visibility", 0)
+        objects_display_lyr(  # skeleton_root to display layer
+            objects=skeleton_root,
+            display_layer="joints_lyr",
+            reference=True,
+        )
         if other_top_joints:
             cmds.parent(other_top_joints, main_rig_group)
+            for top_jnts in other_top_joints:
+                cmds.setAttr(f"{top_jnts}.visibility", 0)
+
+        main_meshes = []
         for mesh in meshes:
             if "flexiSurface" in mesh:
                 cmds.parent(mesh, main_rig_group)
+                cmds.setAttr(f"{mesh}.visibility", 0)
             else:
                 cmds.parent(mesh, skeletalmesh_grp)
+                main_meshes.append(mesh)
+        objects_display_lyr(  # main_meshes to display layer
+            objects=main_meshes,
+            display_layer="geo_lyr",
+            reference=True,
+        )
 
         # --------------- bind skin ---------------
         skin_export_import.import_skin_weights()
