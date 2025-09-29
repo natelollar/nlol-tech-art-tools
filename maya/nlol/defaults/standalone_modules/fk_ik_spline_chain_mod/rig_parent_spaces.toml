@@ -1,0 +1,15 @@
+[[control]]
+control = "pelvis_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "fkSpine_01_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "ikSpineStart_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "spineSwchAux_ctrl"
+parents = "root_ctrl"

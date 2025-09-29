@@ -29,7 +29,7 @@ class BuildMeshSkeleton:
     Also, import rig helpers file.
     """
 
-    def __init__(self, rig_data_filepath: str | Path):
+    def __init__(self, rig_data_filepath: str | Path | None = None):
         self.rig_data_filepath = rig_data_filepath
         self._rig_data = None
 
@@ -39,18 +39,23 @@ class BuildMeshSkeleton:
     def rig_data(self) -> dict:
         """Returns dictionary from "rig_object_data.toml." """
         if self._rig_data is None:
-            with open(self.rig_data_filepath, "rb") as f:
-                self._rig_data = tomllib.load(f)
+            if self.rig_data_filepath.is_file():
+                with open(self.rig_data_filepath, "rb") as f:
+                    self._rig_data = tomllib.load(f)
         return self._rig_data
 
     @property
     def rig_name(self) -> str:
         """Returns rig_name variable from toml."""
+        if self.rig_data is None:
+            return None
         return self.rig_data.get("rig_name")
 
     @property
     def unreal_rig(self) -> str:
         """Returns unreal_rig variable from toml."""
+        if self.rig_data is None:
+            return None
         return self.rig_data.get("unreal_rig")
 
     def import_mesh_skeleton(self):
@@ -59,17 +64,19 @@ class BuildMeshSkeleton:
         """
         cmds.file(mesh_filepath, i=True)
         cmds.file(skeleton_filepath, i=True)
-        cmds.file(rig_helpers_filepath, i=True)
+
+        if rig_helpers_filepath.is_file():
+            cmds.file(rig_helpers_filepath, i=True)
+        else:
+            msg = '"rig_helpers.ma" not in rig folder. Skipping import...'
+            self.logger.info(msg)
 
     def build_skeletalmesh(self):
         """Skin the model geometry to the skeleton.
         Create parent group for this new skeletal mesh.
         """
         if not mesh_filepath.is_file() or not skeleton_filepath.is_file():
-            msg = (
-                '"model.ma", "skeleton.ma", and/or "rig_helpers.ma" not in rig folder. '
-                "Skipping import. Proceeding to rig phase."
-            )
+            msg = '"model.ma", and/or "skeleton.ma" not in rig folder. Skipping import..."'
             self.logger.info(msg)
             return
 
@@ -86,7 +93,7 @@ class BuildMeshSkeleton:
             bgc=(0.2, 0.2, 0.2),
         )
         if dialog_result == no_string:
-            msg = 'Canceling import for "model.ma" and "skeleton.ma". Proceeding to rig phase.'
+            msg = 'Skipping import for "model.ma", "skeleton.ma" and "rig_helpers.ma".'
             self.logger.info(msg)
             return
 
@@ -142,7 +149,7 @@ class BuildMeshSkeleton:
 
         # parent meshes and skeletons to top groups. hide joints and flexi meshes.
         cmds.parent(skeleton_root, skeletalmesh_grp)
-        cmds.setAttr(f"{skeleton_root}.visibility", 0)
+        #cmds.setAttr(f"{skeleton_root}.visibility", 0)
         objects_display_lyr(  # skeleton_root to display layer
             objects=skeleton_root,
             display_layer="joints_lyr",

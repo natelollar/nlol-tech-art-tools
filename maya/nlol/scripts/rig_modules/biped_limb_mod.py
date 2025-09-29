@@ -930,7 +930,7 @@ class BipedLimbModule:
 
         """
         # ----- distance between start joint and ik control -----
-        ruler_shape, ruler_transform, ruler_loc_01, ruler_loc_02, _, ruler_loc_02_const = (
+        ruler_shape, ruler_transform, ruler_loc_01, ruler_loc_02, _, ruler_loc_02_const, *_ = (
             create_attached_ruler(
                 name=f"{self.mod_name}SoftIkRuler{self.mirr_side}",
                 ruler_start_object=self.ik_hip_ctrl,

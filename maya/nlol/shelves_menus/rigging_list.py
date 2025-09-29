@@ -253,15 +253,26 @@ def build_rigging_list():
         },
         shelf_separator,
         {
+            "label": "Build Skeletal Mesh Only",
+            "image": "pythonFamily.png",
+            "annotation": 'Build only skeletal mesh from "maya/nlol/defaults/...".  '
+            'To change rig setup, change folder path in "rig_folder_path.py".',
+            "imageOverlayLabel": "SklMsh",
+            "backgroundColor": random_clrs[6],
+            "command": "from nlol.scripts.rig_setup import rig_build_mesh_skeleton\n"
+            "from importlib import reload\nreload(rig_build_mesh_skeleton)\n"
+            "rig_build_mesh_skeleton.run_mesh_skeleton_build()",
+            "sourceType": "python",
+        },
+        {
             "label": "Build Rig",
             "image": "pythonFamily.png",
-            "annotation": 'Build rig files from "maya/nlol/defaults/rig_folder_path.py"'
+            "annotation": 'Build rig files from "maya/nlol/defaults/...".  '
             'Change folder path in "rig_folder_path.py" to change rig setup.',
             "imageOverlayLabel": "BRig",
             "backgroundColor": random_clrs[7],
             "command": "from nlol.scripts.rig_setup import rig_build\n"
-            "from importlib import reload\n"
-            "reload(rig_build)\n"
+            "from importlib import reload\nreload(rig_build)\n"
             "rig_build.run_rig_build()",
             "sourceType": "python",
         },
@@ -272,8 +283,7 @@ def build_rigging_list():
             "imageOverlayLabel": "SvCrvs",
             "backgroundColor": random_clrs[8],
             "command": "from nlol.scripts.rig_setup import save_control_curves\n"
-            "from importlib import reload\n"
-            "reload(save_control_curves)\n"
+            "from importlib import reload\nreload(save_control_curves)\n"
             "save_control_curves.SaveControlCurves().write_curve_attributes()",
             "sourceType": "python",
         },
@@ -291,27 +301,16 @@ def build_rigging_list():
             "rig_delete.remove_nlol_rig()",
             "sourceType": "python",
         },
-        # {
-        #     "label": "Test Function",
-        #     "image": "pythonFamily.png",
-        #     "annotation": "Run test code from here. Add your code to this python function.",
-        #     "imageOverlayLabel": "Tst",
-        #     "backgroundColor": random_clrs[10],
-        #     "command": "from nlol.scripts.standalone import run_test\n"
-        #     "from importlib import reload\n"
-        #     "reload(run_test)\n"
-        #     "run_test.test()",
-        #     "sourceType": "python",
-        # },
         {
             "label": "Test Function",
             "image": "pythonFamily.png",
             "annotation": "Run test code from here. Add your code to this python function.",
             "imageOverlayLabel": "Tst",
             "backgroundColor": random_clrs[10],
-            "command": "from nlol.scripts.rig_modules import flexi_surface_submod\n"
-            "from importlib import reload\nreload(flexi_surface_submod)\n"
-            "flexi_surface_submod.FlexiSurfaceSubmod().build_flexi_surface()",
+            "command": "from nlol.scripts.standalone import run_test\n"
+            "from importlib import reload\n"
+            "reload(run_test)\n"
+            "run_test.test()",
             "sourceType": "python",
         },
         shelf_separator,

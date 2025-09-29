@@ -15,7 +15,7 @@ control = "pelvis_ctrl"
 parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 
 [[control]]
-control = "spine_01_ctrl"
+control = "fkSpine_01_ctrl, ikSpineStart_ctrl"
 parents = "pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 separate_transforms = true
 skip_translate = true
@@ -23,7 +23,7 @@ skip_scale = true
 base_parent = "pelvis_ctrl"
 
 [[control]]
-control = "neck_01_ctrl"
+control = "fkNeck_01_ctrl, ikNeckStart_ctrl"
 parents = "spine_05, pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 separate_transforms = true
 skip_translate = true
@@ -46,7 +46,7 @@ mirror_right = true
 
 [[control]]
 control = "ikLegPoleVector_left_ctrl"
-parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, pelvis_ctrl, ikAnkle_left_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikAnkle_left_ctrl, pelvis_ctrl"
 separate_transforms = true
 skip_rotate = true
 skip_scale = true
@@ -56,7 +56,7 @@ mirror_right = true
 
 [[control]]
 control = "ikAnkle_left_ctrl"
-parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, pelvis_ctrl, ikUpperLeg_left_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikUpperLeg_left_ctrl, pelvis_ctrl"
 mirror_right = true
 
 [[control]]
@@ -76,7 +76,7 @@ mirror_right = true
 
 [[control]]
 control = "fkUpperArm_left_ctrl"
-parents = "offsetShoulder_left_02_jnt, spine_04_ctrl, pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
+parents = "offsetShoulder_left_02_jnt, spine_05, pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 separate_transforms = true
 skip_translate = true
 skip_scale = true
@@ -85,12 +85,12 @@ mirror_right = true
 
 [[control]]
 control = "ikArmPoleVector_left_ctrl"
-parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, pelvis_ctrl, spine_04_ctrl, ikEndArm_left_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikEndArm_left_ctrl, spine_05, pelvis_ctrl"
 mirror_right = true
 
 [[control]]
 control = "ikEndArm_left_ctrl"
-parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, pelvis_ctrl, spine_04_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, spine_05, pelvis_ctrl"
 mirror_right = true
 
 # --------------- fingers ---------------
@@ -121,16 +121,22 @@ mirror_right = true
 
 # --------------- switch controls ---------------
 [[control]]
-control = "legSwch_left_ctrl"
-parents = "global_ctrl, root_ctrl, cog_ctrl, pelvis_ctrl, world_ctrl"
+control = "legSwch_left_ctrl, armSwch_left_ctrl, shoulderSwch_left_ctrl"
+parents = """
+global_ctrl, 
+root_ctrl, 
+cog_ctrl, 
+pelvis_ctrl, 
+world_ctrl
+"""
 mirror_right = true
 
 [[control]]
-control = "armSwch_left_ctrl"
-parents = "global_ctrl, root_ctrl, cog_ctrl, pelvis_ctrl, world_ctrl"
-mirror_right = true
-
-[[control]]
-control = "shoulderSwch_left_ctrl"
-parents = "global_ctrl, root_ctrl, cog_ctrl, pelvis_ctrl, world_ctrl"
-mirror_right = true
+control = "neckSwch_ctrl, spineSwch_ctrl"
+parents = """
+global_ctrl, 
+root_ctrl, 
+cog_ctrl, 
+pelvis_ctrl, 
+world_ctrl
+"""

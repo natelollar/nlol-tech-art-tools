@@ -85,9 +85,11 @@ Notes for rigging setup.
 - dict = dictionary
 - dir = direction
 - dist = distance
+- eff = effector
 - fk = forward kinematics
 - geo = geometry
 - grp = group
+- hdl = handle
 - ik = inverse kinematics
 - jnt = joint
 - loc = locator
@@ -110,3 +112,4 @@ Notes for rigging setup.
 - tran = translate
 - trans = transform
 - vis = visibility
+*Plural abbreviations may end with an "s".*

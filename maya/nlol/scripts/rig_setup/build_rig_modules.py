@@ -7,6 +7,7 @@ from importlib import reload
 from pathlib import Path
 
 from maya import cmds
+from nlol.scripts.rig_components import create_display_layers
 from nlol.scripts.rig_modules import (
     biped_leg_mod,
     biped_limb_mod,
@@ -14,11 +15,11 @@ from nlol.scripts.rig_modules import (
     fk_chain_mod,
     fk_control_mod,
     fk_ik_single_chain_mod,
+    fk_ik_spline_chain_mod,
     flexi_surface_fk_ctrl_mod,
     flexi_surface_ik_chain_mod,
     world_control_mod,
 )
-from nlol.scripts.rig_components import create_display_layers
 from nlol.scripts.rig_tools import select_multiple_joints
 from nlol.utilities import utils_maya
 from nlol.utilities.nlol_maya_logger import get_logger
@@ -28,6 +29,7 @@ reload(biped_limb_mod)
 reload(fk_chain_mod)
 reload(fk_control_mod)
 reload(fk_ik_single_chain_mod)
+reload(fk_ik_spline_chain_mod)
 reload(flexi_surface_ik_chain_mod)
 reload(flexi_surface_fk_ctrl_mod)
 reload(world_control_mod)
@@ -214,6 +216,16 @@ def build_modules(rig_data_filepath: str | Path):
 
                 case "fk_ik_single_chain_mod":
                     module_instance = fk_ik_single_chain_mod.FkIkSingleChainModule(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        main_joints=main_joints,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
+                case "fk_ik_spline_chain_mod":
+                    module_instance = fk_ik_spline_chain_mod.FkIkSplineChainModule(
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,

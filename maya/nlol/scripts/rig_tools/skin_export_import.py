@@ -1,5 +1,7 @@
+import re
 import xml.etree.ElementTree as ET
 from importlib import reload
+from pathlib import Path
 
 from maya import cmds, mel
 from nlol.defaults import rig_folder_path
@@ -11,16 +13,28 @@ skinweights_folderpath = rig_folder_path.rig_folderpath / "skin_weights"
 logger = get_logger()
 
 
+def empty_xml_filename_param(xml_filepath):
+    """Remove the fileName parameter value for the xml skin weights.
+    To avoid sharing local filepaths.
+    """
+    with open(xml_filepath) as f:
+        content = f.read()
+    content = re.sub(r'fileName="[^"]*"', 'fileName=""', content)
+    with open(xml_filepath, "w") as f:
+        f.write(content)
+
+
 def export_skin_weights():
     """Export index values of multiple skin clusters to xml."""
     mesh_selection = cmds.ls(selection=True)
+
+    skinweights_folderpath.mkdir(exist_ok=True)
 
     for mesh in mesh_selection:
         mesh_history = cmds.listHistory(mesh)
         skin_cluster = cmds.ls(mesh_history, type="skinCluster")[0]
         logger.info(f"mesh: {mesh}")
         logger.info(f"skin_cluster: {skin_cluster}")
-
         cmds.deformerWeights(
             f"{skin_cluster}.xml",
             export=True,
@@ -28,6 +42,8 @@ def export_skin_weights():
             format="XML",
             path=skinweights_folderpath,
         )
+
+        empty_xml_filename_param(Path(skinweights_folderpath) / f"{skin_cluster}.xml")
 
 
 def import_skin_weights(selected_only: bool = False):
@@ -87,9 +103,9 @@ def import_skin_weights(selected_only: bool = False):
         logger.debug(f"old_skincluster: {old_skincluster}")
         if old_skincluster:
             cmds.select(mesh)
-            # going to bindPose first is good, 
+            # going to bindPose first is good,
             # unless joints have been intentionally moved or reparented
-            #mel.eval("gotoBindPose; DetachSkin;")
+            # mel.eval("gotoBindPose; DetachSkin;")
             mel.eval("DetachSkin;")
             cmds.select(clear=True)
 

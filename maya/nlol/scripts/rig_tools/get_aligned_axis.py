@@ -1,5 +1,10 @@
-from maya import cmds
 from maya.api import OpenMaya
+
+from maya import cmds
+from nlol.utilities.nlol_maya_logger import get_logger
+
+logger = get_logger()
+
 
 def axis_facing_direction(object: str, world_space_direction: str) -> str:
     """Find which object axis most aims in the given world space direction.
@@ -94,6 +99,31 @@ def axis_facing_child(object_parent: str, object_child: str) -> str:
             most_aligned_axis = axis
 
     return most_aligned_axis
+
+
+def query_main_axis(
+    parent_jnt: str,
+    child_jnt: str,
+    mod_name: str = "",
+    mirr_side: str = "",
+) -> str | None:
+    """Get down the joint chain main axis.
+    Query the main axis facing down the joint chain.
+    """
+    down_chain_axis = axis_facing_child(
+        object_parent=parent_jnt,
+        object_child=child_jnt,
+    )
+    if down_chain_axis not in ["x", "-x"]:
+        error_msg = (
+            f'Main axis pointing down the "{mod_name}{mirr_side}"'
+            f' chain is "{down_chain_axis}".\n'
+            'Main axis should be "x" or "-x".\n  '
+            f'Rig module "{mod_name}{mirr_side}" did not build.',
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+    return down_chain_axis
 
 
 def axis_facing_child_snap(
