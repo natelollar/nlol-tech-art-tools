@@ -69,33 +69,38 @@ mirror_right = true
 rig_module = "fk_chain_mod" 
 rig_module_name = "thumb" 
 mirror_direction = "left"
-joints = "thumb_01_l, thumb_02_l, thumb_03_l"
+joints = "thumb_01_l"
+get_joint_chain = true
 mirror_right = true
 
 [[rig_module]]
 rig_module = "fk_chain_mod" 
 rig_module_name = "indexFinger"
 mirror_direction = "left" 
-joints = "index_metacarpal_l, index_01_l, index_02_l, index_03_l"
+joints = "index_metacarpal_l"
+get_joint_chain = true
 mirror_right = true
 
 [[rig_module]]
 rig_module = "fk_chain_mod" 
 rig_module_name = "middleFinger"
 mirror_direction = "left" 
-joints = "middle_metacarpal_l, middle_01_l, middle_02_l, middle_03_l"
+joints = "middle_metacarpal_l"
+get_joint_chain = true
 mirror_right = true
 
 [[rig_module]]
 rig_module = "fk_chain_mod" 
 rig_module_name = "ringFinger" 
 mirror_direction = "left" 
-joints = "ring_metacarpal_l, ring_01_l, ring_02_l, ring_03_l"
+joints = "ring_metacarpal_l"
+get_joint_chain = true
 mirror_right = true
 
 [[rig_module]]
 rig_module = "fk_chain_mod" 
 rig_module_name = "pinkFinger" 
 mirror_direction = "left" 
-joints = "pinky_metacarpal_l, pinky_01_l, pinky_02_l, pinky_03_l"
+joints = "pinky_metacarpal_l"
+get_joint_chain = true
 mirror_right = true

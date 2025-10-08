@@ -14,7 +14,9 @@ Entering the ctrl name will automatically find the parent switch group.
 - `base_parent` (str): Parent and scale constrain the base parent group, above the parent switch group. 
     - May be used instead of a single "parents" object for a regular parent relationship. 
     - Also, used when a point constraint needs full rotate parent constraint above, like for "use_point_constraint".
+    - Also, helpful if only enabling rotation switching.
     - May add multiple base_parent values.
+- `base_parent_enabled` (bool): Used instead of "base_parent". Copies and uses "parents" values for "base_parent".
 - `mirror_right` (str): Use left control data for the right side. 
     - Currently works with any "left" or parents with suffix "_l".
     - See "left_to_right_str()" function.  

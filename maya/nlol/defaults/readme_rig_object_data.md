@@ -19,6 +19,18 @@ Rig object data for specified rig modules.
 ---
 - `upper_twist_joints, lower_twist_joints` (str): List of joints in string format. Twist joints of the upper or lower limb segments.  
     "biped_leg_mod", "biped_limb_mod" only. 
+- `main_object_names`: Main object names to be used instead of raw joint names. String name list matching number of "joints".
+    "biped_leg_mod", "biped_limb_mod" only. 
+- `upper_twist_name, lower_twist_name`: Main upper/lower twist object name instead of raw joint names. Single string name
+    to be used as base name for all twist joints.
+    "biped_leg_mod", "biped_limb_mod" only. 
+- `foot_locators` (str): Foot locators instead of using default names, for reverse foot ctrls.  
+    Should be 4 listed in order; toe end, heel, lateral foot side and medial foot side.
+    "biped_leg_mod" only. 
+- `invert_toe_wiggle, invert_toe_spin, invert_foot_lean, invert_foot_tilt, invert_foot_roll` (bool): Invert rotation direction of 
+    specified reverse foot attribute. Useful, for instance, if feet have same joint axis orientation, but are on different mirror sides,
+    in this case "tilt" rotation would need to be inverted for one side.
+    "biped_leg_mod" only. 
 - `constraint` (bool): Whether to constrain the joint to the ctrl.  
     "fk_control_mod" only. 
 - `use_joint_names` (bool): Use joint names for control names. Replaces the end type with "ctrl". Requires nLol naming convention.  

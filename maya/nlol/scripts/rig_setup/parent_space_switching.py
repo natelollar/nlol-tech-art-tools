@@ -77,6 +77,7 @@ class ParentSpacing:
                     "skip_scale": ps_dict.get("skip_scale"),
                     "use_point_constraint": ps_dict.get("use_point_constraint"),
                     "base_parent": base_parent,
+                    "base_parent_enable": ps_dict.get("base_parent_enable"),
                 }
                 right_controls.append(right_dict)
         rig_ps_data.extend(right_controls)
@@ -86,12 +87,12 @@ class ParentSpacing:
             # ----- get variables for child control/s -----
             control = ps_dict["control"]
             control = control.split(",")
-            control = [str.strip() for str in control]
+            control = [txt.strip() for txt in control if txt.strip()]
 
             parents = ps_dict.get("parents")
             if parents:  # may be only base_parent exists
                 parents = parents.split(",")
-                parents = [str.strip() for str in parents]
+                parents = [txt.strip() for txt in parents if txt.strip()]
 
             separate_transforms = ps_dict.get("separate_transforms")
             skip_translate = ps_dict.get("skip_translate")
@@ -103,7 +104,18 @@ class ParentSpacing:
             base_parent = ps_dict.get("base_parent")
             if base_parent:
                 base_parent = base_parent.split(",")
-                base_parent = [str.strip() for str in base_parent]
+                base_parent = [txt.strip() for txt in base_parent if txt.strip()]
+            
+            base_parent_enable = ps_dict.get("base_parent_enable")
+            if base_parent and base_parent_enable: # redundant if both keys used
+                msg = (
+                    f'Do not need both "base_parent" and "base_parent_enable": {control}\n'
+                    '"base_parent_enable" copies and uses "parents" for "base_parent" values.'
+                )
+                self.logger.error(msg)
+                raise ValueError(msg)
+            if base_parent_enable: # used instead of base_parent
+                base_parent = parents
 
             # check if parent objects exist in scene
             for obj in parents or []:

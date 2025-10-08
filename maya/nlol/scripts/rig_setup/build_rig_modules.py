@@ -66,10 +66,14 @@ def build_modules(rig_data_filepath: str | Path):
         mirror_direction = mod_dict.get("mirror_direction")
         if mirror_right and mirror_direction and "left" in mirror_direction:
             joints = left_to_right_str(mod_dict.get("joints"))
+            mirror_direction = (
+                mirror_direction.replace("left", "right") if mirror_direction else None
+            )
             upper_twist_joints = left_to_right_str(mod_dict.get("upper_twist_joints", ""))
             lower_twist_joints = left_to_right_str(mod_dict.get("lower_twist_joints", ""))
-            if mirror_direction:
-                mirror_direction = mirror_direction.replace("left", "right")
+            foot_locators = (
+                left_to_right_str(ft_locs) if (ft_locs := mod_dict.get("foot_locators")) else ""
+            )
 
             joint_chains_str_list = mod_dict.get("joint_chains", [])
             joint_chains = [left_to_right_str(string_list) for string_list in joint_chains_str_list]
@@ -78,8 +82,6 @@ def build_modules(rig_data_filepath: str | Path):
                 "rig_module": rig_module,
                 "rig_module_name": rig_module_name,
                 "joints": joints,
-                "upper_twist_joints": upper_twist_joints,
-                "lower_twist_joints": lower_twist_joints,
                 "mirror_direction": mirror_direction,
                 "joint_chains": joint_chains,
                 "constraint": mod_dict.get("constraint"),
@@ -92,6 +94,17 @@ def build_modules(rig_data_filepath: str | Path):
                 "hide_rotate": mod_dict.get("hide_rotate"),
                 "hide_scale": mod_dict.get("hide_scale"),
                 "display_layer": mod_dict.get("display_layer"),
+                "upper_twist_joints": upper_twist_joints,
+                "lower_twist_joints": lower_twist_joints,
+                "main_object_names": mod_dict.get("main_object_names", ""),
+                "upper_twist_name": mod_dict.get("upper_twist_name"),
+                "lower_twist_name": mod_dict.get("lower_twist_name"),
+                "foot_locators": foot_locators,
+                "invert_toe_wiggle": mod_dict.get("invert_toe_wiggle"),
+                "invert_toe_spin": mod_dict.get("invert_toe_spin"),
+                "invert_foot_lean": mod_dict.get("invert_foot_lean"),
+                "invert_foot_tilt": mod_dict.get("invert_foot_tilt"),
+                "invert_foot_roll": mod_dict.get("invert_foot_roll"),
             }
             right_modules.append(right_dict)
         elif mirror_right and (mirror_direction is None or "left" not in mirror_direction):
@@ -115,24 +128,19 @@ def build_modules(rig_data_filepath: str | Path):
             main_joints = mod_dict.get("joints")
             if main_joints:
                 main_joints = mod_dict["joints"].split(",")
-                main_joints = [txt.strip() for txt in main_joints]
+                main_joints = [txt.strip() for txt in main_joints if txt.strip()]
             if mod_dict.get("get_joint_chain"):
                 main_joints = select_multiple_joints.select_joint_chain(main_joints)
 
-            upper_twist_joints = mod_dict.get("upper_twist_joints", "").split(",")
-            upper_twist_joints = [txt.strip() for txt in upper_twist_joints]
-            lower_twist_joints = mod_dict.get("lower_twist_joints", "").split(",")
-            lower_twist_joints = [txt.strip() for txt in lower_twist_joints]
-
             blend_joints = mod_dict.get("blend_joints")
             if blend_joints:
-                blend_joints = [txt.strip() for txt in blend_joints.split(",")]
+                blend_joints = [txt.strip() for txt in blend_joints.split(",") if txt.strip()]
 
             joint_chains_str_list = mod_dict.get("joint_chains", [])
             joint_chains = []
             for string_list in joint_chains_str_list:
                 joint_list = string_list.split(",")
-                joint_list = [txt.strip() for txt in joint_list]
+                joint_list = [txt.strip() for txt in joint_list if txt.strip()]
                 joint_chains.append(joint_list)
 
             constraint = mod_dict.get("constraint")
@@ -143,6 +151,22 @@ def build_modules(rig_data_filepath: str | Path):
             hide_rotate = mod_dict.get("hide_rotate")
             hide_scale = mod_dict.get("hide_scale")
             display_layer = mod_dict.get("display_layer")
+
+            upper_twist_joints = mod_dict.get("upper_twist_joints", "").split(",")
+            upper_twist_joints = [txt.strip() for txt in upper_twist_joints if txt.strip()]
+            lower_twist_joints = mod_dict.get("lower_twist_joints", "").split(",")
+            lower_twist_joints = [txt.strip() for txt in lower_twist_joints if txt.strip()]
+            main_object_names = mod_dict.get("main_object_names", "").split(",")
+            main_object_names = [txt.strip() for txt in main_object_names if txt.strip()]
+            upper_twist_name = mod_dict.get("upper_twist_name")
+            lower_twist_name = mod_dict.get("lower_twist_name")
+            foot_locators = mod_dict.get("foot_locators", "").split(",")
+            foot_locators = [txt.strip() for txt in foot_locators if txt.strip()]
+            invert_toe_wiggle = mod_dict.get("invert_toe_wiggle")
+            invert_toe_spin = mod_dict.get("invert_toe_spin")
+            invert_foot_lean = mod_dict.get("invert_foot_lean")
+            invert_foot_tilt = mod_dict.get("invert_foot_tilt")
+            invert_foot_roll = mod_dict.get("invert_foot_roll")
 
             aim_vector = mod_dict.get("aim_vector")
             up_vector = mod_dict.get("up_vector")
@@ -156,6 +180,9 @@ def build_modules(rig_data_filepath: str | Path):
                         main_joints=main_joints,
                         upper_twist_joints=upper_twist_joints,
                         lower_twist_joints=lower_twist_joints,
+                        main_object_names=main_object_names,
+                        upper_twist_name=upper_twist_name,
+                        lower_twist_name=lower_twist_name,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -168,6 +195,15 @@ def build_modules(rig_data_filepath: str | Path):
                         main_joints=main_joints,
                         upper_twist_joints=upper_twist_joints,
                         lower_twist_joints=lower_twist_joints,
+                        main_object_names=main_object_names,
+                        upper_twist_name=upper_twist_name,
+                        lower_twist_name=lower_twist_name,
+                        foot_locators=foot_locators,
+                        invert_toe_wiggle=invert_toe_wiggle,
+                        invert_toe_spin=invert_toe_spin,
+                        invert_foot_lean=invert_foot_lean,
+                        invert_foot_tilt=invert_foot_tilt,
+                        invert_foot_roll=invert_foot_roll,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)

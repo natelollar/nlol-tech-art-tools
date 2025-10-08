@@ -41,6 +41,7 @@ def select_joint_chain(start_end_joint: list[str]) -> list[str]:
                     all_descendents = (
                         cmds.listRelatives(jnt, allDescendents=True, type="joint") or []
                     )
+                    all_descendents.append(jnt) # append immediate child back incase its end jnt
                     if end_joint in all_descendents:
                         jnt_chain.extend([jnt])
                         break

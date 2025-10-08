@@ -20,7 +20,7 @@ parents = "pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 separate_transforms = true
 skip_translate = true
 skip_scale = true
-base_parent = "pelvis_ctrl"
+base_parent_enable = true
 
 [[control]]
 control = "fkNeck_01_ctrl, ikNeckStart_ctrl"
@@ -28,7 +28,7 @@ parents = "spine_05, pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 separate_transforms = true
 skip_translate = true
 skip_scale = true
-base_parent = "spine_05"
+base_parent_enable = true
 
 [[control]]
 control = "ikUpperLeg_left_ctrl"
@@ -41,21 +41,21 @@ parents = "pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
 separate_transforms = true
 skip_translate = true
 skip_scale = true
-base_parent = "pelvis_ctrl"
+base_parent_enable = true
 mirror_right = true
 
 [[control]]
 control = "ikLegPoleVector_left_ctrl"
-parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikAnkle_left_ctrl, pelvis_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikAnkleLeg_left_ctrl, pelvis_ctrl"
 separate_transforms = true
 skip_rotate = true
 skip_scale = true
 use_point_constraint = true
-base_parent = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
+base_parent_enable = true
 mirror_right = true
 
 [[control]]
-control = "ikAnkle_left_ctrl"
+control = "ikAnkleLeg_left_ctrl"
 parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikUpperLeg_left_ctrl, pelvis_ctrl"
 mirror_right = true
 
@@ -80,7 +80,7 @@ parents = "offsetShoulder_left_02_jnt, spine_05, pelvis_ctrl, cog_ctrl, root_ctr
 separate_transforms = true
 skip_translate = true
 skip_scale = true
-base_parent = "offsetShoulder_left_02_jnt"
+base_parent_enable = true
 mirror_right = true
 
 [[control]]

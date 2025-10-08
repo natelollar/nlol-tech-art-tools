@@ -341,7 +341,7 @@ class FkIkSingleChainModule:
         # -------------------- lock and hide attributes --------------------
         lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
         for axis in "XYZ":
-            cmds.setAttr(f"{ik_start_ctrl}.rotate{axis}", **lock_hide_kwargs)
+            # cmds.setAttr(f"{ik_start_ctrl}.rotate{axis}", **lock_hide_kwargs)
             cmds.setAttr(f"{ik_start_ctrl}.scale{axis}", **lock_hide_kwargs)
             cmds.setAttr(f"{ik_ctrl}.rotate{axis}", **lock_hide_kwargs)
             cmds.setAttr(f"{ik_ctrl}.scale{axis}", **lock_hide_kwargs)

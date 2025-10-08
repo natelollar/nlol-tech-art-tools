@@ -31,16 +31,37 @@ scale_constr = clean_constraints.scale_constr
 class BipedFootModule:
     """Create reverse foot rig module."""
 
-    def __init__(self, limb_module: BipedLimbModule) -> None:
+    def __init__(
+        self,
+        limb_module: BipedLimbModule,
+        foot_locators: list[str] | None = None,
+        invert_toe_wiggle: bool = False,
+        invert_toe_spin: bool = False,
+        invert_foot_lean: bool = False,
+        invert_foot_tilt: bool = False,
+        invert_foot_roll: bool = False,
+    ) -> None:
         """Initialize foot module.
 
         Args:
             limb_module: The "BipedLimbModule" instance this foot belongs to.
+            foot_locators: Locators determining position rotation of reverse foot ctrls.
+                4 locators; toe end, heel, lateral foot side and medial foot side,
+                listed in that order. Foot locator names do not matter,
+                just that they are listed in the correct order.
+                Or use the pre-determined locator names and skip the arg,
+                if character just has the bipedal left and right leg.
 
         """
         self.limb_mod = limb_module
-        self.mirr_side = self.limb_mod.mirr_side
         self.mod_name = f"{limb_module.mod_name}Foot"
+        self.mirr_side = self.limb_mod.mirr_side
+        self.foot_locators = foot_locators
+        self.invert_toe_wiggle = invert_toe_wiggle
+        self.invert_toe_spin = invert_toe_spin
+        self.invert_foot_lean = invert_foot_lean
+        self.invert_foot_tilt = invert_foot_tilt
+        self.invert_foot_roll = invert_foot_roll
         self.logger = get_logger()
 
     def build(self, base_foot_aim: bool = True, reverse_foot_attrs: bool = True):
@@ -56,14 +77,21 @@ class BipedFootModule:
 
         """
         # ----- check if toe joint exists -----
-        if len(self.limb_mod.ik_jnts) < 4:
-            warning_msg = (
-                f'Rig module "{self.mod_name}{self.mirr_side}" failed to build.\n'
-                f'Less than 4 "{self.limb_mod.mod_name}{self.mirr_side}" joints.'
-                " Likely, toe joint missing in rig object data toml.",
+        if len(self.limb_mod.ik_jnts) != 4:
+            msg = (
+                f'Rig submodule "{self.limb_mod.mod_name}, {self.mirr_side}" failed to build. '
+                f"Needs 4 joints. Likely, toe joint missing in rig object data toml."
             )
-            self.logger.warning(warning_msg)
-            return None
+            self.logger.error(msg)
+            raise ValueError(msg)
+        if self.foot_locators and len(self.foot_locators) != 4:
+            msg = (
+                'Must be 4 "foot_locators" listed: '
+                "toe end, heel, lateral foot side and medial foot side. "
+                f'"{self.mod_name}, {self.mirr_side}"'
+            )
+            self.logger.error(msg)
+            raise ValueError(msg)
 
         # ----- delete simple ik to control -----
         if self.limb_mod.ik_toe_ctrl_grp:
@@ -81,53 +109,53 @@ class BipedFootModule:
             locator_name=f"toe{self.mirr_side}loc",
             local_scale=(5, 5, 5),
         )[0]
-        # match toe locator rotation to ankle
+        # additionally, match toe locator rotation to ankle
         cmds.matchTransform(toe_loc, self.limb_mod.main_joints[2], rotation=True)
 
-        foot_locators = [  # reverse foot locator list
-            f"toeEnd{self.mirr_side}loc",
-            f"heel{self.mirr_side}loc",
-            f"lateral{self.mirr_side}loc",
-            f"medial{self.mirr_side}loc",
-        ]
+        if self.foot_locators:
+            foot_locators = self.foot_locators
+        else:
+            foot_locators = [  # reverse foot locator list
+                f"toeEnd{self.mirr_side}loc",
+                f"heel{self.mirr_side}loc",
+                f"lateral{self.mirr_side}loc",
+                f"medial{self.mirr_side}loc",
+            ]
         foot_locators.insert(0, foot_ankle_loc)
         foot_locators.insert(1, toe_loc)
 
         missing_loc = [loc for loc in foot_locators if not cmds.objExists(loc)]
         if missing_loc:
-            warning_msg = (
-                f"Missing reverse foot locators: {missing_loc}\nFoot module failed to build.",
-            )
-            self.logger.warning(warning_msg)
-            return False
+            msg = f"Missing reverse foot locators: {missing_loc}. Foot module failed to build."
+            self.logger.error(msg)
+            raise ValueError(msg)
 
         # ---------------------------------------------------------
         # ---------- create controls to replace locators ----------
         foot_ctrls = []
         foot_ctrl_grps = []
-        foot_offset_ctrl_grps = []
-        for loc in foot_locators:
-            # ----- create control name -----
-            ctrl_name = loc.replace(
-                "_loc",
-                "_ctrl",
-            )
+        foot_aux_ctrl_grps = []
+        loc_base_names = ["ankle", "toe", "toeEnd", "heel", "lateral", "medial"]
+        for loc, loc_nm in zip(foot_locators, loc_base_names, strict=False):
             # ----- create control -----
             foot_ctrl = CreateCurves(
-                name=f"{self.mod_name}{cap(ctrl_name)}",
+                name=f"{self.mod_name}{cap(loc_nm)}{self.mirr_side}ctrl",
                 size=0.25,
                 color_rgb=(0.2, 1.0, 0.0),
             ).sphere_curve()
 
             # ----- control group -----
-            foot_ctrl_grp, _, _, foot_offs_ctrl_grp = create_ctrl_grps(foot_ctrl)
+            foot_ctrl_grp, *_, foot_aux_ctrl_grp = create_ctrl_grps(
+                foot_ctrl,
+                aux_offset_grp=True,
+            )
 
             # ----- snap control group to locator -----
             cmds.matchTransform(foot_ctrl_grp, loc)
 
             foot_ctrls.append(foot_ctrl)
             foot_ctrl_grps.append(foot_ctrl_grp)
-            foot_offset_ctrl_grps.append(foot_offs_ctrl_grp)
+            foot_aux_ctrl_grps.append(foot_aux_ctrl_grp)
 
         # parent controls and groups together
         for grp, ctrl in zip(
@@ -144,15 +172,13 @@ class BipedFootModule:
             size=1,
             color_rgb=(1, 0, 1),
         ).box_curve()
-
         # ----- control group -----
-        toe_wiggle_ctrl_grp, _, _, toe_wiggle_offs_ctrl_grp = create_ctrl_grps(toe_wiggle_ctrl)
-
+        toe_wiggle_ctrl_grp, *_, toe_wiggle_aux_ctrl_grp = create_ctrl_grps(
+            toe_wiggle_ctrl,
+            aux_offset_grp=True,
+        )
         # ----- snap control to locator -----
         cmds.matchTransform(toe_wiggle_ctrl_grp, foot_locators[1])
-
-        # --------------- parent toe wiggle control ---------------
-        cmds.parent(toe_wiggle_ctrl_grp, foot_ctrls[2])
 
         # -------------------------------------------------------
         # -------------------- parent groups --------------------
@@ -163,6 +189,9 @@ class BipedFootModule:
         cmds.parent(foot_top_grp, self.limb_mod.ik_limb_top_grp)
         # parent foot controls under pivot group
         cmds.parent(foot_ctrl_grps[-1], foot_pivot_grp)
+
+        # --------------- parent toe wiggle control ---------------
+        cmds.parent(toe_wiggle_ctrl_grp, foot_top_grp)
 
         # ------------------------------------------------------
         # --------------- reverse foot parenting ---------------
@@ -217,10 +246,9 @@ class BipedFootModule:
         # ---------- assign instance variables ----------
         self.foot_top_grp = foot_top_grp
         self.foot_ctrls = foot_ctrls
-        self.foot_offset_ctrl_grps = foot_offset_ctrl_grps
-        self.toe_wiggle_ctrl = toe_wiggle_ctrl
+        self.foot_aux_ctrl_grps = foot_aux_ctrl_grps
         self.toe_wiggle_ctrl_grp = toe_wiggle_ctrl_grp
-        self.toe_wiggle_offs_ctrl_grp = toe_wiggle_offs_ctrl_grp
+        self.toe_wiggle_aux_ctrl_grp = toe_wiggle_aux_ctrl_grp
 
         # ---------- point foot at base control ----------
         # use two single ik chains to angle foot
@@ -282,10 +310,12 @@ class BipedFootModule:
         # ----- point and scale constrain top foot joint  -----
         point_constr(self.limb_mod.ik_jnts[2], foot_aim_jnts[0])
         scale_constr(self.foot_ctrls[0], foot_aim_jnts[0])
-        # ----- orient constrain foot joints -----
+        # ----- constrain foot joints -----
         cmds.delete(self.foot_ankle_orient_const)  # remove default foot constraint
         orient_constr(foot_aim_jnts[0], self.limb_mod.ik_jnts[2], offset=True)
-        orient_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp, offset=True)
+        # constraint wiggle ctrl to follow second foot aim joint
+        parent_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp, offset=True)
+        scale_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp)
 
         # ---------- top parent group ----------
         cmds.parent(foot_aim_jnts[0], self.foot_top_grp)
@@ -336,172 +366,265 @@ class BipedFootModule:
         cmds.setAttr(f"{self.limb_mod.ik_ctrl}.rollToeBendAngle", lock=True)
         cmds.setAttr(f"{self.limb_mod.ik_ctrl}.rollToeEndRangeMult", lock=True)
 
+        # -------------------------------------------------------
         # ---------- connect and setup foot attributes ----------
-        # --------------- tilt ---------------
-        tilt_clamp_node = cmds.shadingNode(
+        # --------------- toe wiggle ---------------
+        if self.invert_toe_wiggle:
+            toewiggle_reverse_nd = cmds.createNode(
+                "reverse",
+                name=f"{self.mod_name}ToeWiggle{self.mirr_side}reverse",
+            )
+            cmds.connectAttr(
+                f"{self.limb_mod.ik_ctrl}.toeWiggle",
+                f"{toewiggle_reverse_nd}.inputX",
+            )
+            cmds.connectAttr(
+                f"{toewiggle_reverse_nd}.outputX",
+                f"{self.toe_wiggle_aux_ctrl_grp}.rotateZ",
+            )
+        else:
+            cmds.connectAttr(
+                f"{self.limb_mod.ik_ctrl}.toeWiggle",
+                f"{self.toe_wiggle_aux_ctrl_grp}.rotateZ",
+            )
+        # --------------- top spin ---------------
+        if self.invert_toe_spin:
+            toespin_reverse_nd = cmds.createNode(
+                "reverse",
+                name=f"{self.mod_name}ToeSpin{self.mirr_side}reverse",
+            )
+            cmds.connectAttr(
+                f"{self.limb_mod.ik_ctrl}.toeSpin",
+                f"{toespin_reverse_nd}.inputX",
+            )
+            cmds.connectAttr(
+                f"{toespin_reverse_nd}.outputX",
+                f"{self.foot_aux_ctrl_grps[2]}.rotateX",
+            )
+        else:
+            cmds.connectAttr(
+                f"{self.limb_mod.ik_ctrl}.toeSpin",
+                f"{self.foot_aux_ctrl_grps[2]}.rotateX",
+            )
+        # --------------- lean ---------------
+        if self.invert_foot_lean:
+            lean_reverse_nd = cmds.createNode(
+                "reverse",
+                name=f"{self.mod_name}Lean{self.mirr_side}reverse",
+            )
+            cmds.connectAttr(
+                f"{self.limb_mod.ik_ctrl}.lean",
+                f"{lean_reverse_nd}.inputX",
+            )
+            cmds.connectAttr(
+                f"{lean_reverse_nd}.outputX",
+                f"{self.foot_aux_ctrl_grps[1]}.rotateY",
+            )
+        else:
+            cmds.connectAttr(
+                f"{self.limb_mod.ik_ctrl}.lean",
+                f"{self.foot_aux_ctrl_grps[1]}.rotateY",
+            )
+        # ----------------------------------------------
+        # -------------------- tilt --------------------
+        tilt_clamp_nd = cmds.createNode(
             "clamp",
-            asUtility=True,
             name=f"{self.mod_name}Tilt{self.mirr_side}clamp",
         )
-        cmds.setAttr(f"{tilt_clamp_node}.minG", -180)
-        cmds.setAttr(f"{tilt_clamp_node}.maxR", 180)
-        cmds.connectAttr(f"{self.limb_mod.ik_ctrl}.tilt", f"{tilt_clamp_node}.inputR")
-        cmds.connectAttr(f"{self.limb_mod.ik_ctrl}.tilt", f"{tilt_clamp_node}.inputG")
-        cmds.connectAttr(
-            f"{tilt_clamp_node}.outputR",
-            f"{self.foot_offset_ctrl_grps[4]}.rotateY",
-        )
-        cmds.connectAttr(
-            f"{tilt_clamp_node}.outputG",
-            f"{self.foot_offset_ctrl_grps[5]}.rotateY",
-        )
-        # --------------- lean ---------------
-        cmds.connectAttr(
-            f"{self.limb_mod.ik_ctrl}.lean",
-            f"{self.foot_offset_ctrl_grps[1]}.rotateY",
-        )
-        # --------------- top spin ---------------
-        cmds.connectAttr(
-            f"{self.limb_mod.ik_ctrl}.toeSpin",
-            f"{self.foot_offset_ctrl_grps[2]}.rotateX",
-        )
-        # --------------- top wiggle ---------------
-        cmds.connectAttr(
-            f"{self.limb_mod.ik_ctrl}.toeWiggle",
-            f"{self.toe_wiggle_offs_ctrl_grp}.rotateZ",
-        )
-        # ------------------------------------
-        # --------------- roll ---------------
+        cmds.setAttr(f"{tilt_clamp_nd}.minG", -180)
+        cmds.setAttr(f"{tilt_clamp_nd}.maxR", 180)
+        cmds.connectAttr(f"{self.limb_mod.ik_ctrl}.tilt", f"{tilt_clamp_nd}.inputR")
+        cmds.connectAttr(f"{self.limb_mod.ik_ctrl}.tilt", f"{tilt_clamp_nd}.inputG")
+        if self.invert_foot_tilt:
+            tilt_reverse_nd = cmds.createNode(
+                "reverse",
+                name=f"{self.mod_name}Tilt{self.mirr_side}reverse",
+            )
+            cmds.connectAttr(
+                f"{tilt_clamp_nd}.outputR",
+                f"{tilt_reverse_nd}.inputX",
+            )
+            cmds.connectAttr(
+                f"{tilt_reverse_nd}.outputX",
+                f"{self.foot_aux_ctrl_grps[4]}.rotateY",
+            )
+            cmds.connectAttr(
+                f"{tilt_clamp_nd}.outputG",
+                f"{tilt_reverse_nd}.inputY",
+            )
+            cmds.connectAttr(
+                f"{tilt_reverse_nd}.outputY",
+                f"{self.foot_aux_ctrl_grps[5]}.rotateY",
+            )
+        else:
+            cmds.connectAttr(
+                f"{tilt_clamp_nd}.outputR",
+                f"{self.foot_aux_ctrl_grps[4]}.rotateY",
+            )
+            cmds.connectAttr(
+                f"{tilt_clamp_nd}.outputG",
+                f"{self.foot_aux_ctrl_grps[5]}.rotateY",
+            )
+        # ----------------------------------------------
+        # -------------------- roll --------------------
         # ----------
-        toe_remapevalue_double_node = cmds.shadingNode(
+        if self.invert_foot_roll:
+            roll_reverse_nd = cmds.createNode(
+                "reverse",
+                name=f"{self.mod_name}Roll{self.mirr_side}reverse",
+            )
+        # ----------
+        toe_remapevalue_double_nd = cmds.createNode(
             "multiplyDivide",
-            asUtility=True,
             name=f"{self.mod_name}ToeRemapValueDouble{self.mirr_side}multiplyDivide",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.rollToeBendAngle",
-            f"{toe_remapevalue_double_node}.input1X",
+            f"{toe_remapevalue_double_nd}.input1X",
         )
-        cmds.setAttr(f"{toe_remapevalue_double_node}.input2X", 2)
+        cmds.setAttr(f"{toe_remapevalue_double_nd}.input2X", 2)
         # ----------
-        toe_roll_remap_node = cmds.shadingNode(
+        toe_roll_remap_nd = cmds.createNode(
             "remapValue",
-            asUtility=True,
             name=f"{self.mod_name}ToeRoll{self.mirr_side}remapValue",
         )
-        cmds.setAttr(f"{toe_roll_remap_node}.value[0].value_Position", 0.0)
-        cmds.setAttr(f"{toe_roll_remap_node}.value[0].value_FloatValue", 0.0)
-        cmds.setAttr(f"{toe_roll_remap_node}.value[1].value_Position", 0.5)
-        cmds.setAttr(f"{toe_roll_remap_node}.value[1].value_FloatValue", 1.0)
-        cmds.setAttr(f"{toe_roll_remap_node}.value[2].value_Position", 1.0)
-        cmds.setAttr(f"{toe_roll_remap_node}.value[2].value_FloatValue", 0.0)
+        cmds.setAttr(f"{toe_roll_remap_nd}.value[0].value_Position", 0.0)
+        cmds.setAttr(f"{toe_roll_remap_nd}.value[0].value_FloatValue", 0.0)
+        cmds.setAttr(f"{toe_roll_remap_nd}.value[1].value_Position", 0.5)
+        cmds.setAttr(f"{toe_roll_remap_nd}.value[1].value_FloatValue", 1.0)
+        cmds.setAttr(f"{toe_roll_remap_nd}.value[2].value_Position", 1.0)
+        cmds.setAttr(f"{toe_roll_remap_nd}.value[2].value_FloatValue", 0.0)
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.roll",
-            f"{toe_roll_remap_node}.inputValue",
+            f"{toe_roll_remap_nd}.inputValue",
         )
         cmds.connectAttr(
-            f"{toe_remapevalue_double_node}.outputX",
-            f"{toe_roll_remap_node}.inputMax",
+            f"{toe_remapevalue_double_nd}.outputX",
+            f"{toe_roll_remap_nd}.inputMax",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.rollToeBendAngle",
-            f"{toe_roll_remap_node}.outputMax",
+            f"{toe_roll_remap_nd}.outputMax",
         )
-        cmds.connectAttr(
-            f"{toe_roll_remap_node}.outValue",
-            f"{self.foot_offset_ctrl_grps[1]}.rotateZ",
-        )
+        if self.invert_foot_roll:
+            cmds.connectAttr(
+                f"{toe_roll_remap_nd}.outValue",
+                f"{roll_reverse_nd}.inputX",
+            )
+            cmds.connectAttr(
+                f"{roll_reverse_nd}.outputX",
+                f"{self.foot_aux_ctrl_grps[1]}.rotateZ",
+            )
+        else:
+            cmds.connectAttr(
+                f"{toe_roll_remap_nd}.outValue",
+                f"{self.foot_aux_ctrl_grps[1]}.rotateZ",
+            )
         # ----------
-        condition_180_switch_node = cmds.shadingNode(
+        condition_180_switch_nd = cmds.createNode(
             "condition",
-            asUtility=True,
             name=f"{self.mod_name}180Switch{self.mirr_side}condition",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.rollToeBendAngle",
-            f"{condition_180_switch_node}.firstTerm",
+            f"{condition_180_switch_nd}.firstTerm",
         )
-        cmds.setAttr(f"{condition_180_switch_node}.operation", 4)  # less than
-        cmds.setAttr(f"{condition_180_switch_node}.colorIfTrueR", 180)
-        cmds.setAttr(f"{condition_180_switch_node}.colorIfFalseR", -180)
+        cmds.setAttr(f"{condition_180_switch_nd}.operation", 4)  # less than
+        cmds.setAttr(f"{condition_180_switch_nd}.colorIfTrueR", 180)
+        cmds.setAttr(f"{condition_180_switch_nd}.colorIfFalseR", -180)
         # ----------
-        invet_180_node = cmds.shadingNode(
+        invet_180_nd = cmds.createNode(
             "multiplyDivide",
-            asUtility=True,
             name=f"{self.mod_name}180Invert{self.mirr_side}multiplyDivide",
         )
-        cmds.connectAttr(f"{condition_180_switch_node}.outColorR", f"{invet_180_node}.input1X")
-        cmds.setAttr(f"{invet_180_node}.input2X", -1)
+        cmds.connectAttr(f"{condition_180_switch_nd}.outColorR", f"{invet_180_nd}.input1X")
+        cmds.setAttr(f"{invet_180_nd}.input2X", -1)
         # ----------
-        toe_end_range_mult_node = cmds.shadingNode(
+        toe_end_range_mult_nd = cmds.createNode(
             "multiplyDivide",
-            asUtility=True,
             name=f"{self.mod_name}ToeEndRange{self.mirr_side}multiplyDivide",
         )
-        cmds.connectAttr(f"{invet_180_node}.outputX", f"{toe_end_range_mult_node}.input1X")
+        cmds.connectAttr(f"{invet_180_nd}.outputX", f"{toe_end_range_mult_nd}.input1X")
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.rollToeEndRangeMult",
-            f"{toe_end_range_mult_node}.input2X",
+            f"{toe_end_range_mult_nd}.input2X",
         )
         # ----------
-        difference_180_node = cmds.shadingNode(
+        difference_180_nd = cmds.createNode(
             "plusMinusAverage",
-            asUtility=True,
             name=f"{self.mod_name}180Difference{self.mirr_side}plusMinusAverage",
         )
         cmds.connectAttr(
-            f"{invet_180_node}.outputX",
-            f"{difference_180_node}.input1D[0]",
+            f"{invet_180_nd}.outputX",
+            f"{difference_180_nd}.input1D[0]",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.rollToeBendAngle",
-            f"{difference_180_node}.input1D[1]",
+            f"{difference_180_nd}.input1D[1]",
         )
         # ----------
-        toe_end_roll_remap_node = cmds.shadingNode(
+        toe_end_roll_remap_nd = cmds.createNode(
             "remapValue",
-            asUtility=True,
             name=f"{self.mod_name}ToeEndRoll{self.mirr_side}remapValue",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.roll",
-            f"{toe_end_roll_remap_node}.inputValue",
+            f"{toe_end_roll_remap_nd}.inputValue",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.rollToeBendAngle",
-            f"{toe_end_roll_remap_node}.inputMin",
+            f"{toe_end_roll_remap_nd}.inputMin",
         )
         cmds.connectAttr(
-            f"{difference_180_node}.output1D",
-            f"{toe_end_roll_remap_node}.inputMax",
+            f"{difference_180_nd}.output1D",
+            f"{toe_end_roll_remap_nd}.inputMax",
         )
         cmds.connectAttr(
-            f"{toe_end_range_mult_node}.outputX",
-            f"{toe_end_roll_remap_node}.outputMax",
+            f"{toe_end_range_mult_nd}.outputX",
+            f"{toe_end_roll_remap_nd}.outputMax",
         )
-        cmds.connectAttr(
-            f"{toe_end_roll_remap_node}.outValue",
-            f"{self.foot_offset_ctrl_grps[2]}.rotateZ",
-        )
+        if self.invert_foot_roll:
+            cmds.connectAttr(
+                f"{toe_end_roll_remap_nd}.outValue",
+                f"{roll_reverse_nd}.inputY",
+            )
+            cmds.connectAttr(
+                f"{roll_reverse_nd}.outputY",
+                f"{self.foot_aux_ctrl_grps[2]}.rotateZ",
+            )
+        else:
+            cmds.connectAttr(
+                f"{toe_end_roll_remap_nd}.outValue",
+                f"{self.foot_aux_ctrl_grps[2]}.rotateZ",
+            )
         # ----------
-        heel_roll_remap_node = cmds.shadingNode(
+        heel_roll_remap_nd = cmds.createNode(
             "remapValue",
-            asUtility=True,
             name=f"{self.mod_name}HeelRoll{self.mirr_side}remapValue",
         )
         cmds.connectAttr(
             f"{self.limb_mod.ik_ctrl}.roll",
-            f"{heel_roll_remap_node}.inputValue",
+            f"{heel_roll_remap_nd}.inputValue",
         )
         cmds.connectAttr(
-            f"{condition_180_switch_node}.outColorR",
-            f"{heel_roll_remap_node}.inputMax",
+            f"{condition_180_switch_nd}.outColorR",
+            f"{heel_roll_remap_nd}.inputMax",
         )
         cmds.connectAttr(
-            f"{condition_180_switch_node}.outColorR",
-            f"{heel_roll_remap_node}.outputMax",
+            f"{condition_180_switch_nd}.outColorR",
+            f"{heel_roll_remap_nd}.outputMax",
         )
-        cmds.connectAttr(
-            f"{heel_roll_remap_node}.outValue",
-            f"{self.foot_offset_ctrl_grps[3]}.rotateZ",
-        )
+        if self.invert_foot_roll:
+            cmds.connectAttr(
+                f"{heel_roll_remap_nd}.outValue",
+                f"{roll_reverse_nd}.inputZ",
+            )
+            cmds.connectAttr(
+                f"{roll_reverse_nd}.outputZ",
+                f"{self.foot_aux_ctrl_grps[3]}.rotateZ",
+            )
+        else:
+            cmds.connectAttr(
+                f"{heel_roll_remap_nd}.outValue",
+                f"{self.foot_aux_ctrl_grps[3]}.rotateZ",
+            )

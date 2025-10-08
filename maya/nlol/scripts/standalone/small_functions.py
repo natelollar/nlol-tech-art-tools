@@ -5,23 +5,26 @@ from nlol.utilities.nlol_maya_logger import get_logger
 logger = get_logger()
 
 
-def select_all_controls(rig_group_string: str = "_rigGrp") -> None:
-    """Select all control curves underneath selected group
-    or specified group.
+def select_all_ctrls(rig_group_string: str = "_rigGrp") -> list[str]:
+    """Select all ctrl curves underneath rig, selected,
+    or specified group. Uses string "ctrl" to narrow result.
 
     Args:
         rig_group_string: Either main rig group name or
             string within main rig group identifying it.
 
+    Returns:
+        All rig ctrls or selected and their descendents.
+
     """
     selection = cmds.ls(selection=True)
     if selection:
-        control_group = selection
+        all_ctrls = cmds.listRelatives(selection, allDescendents=True) + selection
     else:
         top_nodes = cmds.ls(assemblies=True)
-        control_group = [node for node in top_nodes if rig_group_string in node]
+        rig_grps = [node for node in top_nodes if rig_group_string in node]
+        all_ctrls = cmds.listRelatives(rig_grps, allDescendents=True)
 
-    all_ctrls = cmds.listRelatives(control_group, allDescendents=True)
     all_ctrls = [
         ctrl
         for ctrl in all_ctrls
@@ -29,6 +32,49 @@ def select_all_controls(rig_group_string: str = "_rigGrp") -> None:
     ]
 
     cmds.select(all_ctrls)
+
+    return all_ctrls
+
+
+def reset_all_ctrls(all_keyable: bool = False) -> None:
+    """Reset all rig ctrls or selected ctrls and their descendents.
+    This resets ctrl transforms translate, rotate, scale, and other custom attributes.
+    Resets to queryable default values.
+
+    Args:
+        all_keyable: Choose to reset all queryable keyable attributes instead of just
+        the smaller list of specified attributes. For instance, resets parent spaces too.
+
+    """
+    all_ctrls = select_all_ctrls()
+
+    standard_attrs = ("translate", "rotate", "scale")
+    custom_attrs = (
+        "toeWiggle",
+        "toeSpin",
+        "lean",
+        "tilt",
+        "roll",
+        "softFalloff",
+        "soft",
+        "startTwistBlend",
+        "stretch",
+    )
+    basic_attrs = standard_attrs + custom_attrs
+
+    for ctrl in all_ctrls:
+        if all_keyable:
+            attrs = cmds.listAttr(ctrl, keyable=True) or []
+        else:
+            attrs = basic_attrs
+
+        for attr in attrs:
+            if attr not in standard_attrs:
+                if not cmds.attributeQuery(attr, node=ctrl, exists=True):
+                    continue
+            default_value = cmds.attributeQuery(attr, node=ctrl, listDefault=True)
+            if default_value and cmds.getAttr(f"{ctrl}.{attr}", settable=True):
+                cmds.setAttr(f"{ctrl}.{attr}", *default_value)
 
 
 def select_shapes():

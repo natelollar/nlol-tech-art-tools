@@ -15,13 +15,9 @@ def build_rigging_list():
 
     shelf_separator = {
         "label": "=" * 35,
-        "annotation": "Shelf separator.",
-        "imageOverlayLabel": "",
-        "flexibleWidthType": 2,  # custom width
-        "flexibleWidthValue": 16,  # custom width pixels
-        "backgroundColor": (0.4, 0.4, 0.4),
-        "highlightColor": (0.4, 0.4, 0.4),
-        "command": "print('Shelf separator.')",
+        "image": "nlol_separator_03_blue.png",
+        "annotation": "Separator.",
+        "command": 'print("Separator.")',
         "sourceType": "python",
     }
 
@@ -195,6 +191,14 @@ def build_rigging_list():
         },
         shelf_separator,
         {
+            "label": "Interactive playback",
+            "image": "interactivePlayback.png",
+            "annotation": "Start Interactive playback.",
+            "imageOverlayLabel": "",
+            "command": "InteractivePlayback",
+            "sourceType": "mel",
+        },
+        {
             "label": "Hierarchy",
             "image": "menuIconSelect.png",
             "annotation": "Select hierarchy",
@@ -301,16 +305,78 @@ def build_rigging_list():
             "rig_delete.remove_nlol_rig()",
             "sourceType": "python",
         },
+        # {
+        #     "label": "Test Function",
+        #     "image": "pythonFamily.png",
+        #     "annotation": "Run test code from here. Add your code to this python function.",
+        #     "imageOverlayLabel": "Tst",
+        #     "backgroundColor": random_clrs[10],
+        #     "command": "from nlol.scripts.standalone import run_test\n"
+        #     "from importlib import reload\n"
+        #     "reload(run_test)\n"
+        #     "run_test.test()",
+        #     "sourceType": "python",
+        # },
         {
-            "label": "Test Function",
+            "label": "Setup nCloth Rig Components",
             "image": "pythonFamily.png",
-            "annotation": "Run test code from here. Add your code to this python function.",
-            "imageOverlayLabel": "Tst",
+            "annotation": "Setup nCloth rig components. Reads data from cloth_data folder.",
+            "imageOverlayLabel": "ClthRg",
             "backgroundColor": random_clrs[10],
-            "command": "from nlol.scripts.standalone import run_test\n"
+            "command": "from nlol.scripts.rig_components import flexi_to_cloth\n"
             "from importlib import reload\n"
-            "reload(run_test)\n"
-            "run_test.test()",
+            "reload(flexi_to_cloth)\n"
+            "flexi_to_cloth.FlexiToCloth().build()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Save Attach Verts and Object",
+            "image": "pythonFamily.png",
+            "annotation": "Select vertices from cloth mesh and attach object. "
+            "Cloth mesh should not be initialized yet. "
+            "This just saves selection to json in cloth_data folder.",
+            "imageOverlayLabel": "SvClth",
+            "backgroundColor": random_clrs[11],
+            "command": "from nlol.scripts.rig_components import flexi_to_cloth\n"
+            "from importlib import reload\n"
+            "reload(flexi_to_cloth)\n"
+            "flexi_to_cloth.FlexiToCloth().save_vertex_ids()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Save Collision Meshes",
+            "image": "pythonFamily.png",
+            "annotation": "Save selected collision mesh names to cloth_data folder.",
+            "imageOverlayLabel": "SvColl",
+            "backgroundColor": random_clrs[12],
+            "command": "from nlol.scripts.rig_components import flexi_to_cloth\n"
+            "from importlib import reload\n"
+            "reload(flexi_to_cloth)\n"
+            "flexi_to_cloth.FlexiToCloth().save_collision_meshes()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Save nCloth Settings",
+            "image": "pythonFamily.png",
+            "annotation": "Save settings for selected nCloth objects.",
+            "imageOverlayLabel": "SvSet",
+            "backgroundColor": random_clrs[13],
+            "command": "from nlol.scripts.rig_components import flexi_to_cloth\n"
+            "from importlib import reload\n"
+            "reload(flexi_to_cloth)\n"
+            "flexi_to_cloth.FlexiToCloth().save_ncloth_settings()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Apply nCloth Settings",
+            "image": "pythonFamily.png",
+            "annotation": "Apply saved nCloth settings from cloth_data folder.",
+            "imageOverlayLabel": "AplySet",
+            "backgroundColor": random_clrs[14],
+            "command": "from nlol.scripts.rig_components import flexi_to_cloth\n"
+            "from importlib import reload\n"
+            "reload(flexi_to_cloth)\n"
+            "flexi_to_cloth.FlexiToCloth().apply_ncloth_settings()",
             "sourceType": "python",
         },
         shelf_separator,
@@ -362,7 +428,32 @@ def build_rigging_list():
             "backgroundColor": random_clrs[14],
             "command": "from nlol.scripts.standalone import small_functions\n"
             "from importlib import reload\nreload(small_functions)\n"
-            "small_functions.select_all_controls()",
+            "small_functions.select_all_ctrls()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Reset All Controls",
+            "image": "pythonFamily.png",
+            "annotation": "Resets selected ctrls and their descendents or "
+            'all ctrls under groups containing string "_rigGrp" if nothing selected. '
+            "Resets translate, rotate, and scale.",
+            "imageOverlayLabel": "RstCtrl",
+            "backgroundColor": random_clrs[11],
+            "command": "from nlol.scripts.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.reset_all_ctrls()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Reset All Controls (Keyable Attrs)",
+            "image": "pythonFamily.png",
+            "annotation": 'Same as "Reset All Controls" except resets all keyable attributes '
+            "instead of just the smaller list of specified attributes in the function.",
+            "imageOverlayLabel": "RstKybl",
+            "backgroundColor": random_clrs[12],
+            "command": "from nlol.scripts.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.reset_all_ctrls(all_keyable=True)",
             "sourceType": "python",
         },
         shelf_separator,

@@ -1,12 +1,6 @@
 # Rig Module Notes
 Notes for rigging setup.
 
-### Module List
-- `biped_leg_mod`  
-  Standard biped leg rig. Foot included. Takes 4 main joints and optional twist joints.
-- `fk_control_mod`  
-  Single fk control.  Takes one joint.
-
 ### Notes
 - Enter joints in order, down the chain.  
   Example: Hip to toe. Shoulder to wrist.
@@ -40,6 +34,7 @@ Notes for rigging setup.
     - `rig_grp`
 
 - `<direction>` conventions in this order
+  - `corner`
   - `start, mid, end`
   - `front, back`
   - `inner, middle, outer`
@@ -82,6 +77,7 @@ Notes for rigging setup.
 - const / constr = constraint
 - clr = color
 - ctrl = control
+- def = default
 - dict = dictionary
 - dir = direction
 - dist = distance
@@ -111,5 +107,6 @@ Notes for rigging setup.
 - twst = twist
 - tran = translate
 - trans = transform
+- vert = vertex
 - vis = visibility
 *Plural abbreviations may end with an "s".*

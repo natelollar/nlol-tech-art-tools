@@ -47,10 +47,10 @@ class BipedLimbModule:
         self,
         rig_module_name: str,
         mirror_direction: str,
-        main_joints: list,
-        upper_twist_joints: list,
-        lower_twist_joints: list,
-        main_object_names: str = "",
+        main_joints: list[str],
+        upper_twist_joints: list[str],
+        lower_twist_joints: list[str],
+        main_object_names: list[str] = [],
         upper_twist_name: str = "",
         lower_twist_name: str = "",
         fk_ctrl_size: float = 1,
@@ -72,8 +72,8 @@ class BipedLimbModule:
             lower_twist_joints: Main skinned twist joints for lower limb segment.
 
             main_object_names: Main object names to be used instead of raw joint names.
-            upper_twist_name: Main upper twist object names instead of raw joint names.
-            lower_twist_name: Main lower twist object names instead of raw joint names.
+            upper_twist_name: Main upper twist object name instead of raw joint names.
+            lower_twist_name: Main lower twist object name instead of raw joint names.
 
             fk_ctrl_size: Size of fk controls.
             ik_ctrl_size: Size of main end limb ik control.
@@ -81,19 +81,26 @@ class BipedLimbModule:
             polevector_ctrl_distance: Default distance hinge control placed from hinge joint.
             switch_ctrl_size: Fk ik blend control size.
             switch_ctrl_distance: Fk ik blend control distance from end limb joint.
-
+            switch_ctrl_constraint: Whether to constrain switch control to limb by default.
         """
+        self.logger = get_logger()
+
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.main_joints = main_joints
         self.upper_twist_joints = upper_twist_joints
         self.lower_twist_joints = lower_twist_joints
 
-        self.main_object_names = [name.strip() for name in main_object_names.split(",")]
+        self.main_object_names = main_object_names
         self.upper_twist_name = upper_twist_name
         self.lower_twist_name = lower_twist_name
 
-        if not main_object_names.strip():
+        if self.main_object_names:
+            if len(self.main_object_names) != len(self.main_joints):
+                msg = "Should be same number of main_object_names as main_joints: "
+                f'"{self.mod_name}, {self.mirr_side}"'
+                self.logger.warning(msg)
+        if not self.main_object_names:
             self.main_object_names = [
                 f"upper{cap(self.mod_name)}",
                 f"lower{cap(self.mod_name)}",
@@ -113,8 +120,6 @@ class BipedLimbModule:
         self.switch_ctrl_size = switch_ctrl_size
         self.switch_ctrl_distance = switch_ctrl_distance
         self.switch_ctrl_constraint = switch_ctrl_constraint
-
-        self.logger = get_logger()
 
     def build(self) -> str:
         """Build the limb rig module.

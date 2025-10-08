@@ -42,6 +42,16 @@ def update_rigging_shelf():
                 "sourceType",
                 "menuItem",
                 "menuItemPython",
+                # ----------
+                "enable",
+                "width",
+                "height",
+                "manage",
+                "visible",
+                "preventOverride",
+                "enableBackground",
+                "style", 
+                "horizontal",
             ]
             if key in shelf and shelf[key] not in (None, "")
         }
