@@ -1,0 +1,6 @@
+{
+    "collision_meshes": [
+        "legClothColl_right_geo",
+        "legClothColl_left_geo"
+    ]
+}

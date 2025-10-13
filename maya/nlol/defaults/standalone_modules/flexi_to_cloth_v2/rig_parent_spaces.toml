@@ -1,0 +1,101 @@
+# ---------- main ----------
+[[control]]
+control = "nClothAux_ctrl"
+parents = "root_ctrl"
+
+# ---------- sling ----------
+[[control]]
+control = "slingRibbonOffsetParent_ctrl"
+parents = "root_ctrl"
+
+# ----- sling finger loop -----
+[[control]]
+control = "fkSlingLoopParent_ctrl"
+base_parent = "slingRibbonOffsetParent_ctrl"  # for flexi surface control scaling
+
+[[control]]
+control = "slingLoopRibbonOffset_01_ctrl"
+parents = "slingRibbonOffsetParent_ctrl"
+
+[[control]]
+control = """
+slingLoopRibbonOffset_02_ctrl, 
+slingLoopRibbonOffset_03_ctrl, 
+slingLoopRibbonOffset_04_ctrl
+"""
+parents = """
+slingLoopRibbonOffset_01_ctrl, 
+slingRibbonOffsetParent_ctrl
+"""
+
+# ----- sling main length -----
+[[control]]
+control = "fkSlingFlexiParent_ctrl" 
+base_parent = "slingRibbonOffsetParent_ctrl"  # for flexi surface control scaling
+
+[[control]]
+control = "slingRibbonOffset_start_01_ctrl"
+parents = "slingRibbonOffsetParent_ctrl"
+
+[[control]]
+control = "slingRibbonOffset_start_02_ctrl"
+parents = """
+slingRibbonOffsetParent_ctrl,
+slingRibbonOffset_start_01_ctrl
+"""
+
+[[control]]
+control = "slingRibbonOffset_mid_01_ctrl"
+parents = """
+slingRibbonOffsetParent_ctrl,
+slingRibbonOffset_start_01_ctrl, 
+slingRibbonOffset_start_02_ctrl
+"""
+
+[[control]]
+control = "slingRibbonOffset_mid_02_ctrl"
+parents = """
+slingRibbonOffsetParent_ctrl,
+slingRibbonOffset_start_01_ctrl, 
+slingRibbonOffset_start_02_ctrl, 
+slingRibbonOffset_mid_01_ctrl
+"""
+
+[[control]]
+control = "slingRibbonOffset_mid_03_ctrl"
+parents = """
+slingRibbonOffsetParent_ctrl,
+slingRibbonOffset_start_01_ctrl, 
+slingRibbonOffset_start_02_ctrl, 
+slingRibbonOffset_mid_01_ctrl, 
+slingRibbonOffset_mid_02_ctrl
+"""
+
+[[control]]
+control = "slingRibbonOffset_end_01_ctrl"
+parents = """
+slingRibbonOffsetParent_ctrl,
+slingRibbonOffset_start_01_ctrl, 
+slingRibbonOffset_start_02_ctrl, 
+slingRibbonOffset_mid_01_ctrl, 
+slingRibbonOffset_mid_02_ctrl, 
+slingRibbonOffset_mid_03_ctrl
+"""
+
+[[control]]
+control = "slingRibbonOffset_end_02_ctrl"
+parents = """
+slingRibbonOffsetParent_ctrl,
+slingRibbonOffset_start_01_ctrl, 
+slingRibbonOffset_start_02_ctrl, 
+slingRibbonOffset_mid_01_ctrl, 
+slingRibbonOffset_mid_02_ctrl, 
+slingRibbonOffset_mid_03_ctrl, 
+slingRibbonOffset_end_01_ctrl
+"""
+
+# ---------- sling rock ----------
+[[control]]
+control = "slingRock_ctrl" 
+parents = "root_ctrl, fkSlingFlexi_11_ctrl, slingRibbonOffset_mid_02_ctrl"
+

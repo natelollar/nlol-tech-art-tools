@@ -1,0 +1,3070 @@
+<?xml version="1.0"?>
+<deformerWeight>
+  <headerInfo fileName="" worldMatrix="1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 "/>
+  <shape name="chagor_lowGeoShape" group="0" stride="3" size="504" max="503">
+    <point index="0" value=" 14.988500 101.214272 -9.813848"/>
+    <point index="1" value=" -0.004745 100.558144 -12.580314"/>
+    <point index="2" value=" -14.844710 101.275139 -9.672630"/>
+    <point index="3" value=" -20.028645 101.575714 2.295273"/>
+    <point index="4" value=" -14.077076 101.439507 13.413304"/>
+    <point index="5" value=" -0.002616 101.240387 17.916388"/>
+    <point index="6" value=" 14.100997 101.387924 13.425379"/>
+    <point index="7" value=" 20.047756 101.568588 2.286384"/>
+    <point index="8" value=" 12.549077 113.854301 -8.038151"/>
+    <point index="9" value=" 0.003489 113.465630 -10.977130"/>
+    <point index="10" value=" -12.393576 113.686157 -7.856922"/>
+    <point index="11" value=" -16.772955 113.725258 2.069293"/>
+    <point index="12" value=" -12.390144 113.977684 11.341264"/>
+    <point index="13" value=" -0.004657 113.859200 16.455841"/>
+    <point index="14" value=" 12.404151 114.044060 11.328476"/>
+    <point index="15" value=" 16.781891 113.741020 2.067470"/>
+    <point index="16" value=" 8.366716 101.349602 16.447096"/>
+    <point index="17" value=" 13.856330 108.051994 13.092987"/>
+    <point index="18" value=" 7.727855 113.935997 14.458419"/>
+    <point index="19" value=" 18.445255 101.547745 8.432788"/>
+    <point index="20" value=" 19.341427 108.053528 2.184650"/>
+    <point index="21" value=" 15.806893 113.923729 7.085755"/>
+    <point index="22" value=" 18.774628 101.382812 -4.003742"/>
+    <point index="23" value=" 15.812117 113.894180 -3.200842"/>
+    <point index="24" value=" 8.638080 100.919441 -12.681493"/>
+    <point index="25" value=" -0.006221 107.410454 -12.604915"/>
+    <point index="26" value=" 7.432164 113.733177 -10.524675"/>
+    <point index="27" value=" 14.366468 107.971809 -9.593555"/>
+    <point index="28" value=" -8.630404 100.953392 -12.645291"/>
+    <point index="29" value=" -14.364650 107.966843 -9.604559"/>
+    <point index="30" value=" -7.391231 113.592720 -10.329778"/>
+    <point index="31" value=" -19.109478 101.282768 -4.147989"/>
+    <point index="32" value=" -19.263916 108.020393 2.179271"/>
+    <point index="33" value=" -15.642126 113.740379 -3.122083"/>
+    <point index="34" value=" -18.479671 101.538658 8.453098"/>
+    <point index="35" value=" -13.983740 108.095528 13.249377"/>
+    <point index="36" value=" -15.735468 113.826363 7.042795"/>
+    <point index="37" value=" -8.371945 101.279099 16.498936"/>
+    <point index="38" value=" 0.002725 107.584793 18.411108"/>
+    <point index="39" value=" -7.775591 114.075745 14.547834"/>
+    <point index="40" value=" 8.196737 107.885414 -12.329445"/>
+    <point index="41" value=" -8.178770 107.893867 -12.332600"/>
+    <point index="42" value=" -18.147539 107.973671 -3.978087"/>
+    <point index="43" value=" -18.010780 108.079430 8.217007"/>
+    <point index="44" value=" -8.516199 107.928963 16.437456"/>
+    <point index="45" value=" 8.572453 107.923004 16.574923"/>
+    <point index="46" value=" 18.040094 108.079102 8.243023"/>
+    <point index="47" value=" 18.194225 107.979965 -3.987764"/>
+    <point index="48" value=" 11.857025 104.092354 -11.933424"/>
+    <point index="49" value=" 5.373639 103.773186 -13.193887"/>
+    <point index="50" value=" 4.990267 111.290718 -11.715699"/>
+    <point index="51" value=" 10.752843 111.498817 -10.652239"/>
+    <point index="52" value=" -5.344202 103.763306 -12.933494"/>
+    <point index="53" value=" -11.848964 104.089111 -11.928972"/>
+    <point index="54" value=" -10.692223 111.480865 -10.618935"/>
+    <point index="55" value=" -4.986607 111.327339 -11.852393"/>
+    <point index="56" value=" -17.293131 104.134193 -7.242919"/>
+    <point index="57" value=" -19.950869 104.235588 -0.962857"/>
+    <point index="58" value=" -17.787958 111.501633 -0.759406"/>
+    <point index="59" value=" -15.476084 111.482216 -6.354354"/>
+    <point index="60" value=" -19.762562 104.337624 5.454958"/>
+    <point index="61" value=" -16.628178 104.206619 11.248641"/>
+    <point index="62" value=" -15.265061 111.654854 10.088050"/>
+    <point index="63" value=" -17.837517 111.555412 4.890218"/>
+    <point index="64" value=" -11.578939 104.165115 15.550334"/>
+    <point index="65" value=" -10.835166 111.678520 14.134950"/>
+    <point index="66" value=" 11.501609 104.141747 15.429546"/>
+    <point index="67" value=" 10.990912 111.796333 14.344198"/>
+    <point index="68" value=" 16.695501 104.208626 11.304568"/>
+    <point index="69" value=" 19.737494 104.321960 5.457795"/>
+    <point index="70" value=" 17.922844 111.580498 4.922668"/>
+    <point index="71" value=" 15.021996 111.532455 9.906418"/>
+    <point index="72" value=" 19.974863 104.251007 -0.975084"/>
+    <point index="73" value=" 17.300505 104.129265 -7.231298"/>
+    <point index="74" value=" 15.378608 111.421501 -6.256472"/>
+    <point index="75" value=" 17.886194 111.518288 -0.750073"/>
+    <point index="76" value=" 8.530906 103.972252 -12.790252"/>
+    <point index="77" value=" 5.196252 107.744698 -12.688048"/>
+    <point index="78" value=" 7.840952 111.514610 -11.724407"/>
+    <point index="79" value=" 11.424629 107.983727 -11.536578"/>
+    <point index="80" value=" -8.510535 103.977776 -12.857053"/>
+    <point index="81" value=" -11.331770 107.948456 -11.419205"/>
+    <point index="82" value=" -7.771790 111.402466 -11.386727"/>
+    <point index="83" value=" -5.153142 107.715904 -12.598565"/>
+    <point index="84" value=" -19.031736 104.163567 -4.207150"/>
+    <point index="85" value=" -19.014809 107.988426 -0.918923"/>
+    <point index="86" value=" -16.925983 111.494148 -3.587940"/>
+    <point index="87" value=" -16.554106 107.943336 -6.909333"/>
+    <point index="88" value=" -18.658241 104.269997 8.556633"/>
+    <point index="89" value=" -16.221365 108.077324 10.874942"/>
+    <point index="90" value=" -16.874866 111.598076 7.615851"/>
+    <point index="91" value=" -18.903458 108.033485 5.218465"/>
+    <point index="92" value=" -8.620834 104.062775 16.905085"/>
+    <point index="93" value=" -8.236750 111.654892 15.630447"/>
+    <point index="94" value=" -11.326016 108.031555 15.019197"/>
+    <point index="95" value=" 8.625710 104.030136 16.926416"/>
+    <point index="96" value=" 11.390384 108.022255 15.099666"/>
+    <point index="97" value=" 8.246617 111.667953 15.696288"/>
+    <point index="98" value=" 18.473125 104.256737 8.471231"/>
+    <point index="99" value=" 18.924377 108.038528 5.220250"/>
+    <point index="100" value=" 16.871580 111.610413 7.645691"/>
+    <point index="101" value=" 16.091784 108.044296 10.815524"/>
+    <point index="102" value=" 18.930197 104.144348 -4.160309"/>
+    <point index="103" value=" 16.432938 107.897293 -6.807392"/>
+    <point index="104" value=" 17.016682 111.535751 -3.633352"/>
+    <point index="105" value=" 19.161257 108.030914 -0.916907"/>
+    <point index="106" value=" 11.807254 101.197929 -11.548126"/>
+    <point index="107" value=" 5.471835 100.708466 -12.938321"/>
+    <point index="108" value=" -0.021558 103.458908 -12.974874"/>
+    <point index="109" value=" 0.007014 111.118919 -12.048841"/>
+    <point index="110" value=" 4.818741 113.629349 -10.845470"/>
+    <point index="111" value=" 10.036613 113.699211 -9.563413"/>
+    <point index="112" value=" 13.540396 111.562592 -8.960856"/>
+    <point index="113" value=" 14.950101 104.126015 -9.999009"/>
+    <point index="114" value=" -5.449054 100.805313 -12.806439"/>
+    <point index="115" value=" -11.851720 101.164047 -11.640496"/>
+    <point index="116" value=" -14.813299 104.109505 -9.833251"/>
+    <point index="117" value=" -13.328558 111.428673 -8.730520"/>
+    <point index="118" value=" -10.020473 113.673439 -9.526043"/>
+    <point index="119" value=" -4.806241 113.703224 -10.866512"/>
+    <point index="120" value=" -17.476679 101.205223 -7.231801"/>
+    <point index="121" value=" -19.886787 101.477890 -0.909028"/>
+    <point index="122" value=" -20.046436 104.306984 2.262686"/>
+    <point index="123" value=" -18.007198 111.476982 2.096423"/>
+    <point index="124" value=" -16.494671 113.762123 -0.536380"/>
+    <point index="125" value=" -14.393950 113.871910 -5.716869"/>
+    <point index="126" value=" -19.571875 101.610268 5.429375"/>
+    <point index="127" value=" -16.551464 101.474342 11.152051"/>
+    <point index="128" value=" -14.149015 104.175262 13.484483"/>
+    <point index="129" value=" -13.296003 111.770996 12.381989"/>
+    <point index="130" value=" -14.341321 113.959435 9.340256"/>
+    <point index="131" value=" -16.590900 113.782135 4.604922"/>
+    <point index="132" value=" -11.262682 101.435570 15.127508"/>
+    <point index="133" value=" 0.015958 103.782234 18.591835"/>
+    <point index="134" value=" 0.013707 111.387680 17.765329"/>
+    <point index="135" value=" -10.169616 113.942528 13.072983"/>
+    <point index="136" value=" 11.273296 101.342270 15.135843"/>
+    <point index="137" value=" 14.235557 104.181763 13.599117"/>
+    <point index="138" value=" 13.309324 111.763092 12.348692"/>
+    <point index="139" value=" 10.202127 113.985321 13.102993"/>
+    <point index="140" value=" 16.502882 101.484161 11.106274"/>
+    <point index="141" value=" 19.691273 101.593246 5.465461"/>
+    <point index="142" value=" 20.139038 104.325989 2.282209"/>
+    <point index="143" value=" 18.035103 111.484840 2.101627"/>
+    <point index="144" value=" 16.583746 113.777046 4.601449"/>
+    <point index="145" value=" 14.200608 113.850533 9.227783"/>
+    <point index="146" value=" 19.915638 101.442604 -0.918118"/>
+    <point index="147" value=" 17.412531 101.214363 -7.143181"/>
+    <point index="148" value=" 14.322479 113.740944 -5.652295"/>
+    <point index="149" value=" 16.555628 113.768433 -0.541020"/>
+    <point index="150" value=" 12.808867 100.890297 -7.175621"/>
+    <point index="151" value=" 10.358761 100.808319 -8.599325"/>
+    <point index="152" value=" 9.864902 103.535675 -7.915412"/>
+    <point index="153" value=" 12.066592 103.508286 -6.533466"/>
+    <point index="154" value=" 7.772218 100.689476 -9.335567"/>
+    <point index="155" value=" 7.438710 103.479240 -8.620870"/>
+    <point index="156" value=" 7.011961 107.273476 -7.880154"/>
+    <point index="157" value=" 9.240154 107.254532 -7.216059"/>
+    <point index="158" value=" 11.357853 107.240089 -6.086591"/>
+    <point index="159" value=" 5.078386 100.508415 -9.419553"/>
+    <point index="160" value=" 4.879094 103.310219 -8.640222"/>
+    <point index="161" value=" 0.001409 100.326836 -9.185916"/>
+    <point index="162" value=" 0.000119 103.080627 -8.313239"/>
+    <point index="163" value=" -0.000756 106.977890 -7.727803"/>
+    <point index="164" value=" 4.631241 107.182846 -8.019444"/>
+    <point index="165" value=" 4.432100 110.851257 -7.668606"/>
+    <point index="166" value=" 6.665146 110.899101 -7.502129"/>
+    <point index="167" value=" -0.001120 110.685463 -7.688835"/>
+    <point index="168" value=" -0.001601 113.177963 -7.831047"/>
+    <point index="169" value=" 4.399444 113.324524 -7.917982"/>
+    <point index="170" value=" 6.600305 113.360352 -7.668065"/>
+    <point index="171" value=" 8.737287 110.864883 -6.822631"/>
+    <point index="172" value=" 10.678762 110.852936 -5.661635"/>
+    <point index="173" value=" 8.596270 113.373245 -6.861944"/>
+    <point index="174" value=" 10.509639 113.353508 -5.687010"/>
+    <point index="175" value=" -5.068537 100.573708 -9.556236"/>
+    <point index="176" value=" -4.868789 103.342628 -8.816682"/>
+    <point index="177" value=" -7.781990 100.748367 -9.456564"/>
+    <point index="178" value=" -7.443700 103.489510 -8.671520"/>
+    <point index="179" value=" -7.015139 107.276665 -7.902291"/>
+    <point index="180" value=" -4.628669 107.204224 -8.190228"/>
+    <point index="181" value=" -10.412121 100.882256 -8.735009"/>
+    <point index="182" value=" -9.918084 103.570717 -8.045140"/>
+    <point index="183" value=" -12.836102 100.911133 -7.207503"/>
+    <point index="184" value=" -12.176543 103.559174 -6.665765"/>
+    <point index="185" value=" -11.359623 107.240265 -6.086917"/>
+    <point index="186" value=" -9.301398 107.286148 -7.354626"/>
+    <point index="187" value=" -8.805263 110.883087 -6.961693"/>
+    <point index="188" value=" -6.676324 110.902168 -7.561028"/>
+    <point index="189" value=" -10.649056 110.847443 -5.629487"/>
+    <point index="190" value=" -10.515569 113.354729 -5.692239"/>
+    <point index="191" value=" -8.702634 113.321304 -7.064286"/>
+    <point index="192" value=" -6.606141 113.354050 -7.690693"/>
+    <point index="193" value=" -4.441229 110.854370 -7.864820"/>
+    <point index="194" value=" -4.411705 113.279243 -8.075066"/>
+    <point index="195" value=" -14.847795 100.912102 -5.182990"/>
+    <point index="196" value=" -14.014992 103.512657 -4.747787"/>
+    <point index="197" value=" -16.243677 100.927826 -2.822922"/>
+    <point index="198" value=" -15.311053 103.511154 -2.530977"/>
+    <point index="199" value=" -14.046430 107.191238 -2.145863"/>
+    <point index="200" value=" -12.883487 107.169304 -4.192536"/>
+    <point index="201" value=" -16.986862 101.014915 -0.307753"/>
+    <point index="202" value=" -15.870587 103.533615 -0.153537"/>
+    <point index="203" value=" -17.260979 101.198265 2.223362"/>
+    <point index="204" value=" -16.092054 103.663979 2.170831"/>
+    <point index="205" value=" -14.795105 107.317520 2.111345"/>
+    <point index="206" value=" -14.563172 107.216324 0.016495"/>
+    <point index="207" value=" -13.652404 110.918091 0.143451"/>
+    <point index="208" value=" -13.106483 110.893867 -1.867744"/>
+    <point index="209" value=" -13.973798 110.978325 2.089870"/>
+    <point index="210" value=" -13.901381 113.518051 2.086030"/>
+    <point index="211" value=" -13.546839 113.532333 0.130499"/>
+    <point index="212" value=" -12.901771 113.523064 -1.858482"/>
+    <point index="213" value=" -12.028480 110.848236 -3.800262"/>
+    <point index="214" value=" -11.749415 113.492920 -3.746382"/>
+    <point index="215" value=" -16.820808 101.202049 4.717863"/>
+    <point index="216" value=" -15.795551 103.735588 4.464987"/>
+    <point index="217" value=" -16.005098 101.234985 7.172885"/>
+    <point index="218" value=" -14.963887 103.731689 6.676908"/>
+    <point index="219" value=" -14.043196 107.503281 6.238751"/>
+    <point index="220" value=" -14.686361 107.431465 4.191483"/>
+    <point index="221" value=" -14.354528 101.126549 9.301765"/>
+    <point index="222" value=" -13.441712 103.667908 8.616237"/>
+    <point index="223" value=" -12.279840 101.164742 11.186991"/>
+    <point index="224" value=" -11.632677 103.730927 10.467561"/>
+    <point index="225" value=" -10.973959 107.536407 9.750120"/>
+    <point index="226" value=" -12.599223 107.486656 7.992849"/>
+    <point index="227" value=" -12.161941 111.208725 7.653500"/>
+    <point index="228" value=" -13.421415 111.149994 5.939402"/>
+    <point index="229" value=" -10.626310 111.240074 9.355540"/>
+    <point index="230" value=" -10.653878 113.666534 9.380913"/>
+    <point index="231" value=" -12.158183 113.672630 7.639186"/>
+    <point index="232" value=" -13.414557 113.572899 5.935814"/>
+    <point index="233" value=" -13.833853 111.046448 4.000951"/>
+    <point index="234" value=" -13.816453 113.547707 4.005071"/>
+    <point index="235" value=" -9.848610 101.194450 12.661085"/>
+    <point index="236" value=" -9.431748 103.764236 11.959607"/>
+    <point index="237" value=" -7.350266 101.224358 13.880468"/>
+    <point index="238" value=" -7.056357 103.743126 13.078820"/>
+    <point index="239" value=" -6.762234 107.489799 12.323205"/>
+    <point index="240" value=" -8.979275 107.532555 11.224161"/>
+    <point index="241" value=" 0.000313 101.212662 15.251299"/>
+    <point index="242" value=" 0.000208 103.665695 14.445381"/>
+    <point index="243" value=" 0.000110 107.313728 13.752817"/>
+    <point index="244" value=" -6.591487 111.194557 11.893625"/>
+    <point index="245" value=" 0.000161 111.021049 13.347527"/>
+    <point index="246" value=" 0.000140 113.660942 13.398727"/>
+    <point index="247" value=" -6.610394 113.709427 11.942601"/>
+    <point index="248" value=" -8.687541 111.210190 10.752756"/>
+    <point index="249" value=" -8.719468 113.665817 10.807207"/>
+    <point index="250" value=" 7.358274 101.225403 13.902205"/>
+    <point index="251" value=" 7.055313 103.741211 13.075871"/>
+    <point index="252" value=" 6.731739 107.474945 12.253623"/>
+    <point index="253" value=" 9.896511 101.238121 12.748814"/>
+    <point index="254" value=" 9.397701 103.746956 11.896472"/>
+    <point index="255" value=" 12.350337 101.224304 11.277399"/>
+    <point index="256" value=" 11.709916 103.771858 10.564480"/>
+    <point index="257" value=" 10.968059 107.532753 9.740787"/>
+    <point index="258" value=" 8.942327 107.518036 11.161869"/>
+    <point index="259" value=" 8.687675 111.205887 10.752480"/>
+    <point index="260" value=" 6.579607 111.190781 11.868576"/>
+    <point index="261" value=" 10.564291 111.226166 9.285702"/>
+    <point index="262" value=" 10.593042 113.681503 9.312626"/>
+    <point index="263" value=" 8.703196 113.670639 10.781586"/>
+    <point index="264" value=" 6.600880 113.712486 11.924056"/>
+    <point index="265" value=" 14.532262 101.261635 9.458756"/>
+    <point index="266" value=" 13.633021 103.755905 8.780573"/>
+    <point index="267" value=" 15.966789 101.205833 7.151009"/>
+    <point index="268" value=" 15.017056 103.755661 6.704385"/>
+    <point index="269" value=" 13.840158 107.444923 6.137406"/>
+    <point index="270" value=" 12.641977 107.499458 8.026391"/>
+    <point index="271" value=" 16.760036 101.160896 4.702260"/>
+    <point index="272" value=" 15.694478 103.698166 4.440750"/>
+    <point index="273" value=" 17.144115 101.126030 2.223174"/>
+    <point index="274" value=" 16.042528 103.645477 2.170604"/>
+    <point index="275" value=" 14.829874 107.326187 2.110736"/>
+    <point index="276" value=" 14.651877 107.421524 4.183055"/>
+    <point index="277" value=" 13.824724 111.045197 3.997736"/>
+    <point index="278" value=" 13.197527 111.119774 5.831286"/>
+    <point index="279" value=" 13.976820 110.978958 2.088590"/>
+    <point index="280" value=" 13.975736 113.502831 2.081576"/>
+    <point index="281" value=" 13.862763 113.536285 4.012148"/>
+    <point index="282" value=" 13.220110 113.615257 5.840213"/>
+    <point index="283" value=" 12.096690 111.196487 7.600947"/>
+    <point index="284" value=" 12.125703 113.678017 7.611769"/>
+    <point index="285" value=" 16.883926 100.948997 -0.284439"/>
+    <point index="286" value=" 15.789980 103.502922 -0.137182"/>
+    <point index="287" value=" 16.194651 100.895348 -2.801446"/>
+    <point index="288" value=" 15.190559 103.463417 -2.480341"/>
+    <point index="289" value=" 14.013332 107.179680 -2.133123"/>
+    <point index="290" value=" 14.626331 107.233643 0.003150"/>
+    <point index="291" value=" 14.907753 100.959816 -5.229202"/>
+    <point index="292" value=" 13.988111 103.500183 -4.728496"/>
+    <point index="293" value=" 13.023895 107.216965 -4.288928"/>
+    <point index="294" value=" 12.169469 110.875847 -3.896069"/>
+    <point index="295" value=" 13.077050 110.887146 -1.855559"/>
+    <point index="296" value=" 11.999773 113.431274 -3.913374"/>
+    <point index="297" value=" 12.936701 113.514030 -1.875445"/>
+    <point index="298" value=" 13.741864 110.932198 0.122684"/>
+    <point index="299" value=" 13.674566 113.507248 0.098255"/>
+    <point index="300" value=" 0.007240 114.261299 -8.700683"/>
+    <point index="301" value=" 4.524905 114.362419 -8.746857"/>
+    <point index="302" value=" 6.830936 114.375435 -8.454616"/>
+    <point index="303" value=" 8.975536 114.507156 -7.631222"/>
+    <point index="304" value=" 10.972264 114.351517 -6.295742"/>
+    <point index="305" value=" 12.572314 114.428879 -4.406399"/>
+    <point index="306" value=" 13.723155 114.550728 -2.278909"/>
+    <point index="307" value=" 14.450462 114.544731 -0.101164"/>
+    <point index="308" value=" 14.722367 114.538368 2.065836"/>
+    <point index="309" value=" 14.570372 114.565430 4.166306"/>
+    <point index="310" value=" 13.907460 114.657295 6.156837"/>
+    <point index="311" value=" 12.717955 114.677826 8.065064"/>
+    <point index="312" value=" 11.064430 114.642387 9.840992"/>
+    <point index="313" value=" 9.067049 114.694901 11.382670"/>
+    <point index="314" value=" 6.890835 114.809280 12.605891"/>
+    <point index="315" value=" -0.003130 114.740517 14.262156"/>
+    <point index="316" value=" -6.905622 114.719475 12.655052"/>
+    <point index="317" value=" -9.094630 114.611404 11.415272"/>
+    <point index="318" value=" -11.056562 114.654953 9.838890"/>
+    <point index="319" value=" -12.684584 114.770393 8.037342"/>
+    <point index="320" value=" -13.967520 114.521996 6.195591"/>
+    <point index="321" value=" -14.614882 114.473892 4.172038"/>
+    <point index="322" value=" -14.743185 114.525848 2.064557"/>
+    <point index="323" value=" -14.448881 114.580292 -0.099015"/>
+    <point index="324" value=" -13.725423 114.555092 -2.285979"/>
+    <point index="325" value=" -12.499789 114.697624 -4.365321"/>
+    <point index="326" value=" -10.983775 114.330666 -6.298049"/>
+    <point index="327" value=" -9.008945 114.355370 -7.691963"/>
+    <point index="328" value=" -6.833952 114.361122 -8.459531"/>
+    <point index="329" value=" -4.536920 114.230400 -8.809607"/>
+    <point index="330" value=" 13.608214 99.867325 -8.099062"/>
+    <point index="331" value=" 10.962649 99.866249 -9.744081"/>
+    <point index="332" value=" 8.154811 99.700035 -10.538639"/>
+    <point index="333" value=" 5.287522 99.564194 -10.658011"/>
+    <point index="334" value=" 0.013016 99.372147 -10.404222"/>
+    <point index="335" value=" -5.285490 99.586510 -10.666019"/>
+    <point index="336" value=" -8.145761 99.885605 -10.578136"/>
+    <point index="337" value=" -10.964700 99.885139 -9.746797"/>
+    <point index="338" value=" -13.625182 99.995445 -8.117977"/>
+    <point index="339" value=" -15.764892 99.865944 -5.850394"/>
+    <point index="340" value=" -17.287626 100.024467 -3.284248"/>
+    <point index="341" value=" -18.085028 100.096695 -0.530946"/>
+    <point index="342" value=" -18.303232 100.352097 2.242984"/>
+    <point index="343" value=" -17.845161 100.192810 4.971082"/>
+    <point index="344" value=" -16.895763 100.273720 7.610502"/>
+    <point index="345" value=" -15.192048 100.119011 9.970883"/>
+    <point index="346" value=" -12.919574 100.125092 11.956679"/>
+    <point index="347" value=" -10.320485 100.130180 13.500669"/>
+    <point index="348" value=" -7.667303 100.269913 14.744199"/>
+    <point index="349" value=" -0.002668 100.149803 16.030628"/>
+    <point index="350" value=" 7.666306 100.286186 14.734733"/>
+    <point index="351" value=" 10.354754 100.256332 13.565571"/>
+    <point index="352" value=" 12.954619 100.275673 11.999605"/>
+    <point index="353" value=" 15.250274 100.418236 10.022766"/>
+    <point index="354" value=" 16.874348 100.211884 7.587018"/>
+    <point index="355" value=" 17.848131 100.156456 4.970714"/>
+    <point index="356" value=" 18.253704 100.190918 2.246676"/>
+    <point index="357" value=" 18.086113 100.106506 -0.529464"/>
+    <point index="358" value=" 17.283489 100.023895 -3.280828"/>
+    <point index="359" value=" 15.818352 100.133263 -5.894053"/>
+    <point index="360" value=" 2.690726 101.274864 17.706388"/>
+    <point index="361" value=" 2.783697 103.845085 18.168238"/>
+    <point index="362" value=" 2.831884 107.630424 18.086342"/>
+    <point index="363" value=" 2.751578 111.390800 17.311481"/>
+    <point index="364" value=" 2.591674 113.859764 16.150925"/>
+    <point index="365" value=" 2.306235 114.813980 14.073671"/>
+    <point index="366" value=" 2.213134 113.713539 13.307112"/>
+    <point index="367" value=" 2.203731 111.066193 13.196633"/>
+    <point index="368" value=" 2.264214 107.365135 13.729584"/>
+    <point index="369" value=" 2.314581 103.667213 14.292774"/>
+    <point index="370" value=" 2.372670 101.128822 14.946682"/>
+    <point index="371" value=" 2.474189 100.172142 15.911856"/>
+    <point index="372" value=" -2.699720 101.257370 17.776161"/>
+    <point index="373" value=" -2.791168 103.855072 18.279751"/>
+    <point index="374" value=" -2.845630 107.652672 18.185886"/>
+    <point index="375" value=" -2.744951 111.366539 17.272009"/>
+    <point index="376" value=" -2.593357 113.865082 16.157871"/>
+    <point index="377" value=" -2.307137 114.800056 14.079553"/>
+    <point index="378" value=" -2.201071 113.694267 13.219796"/>
+    <point index="379" value=" -2.187636 111.061081 13.084056"/>
+    <point index="380" value=" -2.242671 107.348442 13.567045"/>
+    <point index="381" value=" -2.308457 103.664833 14.240694"/>
+    <point index="382" value=" -2.372991 101.134544 14.949312"/>
+    <point index="383" value=" -2.472618 100.110222 15.895874"/>
+    <point index="384" value=" 5.464356 101.305504 17.241270"/>
+    <point index="385" value=" 5.651059 103.919167 17.784416"/>
+    <point index="386" value=" 5.688227 107.779617 17.568920"/>
+    <point index="387" value=" 5.508101 111.528854 16.683796"/>
+    <point index="388" value=" 5.190990 113.959030 15.560138"/>
+    <point index="389" value=" 4.620039 114.786469 13.559940"/>
+    <point index="390" value=" 4.423537 113.728905 12.800100"/>
+    <point index="391" value=" 4.396565 111.151169 12.683189"/>
+    <point index="392" value=" 4.513827 107.430038 13.172990"/>
+    <point index="393" value=" 4.676221 103.709175 13.913240"/>
+    <point index="394" value=" 4.809481 101.148445 14.578253"/>
+    <point index="395" value=" 5.009465 100.191071 15.478560"/>
+    <point index="396" value=" -5.449429 101.319061 17.199081"/>
+    <point index="397" value=" -5.645354 103.937950 17.726158"/>
+    <point index="398" value=" -5.659700 107.788864 17.474121"/>
+    <point index="399" value=" -5.519686 111.555237 16.710995"/>
+    <point index="400" value=" -5.220706 114.098969 15.612326"/>
+    <point index="401" value=" -4.625252 114.877441 13.557841"/>
+    <point index="402" value=" -4.427946 113.718552 12.810783"/>
+    <point index="403" value=" -4.406921 111.154892 12.713977"/>
+    <point index="404" value=" -4.505592 107.430977 13.140312"/>
+    <point index="405" value=" -4.646161 103.687271 13.793715"/>
+    <point index="406" value=" -4.830896 101.196945 14.666258"/>
+    <point index="407" value=" -5.017529 100.223831 15.509783"/>
+    <point index="408" value=" -2.580963 100.691956 -12.516459"/>
+    <point index="409" value=" -2.510724 103.543358 -12.689881"/>
+    <point index="410" value=" -2.472600 107.450096 -12.261024"/>
+    <point index="411" value=" -2.372360 111.147995 -11.871826"/>
+    <point index="412" value=" -2.328508 113.461868 -10.814051"/>
+    <point index="413" value=" -2.229798 114.235947 -8.786809"/>
+    <point index="414" value=" -2.181620 113.222137 -7.935432"/>
+    <point index="415" value=" -2.192615 110.743698 -7.736058"/>
+    <point index="416" value=" -2.281222 107.039848 -7.807707"/>
+    <point index="417" value=" -2.375160 103.169136 -8.559319"/>
+    <point index="418" value=" -2.454540 100.448402 -9.424548"/>
+    <point index="419" value=" -2.547724 99.612442 -10.545033"/>
+    <point index="420" value=" 2.581035 100.523735 -12.762364"/>
+    <point index="421" value=" 2.538431 103.547188 -13.003304"/>
+    <point index="422" value=" 2.485608 107.508690 -12.589021"/>
+    <point index="423" value=" 2.420469 111.133034 -11.825312"/>
+    <point index="424" value=" 2.338875 113.444473 -10.827740"/>
+    <point index="425" value=" 2.228009 114.346855 -8.749601"/>
+    <point index="426" value=" 2.179621 113.232674 -7.896909"/>
+    <point index="427" value=" 2.193153 110.745087 -7.631418"/>
+    <point index="428" value=" 2.277557 107.036591 -7.767635"/>
+    <point index="429" value=" 2.389723 103.134315 -8.363293"/>
+    <point index="430" value=" 2.481086 100.292496 -9.109818"/>
+    <point index="431" value=" 2.560130 99.362480 -10.483221"/>
+    <point index="432" value=" 14.395493 99.989403 -9.056529"/>
+    <point index="433" value=" 11.484405 100.034233 -10.799562"/>
+    <point index="434" value=" 8.492399 99.646881 -11.831298"/>
+    <point index="435" value=" 5.433436 99.552071 -11.926487"/>
+    <point index="436" value=" 2.595865 99.437897 -11.767784"/>
+    <point index="437" value=" 0.003654 99.417641 -11.603984"/>
+    <point index="438" value=" -2.596723 99.650162 -11.629024"/>
+    <point index="439" value=" -5.426185 99.596245 -11.874692"/>
+    <point index="440" value=" -8.447681 99.931938 -11.686490"/>
+    <point index="441" value=" -11.493708 99.991425 -10.818938"/>
+    <point index="442" value=" -14.358245 100.075478 -9.017899"/>
+    <point index="443" value=" -16.752979 99.986435 -6.620019"/>
+    <point index="444" value=" -18.320673 100.122574 -3.757489"/>
+    <point index="445" value=" -19.129419 100.279984 -0.748262"/>
+    <point index="446" value=" -19.274666 100.443008 2.273207"/>
+    <point index="447" value=" -18.881592 100.432289 5.242577"/>
+    <point index="448" value=" -17.794214 100.390129 8.081019"/>
+    <point index="449" value=" -16.030294 100.256691 10.688986"/>
+    <point index="450" value=" -13.587584 100.293167 12.791428"/>
+    <point index="451" value=" -10.855302 100.301544 14.442799"/>
+    <point index="452" value=" -8.027124 100.310371 15.660662"/>
+    <point index="453" value=" -5.245895 100.324432 16.451588"/>
+    <point index="454" value=" -2.590197 100.238823 16.928947"/>
+    <point index="455" value=" -0.004077 100.198906 17.082626"/>
+    <point index="456" value=" 2.588277 100.281075 16.912054"/>
+    <point index="457" value=" 5.245869 100.315994 16.444809"/>
+    <point index="458" value=" 8.020354 100.342049 15.632737"/>
+    <point index="459" value=" 10.873871 100.308228 14.477479"/>
+    <point index="460" value=" 13.614079 100.261177 12.819098"/>
+    <point index="461" value=" 15.930309 100.485840 10.594539"/>
+    <point index="462" value=" 17.882002 100.270210 8.113863"/>
+    <point index="463" value=" 18.940235 100.357872 5.254539"/>
+    <point index="464" value=" 19.345572 100.353790 2.275295"/>
+    <point index="465" value=" 19.136614 100.279694 -0.746963"/>
+    <point index="466" value=" 18.242798 100.237801 -3.726920"/>
+    <point index="467" value=" 16.704256 100.148972 -6.572050"/>
+    <point index="468" value=" 0.001078 114.285721 -9.813883"/>
+    <point index="469" value=" 2.279997 114.446075 -9.884723"/>
+    <point index="470" value=" 4.672204 114.404877 -9.790037"/>
+    <point index="471" value=" 7.122159 114.467712 -9.457103"/>
+    <point index="472" value=" 9.500354 114.526711 -8.617486"/>
+    <point index="473" value=" 11.675867 114.582741 -7.107901"/>
+    <point index="474" value=" 13.386119 114.444328 -5.016911"/>
+    <point index="475" value=" 14.709343 114.576546 -2.737839"/>
+    <point index="476" value=" 15.466425 114.574043 -0.328960"/>
+    <point index="477" value=" 15.755498 114.579636 2.058284"/>
+    <point index="478" value=" 15.571198 114.652939 4.376362"/>
+    <point index="479" value=" 14.819358 114.625160 6.591302"/>
+    <point index="480" value=" 13.492229 114.741730 8.659858"/>
+    <point index="481" value=" 11.700298 114.746025 10.552214"/>
+    <point index="482" value=" 9.616089 114.821007 12.218558"/>
+    <point index="483" value=" 7.323453 114.855469 13.566479"/>
+    <point index="484" value=" 4.891761 114.784470 14.538945"/>
+    <point index="485" value=" 2.451087 114.867928 15.151700"/>
+    <point index="486" value=" -0.001530 114.709160 15.322982"/>
+    <point index="487" value=" -2.454457 114.859695 15.161574"/>
+    <point index="488" value=" -4.920386 114.998756 14.579470"/>
+    <point index="489" value=" -7.321681 114.830528 13.578461"/>
+    <point index="490" value=" -9.594833 114.737350 12.193227"/>
+    <point index="491" value=" -11.683694 114.758667 10.542130"/>
+    <point index="492" value=" -13.518106 114.887085 8.685456"/>
+    <point index="493" value=" -14.787773 114.587265 6.585191"/>
+    <point index="494" value=" -15.517412 114.492393 4.370823"/>
+    <point index="495" value=" -15.753628 114.594109 2.063185"/>
+    <point index="496" value=" -15.492605 114.644455 -0.330908"/>
+    <point index="497" value=" -14.681623 114.537758 -2.722532"/>
+    <point index="498" value=" -13.487456 114.814590 -5.096463"/>
+    <point index="499" value=" -11.644794 114.411507 -7.055232"/>
+    <point index="500" value=" -9.500926 114.493042 -8.611908"/>
+    <point index="501" value=" -7.117147 114.375061 -9.428791"/>
+    <point index="502" value=" -4.673678 114.437859 -9.804029"/>
+    <point index="503" value=" -2.293076 114.201393 -9.813684"/>
+  </shape>
+  <weights deformer="chagor_skinCluster" source="thigh_twist_02_r" shape="chagor_lowGeoShape" layer="0" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="chagor_skinCluster" source="thigh_twist_01_r" shape="chagor_lowGeoShape" layer="1" defaultValue="0.000" size="80" max="451">
+    <point index="2" value="0.006"/>
+    <point index="3" value="0.033"/>
+    <point index="4" value="0.010"/>
+    <point index="31" value="0.026"/>
+    <point index="32" value="0.004"/>
+    <point index="34" value="0.025"/>
+    <point index="35" value="0.001"/>
+    <point index="42" value="0.003"/>
+    <point index="43" value="0.003"/>
+    <point index="56" value="0.008"/>
+    <point index="57" value="0.015"/>
+    <point index="60" value="0.013"/>
+    <point index="61" value="0.008"/>
+    <point index="64" value="0.002"/>
+    <point index="84" value="0.012"/>
+    <point index="85" value="0.004"/>
+    <point index="87" value="0.002"/>
+    <point index="88" value="0.011"/>
+    <point index="89" value="0.002"/>
+    <point index="91" value="0.003"/>
+    <point index="115" value="0.001"/>
+    <point index="116" value="0.003"/>
+    <point index="120" value="0.016"/>
+    <point index="121" value="0.032"/>
+    <point index="122" value="0.015"/>
+    <point index="126" value="0.030"/>
+    <point index="127" value="0.018"/>
+    <point index="128" value="0.005"/>
+    <point index="132" value="0.003"/>
+    <point index="181" value="0.002"/>
+    <point index="183" value="0.006"/>
+    <point index="184" value="0.003"/>
+    <point index="195" value="0.015"/>
+    <point index="196" value="0.007"/>
+    <point index="197" value="0.025"/>
+    <point index="198" value="0.011"/>
+    <point index="199" value="0.003"/>
+    <point index="200" value="0.002"/>
+    <point index="201" value="0.031"/>
+    <point index="202" value="0.013"/>
+    <point index="203" value="0.033"/>
+    <point index="204" value="0.014"/>
+    <point index="205" value="0.003"/>
+    <point index="206" value="0.003"/>
+    <point index="215" value="0.030"/>
+    <point index="216" value="0.013"/>
+    <point index="217" value="0.026"/>
+    <point index="218" value="0.011"/>
+    <point index="219" value="0.002"/>
+    <point index="220" value="0.003"/>
+    <point index="221" value="0.019"/>
+    <point index="222" value="0.008"/>
+    <point index="223" value="0.011"/>
+    <point index="224" value="0.005"/>
+    <point index="225" value="0.001"/>
+    <point index="226" value="0.002"/>
+    <point index="235" value="0.004"/>
+    <point index="236" value="0.002"/>
+    <point index="337" value="0.002"/>
+    <point index="338" value="0.007"/>
+    <point index="339" value="0.019"/>
+    <point index="340" value="0.032"/>
+    <point index="341" value="0.040"/>
+    <point index="342" value="0.043"/>
+    <point index="343" value="0.040"/>
+    <point index="344" value="0.033"/>
+    <point index="345" value="0.024"/>
+    <point index="346" value="0.013"/>
+    <point index="347" value="0.004"/>
+    <point index="441" value="0.002"/>
+    <point index="442" value="0.007"/>
+    <point index="443" value="0.020"/>
+    <point index="444" value="0.032"/>
+    <point index="445" value="0.041"/>
+    <point index="446" value="0.043"/>
+    <point index="447" value="0.040"/>
+    <point index="448" value="0.033"/>
+    <point index="449" value="0.023"/>
+    <point index="450" value="0.013"/>
+    <point index="451" value="0.004"/>
+  </weights>
+  <weights deformer="chagor_skinCluster" source="thigh_twist_02_l" shape="chagor_lowGeoShape" layer="2" defaultValue="0.000" size="0" max="0"/>
+  <weights deformer="chagor_skinCluster" source="thigh_twist_01_l" shape="chagor_lowGeoShape" layer="3" defaultValue="0.000" size="80" max="467">
+    <point index="0" value="0.006"/>
+    <point index="6" value="0.009"/>
+    <point index="7" value="0.034"/>
+    <point index="17" value="0.001"/>
+    <point index="19" value="0.024"/>
+    <point index="20" value="0.004"/>
+    <point index="22" value="0.025"/>
+    <point index="46" value="0.003"/>
+    <point index="47" value="0.003"/>
+    <point index="66" value="0.002"/>
+    <point index="68" value="0.007"/>
+    <point index="69" value="0.013"/>
+    <point index="72" value="0.015"/>
+    <point index="73" value="0.008"/>
+    <point index="98" value="0.011"/>
+    <point index="99" value="0.003"/>
+    <point index="101" value="0.002"/>
+    <point index="102" value="0.012"/>
+    <point index="103" value="0.002"/>
+    <point index="105" value="0.004"/>
+    <point index="106" value="0.001"/>
+    <point index="113" value="0.003"/>
+    <point index="136" value="0.003"/>
+    <point index="137" value="0.004"/>
+    <point index="140" value="0.016"/>
+    <point index="141" value="0.031"/>
+    <point index="142" value="0.015"/>
+    <point index="146" value="0.032"/>
+    <point index="147" value="0.015"/>
+    <point index="150" value="0.006"/>
+    <point index="151" value="0.002"/>
+    <point index="153" value="0.003"/>
+    <point index="253" value="0.003"/>
+    <point index="254" value="0.002"/>
+    <point index="255" value="0.010"/>
+    <point index="256" value="0.005"/>
+    <point index="257" value="0.001"/>
+    <point index="265" value="0.017"/>
+    <point index="266" value="0.008"/>
+    <point index="267" value="0.025"/>
+    <point index="268" value="0.011"/>
+    <point index="269" value="0.002"/>
+    <point index="270" value="0.002"/>
+    <point index="271" value="0.031"/>
+    <point index="272" value="0.013"/>
+    <point index="273" value="0.034"/>
+    <point index="274" value="0.014"/>
+    <point index="275" value="0.003"/>
+    <point index="276" value="0.003"/>
+    <point index="285" value="0.031"/>
+    <point index="286" value="0.013"/>
+    <point index="287" value="0.024"/>
+    <point index="288" value="0.011"/>
+    <point index="289" value="0.003"/>
+    <point index="290" value="0.003"/>
+    <point index="291" value="0.015"/>
+    <point index="292" value="0.007"/>
+    <point index="293" value="0.002"/>
+    <point index="330" value="0.007"/>
+    <point index="331" value="0.002"/>
+    <point index="351" value="0.004"/>
+    <point index="352" value="0.012"/>
+    <point index="353" value="0.020"/>
+    <point index="354" value="0.033"/>
+    <point index="355" value="0.041"/>
+    <point index="356" value="0.044"/>
+    <point index="357" value="0.041"/>
+    <point index="358" value="0.031"/>
+    <point index="359" value="0.018"/>
+    <point index="432" value="0.007"/>
+    <point index="433" value="0.002"/>
+    <point index="459" value="0.004"/>
+    <point index="460" value="0.011"/>
+    <point index="461" value="0.020"/>
+    <point index="462" value="0.032"/>
+    <point index="463" value="0.041"/>
+    <point index="464" value="0.044"/>
+    <point index="465" value="0.041"/>
+    <point index="466" value="0.031"/>
+    <point index="467" value="0.019"/>
+  </weights>
+  <weights deformer="chagor_skinCluster" source="pelvis" shape="chagor_lowGeoShape" layer="4" defaultValue="0.000" size="504" max="503">
+    <point index="0" value="0.774"/>
+    <point index="1" value="0.783"/>
+    <point index="2" value="0.775"/>
+    <point index="3" value="0.776"/>
+    <point index="4" value="0.694"/>
+    <point index="5" value="0.536"/>
+    <point index="6" value="0.694"/>
+    <point index="7" value="0.776"/>
+    <point index="8" value="0.191"/>
+    <point index="9" value="0.169"/>
+    <point index="10" value="0.191"/>
+    <point index="11" value="0.226"/>
+    <point index="12" value="0.145"/>
+    <point index="13" value="0.110"/>
+    <point index="14" value="0.142"/>
+    <point index="15" value="0.225"/>
+    <point index="16" value="0.592"/>
+    <point index="17" value="0.430"/>
+    <point index="18" value="0.106"/>
+    <point index="19" value="0.763"/>
+    <point index="20" value="0.527"/>
+    <point index="21" value="0.195"/>
+    <point index="22" value="0.776"/>
+    <point index="23" value="0.222"/>
+    <point index="24" value="0.782"/>
+    <point index="25" value="0.442"/>
+    <point index="26" value="0.173"/>
+    <point index="27" value="0.508"/>
+    <point index="28" value="0.781"/>
+    <point index="29" value="0.509"/>
+    <point index="30" value="0.174"/>
+    <point index="31" value="0.775"/>
+    <point index="32" value="0.527"/>
+    <point index="33" value="0.221"/>
+    <point index="34" value="0.765"/>
+    <point index="35" value="0.433"/>
+    <point index="36" value="0.196"/>
+    <point index="37" value="0.593"/>
+    <point index="38" value="0.313"/>
+    <point index="39" value="0.106"/>
+    <point index="40" value="0.461"/>
+    <point index="41" value="0.461"/>
+    <point index="42" value="0.532"/>
+    <point index="43" value="0.500"/>
+    <point index="44" value="0.345"/>
+    <point index="45" value="0.344"/>
+    <point index="46" value="0.500"/>
+    <point index="47" value="0.533"/>
+    <point index="48" value="0.680"/>
+    <point index="49" value="0.666"/>
+    <point index="50" value="0.257"/>
+    <point index="51" value="0.285"/>
+    <point index="52" value="0.665"/>
+    <point index="53" value="0.680"/>
+    <point index="54" value="0.286"/>
+    <point index="55" value="0.258"/>
+    <point index="56" value="0.690"/>
+    <point index="57" value="0.686"/>
+    <point index="58" value="0.356"/>
+    <point index="59" value="0.331"/>
+    <point index="60" value="0.675"/>
+    <point index="61" value="0.639"/>
+    <point index="62" value="0.293"/>
+    <point index="63" value="0.340"/>
+    <point index="64" value="0.543"/>
+    <point index="65" value="0.221"/>
+    <point index="66" value="0.543"/>
+    <point index="67" value="0.214"/>
+    <point index="68" value="0.639"/>
+    <point index="69" value="0.675"/>
+    <point index="70" value="0.340"/>
+    <point index="71" value="0.291"/>
+    <point index="72" value="0.686"/>
+    <point index="73" value="0.690"/>
+    <point index="74" value="0.331"/>
+    <point index="75" value="0.356"/>
+    <point index="76" value="0.671"/>
+    <point index="77" value="0.445"/>
+    <point index="78" value="0.267"/>
+    <point index="79" value="0.484"/>
+    <point index="80" value="0.671"/>
+    <point index="81" value="0.484"/>
+    <point index="82" value="0.268"/>
+    <point index="83" value="0.447"/>
+    <point index="84" value="0.690"/>
+    <point index="85" value="0.533"/>
+    <point index="86" value="0.349"/>
+    <point index="87" value="0.524"/>
+    <point index="88" value="0.664"/>
+    <point index="89" value="0.474"/>
+    <point index="90" value="0.320"/>
+    <point index="91" value="0.517"/>
+    <point index="92" value="0.496"/>
+    <point index="93" value="0.197"/>
+    <point index="94" value="0.384"/>
+    <point index="95" value="0.497"/>
+    <point index="96" value="0.381"/>
+    <point index="97" value="0.193"/>
+    <point index="98" value="0.664"/>
+    <point index="99" value="0.517"/>
+    <point index="100" value="0.319"/>
+    <point index="101" value="0.472"/>
+    <point index="102" value="0.691"/>
+    <point index="103" value="0.523"/>
+    <point index="104" value="0.349"/>
+    <point index="105" value="0.533"/>
+    <point index="106" value="0.778"/>
+    <point index="107" value="0.784"/>
+    <point index="108" value="0.662"/>
+    <point index="109" value="0.253"/>
+    <point index="110" value="0.171"/>
+    <point index="111" value="0.178"/>
+    <point index="112" value="0.308"/>
+    <point index="113" value="0.686"/>
+    <point index="114" value="0.782"/>
+    <point index="115" value="0.777"/>
+    <point index="116" value="0.687"/>
+    <point index="117" value="0.309"/>
+    <point index="118" value="0.180"/>
+    <point index="119" value="0.171"/>
+    <point index="120" value="0.774"/>
+    <point index="121" value="0.775"/>
+    <point index="122" value="0.681"/>
+    <point index="123" value="0.352"/>
+    <point index="124" value="0.228"/>
+    <point index="125" value="0.205"/>
+    <point index="126" value="0.776"/>
+    <point index="127" value="0.737"/>
+    <point index="128" value="0.597"/>
+    <point index="129" value="0.258"/>
+    <point index="130" value="0.173"/>
+    <point index="131" value="0.215"/>
+    <point index="132" value="0.639"/>
+    <point index="133" value="0.448"/>
+    <point index="134" value="0.186"/>
+    <point index="135" value="0.120"/>
+    <point index="136" value="0.641"/>
+    <point index="137" value="0.595"/>
+    <point index="138" value="0.254"/>
+    <point index="139" value="0.116"/>
+    <point index="140" value="0.738"/>
+    <point index="141" value="0.773"/>
+    <point index="142" value="0.681"/>
+    <point index="143" value="0.352"/>
+    <point index="144" value="0.214"/>
+    <point index="145" value="0.170"/>
+    <point index="146" value="0.776"/>
+    <point index="147" value="0.775"/>
+    <point index="148" value="0.207"/>
+    <point index="149" value="0.229"/>
+    <point index="150" value="0.764"/>
+    <point index="151" value="0.767"/>
+    <point index="152" value="0.673"/>
+    <point index="153" value="0.678"/>
+    <point index="154" value="0.770"/>
+    <point index="155" value="0.667"/>
+    <point index="156" value="0.487"/>
+    <point index="157" value="0.502"/>
+    <point index="158" value="0.517"/>
+    <point index="159" value="0.771"/>
+    <point index="160" value="0.661"/>
+    <point index="161" value="0.771"/>
+    <point index="162" value="0.656"/>
+    <point index="163" value="0.464"/>
+    <point index="164" value="0.473"/>
+    <point index="165" value="0.297"/>
+    <point index="166" value="0.307"/>
+    <point index="167" value="0.289"/>
+    <point index="168" value="0.192"/>
+    <point index="169" value="0.197"/>
+    <point index="170" value="0.200"/>
+    <point index="171" value="0.321"/>
+    <point index="172" value="0.334"/>
+    <point index="173" value="0.206"/>
+    <point index="174" value="0.214"/>
+    <point index="175" value="0.772"/>
+    <point index="176" value="0.661"/>
+    <point index="177" value="0.771"/>
+    <point index="178" value="0.667"/>
+    <point index="179" value="0.486"/>
+    <point index="180" value="0.472"/>
+    <point index="181" value="0.767"/>
+    <point index="182" value="0.674"/>
+    <point index="183" value="0.766"/>
+    <point index="184" value="0.678"/>
+    <point index="185" value="0.517"/>
+    <point index="186" value="0.502"/>
+    <point index="187" value="0.319"/>
+    <point index="188" value="0.306"/>
+    <point index="189" value="0.334"/>
+    <point index="190" value="0.213"/>
+    <point index="191" value="0.204"/>
+    <point index="192" value="0.199"/>
+    <point index="193" value="0.296"/>
+    <point index="194" value="0.196"/>
+    <point index="195" value="0.767"/>
+    <point index="196" value="0.684"/>
+    <point index="197" value="0.774"/>
+    <point index="198" value="0.689"/>
+    <point index="199" value="0.528"/>
+    <point index="200" value="0.525"/>
+    <point index="201" value="0.781"/>
+    <point index="202" value="0.693"/>
+    <point index="203" value="0.786"/>
+    <point index="204" value="0.692"/>
+    <point index="205" value="0.517"/>
+    <point index="206" value="0.526"/>
+    <point index="207" value="0.346"/>
+    <point index="208" value="0.351"/>
+    <point index="209" value="0.336"/>
+    <point index="210" value="0.222"/>
+    <point index="211" value="0.231"/>
+    <point index="212" value="0.232"/>
+    <point index="213" value="0.347"/>
+    <point index="214" value="0.226"/>
+    <point index="215" value="0.785"/>
+    <point index="216" value="0.683"/>
+    <point index="217" value="0.772"/>
+    <point index="218" value="0.666"/>
+    <point index="219" value="0.480"/>
+    <point index="220" value="0.503"/>
+    <point index="221" value="0.740"/>
+    <point index="222" value="0.633"/>
+    <point index="223" value="0.694"/>
+    <point index="224" value="0.587"/>
+    <point index="225" value="0.410"/>
+    <point index="226" value="0.449"/>
+    <point index="227" value="0.274"/>
+    <point index="228" value="0.300"/>
+    <point index="229" value="0.243"/>
+    <point index="230" value="0.146"/>
+    <point index="231" value="0.171"/>
+    <point index="232" value="0.192"/>
+    <point index="233" value="0.320"/>
+    <point index="234" value="0.210"/>
+    <point index="235" value="0.640"/>
+    <point index="236" value="0.538"/>
+    <point index="237" value="0.595"/>
+    <point index="238" value="0.497"/>
+    <point index="239" value="0.337"/>
+    <point index="240" value="0.369"/>
+    <point index="241" value="0.542"/>
+    <point index="242" value="0.450"/>
+    <point index="243" value="0.303"/>
+    <point index="244" value="0.193"/>
+    <point index="245" value="0.177"/>
+    <point index="246" value="0.107"/>
+    <point index="247" value="0.110"/>
+    <point index="248" value="0.214"/>
+    <point index="249" value="0.123"/>
+    <point index="250" value="0.595"/>
+    <point index="251" value="0.496"/>
+    <point index="252" value="0.337"/>
+    <point index="253" value="0.640"/>
+    <point index="254" value="0.537"/>
+    <point index="255" value="0.693"/>
+    <point index="256" value="0.586"/>
+    <point index="257" value="0.409"/>
+    <point index="258" value="0.369"/>
+    <point index="259" value="0.214"/>
+    <point index="260" value="0.193"/>
+    <point index="261" value="0.244"/>
+    <point index="262" value="0.147"/>
+    <point index="263" value="0.124"/>
+    <point index="264" value="0.111"/>
+    <point index="265" value="0.741"/>
+    <point index="266" value="0.633"/>
+    <point index="267" value="0.771"/>
+    <point index="268" value="0.665"/>
+    <point index="269" value="0.480"/>
+    <point index="270" value="0.449"/>
+    <point index="271" value="0.784"/>
+    <point index="272" value="0.683"/>
+    <point index="273" value="0.785"/>
+    <point index="274" value="0.692"/>
+    <point index="275" value="0.517"/>
+    <point index="276" value="0.503"/>
+    <point index="277" value="0.319"/>
+    <point index="278" value="0.300"/>
+    <point index="279" value="0.335"/>
+    <point index="280" value="0.222"/>
+    <point index="281" value="0.209"/>
+    <point index="282" value="0.193"/>
+    <point index="283" value="0.274"/>
+    <point index="284" value="0.171"/>
+    <point index="285" value="0.781"/>
+    <point index="286" value="0.693"/>
+    <point index="287" value="0.774"/>
+    <point index="288" value="0.689"/>
+    <point index="289" value="0.528"/>
+    <point index="290" value="0.526"/>
+    <point index="291" value="0.768"/>
+    <point index="292" value="0.684"/>
+    <point index="293" value="0.524"/>
+    <point index="294" value="0.345"/>
+    <point index="295" value="0.350"/>
+    <point index="296" value="0.224"/>
+    <point index="297" value="0.231"/>
+    <point index="298" value="0.346"/>
+    <point index="299" value="0.230"/>
+    <point index="300" value="0.157"/>
+    <point index="301" value="0.161"/>
+    <point index="302" value="0.160"/>
+    <point index="303" value="0.161"/>
+    <point index="304" value="0.170"/>
+    <point index="305" value="0.181"/>
+    <point index="306" value="0.189"/>
+    <point index="307" value="0.191"/>
+    <point index="308" value="0.185"/>
+    <point index="309" value="0.174"/>
+    <point index="310" value="0.158"/>
+    <point index="311" value="0.137"/>
+    <point index="312" value="0.115"/>
+    <point index="313" value="0.093"/>
+    <point index="314" value="0.084"/>
+    <point index="315" value="0.086"/>
+    <point index="316" value="0.083"/>
+    <point index="317" value="0.094"/>
+    <point index="318" value="0.115"/>
+    <point index="319" value="0.137"/>
+    <point index="320" value="0.159"/>
+    <point index="321" value="0.175"/>
+    <point index="322" value="0.185"/>
+    <point index="323" value="0.190"/>
+    <point index="324" value="0.187"/>
+    <point index="325" value="0.178"/>
+    <point index="326" value="0.169"/>
+    <point index="327" value="0.163"/>
+    <point index="328" value="0.161"/>
+    <point index="329" value="0.162"/>
+    <point index="330" value="0.791"/>
+    <point index="331" value="0.797"/>
+    <point index="332" value="0.803"/>
+    <point index="333" value="0.808"/>
+    <point index="334" value="0.808"/>
+    <point index="335" value="0.806"/>
+    <point index="336" value="0.802"/>
+    <point index="337" value="0.796"/>
+    <point index="338" value="0.791"/>
+    <point index="339" value="0.792"/>
+    <point index="340" value="0.796"/>
+    <point index="341" value="0.805"/>
+    <point index="342" value="0.809"/>
+    <point index="343" value="0.812"/>
+    <point index="344" value="0.802"/>
+    <point index="345" value="0.772"/>
+    <point index="346" value="0.727"/>
+    <point index="347" value="0.671"/>
+    <point index="348" value="0.624"/>
+    <point index="349" value="0.568"/>
+    <point index="350" value="0.622"/>
+    <point index="351" value="0.669"/>
+    <point index="352" value="0.723"/>
+    <point index="353" value="0.770"/>
+    <point index="354" value="0.799"/>
+    <point index="355" value="0.811"/>
+    <point index="356" value="0.810"/>
+    <point index="357" value="0.804"/>
+    <point index="358" value="0.797"/>
+    <point index="359" value="0.792"/>
+    <point index="360" value="0.542"/>
+    <point index="361" value="0.452"/>
+    <point index="362" value="0.316"/>
+    <point index="363" value="0.185"/>
+    <point index="364" value="0.109"/>
+    <point index="365" value="0.084"/>
+    <point index="366" value="0.106"/>
+    <point index="367" value="0.178"/>
+    <point index="368" value="0.306"/>
+    <point index="369" value="0.454"/>
+    <point index="370" value="0.547"/>
+    <point index="371" value="0.573"/>
+    <point index="372" value="0.542"/>
+    <point index="373" value="0.452"/>
+    <point index="374" value="0.315"/>
+    <point index="375" value="0.186"/>
+    <point index="376" value="0.108"/>
+    <point index="377" value="0.084"/>
+    <point index="378" value="0.106"/>
+    <point index="379" value="0.177"/>
+    <point index="380" value="0.306"/>
+    <point index="381" value="0.454"/>
+    <point index="382" value="0.547"/>
+    <point index="383" value="0.574"/>
+    <point index="384" value="0.560"/>
+    <point index="385" value="0.467"/>
+    <point index="386" value="0.323"/>
+    <point index="387" value="0.186"/>
+    <point index="388" value="0.106"/>
+    <point index="389" value="0.082"/>
+    <point index="390" value="0.106"/>
+    <point index="391" value="0.182"/>
+    <point index="392" value="0.317"/>
+    <point index="393" value="0.469"/>
+    <point index="394" value="0.564"/>
+    <point index="395" value="0.591"/>
+    <point index="396" value="0.560"/>
+    <point index="397" value="0.467"/>
+    <point index="398" value="0.324"/>
+    <point index="399" value="0.188"/>
+    <point index="400" value="0.105"/>
+    <point index="401" value="0.081"/>
+    <point index="402" value="0.106"/>
+    <point index="403" value="0.181"/>
+    <point index="404" value="0.316"/>
+    <point index="405" value="0.469"/>
+    <point index="406" value="0.564"/>
+    <point index="407" value="0.591"/>
+    <point index="408" value="0.783"/>
+    <point index="409" value="0.664"/>
+    <point index="410" value="0.443"/>
+    <point index="411" value="0.254"/>
+    <point index="412" value="0.169"/>
+    <point index="413" value="0.159"/>
+    <point index="414" value="0.193"/>
+    <point index="415" value="0.290"/>
+    <point index="416" value="0.465"/>
+    <point index="417" value="0.658"/>
+    <point index="418" value="0.772"/>
+    <point index="419" value="0.807"/>
+    <point index="420" value="0.785"/>
+    <point index="421" value="0.664"/>
+    <point index="422" value="0.441"/>
+    <point index="423" value="0.254"/>
+    <point index="424" value="0.170"/>
+    <point index="425" value="0.159"/>
+    <point index="426" value="0.194"/>
+    <point index="427" value="0.291"/>
+    <point index="428" value="0.466"/>
+    <point index="429" value="0.657"/>
+    <point index="430" value="0.771"/>
+    <point index="431" value="0.809"/>
+    <point index="432" value="0.796"/>
+    <point index="433" value="0.800"/>
+    <point index="434" value="0.808"/>
+    <point index="435" value="0.813"/>
+    <point index="436" value="0.813"/>
+    <point index="437" value="0.811"/>
+    <point index="438" value="0.811"/>
+    <point index="439" value="0.811"/>
+    <point index="440" value="0.806"/>
+    <point index="441" value="0.799"/>
+    <point index="442" value="0.794"/>
+    <point index="443" value="0.794"/>
+    <point index="444" value="0.798"/>
+    <point index="445" value="0.802"/>
+    <point index="446" value="0.807"/>
+    <point index="447" value="0.807"/>
+    <point index="448" value="0.799"/>
+    <point index="449" value="0.771"/>
+    <point index="450" value="0.725"/>
+    <point index="451" value="0.669"/>
+    <point index="452" value="0.622"/>
+    <point index="453" value="0.590"/>
+    <point index="454" value="0.572"/>
+    <point index="455" value="0.566"/>
+    <point index="456" value="0.571"/>
+    <point index="457" value="0.589"/>
+    <point index="458" value="0.621"/>
+    <point index="459" value="0.668"/>
+    <point index="460" value="0.724"/>
+    <point index="461" value="0.768"/>
+    <point index="462" value="0.796"/>
+    <point index="463" value="0.807"/>
+    <point index="464" value="0.805"/>
+    <point index="465" value="0.802"/>
+    <point index="466" value="0.797"/>
+    <point index="467" value="0.794"/>
+    <point index="468" value="0.150"/>
+    <point index="469" value="0.151"/>
+    <point index="470" value="0.152"/>
+    <point index="471" value="0.151"/>
+    <point index="472" value="0.152"/>
+    <point index="473" value="0.161"/>
+    <point index="474" value="0.174"/>
+    <point index="475" value="0.185"/>
+    <point index="476" value="0.189"/>
+    <point index="477" value="0.185"/>
+    <point index="478" value="0.174"/>
+    <point index="479" value="0.157"/>
+    <point index="480" value="0.135"/>
+    <point index="481" value="0.112"/>
+    <point index="482" value="0.090"/>
+    <point index="483" value="0.082"/>
+    <point index="484" value="0.082"/>
+    <point index="485" value="0.085"/>
+    <point index="486" value="0.086"/>
+    <point index="487" value="0.084"/>
+    <point index="488" value="0.081"/>
+    <point index="489" value="0.081"/>
+    <point index="490" value="0.091"/>
+    <point index="491" value="0.113"/>
+    <point index="492" value="0.135"/>
+    <point index="493" value="0.158"/>
+    <point index="494" value="0.176"/>
+    <point index="495" value="0.185"/>
+    <point index="496" value="0.188"/>
+    <point index="497" value="0.183"/>
+    <point index="498" value="0.170"/>
+    <point index="499" value="0.161"/>
+    <point index="500" value="0.154"/>
+    <point index="501" value="0.153"/>
+    <point index="502" value="0.154"/>
+    <point index="503" value="0.152"/>
+  </weights>
+  <weights deformer="chagor_skinCluster" source="spine_01" shape="chagor_lowGeoShape" layer="5" defaultValue="0.000" size="504" max="503">
+    <point index="0" value="0.141"/>
+    <point index="1" value="0.137"/>
+    <point index="2" value="0.141"/>
+    <point index="3" value="0.092"/>
+    <point index="4" value="0.113"/>
+    <point index="5" value="0.146"/>
+    <point index="6" value="0.113"/>
+    <point index="7" value="0.091"/>
+    <point index="8" value="0.112"/>
+    <point index="9" value="0.126"/>
+    <point index="10" value="0.112"/>
+    <point index="11" value="0.101"/>
+    <point index="12" value="0.088"/>
+    <point index="13" value="0.079"/>
+    <point index="14" value="0.088"/>
+    <point index="15" value="0.101"/>
+    <point index="16" value="0.140"/>
+    <point index="17" value="0.127"/>
+    <point index="18" value="0.081"/>
+    <point index="19" value="0.087"/>
+    <point index="20" value="0.139"/>
+    <point index="21" value="0.096"/>
+    <point index="22" value="0.117"/>
+    <point index="23" value="0.105"/>
+    <point index="24" value="0.139"/>
+    <point index="25" value="0.162"/>
+    <point index="26" value="0.116"/>
+    <point index="27" value="0.161"/>
+    <point index="28" value="0.140"/>
+    <point index="29" value="0.161"/>
+    <point index="30" value="0.117"/>
+    <point index="31" value="0.117"/>
+    <point index="32" value="0.139"/>
+    <point index="33" value="0.105"/>
+    <point index="34" value="0.086"/>
+    <point index="35" value="0.128"/>
+    <point index="36" value="0.096"/>
+    <point index="37" value="0.140"/>
+    <point index="38" value="0.129"/>
+    <point index="39" value="0.080"/>
+    <point index="40" value="0.158"/>
+    <point index="41" value="0.158"/>
+    <point index="42" value="0.154"/>
+    <point index="43" value="0.128"/>
+    <point index="44" value="0.129"/>
+    <point index="45" value="0.128"/>
+    <point index="46" value="0.128"/>
+    <point index="47" value="0.154"/>
+    <point index="48" value="0.156"/>
+    <point index="49" value="0.152"/>
+    <point index="50" value="0.138"/>
+    <point index="51" value="0.136"/>
+    <point index="52" value="0.153"/>
+    <point index="53" value="0.156"/>
+    <point index="54" value="0.137"/>
+    <point index="55" value="0.139"/>
+    <point index="56" value="0.150"/>
+    <point index="57" value="0.130"/>
+    <point index="58" value="0.129"/>
+    <point index="59" value="0.137"/>
+    <point index="60" value="0.115"/>
+    <point index="61" value="0.116"/>
+    <point index="62" value="0.112"/>
+    <point index="63" value="0.121"/>
+    <point index="64" value="0.135"/>
+    <point index="65" value="0.106"/>
+    <point index="66" value="0.134"/>
+    <point index="67" value="0.104"/>
+    <point index="68" value="0.116"/>
+    <point index="69" value="0.115"/>
+    <point index="70" value="0.121"/>
+    <point index="71" value="0.112"/>
+    <point index="72" value="0.130"/>
+    <point index="73" value="0.150"/>
+    <point index="74" value="0.137"/>
+    <point index="75" value="0.129"/>
+    <point index="76" value="0.153"/>
+    <point index="77" value="0.158"/>
+    <point index="78" value="0.136"/>
+    <point index="79" value="0.159"/>
+    <point index="80" value="0.154"/>
+    <point index="81" value="0.160"/>
+    <point index="82" value="0.137"/>
+    <point index="83" value="0.159"/>
+    <point index="84" value="0.141"/>
+    <point index="85" value="0.146"/>
+    <point index="86" value="0.134"/>
+    <point index="87" value="0.159"/>
+    <point index="88" value="0.112"/>
+    <point index="89" value="0.127"/>
+    <point index="90" value="0.116"/>
+    <point index="91" value="0.133"/>
+    <point index="92" value="0.140"/>
+    <point index="93" value="0.103"/>
+    <point index="94" value="0.129"/>
+    <point index="95" value="0.140"/>
+    <point index="96" value="0.128"/>
+    <point index="97" value="0.102"/>
+    <point index="98" value="0.112"/>
+    <point index="99" value="0.133"/>
+    <point index="100" value="0.116"/>
+    <point index="101" value="0.126"/>
+    <point index="102" value="0.141"/>
+    <point index="103" value="0.159"/>
+    <point index="104" value="0.134"/>
+    <point index="105" value="0.146"/>
+    <point index="106" value="0.142"/>
+    <point index="107" value="0.136"/>
+    <point index="108" value="0.154"/>
+    <point index="109" value="0.143"/>
+    <point index="110" value="0.120"/>
+    <point index="111" value="0.114"/>
+    <point index="112" value="0.137"/>
+    <point index="113" value="0.156"/>
+    <point index="114" value="0.137"/>
+    <point index="115" value="0.143"/>
+    <point index="116" value="0.156"/>
+    <point index="117" value="0.138"/>
+    <point index="118" value="0.115"/>
+    <point index="119" value="0.121"/>
+    <point index="120" value="0.131"/>
+    <point index="121" value="0.103"/>
+    <point index="122" value="0.121"/>
+    <point index="123" value="0.125"/>
+    <point index="124" value="0.102"/>
+    <point index="125" value="0.108"/>
+    <point index="126" value="0.085"/>
+    <point index="127" value="0.096"/>
+    <point index="128" value="0.125"/>
+    <point index="129" value="0.109"/>
+    <point index="130" value="0.092"/>
+    <point index="131" value="0.100"/>
+    <point index="132" value="0.130"/>
+    <point index="133" value="0.143"/>
+    <point index="134" value="0.101"/>
+    <point index="135" value="0.084"/>
+    <point index="136" value="0.130"/>
+    <point index="137" value="0.125"/>
+    <point index="138" value="0.108"/>
+    <point index="139" value="0.083"/>
+    <point index="140" value="0.097"/>
+    <point index="141" value="0.086"/>
+    <point index="142" value="0.121"/>
+    <point index="143" value="0.125"/>
+    <point index="144" value="0.099"/>
+    <point index="145" value="0.092"/>
+    <point index="146" value="0.103"/>
+    <point index="147" value="0.132"/>
+    <point index="148" value="0.109"/>
+    <point index="149" value="0.102"/>
+    <point index="150" value="0.146"/>
+    <point index="151" value="0.148"/>
+    <point index="152" value="0.166"/>
+    <point index="153" value="0.165"/>
+    <point index="154" value="0.146"/>
+    <point index="155" value="0.164"/>
+    <point index="156" value="0.173"/>
+    <point index="157" value="0.175"/>
+    <point index="158" value="0.175"/>
+    <point index="159" value="0.143"/>
+    <point index="160" value="0.162"/>
+    <point index="161" value="0.142"/>
+    <point index="162" value="0.162"/>
+    <point index="163" value="0.173"/>
+    <point index="164" value="0.172"/>
+    <point index="165" value="0.155"/>
+    <point index="166" value="0.153"/>
+    <point index="167" value="0.159"/>
+    <point index="168" value="0.137"/>
+    <point index="169" value="0.132"/>
+    <point index="170" value="0.128"/>
+    <point index="171" value="0.153"/>
+    <point index="172" value="0.152"/>
+    <point index="173" value="0.125"/>
+    <point index="174" value="0.123"/>
+    <point index="175" value="0.143"/>
+    <point index="176" value="0.162"/>
+    <point index="177" value="0.146"/>
+    <point index="178" value="0.164"/>
+    <point index="179" value="0.173"/>
+    <point index="180" value="0.172"/>
+    <point index="181" value="0.148"/>
+    <point index="182" value="0.166"/>
+    <point index="183" value="0.146"/>
+    <point index="184" value="0.165"/>
+    <point index="185" value="0.175"/>
+    <point index="186" value="0.174"/>
+    <point index="187" value="0.153"/>
+    <point index="188" value="0.153"/>
+    <point index="189" value="0.152"/>
+    <point index="190" value="0.123"/>
+    <point index="191" value="0.125"/>
+    <point index="192" value="0.128"/>
+    <point index="193" value="0.155"/>
+    <point index="194" value="0.132"/>
+    <point index="195" value="0.135"/>
+    <point index="196" value="0.157"/>
+    <point index="197" value="0.118"/>
+    <point index="198" value="0.145"/>
+    <point index="199" value="0.162"/>
+    <point index="200" value="0.171"/>
+    <point index="201" value="0.102"/>
+    <point index="202" value="0.131"/>
+    <point index="203" value="0.089"/>
+    <point index="204" value="0.119"/>
+    <point index="205" value="0.141"/>
+    <point index="206" value="0.151"/>
+    <point index="207" value="0.134"/>
+    <point index="208" value="0.142"/>
+    <point index="209" value="0.127"/>
+    <point index="210" value="0.103"/>
+    <point index="211" value="0.107"/>
+    <point index="212" value="0.112"/>
+    <point index="213" value="0.150"/>
+    <point index="214" value="0.119"/>
+    <point index="215" value="0.082"/>
+    <point index="216" value="0.112"/>
+    <point index="217" value="0.083"/>
+    <point index="218" value="0.110"/>
+    <point index="219" value="0.129"/>
+    <point index="220" value="0.133"/>
+    <point index="221" value="0.094"/>
+    <point index="222" value="0.115"/>
+    <point index="223" value="0.111"/>
+    <point index="224" value="0.125"/>
+    <point index="225" value="0.129"/>
+    <point index="226" value="0.128"/>
+    <point index="227" value="0.114"/>
+    <point index="228" value="0.118"/>
+    <point index="229" value="0.112"/>
+    <point index="230" value="0.092"/>
+    <point index="231" value="0.096"/>
+    <point index="232" value="0.098"/>
+    <point index="233" value="0.122"/>
+    <point index="234" value="0.101"/>
+    <point index="235" value="0.129"/>
+    <point index="236" value="0.135"/>
+    <point index="237" value="0.139"/>
+    <point index="238" value="0.140"/>
+    <point index="239" value="0.129"/>
+    <point index="240" value="0.130"/>
+    <point index="241" value="0.145"/>
+    <point index="242" value="0.143"/>
+    <point index="243" value="0.128"/>
+    <point index="244" value="0.104"/>
+    <point index="245" value="0.100"/>
+    <point index="246" value="0.079"/>
+    <point index="247" value="0.083"/>
+    <point index="248" value="0.108"/>
+    <point index="249" value="0.087"/>
+    <point index="250" value="0.140"/>
+    <point index="251" value="0.140"/>
+    <point index="252" value="0.130"/>
+    <point index="253" value="0.129"/>
+    <point index="254" value="0.135"/>
+    <point index="255" value="0.112"/>
+    <point index="256" value="0.126"/>
+    <point index="257" value="0.130"/>
+    <point index="258" value="0.130"/>
+    <point index="259" value="0.108"/>
+    <point index="260" value="0.104"/>
+    <point index="261" value="0.112"/>
+    <point index="262" value="0.092"/>
+    <point index="263" value="0.088"/>
+    <point index="264" value="0.083"/>
+    <point index="265" value="0.095"/>
+    <point index="266" value="0.116"/>
+    <point index="267" value="0.084"/>
+    <point index="268" value="0.111"/>
+    <point index="269" value="0.129"/>
+    <point index="270" value="0.128"/>
+    <point index="271" value="0.082"/>
+    <point index="272" value="0.112"/>
+    <point index="273" value="0.089"/>
+    <point index="274" value="0.119"/>
+    <point index="275" value="0.141"/>
+    <point index="276" value="0.133"/>
+    <point index="277" value="0.122"/>
+    <point index="278" value="0.118"/>
+    <point index="279" value="0.127"/>
+    <point index="280" value="0.103"/>
+    <point index="281" value="0.101"/>
+    <point index="282" value="0.098"/>
+    <point index="283" value="0.115"/>
+    <point index="284" value="0.095"/>
+    <point index="285" value="0.102"/>
+    <point index="286" value="0.131"/>
+    <point index="287" value="0.119"/>
+    <point index="288" value="0.145"/>
+    <point index="289" value="0.162"/>
+    <point index="290" value="0.151"/>
+    <point index="291" value="0.135"/>
+    <point index="292" value="0.157"/>
+    <point index="293" value="0.171"/>
+    <point index="294" value="0.149"/>
+    <point index="295" value="0.142"/>
+    <point index="296" value="0.119"/>
+    <point index="297" value="0.112"/>
+    <point index="298" value="0.134"/>
+    <point index="299" value="0.107"/>
+    <point index="300" value="0.126"/>
+    <point index="301" value="0.120"/>
+    <point index="302" value="0.115"/>
+    <point index="303" value="0.112"/>
+    <point index="304" value="0.109"/>
+    <point index="305" value="0.105"/>
+    <point index="306" value="0.098"/>
+    <point index="307" value="0.094"/>
+    <point index="308" value="0.093"/>
+    <point index="309" value="0.092"/>
+    <point index="310" value="0.090"/>
+    <point index="311" value="0.087"/>
+    <point index="312" value="0.084"/>
+    <point index="313" value="0.079"/>
+    <point index="314" value="0.075"/>
+    <point index="315" value="0.072"/>
+    <point index="316" value="0.075"/>
+    <point index="317" value="0.079"/>
+    <point index="318" value="0.084"/>
+    <point index="319" value="0.087"/>
+    <point index="320" value="0.090"/>
+    <point index="321" value="0.092"/>
+    <point index="322" value="0.093"/>
+    <point index="323" value="0.094"/>
+    <point index="324" value="0.098"/>
+    <point index="325" value="0.103"/>
+    <point index="326" value="0.109"/>
+    <point index="327" value="0.113"/>
+    <point index="328" value="0.116"/>
+    <point index="329" value="0.120"/>
+    <point index="330" value="0.138"/>
+    <point index="331" value="0.140"/>
+    <point index="332" value="0.137"/>
+    <point index="333" value="0.133"/>
+    <point index="334" value="0.132"/>
+    <point index="335" value="0.134"/>
+    <point index="336" value="0.137"/>
+    <point index="337" value="0.140"/>
+    <point index="338" value="0.138"/>
+    <point index="339" value="0.125"/>
+    <point index="340" value="0.108"/>
+    <point index="341" value="0.090"/>
+    <point index="342" value="0.077"/>
+    <point index="343" value="0.070"/>
+    <point index="344" value="0.072"/>
+    <point index="345" value="0.085"/>
+    <point index="346" value="0.105"/>
+    <point index="347" value="0.126"/>
+    <point index="348" value="0.139"/>
+    <point index="349" value="0.145"/>
+    <point index="350" value="0.139"/>
+    <point index="351" value="0.127"/>
+    <point index="352" value="0.107"/>
+    <point index="353" value="0.088"/>
+    <point index="354" value="0.073"/>
+    <point index="355" value="0.070"/>
+    <point index="356" value="0.076"/>
+    <point index="357" value="0.090"/>
+    <point index="358" value="0.108"/>
+    <point index="359" value="0.126"/>
+    <point index="360" value="0.145"/>
+    <point index="361" value="0.143"/>
+    <point index="362" value="0.129"/>
+    <point index="363" value="0.101"/>
+    <point index="364" value="0.079"/>
+    <point index="365" value="0.072"/>
+    <point index="366" value="0.079"/>
+    <point index="367" value="0.100"/>
+    <point index="368" value="0.128"/>
+    <point index="369" value="0.143"/>
+    <point index="370" value="0.145"/>
+    <point index="371" value="0.145"/>
+    <point index="372" value="0.145"/>
+    <point index="373" value="0.143"/>
+    <point index="374" value="0.129"/>
+    <point index="375" value="0.101"/>
+    <point index="376" value="0.079"/>
+    <point index="377" value="0.071"/>
+    <point index="378" value="0.079"/>
+    <point index="379" value="0.100"/>
+    <point index="380" value="0.128"/>
+    <point index="381" value="0.143"/>
+    <point index="382" value="0.145"/>
+    <point index="383" value="0.145"/>
+    <point index="384" value="0.144"/>
+    <point index="385" value="0.142"/>
+    <point index="386" value="0.128"/>
+    <point index="387" value="0.101"/>
+    <point index="388" value="0.079"/>
+    <point index="389" value="0.073"/>
+    <point index="390" value="0.080"/>
+    <point index="391" value="0.101"/>
+    <point index="392" value="0.128"/>
+    <point index="393" value="0.142"/>
+    <point index="394" value="0.144"/>
+    <point index="395" value="0.143"/>
+    <point index="396" value="0.144"/>
+    <point index="397" value="0.142"/>
+    <point index="398" value="0.129"/>
+    <point index="399" value="0.101"/>
+    <point index="400" value="0.079"/>
+    <point index="401" value="0.072"/>
+    <point index="402" value="0.080"/>
+    <point index="403" value="0.101"/>
+    <point index="404" value="0.128"/>
+    <point index="405" value="0.142"/>
+    <point index="406" value="0.144"/>
+    <point index="407" value="0.143"/>
+    <point index="408" value="0.137"/>
+    <point index="409" value="0.153"/>
+    <point index="410" value="0.161"/>
+    <point index="411" value="0.142"/>
+    <point index="412" value="0.125"/>
+    <point index="413" value="0.125"/>
+    <point index="414" value="0.136"/>
+    <point index="415" value="0.158"/>
+    <point index="416" value="0.173"/>
+    <point index="417" value="0.162"/>
+    <point index="418" value="0.142"/>
+    <point index="419" value="0.133"/>
+    <point index="420" value="0.136"/>
+    <point index="421" value="0.153"/>
+    <point index="422" value="0.161"/>
+    <point index="423" value="0.142"/>
+    <point index="424" value="0.124"/>
+    <point index="425" value="0.124"/>
+    <point index="426" value="0.136"/>
+    <point index="427" value="0.158"/>
+    <point index="428" value="0.173"/>
+    <point index="429" value="0.162"/>
+    <point index="430" value="0.142"/>
+    <point index="431" value="0.132"/>
+    <point index="432" value="0.136"/>
+    <point index="433" value="0.138"/>
+    <point index="434" value="0.134"/>
+    <point index="435" value="0.131"/>
+    <point index="436" value="0.130"/>
+    <point index="437" value="0.131"/>
+    <point index="438" value="0.131"/>
+    <point index="439" value="0.132"/>
+    <point index="440" value="0.135"/>
+    <point index="441" value="0.139"/>
+    <point index="442" value="0.137"/>
+    <point index="443" value="0.124"/>
+    <point index="444" value="0.107"/>
+    <point index="445" value="0.090"/>
+    <point index="446" value="0.078"/>
+    <point index="447" value="0.072"/>
+    <point index="448" value="0.073"/>
+    <point index="449" value="0.086"/>
+    <point index="450" value="0.106"/>
+    <point index="451" value="0.127"/>
+    <point index="452" value="0.139"/>
+    <point index="453" value="0.143"/>
+    <point index="454" value="0.145"/>
+    <point index="455" value="0.145"/>
+    <point index="456" value="0.145"/>
+    <point index="457" value="0.144"/>
+    <point index="458" value="0.139"/>
+    <point index="459" value="0.127"/>
+    <point index="460" value="0.107"/>
+    <point index="461" value="0.089"/>
+    <point index="462" value="0.075"/>
+    <point index="463" value="0.071"/>
+    <point index="464" value="0.078"/>
+    <point index="465" value="0.090"/>
+    <point index="466" value="0.108"/>
+    <point index="467" value="0.125"/>
+    <point index="468" value="0.122"/>
+    <point index="469" value="0.120"/>
+    <point index="470" value="0.116"/>
+    <point index="471" value="0.111"/>
+    <point index="472" value="0.108"/>
+    <point index="473" value="0.105"/>
+    <point index="474" value="0.101"/>
+    <point index="475" value="0.096"/>
+    <point index="476" value="0.093"/>
+    <point index="477" value="0.092"/>
+    <point index="478" value="0.091"/>
+    <point index="479" value="0.089"/>
+    <point index="480" value="0.086"/>
+    <point index="481" value="0.082"/>
+    <point index="482" value="0.077"/>
+    <point index="483" value="0.074"/>
+    <point index="484" value="0.072"/>
+    <point index="485" value="0.071"/>
+    <point index="486" value="0.072"/>
+    <point index="487" value="0.071"/>
+    <point index="488" value="0.072"/>
+    <point index="489" value="0.074"/>
+    <point index="490" value="0.077"/>
+    <point index="491" value="0.082"/>
+    <point index="492" value="0.085"/>
+    <point index="493" value="0.089"/>
+    <point index="494" value="0.092"/>
+    <point index="495" value="0.092"/>
+    <point index="496" value="0.093"/>
+    <point index="497" value="0.095"/>
+    <point index="498" value="0.099"/>
+    <point index="499" value="0.105"/>
+    <point index="500" value="0.109"/>
+    <point index="501" value="0.112"/>
+    <point index="502" value="0.117"/>
+    <point index="503" value="0.121"/>
+  </weights>
+  <weights deformer="chagor_skinCluster" source="spine_02" shape="chagor_lowGeoShape" layer="6" defaultValue="0.000" size="504" max="503">
+    <point index="0" value="0.067"/>
+    <point index="1" value="0.064"/>
+    <point index="2" value="0.067"/>
+    <point index="3" value="0.084"/>
+    <point index="4" value="0.166"/>
+    <point index="5" value="0.285"/>
+    <point index="6" value="0.167"/>
+    <point index="7" value="0.084"/>
+    <point index="8" value="0.260"/>
+    <point index="9" value="0.264"/>
+    <point index="10" value="0.260"/>
+    <point index="11" value="0.276"/>
+    <point index="12" value="0.338"/>
+    <point index="13" value="0.414"/>
+    <point index="14" value="0.338"/>
+    <point index="15" value="0.275"/>
+    <point index="16" value="0.241"/>
+    <point index="17" value="0.281"/>
+    <point index="18" value="0.386"/>
+    <point index="19" value="0.110"/>
+    <point index="20" value="0.192"/>
+    <point index="21" value="0.301"/>
+    <point index="22" value="0.071"/>
+    <point index="23" value="0.256"/>
+    <point index="24" value="0.064"/>
+    <point index="25" value="0.194"/>
+    <point index="26" value="0.265"/>
+    <point index="27" value="0.169"/>
+    <point index="28" value="0.064"/>
+    <point index="29" value="0.169"/>
+    <point index="30" value="0.266"/>
+    <point index="31" value="0.071"/>
+    <point index="32" value="0.192"/>
+    <point index="33" value="0.256"/>
+    <point index="34" value="0.109"/>
+    <point index="35" value="0.282"/>
+    <point index="36" value="0.301"/>
+    <point index="37" value="0.241"/>
+    <point index="38" value="0.385"/>
+    <point index="39" value="0.385"/>
+    <point index="40" value="0.186"/>
+    <point index="41" value="0.186"/>
+    <point index="42" value="0.171"/>
+    <point index="43" value="0.224"/>
+    <point index="44" value="0.352"/>
+    <point index="45" value="0.351"/>
+    <point index="46" value="0.224"/>
+    <point index="47" value="0.171"/>
+    <point index="48" value="0.105"/>
+    <point index="49" value="0.111"/>
+    <point index="50" value="0.248"/>
+    <point index="51" value="0.239"/>
+    <point index="52" value="0.111"/>
+    <point index="53" value="0.105"/>
+    <point index="54" value="0.239"/>
+    <point index="55" value="0.248"/>
+    <point index="56" value="0.105"/>
+    <point index="57" value="0.119"/>
+    <point index="58" value="0.236"/>
+    <point index="59" value="0.226"/>
+    <point index="60" value="0.142"/>
+    <point index="61" value="0.181"/>
+    <point index="62" value="0.299"/>
+    <point index="63" value="0.262"/>
+    <point index="64" value="0.254"/>
+    <point index="65" value="0.360"/>
+    <point index="66" value="0.253"/>
+    <point index="67" value="0.359"/>
+    <point index="68" value="0.182"/>
+    <point index="69" value="0.142"/>
+    <point index="70" value="0.262"/>
+    <point index="71" value="0.299"/>
+    <point index="72" value="0.119"/>
+    <point index="73" value="0.105"/>
+    <point index="74" value="0.227"/>
+    <point index="75" value="0.236"/>
+    <point index="76" value="0.109"/>
+    <point index="77" value="0.193"/>
+    <point index="78" value="0.245"/>
+    <point index="79" value="0.177"/>
+    <point index="80" value="0.109"/>
+    <point index="81" value="0.177"/>
+    <point index="82" value="0.245"/>
+    <point index="83" value="0.192"/>
+    <point index="84" value="0.110"/>
+    <point index="85" value="0.180"/>
+    <point index="86" value="0.228"/>
+    <point index="87" value="0.167"/>
+    <point index="88" value="0.158"/>
+    <point index="89" value="0.248"/>
+    <point index="90" value="0.279"/>
+    <point index="91" value="0.206"/>
+    <point index="92" value="0.289"/>
+    <point index="93" value="0.385"/>
+    <point index="94" value="0.320"/>
+    <point index="95" value="0.288"/>
+    <point index="96" value="0.319"/>
+    <point index="97" value="0.386"/>
+    <point index="98" value="0.158"/>
+    <point index="99" value="0.206"/>
+    <point index="100" value="0.279"/>
+    <point index="101" value="0.248"/>
+    <point index="102" value="0.110"/>
+    <point index="103" value="0.167"/>
+    <point index="104" value="0.228"/>
+    <point index="105" value="0.180"/>
+    <point index="106" value="0.066"/>
+    <point index="107" value="0.063"/>
+    <point index="108" value="0.113"/>
+    <point index="109" value="0.248"/>
+    <point index="110" value="0.265"/>
+    <point index="111" value="0.264"/>
+    <point index="112" value="0.231"/>
+    <point index="113" value="0.103"/>
+    <point index="114" value="0.064"/>
+    <point index="115" value="0.066"/>
+    <point index="116" value="0.103"/>
+    <point index="117" value="0.231"/>
+    <point index="118" value="0.265"/>
+    <point index="119" value="0.265"/>
+    <point index="120" value="0.069"/>
+    <point index="121" value="0.077"/>
+    <point index="122" value="0.130"/>
+    <point index="123" value="0.248"/>
+    <point index="124" value="0.264"/>
+    <point index="125" value="0.256"/>
+    <point index="126" value="0.094"/>
+    <point index="127" value="0.133"/>
+    <point index="128" value="0.214"/>
+    <point index="129" value="0.328"/>
+    <point index="130" value="0.316"/>
+    <point index="131" value="0.289"/>
+    <point index="132" value="0.206"/>
+    <point index="133" value="0.329"/>
+    <point index="134" value="0.415"/>
+    <point index="135" value="0.364"/>
+    <point index="136" value="0.205"/>
+    <point index="137" value="0.215"/>
+    <point index="138" value="0.326"/>
+    <point index="139" value="0.364"/>
+    <point index="140" value="0.134"/>
+    <point index="141" value="0.094"/>
+    <point index="142" value="0.130"/>
+    <point index="143" value="0.248"/>
+    <point index="144" value="0.288"/>
+    <point index="145" value="0.316"/>
+    <point index="146" value="0.076"/>
+    <point index="147" value="0.068"/>
+    <point index="148" value="0.256"/>
+    <point index="149" value="0.264"/>
+    <point index="150" value="0.072"/>
+    <point index="151" value="0.070"/>
+    <point index="152" value="0.109"/>
+    <point index="153" value="0.108"/>
+    <point index="154" value="0.069"/>
+    <point index="155" value="0.112"/>
+    <point index="156" value="0.182"/>
+    <point index="157" value="0.176"/>
+    <point index="158" value="0.171"/>
+    <point index="159" value="0.069"/>
+    <point index="160" value="0.114"/>
+    <point index="161" value="0.069"/>
+    <point index="162" value="0.117"/>
+    <point index="163" value="0.191"/>
+    <point index="164" value="0.188"/>
+    <point index="165" value="0.244"/>
+    <point index="166" value="0.241"/>
+    <point index="167" value="0.246"/>
+    <point index="168" value="0.264"/>
+    <point index="169" value="0.265"/>
+    <point index="170" value="0.265"/>
+    <point index="171" value="0.236"/>
+    <point index="172" value="0.231"/>
+    <point index="173" value="0.264"/>
+    <point index="174" value="0.260"/>
+    <point index="175" value="0.069"/>
+    <point index="176" value="0.114"/>
+    <point index="177" value="0.069"/>
+    <point index="178" value="0.112"/>
+    <point index="179" value="0.183"/>
+    <point index="180" value="0.188"/>
+    <point index="181" value="0.070"/>
+    <point index="182" value="0.109"/>
+    <point index="183" value="0.071"/>
+    <point index="184" value="0.108"/>
+    <point index="185" value="0.171"/>
+    <point index="186" value="0.176"/>
+    <point index="187" value="0.237"/>
+    <point index="188" value="0.242"/>
+    <point index="189" value="0.231"/>
+    <point index="190" value="0.260"/>
+    <point index="191" value="0.264"/>
+    <point index="192" value="0.266"/>
+    <point index="193" value="0.245"/>
+    <point index="194" value="0.265"/>
+    <point index="195" value="0.072"/>
+    <point index="196" value="0.108"/>
+    <point index="197" value="0.072"/>
+    <point index="198" value="0.111"/>
+    <point index="199" value="0.176"/>
+    <point index="200" value="0.171"/>
+    <point index="201" value="0.075"/>
+    <point index="202" value="0.118"/>
+    <point index="203" value="0.080"/>
+    <point index="204" value="0.127"/>
+    <point index="205" value="0.200"/>
+    <point index="206" value="0.186"/>
+    <point index="207" value="0.244"/>
+    <point index="208" value="0.233"/>
+    <point index="209" value="0.259"/>
+    <point index="210" value="0.281"/>
+    <point index="211" value="0.268"/>
+    <point index="212" value="0.259"/>
+    <point index="213" value="0.229"/>
+    <point index="214" value="0.257"/>
+    <point index="215" value="0.090"/>
+    <point index="216" value="0.141"/>
+    <point index="217" value="0.105"/>
+    <point index="218" value="0.159"/>
+    <point index="219" value="0.238"/>
+    <point index="220" value="0.217"/>
+    <point index="221" value="0.131"/>
+    <point index="222" value="0.186"/>
+    <point index="223" value="0.165"/>
+    <point index="224" value="0.220"/>
+    <point index="225" value="0.297"/>
+    <point index="226" value="0.265"/>
+    <point index="227" value="0.316"/>
+    <point index="228" value="0.294"/>
+    <point index="229" value="0.343"/>
+    <point index="230" value="0.348"/>
+    <point index="231" value="0.327"/>
+    <point index="232" value="0.310"/>
+    <point index="233" value="0.276"/>
+    <point index="234" value="0.295"/>
+    <point index="235" value="0.204"/>
+    <point index="236" value="0.256"/>
+    <point index="237" value="0.239"/>
+    <point index="238" value="0.288"/>
+    <point index="239" value="0.357"/>
+    <point index="240" value="0.329"/>
+    <point index="241" value="0.282"/>
+    <point index="242" value="0.328"/>
+    <point index="243" value="0.391"/>
+    <point index="244" value="0.392"/>
+    <point index="245" value="0.419"/>
+    <point index="246" value="0.416"/>
+    <point index="247" value="0.390"/>
+    <point index="248" value="0.370"/>
+    <point index="249" value="0.372"/>
+    <point index="250" value="0.239"/>
+    <point index="251" value="0.288"/>
+    <point index="252" value="0.357"/>
+    <point index="253" value="0.205"/>
+    <point index="254" value="0.257"/>
+    <point index="255" value="0.167"/>
+    <point index="256" value="0.220"/>
+    <point index="257" value="0.297"/>
+    <point index="258" value="0.330"/>
+    <point index="259" value="0.370"/>
+    <point index="260" value="0.392"/>
+    <point index="261" value="0.343"/>
+    <point index="262" value="0.348"/>
+    <point index="263" value="0.372"/>
+    <point index="264" value="0.391"/>
+    <point index="265" value="0.132"/>
+    <point index="266" value="0.186"/>
+    <point index="267" value="0.106"/>
+    <point index="268" value="0.160"/>
+    <point index="269" value="0.239"/>
+    <point index="270" value="0.265"/>
+    <point index="271" value="0.090"/>
+    <point index="272" value="0.141"/>
+    <point index="273" value="0.080"/>
+    <point index="274" value="0.127"/>
+    <point index="275" value="0.200"/>
+    <point index="276" value="0.217"/>
+    <point index="277" value="0.276"/>
+    <point index="278" value="0.294"/>
+    <point index="279" value="0.259"/>
+    <point index="280" value="0.281"/>
+    <point index="281" value="0.295"/>
+    <point index="282" value="0.310"/>
+    <point index="283" value="0.317"/>
+    <point index="284" value="0.327"/>
+    <point index="285" value="0.075"/>
+    <point index="286" value="0.118"/>
+    <point index="287" value="0.072"/>
+    <point index="288" value="0.111"/>
+    <point index="289" value="0.176"/>
+    <point index="290" value="0.186"/>
+    <point index="291" value="0.072"/>
+    <point index="292" value="0.108"/>
+    <point index="293" value="0.171"/>
+    <point index="294" value="0.229"/>
+    <point index="295" value="0.234"/>
+    <point index="296" value="0.257"/>
+    <point index="297" value="0.259"/>
+    <point index="298" value="0.244"/>
+    <point index="299" value="0.268"/>
+    <point index="300" value="0.267"/>
+    <point index="301" value="0.268"/>
+    <point index="302" value="0.270"/>
+    <point index="303" value="0.270"/>
+    <point index="304" value="0.267"/>
+    <point index="305" value="0.264"/>
+    <point index="306" value="0.265"/>
+    <point index="307" value="0.272"/>
+    <point index="308" value="0.284"/>
+    <point index="309" value="0.297"/>
+    <point index="310" value="0.309"/>
+    <point index="311" value="0.324"/>
+    <point index="312" value="0.344"/>
+    <point index="313" value="0.366"/>
+    <point index="314" value="0.385"/>
+    <point index="315" value="0.412"/>
+    <point index="316" value="0.384"/>
+    <point index="317" value="0.367"/>
+    <point index="318" value="0.344"/>
+    <point index="319" value="0.324"/>
+    <point index="320" value="0.310"/>
+    <point index="321" value="0.298"/>
+    <point index="322" value="0.285"/>
+    <point index="323" value="0.272"/>
+    <point index="324" value="0.264"/>
+    <point index="325" value="0.264"/>
+    <point index="326" value="0.267"/>
+    <point index="327" value="0.270"/>
+    <point index="328" value="0.270"/>
+    <point index="329" value="0.269"/>
+    <point index="330" value="0.060"/>
+    <point index="331" value="0.057"/>
+    <point index="332" value="0.055"/>
+    <point index="333" value="0.053"/>
+    <point index="334" value="0.054"/>
+    <point index="335" value="0.054"/>
+    <point index="336" value="0.056"/>
+    <point index="337" value="0.058"/>
+    <point index="338" value="0.060"/>
+    <point index="339" value="0.060"/>
+    <point index="340" value="0.060"/>
+    <point index="341" value="0.061"/>
+    <point index="342" value="0.066"/>
+    <point index="343" value="0.073"/>
+    <point index="344" value="0.088"/>
+    <point index="345" value="0.113"/>
+    <point index="346" value="0.147"/>
+    <point index="347" value="0.188"/>
+    <point index="348" value="0.223"/>
+    <point index="349" value="0.268"/>
+    <point index="350" value="0.224"/>
+    <point index="351" value="0.189"/>
+    <point index="352" value="0.150"/>
+    <point index="353" value="0.116"/>
+    <point index="354" value="0.089"/>
+    <point index="355" value="0.073"/>
+    <point index="356" value="0.065"/>
+    <point index="357" value="0.061"/>
+    <point index="358" value="0.060"/>
+    <point index="359" value="0.060"/>
+    <point index="360" value="0.281"/>
+    <point index="361" value="0.325"/>
+    <point index="362" value="0.382"/>
+    <point index="363" value="0.412"/>
+    <point index="364" value="0.411"/>
+    <point index="365" value="0.408"/>
+    <point index="366" value="0.413"/>
+    <point index="367" value="0.416"/>
+    <point index="368" value="0.388"/>
+    <point index="369" value="0.324"/>
+    <point index="370" value="0.277"/>
+    <point index="371" value="0.263"/>
+    <point index="372" value="0.281"/>
+    <point index="373" value="0.325"/>
+    <point index="374" value="0.382"/>
+    <point index="375" value="0.411"/>
+    <point index="376" value="0.410"/>
+    <point index="377" value="0.407"/>
+    <point index="378" value="0.412"/>
+    <point index="379" value="0.416"/>
+    <point index="380" value="0.388"/>
+    <point index="381" value="0.324"/>
+    <point index="382" value="0.277"/>
+    <point index="383" value="0.263"/>
+    <point index="384" value="0.266"/>
+    <point index="385" value="0.312"/>
+    <point index="386" value="0.372"/>
+    <point index="387" value="0.403"/>
+    <point index="388" value="0.401"/>
+    <point index="389" value="0.398"/>
+    <point index="390" value="0.404"/>
+    <point index="391" value="0.407"/>
+    <point index="392" value="0.376"/>
+    <point index="393" value="0.311"/>
+    <point index="394" value="0.263"/>
+    <point index="395" value="0.249"/>
+    <point index="396" value="0.266"/>
+    <point index="397" value="0.313"/>
+    <point index="398" value="0.372"/>
+    <point index="399" value="0.402"/>
+    <point index="400" value="0.399"/>
+    <point index="401" value="0.397"/>
+    <point index="402" value="0.403"/>
+    <point index="403" value="0.407"/>
+    <point index="404" value="0.376"/>
+    <point index="405" value="0.311"/>
+    <point index="406" value="0.263"/>
+    <point index="407" value="0.249"/>
+    <point index="408" value="0.064"/>
+    <point index="409" value="0.112"/>
+    <point index="410" value="0.194"/>
+    <point index="411" value="0.248"/>
+    <point index="412" value="0.265"/>
+    <point index="413" value="0.268"/>
+    <point index="414" value="0.265"/>
+    <point index="415" value="0.246"/>
+    <point index="416" value="0.190"/>
+    <point index="417" value="0.116"/>
+    <point index="418" value="0.069"/>
+    <point index="419" value="0.054"/>
+    <point index="420" value="0.063"/>
+    <point index="421" value="0.112"/>
+    <point index="422" value="0.194"/>
+    <point index="423" value="0.248"/>
+    <point index="424" value="0.264"/>
+    <point index="425" value="0.267"/>
+    <point index="426" value="0.264"/>
+    <point index="427" value="0.246"/>
+    <point index="428" value="0.190"/>
+    <point index="429" value="0.116"/>
+    <point index="430" value="0.069"/>
+    <point index="431" value="0.053"/>
+    <point index="432" value="0.058"/>
+    <point index="433" value="0.056"/>
+    <point index="434" value="0.053"/>
+    <point index="435" value="0.051"/>
+    <point index="436" value="0.051"/>
+    <point index="437" value="0.052"/>
+    <point index="438" value="0.052"/>
+    <point index="439" value="0.052"/>
+    <point index="440" value="0.054"/>
+    <point index="441" value="0.056"/>
+    <point index="442" value="0.059"/>
+    <point index="443" value="0.059"/>
+    <point index="444" value="0.059"/>
+    <point index="445" value="0.062"/>
+    <point index="446" value="0.067"/>
+    <point index="447" value="0.075"/>
+    <point index="448" value="0.089"/>
+    <point index="449" value="0.114"/>
+    <point index="450" value="0.148"/>
+    <point index="451" value="0.189"/>
+    <point index="452" value="0.224"/>
+    <point index="453" value="0.250"/>
+    <point index="454" value="0.264"/>
+    <point index="455" value="0.269"/>
+    <point index="456" value="0.265"/>
+    <point index="457" value="0.250"/>
+    <point index="458" value="0.225"/>
+    <point index="459" value="0.190"/>
+    <point index="460" value="0.150"/>
+    <point index="461" value="0.117"/>
+    <point index="462" value="0.091"/>
+    <point index="463" value="0.075"/>
+    <point index="464" value="0.067"/>
+    <point index="465" value="0.062"/>
+    <point index="466" value="0.060"/>
+    <point index="467" value="0.059"/>
+    <point index="468" value="0.267"/>
+    <point index="469" value="0.267"/>
+    <point index="470" value="0.268"/>
+    <point index="471" value="0.269"/>
+    <point index="472" value="0.270"/>
+    <point index="473" value="0.267"/>
+    <point index="474" value="0.263"/>
+    <point index="475" value="0.264"/>
+    <point index="476" value="0.271"/>
+    <point index="477" value="0.283"/>
+    <point index="478" value="0.295"/>
+    <point index="479" value="0.307"/>
+    <point index="480" value="0.321"/>
+    <point index="481" value="0.340"/>
+    <point index="482" value="0.364"/>
+    <point index="483" value="0.383"/>
+    <point index="484" value="0.397"/>
+    <point index="485" value="0.407"/>
+    <point index="486" value="0.411"/>
+    <point index="487" value="0.406"/>
+    <point index="488" value="0.395"/>
+    <point index="489" value="0.382"/>
+    <point index="490" value="0.364"/>
+    <point index="491" value="0.340"/>
+    <point index="492" value="0.320"/>
+    <point index="493" value="0.307"/>
+    <point index="494" value="0.296"/>
+    <point index="495" value="0.283"/>
+    <point index="496" value="0.271"/>
+    <point index="497" value="0.264"/>
+    <point index="498" value="0.263"/>
+    <point index="499" value="0.267"/>
+    <point index="500" value="0.271"/>
+    <point index="501" value="0.270"/>
+    <point index="502" value="0.268"/>
+    <point index="503" value="0.267"/>
+  </weights>
+  <weights deformer="chagor_skinCluster" source="spine_03" shape="chagor_lowGeoShape" layer="7" defaultValue="0.000" size="504" max="503">
+    <point index="0" value="0.011"/>
+    <point index="1" value="0.016"/>
+    <point index="2" value="0.010"/>
+    <point index="3" value="0.015"/>
+    <point index="4" value="0.017"/>
+    <point index="5" value="0.033"/>
+    <point index="6" value="0.017"/>
+    <point index="7" value="0.015"/>
+    <point index="8" value="0.340"/>
+    <point index="9" value="0.359"/>
+    <point index="10" value="0.340"/>
+    <point index="11" value="0.309"/>
+    <point index="12" value="0.318"/>
+    <point index="13" value="0.323"/>
+    <point index="14" value="0.320"/>
+    <point index="15" value="0.310"/>
+    <point index="16" value="0.026"/>
+    <point index="17" value="0.139"/>
+    <point index="18" value="0.327"/>
+    <point index="19" value="0.016"/>
+    <point index="20" value="0.121"/>
+    <point index="21" value="0.313"/>
+    <point index="22" value="0.011"/>
+    <point index="23" value="0.319"/>
+    <point index="24" value="0.014"/>
+    <point index="25" value="0.180"/>
+    <point index="26" value="0.357"/>
+    <point index="27" value="0.137"/>
+    <point index="28" value="0.014"/>
+    <point index="29" value="0.137"/>
+    <point index="30" value="0.356"/>
+    <point index="31" value="0.011"/>
+    <point index="32" value="0.121"/>
+    <point index="33" value="0.320"/>
+    <point index="34" value="0.015"/>
+    <point index="35" value="0.136"/>
+    <point index="36" value="0.311"/>
+    <point index="37" value="0.026"/>
+    <point index="38" value="0.159"/>
+    <point index="39" value="0.327"/>
+    <point index="40" value="0.170"/>
+    <point index="41" value="0.170"/>
+    <point index="42" value="0.120"/>
+    <point index="43" value="0.127"/>
+    <point index="44" value="0.155"/>
+    <point index="45" value="0.157"/>
+    <point index="46" value="0.127"/>
+    <point index="47" value="0.119"/>
+    <point index="48" value="0.053"/>
+    <point index="49" value="0.065"/>
+    <point index="50" value="0.299"/>
+    <point index="51" value="0.279"/>
+    <point index="52" value="0.065"/>
+    <point index="53" value="0.052"/>
+    <point index="54" value="0.277"/>
+    <point index="55" value="0.298"/>
+    <point index="56" value="0.042"/>
+    <point index="57" value="0.046"/>
+    <point index="58" value="0.226"/>
+    <point index="59" value="0.244"/>
+    <point index="60" value="0.051"/>
+    <point index="61" value="0.052"/>
+    <point index="62" value="0.236"/>
+    <point index="63" value="0.227"/>
+    <point index="64" value="0.062"/>
+    <point index="65" value="0.252"/>
+    <point index="66" value="0.063"/>
+    <point index="67" value="0.258"/>
+    <point index="68" value="0.052"/>
+    <point index="69" value="0.051"/>
+    <point index="70" value="0.227"/>
+    <point index="71" value="0.237"/>
+    <point index="72" value="0.046"/>
+    <point index="73" value="0.042"/>
+    <point index="74" value="0.244"/>
+    <point index="75" value="0.226"/>
+    <point index="76" value="0.061"/>
+    <point index="77" value="0.180"/>
+    <point index="78" value="0.292"/>
+    <point index="79" value="0.155"/>
+    <point index="80" value="0.060"/>
+    <point index="81" value="0.154"/>
+    <point index="82" value="0.291"/>
+    <point index="83" value="0.179"/>
+    <point index="84" value="0.043"/>
+    <point index="85" value="0.119"/>
+    <point index="86" value="0.232"/>
+    <point index="87" value="0.125"/>
+    <point index="88" value="0.051"/>
+    <point index="89" value="0.130"/>
+    <point index="90" value="0.231"/>
+    <point index="91" value="0.124"/>
+    <point index="92" value="0.070"/>
+    <point index="93" value="0.258"/>
+    <point index="94" value="0.147"/>
+    <point index="95" value="0.070"/>
+    <point index="96" value="0.150"/>
+    <point index="97" value="0.262"/>
+    <point index="98" value="0.051"/>
+    <point index="99" value="0.124"/>
+    <point index="100" value="0.231"/>
+    <point index="101" value="0.131"/>
+    <point index="102" value="0.042"/>
+    <point index="103" value="0.126"/>
+    <point index="104" value="0.232"/>
+    <point index="105" value="0.119"/>
+    <point index="106" value="0.012"/>
+    <point index="107" value="0.016"/>
+    <point index="108" value="0.066"/>
+    <point index="109" value="0.299"/>
+    <point index="110" value="0.359"/>
+    <point index="111" value="0.351"/>
+    <point index="112" value="0.261"/>
+    <point index="113" value="0.046"/>
+    <point index="114" value="0.016"/>
+    <point index="115" value="0.012"/>
+    <point index="116" value="0.045"/>
+    <point index="117" value="0.260"/>
+    <point index="118" value="0.350"/>
+    <point index="119" value="0.359"/>
+    <point index="120" value="0.010"/>
+    <point index="121" value="0.013"/>
+    <point index="122" value="0.049"/>
+    <point index="123" value="0.225"/>
+    <point index="124" value="0.313"/>
+    <point index="125" value="0.330"/>
+    <point index="126" value="0.015"/>
+    <point index="127" value="0.016"/>
+    <point index="128" value="0.055"/>
+    <point index="129" value="0.242"/>
+    <point index="130" value="0.314"/>
+    <point index="131" value="0.309"/>
+    <point index="132" value="0.022"/>
+    <point index="133" value="0.077"/>
+    <point index="134" value="0.257"/>
+    <point index="135" value="0.323"/>
+    <point index="136" value="0.021"/>
+    <point index="137" value="0.056"/>
+    <point index="138" value="0.246"/>
+    <point index="139" value="0.326"/>
+    <point index="140" value="0.015"/>
+    <point index="141" value="0.016"/>
+    <point index="142" value="0.049"/>
+    <point index="143" value="0.225"/>
+    <point index="144" value="0.310"/>
+    <point index="145" value="0.315"/>
+    <point index="146" value="0.013"/>
+    <point index="147" value="0.010"/>
+    <point index="148" value="0.329"/>
+    <point index="149" value="0.313"/>
+    <point index="150" value="0.012"/>
+    <point index="151" value="0.013"/>
+    <point index="152" value="0.048"/>
+    <point index="153" value="0.043"/>
+    <point index="154" value="0.015"/>
+    <point index="155" value="0.054"/>
+    <point index="156" value="0.145"/>
+    <point index="157" value="0.133"/>
+    <point index="158" value="0.123"/>
+    <point index="159" value="0.017"/>
+    <point index="160" value="0.060"/>
+    <point index="161" value="0.018"/>
+    <point index="162" value="0.063"/>
+    <point index="163" value="0.160"/>
+    <point index="164" value="0.154"/>
+    <point index="165" value="0.264"/>
+    <point index="166" value="0.257"/>
+    <point index="167" value="0.269"/>
+    <point index="168" value="0.338"/>
+    <point index="169" value="0.337"/>
+    <point index="170" value="0.335"/>
+    <point index="171" value="0.247"/>
+    <point index="172" value="0.237"/>
+    <point index="173" value="0.329"/>
+    <point index="174" value="0.322"/>
+    <point index="175" value="0.016"/>
+    <point index="176" value="0.060"/>
+    <point index="177" value="0.014"/>
+    <point index="178" value="0.054"/>
+    <point index="179" value="0.145"/>
+    <point index="180" value="0.155"/>
+    <point index="181" value="0.013"/>
+    <point index="182" value="0.048"/>
+    <point index="183" value="0.011"/>
+    <point index="184" value="0.043"/>
+    <point index="185" value="0.123"/>
+    <point index="186" value="0.134"/>
+    <point index="187" value="0.248"/>
+    <point index="188" value="0.258"/>
+    <point index="189" value="0.237"/>
+    <point index="190" value="0.323"/>
+    <point index="191" value="0.330"/>
+    <point index="192" value="0.335"/>
+    <point index="193" value="0.265"/>
+    <point index="194" value="0.338"/>
+    <point index="195" value="0.011"/>
+    <point index="196" value="0.041"/>
+    <point index="197" value="0.011"/>
+    <point index="198" value="0.041"/>
+    <point index="199" value="0.117"/>
+    <point index="200" value="0.117"/>
+    <point index="201" value="0.011"/>
+    <point index="202" value="0.042"/>
+    <point index="203" value="0.012"/>
+    <point index="204" value="0.045"/>
+    <point index="205" value="0.125"/>
+    <point index="206" value="0.120"/>
+    <point index="207" value="0.229"/>
+    <point index="208" value="0.227"/>
+    <point index="209" value="0.233"/>
+    <point index="210" value="0.310"/>
+    <point index="211" value="0.310"/>
+    <point index="212" value="0.311"/>
+    <point index="213" value="0.229"/>
+    <point index="214" value="0.314"/>
+    <point index="215" value="0.013"/>
+    <point index="216" value="0.048"/>
+    <point index="217" value="0.014"/>
+    <point index="218" value="0.051"/>
+    <point index="219" value="0.135"/>
+    <point index="220" value="0.130"/>
+    <point index="221" value="0.016"/>
+    <point index="222" value="0.055"/>
+    <point index="223" value="0.019"/>
+    <point index="224" value="0.060"/>
+    <point index="225" value="0.147"/>
+    <point index="226" value="0.141"/>
+    <point index="227" value="0.245"/>
+    <point index="228" value="0.241"/>
+    <point index="229" value="0.251"/>
+    <point index="230" value="0.317"/>
+    <point index="231" value="0.314"/>
+    <point index="232" value="0.313"/>
+    <point index="233" value="0.236"/>
+    <point index="234" value="0.311"/>
+    <point index="235" value="0.023"/>
+    <point index="236" value="0.066"/>
+    <point index="237" value="0.026"/>
+    <point index="238" value="0.072"/>
+    <point index="239" value="0.162"/>
+    <point index="240" value="0.155"/>
+    <point index="241" value="0.031"/>
+    <point index="242" value="0.077"/>
+    <point index="243" value="0.165"/>
+    <point index="244" value="0.262"/>
+    <point index="245" value="0.264"/>
+    <point index="246" value="0.325"/>
+    <point index="247" value="0.325"/>
+    <point index="248" value="0.257"/>
+    <point index="249" value="0.322"/>
+    <point index="250" value="0.026"/>
+    <point index="251" value="0.072"/>
+    <point index="252" value="0.161"/>
+    <point index="253" value="0.023"/>
+    <point index="254" value="0.066"/>
+    <point index="255" value="0.018"/>
+    <point index="256" value="0.060"/>
+    <point index="257" value="0.147"/>
+    <point index="258" value="0.155"/>
+    <point index="259" value="0.257"/>
+    <point index="260" value="0.262"/>
+    <point index="261" value="0.250"/>
+    <point index="262" value="0.317"/>
+    <point index="263" value="0.321"/>
+    <point index="264" value="0.324"/>
+    <point index="265" value="0.015"/>
+    <point index="266" value="0.054"/>
+    <point index="267" value="0.014"/>
+    <point index="268" value="0.051"/>
+    <point index="269" value="0.135"/>
+    <point index="270" value="0.141"/>
+    <point index="271" value="0.013"/>
+    <point index="272" value="0.048"/>
+    <point index="273" value="0.012"/>
+    <point index="274" value="0.045"/>
+    <point index="275" value="0.125"/>
+    <point index="276" value="0.130"/>
+    <point index="277" value="0.237"/>
+    <point index="278" value="0.241"/>
+    <point index="279" value="0.233"/>
+    <point index="280" value="0.311"/>
+    <point index="281" value="0.312"/>
+    <point index="282" value="0.313"/>
+    <point index="283" value="0.245"/>
+    <point index="284" value="0.314"/>
+    <point index="285" value="0.011"/>
+    <point index="286" value="0.042"/>
+    <point index="287" value="0.011"/>
+    <point index="288" value="0.041"/>
+    <point index="289" value="0.117"/>
+    <point index="290" value="0.120"/>
+    <point index="291" value="0.010"/>
+    <point index="292" value="0.041"/>
+    <point index="293" value="0.118"/>
+    <point index="294" value="0.230"/>
+    <point index="295" value="0.228"/>
+    <point index="296" value="0.316"/>
+    <point index="297" value="0.312"/>
+    <point index="298" value="0.229"/>
+    <point index="299" value="0.311"/>
+    <point index="300" value="0.365"/>
+    <point index="301" value="0.365"/>
+    <point index="302" value="0.365"/>
+    <point index="303" value="0.362"/>
+    <point index="304" value="0.354"/>
+    <point index="305" value="0.347"/>
+    <point index="306" value="0.342"/>
+    <point index="307" value="0.339"/>
+    <point index="308" value="0.337"/>
+    <point index="309" value="0.337"/>
+    <point index="310" value="0.337"/>
+    <point index="311" value="0.338"/>
+    <point index="312" value="0.339"/>
+    <point index="313" value="0.343"/>
+    <point index="314" value="0.345"/>
+    <point index="315" value="0.344"/>
+    <point index="316" value="0.345"/>
+    <point index="317" value="0.342"/>
+    <point index="318" value="0.339"/>
+    <point index="319" value="0.337"/>
+    <point index="320" value="0.336"/>
+    <point index="321" value="0.336"/>
+    <point index="322" value="0.337"/>
+    <point index="323" value="0.340"/>
+    <point index="324" value="0.344"/>
+    <point index="325" value="0.349"/>
+    <point index="326" value="0.354"/>
+    <point index="327" value="0.361"/>
+    <point index="328" value="0.364"/>
+    <point index="329" value="0.364"/>
+    <point index="330" value="0.004"/>
+    <point index="331" value="0.004"/>
+    <point index="332" value="0.005"/>
+    <point index="333" value="0.006"/>
+    <point index="334" value="0.006"/>
+    <point index="335" value="0.006"/>
+    <point index="336" value="0.005"/>
+    <point index="337" value="0.004"/>
+    <point index="338" value="0.004"/>
+    <point index="339" value="0.004"/>
+    <point index="340" value="0.004"/>
+    <point index="341" value="0.004"/>
+    <point index="342" value="0.005"/>
+    <point index="343" value="0.005"/>
+    <point index="344" value="0.005"/>
+    <point index="345" value="0.006"/>
+    <point index="346" value="0.008"/>
+    <point index="347" value="0.011"/>
+    <point index="348" value="0.014"/>
+    <point index="349" value="0.019"/>
+    <point index="350" value="0.015"/>
+    <point index="351" value="0.011"/>
+    <point index="352" value="0.008"/>
+    <point index="353" value="0.006"/>
+    <point index="354" value="0.006"/>
+    <point index="355" value="0.005"/>
+    <point index="356" value="0.005"/>
+    <point index="357" value="0.004"/>
+    <point index="358" value="0.004"/>
+    <point index="359" value="0.004"/>
+    <point index="360" value="0.032"/>
+    <point index="361" value="0.077"/>
+    <point index="362" value="0.160"/>
+    <point index="363" value="0.259"/>
+    <point index="364" value="0.324"/>
+    <point index="365" value="0.345"/>
+    <point index="366" value="0.326"/>
+    <point index="367" value="0.264"/>
+    <point index="368" value="0.165"/>
+    <point index="369" value="0.077"/>
+    <point index="370" value="0.031"/>
+    <point index="371" value="0.019"/>
+    <point index="372" value="0.032"/>
+    <point index="373" value="0.077"/>
+    <point index="374" value="0.160"/>
+    <point index="375" value="0.258"/>
+    <point index="376" value="0.324"/>
+    <point index="377" value="0.345"/>
+    <point index="378" value="0.326"/>
+    <point index="379" value="0.264"/>
+    <point index="380" value="0.165"/>
+    <point index="381" value="0.077"/>
+    <point index="382" value="0.031"/>
+    <point index="383" value="0.018"/>
+    <point index="384" value="0.030"/>
+    <point index="385" value="0.075"/>
+    <point index="386" value="0.160"/>
+    <point index="387" value="0.261"/>
+    <point index="388" value="0.326"/>
+    <point index="389" value="0.346"/>
+    <point index="390" value="0.326"/>
+    <point index="391" value="0.265"/>
+    <point index="392" value="0.165"/>
+    <point index="393" value="0.075"/>
+    <point index="394" value="0.029"/>
+    <point index="395" value="0.017"/>
+    <point index="396" value="0.030"/>
+    <point index="397" value="0.075"/>
+    <point index="398" value="0.160"/>
+    <point index="399" value="0.259"/>
+    <point index="400" value="0.326"/>
+    <point index="401" value="0.346"/>
+    <point index="402" value="0.326"/>
+    <point index="403" value="0.265"/>
+    <point index="404" value="0.165"/>
+    <point index="405" value="0.075"/>
+    <point index="406" value="0.029"/>
+    <point index="407" value="0.017"/>
+    <point index="408" value="0.016"/>
+    <point index="409" value="0.066"/>
+    <point index="410" value="0.180"/>
+    <point index="411" value="0.299"/>
+    <point index="412" value="0.359"/>
+    <point index="413" value="0.365"/>
+    <point index="414" value="0.338"/>
+    <point index="415" value="0.268"/>
+    <point index="416" value="0.159"/>
+    <point index="417" value="0.062"/>
+    <point index="418" value="0.017"/>
+    <point index="419" value="0.006"/>
+    <point index="420" value="0.016"/>
+    <point index="421" value="0.066"/>
+    <point index="422" value="0.181"/>
+    <point index="423" value="0.300"/>
+    <point index="424" value="0.359"/>
+    <point index="425" value="0.365"/>
+    <point index="426" value="0.337"/>
+    <point index="427" value="0.267"/>
+    <point index="428" value="0.159"/>
+    <point index="429" value="0.063"/>
+    <point index="430" value="0.018"/>
+    <point index="431" value="0.006"/>
+    <point index="432" value="0.003"/>
+    <point index="433" value="0.004"/>
+    <point index="434" value="0.005"/>
+    <point index="435" value="0.005"/>
+    <point index="436" value="0.006"/>
+    <point index="437" value="0.006"/>
+    <point index="438" value="0.006"/>
+    <point index="439" value="0.005"/>
+    <point index="440" value="0.005"/>
+    <point index="441" value="0.004"/>
+    <point index="442" value="0.003"/>
+    <point index="443" value="0.003"/>
+    <point index="444" value="0.004"/>
+    <point index="445" value="0.005"/>
+    <point index="446" value="0.005"/>
+    <point index="447" value="0.006"/>
+    <point index="448" value="0.006"/>
+    <point index="449" value="0.006"/>
+    <point index="450" value="0.008"/>
+    <point index="451" value="0.011"/>
+    <point index="452" value="0.015"/>
+    <point index="453" value="0.017"/>
+    <point index="454" value="0.019"/>
+    <point index="455" value="0.020"/>
+    <point index="456" value="0.019"/>
+    <point index="457" value="0.017"/>
+    <point index="458" value="0.015"/>
+    <point index="459" value="0.011"/>
+    <point index="460" value="0.008"/>
+    <point index="461" value="0.006"/>
+    <point index="462" value="0.006"/>
+    <point index="463" value="0.006"/>
+    <point index="464" value="0.006"/>
+    <point index="465" value="0.005"/>
+    <point index="466" value="0.004"/>
+    <point index="467" value="0.003"/>
+    <point index="468" value="0.372"/>
+    <point index="469" value="0.372"/>
+    <point index="470" value="0.372"/>
+    <point index="471" value="0.372"/>
+    <point index="472" value="0.369"/>
+    <point index="473" value="0.361"/>
+    <point index="474" value="0.352"/>
+    <point index="475" value="0.346"/>
+    <point index="476" value="0.341"/>
+    <point index="477" value="0.338"/>
+    <point index="478" value="0.337"/>
+    <point index="479" value="0.338"/>
+    <point index="480" value="0.339"/>
+    <point index="481" value="0.341"/>
+    <point index="482" value="0.345"/>
+    <point index="483" value="0.346"/>
+    <point index="484" value="0.346"/>
+    <point index="485" value="0.344"/>
+    <point index="486" value="0.343"/>
+    <point index="487" value="0.345"/>
+    <point index="488" value="0.346"/>
+    <point index="489" value="0.346"/>
+    <point index="490" value="0.344"/>
+    <point index="491" value="0.340"/>
+    <point index="492" value="0.339"/>
+    <point index="493" value="0.337"/>
+    <point index="494" value="0.336"/>
+    <point index="495" value="0.338"/>
+    <point index="496" value="0.341"/>
+    <point index="497" value="0.347"/>
+    <point index="498" value="0.355"/>
+    <point index="499" value="0.361"/>
+    <point index="500" value="0.367"/>
+    <point index="501" value="0.371"/>
+    <point index="502" value="0.371"/>
+    <point index="503" value="0.371"/>
+  </weights>
+  <weights deformer="chagor_skinCluster" source="spine_04" shape="chagor_lowGeoShape" layer="8" defaultValue="0.000" size="368" max="503">
+    <point index="0" value="0.001"/>
+    <point index="2" value="0.001"/>
+    <point index="8" value="0.097"/>
+    <point index="9" value="0.082"/>
+    <point index="10" value="0.097"/>
+    <point index="11" value="0.088"/>
+    <point index="12" value="0.110"/>
+    <point index="13" value="0.074"/>
+    <point index="14" value="0.112"/>
+    <point index="15" value="0.089"/>
+    <point index="17" value="0.022"/>
+    <point index="18" value="0.100"/>
+    <point index="20" value="0.017"/>
+    <point index="21" value="0.096"/>
+    <point index="23" value="0.097"/>
+    <point index="24" value="0.001"/>
+    <point index="25" value="0.022"/>
+    <point index="26" value="0.089"/>
+    <point index="27" value="0.025"/>
+    <point index="28" value="0.001"/>
+    <point index="29" value="0.024"/>
+    <point index="30" value="0.087"/>
+    <point index="32" value="0.017"/>
+    <point index="33" value="0.098"/>
+    <point index="35" value="0.020"/>
+    <point index="36" value="0.095"/>
+    <point index="38" value="0.013"/>
+    <point index="39" value="0.102"/>
+    <point index="40" value="0.025"/>
+    <point index="41" value="0.024"/>
+    <point index="42" value="0.020"/>
+    <point index="43" value="0.018"/>
+    <point index="44" value="0.018"/>
+    <point index="45" value="0.019"/>
+    <point index="46" value="0.018"/>
+    <point index="47" value="0.020"/>
+    <point index="48" value="0.006"/>
+    <point index="49" value="0.006"/>
+    <point index="50" value="0.059"/>
+    <point index="51" value="0.062"/>
+    <point index="52" value="0.006"/>
+    <point index="53" value="0.006"/>
+    <point index="54" value="0.061"/>
+    <point index="55" value="0.058"/>
+    <point index="56" value="0.005"/>
+    <point index="57" value="0.004"/>
+    <point index="58" value="0.053"/>
+    <point index="59" value="0.061"/>
+    <point index="60" value="0.004"/>
+    <point index="61" value="0.004"/>
+    <point index="62" value="0.060"/>
+    <point index="63" value="0.050"/>
+    <point index="64" value="0.004"/>
+    <point index="65" value="0.062"/>
+    <point index="66" value="0.005"/>
+    <point index="67" value="0.065"/>
+    <point index="68" value="0.004"/>
+    <point index="69" value="0.004"/>
+    <point index="70" value="0.050"/>
+    <point index="71" value="0.061"/>
+    <point index="72" value="0.004"/>
+    <point index="73" value="0.005"/>
+    <point index="74" value="0.061"/>
+    <point index="75" value="0.053"/>
+    <point index="76" value="0.006"/>
+    <point index="77" value="0.024"/>
+    <point index="78" value="0.061"/>
+    <point index="79" value="0.025"/>
+    <point index="80" value="0.006"/>
+    <point index="81" value="0.025"/>
+    <point index="82" value="0.059"/>
+    <point index="83" value="0.024"/>
+    <point index="84" value="0.004"/>
+    <point index="85" value="0.018"/>
+    <point index="86" value="0.057"/>
+    <point index="87" value="0.023"/>
+    <point index="88" value="0.004"/>
+    <point index="89" value="0.020"/>
+    <point index="90" value="0.054"/>
+    <point index="91" value="0.017"/>
+    <point index="92" value="0.004"/>
+    <point index="93" value="0.057"/>
+    <point index="94" value="0.020"/>
+    <point index="95" value="0.004"/>
+    <point index="96" value="0.022"/>
+    <point index="97" value="0.058"/>
+    <point index="98" value="0.004"/>
+    <point index="99" value="0.017"/>
+    <point index="100" value="0.054"/>
+    <point index="101" value="0.020"/>
+    <point index="102" value="0.004"/>
+    <point index="103" value="0.023"/>
+    <point index="104" value="0.057"/>
+    <point index="105" value="0.018"/>
+    <point index="106" value="0.001"/>
+    <point index="107" value="0.001"/>
+    <point index="108" value="0.005"/>
+    <point index="109" value="0.056"/>
+    <point index="110" value="0.085"/>
+    <point index="111" value="0.093"/>
+    <point index="112" value="0.063"/>
+    <point index="113" value="0.006"/>
+    <point index="114" value="0.001"/>
+    <point index="115" value="0.001"/>
+    <point index="116" value="0.006"/>
+    <point index="117" value="0.062"/>
+    <point index="118" value="0.091"/>
+    <point index="119" value="0.084"/>
+    <point index="122" value="0.004"/>
+    <point index="123" value="0.050"/>
+    <point index="124" value="0.093"/>
+    <point index="125" value="0.101"/>
+    <point index="128" value="0.004"/>
+    <point index="129" value="0.063"/>
+    <point index="130" value="0.105"/>
+    <point index="131" value="0.087"/>
+    <point index="133" value="0.003"/>
+    <point index="134" value="0.041"/>
+    <point index="135" value="0.109"/>
+    <point index="137" value="0.005"/>
+    <point index="138" value="0.065"/>
+    <point index="139" value="0.111"/>
+    <point index="142" value="0.004"/>
+    <point index="143" value="0.050"/>
+    <point index="144" value="0.089"/>
+    <point index="145" value="0.106"/>
+    <point index="148" value="0.099"/>
+    <point index="149" value="0.092"/>
+    <point index="152" value="0.003"/>
+    <point index="153" value="0.003"/>
+    <point index="155" value="0.003"/>
+    <point index="156" value="0.013"/>
+    <point index="157" value="0.014"/>
+    <point index="158" value="0.014"/>
+    <point index="160" value="0.003"/>
+    <point index="162" value="0.002"/>
+    <point index="163" value="0.012"/>
+    <point index="164" value="0.013"/>
+    <point index="165" value="0.039"/>
+    <point index="166" value="0.041"/>
+    <point index="167" value="0.038"/>
+    <point index="168" value="0.068"/>
+    <point index="169" value="0.070"/>
+    <point index="170" value="0.073"/>
+    <point index="171" value="0.043"/>
+    <point index="172" value="0.045"/>
+    <point index="173" value="0.076"/>
+    <point index="174" value="0.081"/>
+    <point index="176" value="0.003"/>
+    <point index="178" value="0.003"/>
+    <point index="179" value="0.014"/>
+    <point index="180" value="0.013"/>
+    <point index="182" value="0.003"/>
+    <point index="184" value="0.003"/>
+    <point index="185" value="0.014"/>
+    <point index="186" value="0.014"/>
+    <point index="187" value="0.043"/>
+    <point index="188" value="0.041"/>
+    <point index="189" value="0.045"/>
+    <point index="190" value="0.081"/>
+    <point index="191" value="0.076"/>
+    <point index="192" value="0.073"/>
+    <point index="193" value="0.040"/>
+    <point index="194" value="0.070"/>
+    <point index="196" value="0.003"/>
+    <point index="198" value="0.003"/>
+    <point index="199" value="0.014"/>
+    <point index="200" value="0.014"/>
+    <point index="202" value="0.003"/>
+    <point index="204" value="0.003"/>
+    <point index="205" value="0.014"/>
+    <point index="206" value="0.014"/>
+    <point index="207" value="0.046"/>
+    <point index="208" value="0.046"/>
+    <point index="209" value="0.046"/>
+    <point index="210" value="0.083"/>
+    <point index="211" value="0.085"/>
+    <point index="212" value="0.086"/>
+    <point index="213" value="0.046"/>
+    <point index="214" value="0.084"/>
+    <point index="216" value="0.003"/>
+    <point index="218" value="0.003"/>
+    <point index="219" value="0.015"/>
+    <point index="220" value="0.014"/>
+    <point index="222" value="0.003"/>
+    <point index="224" value="0.003"/>
+    <point index="225" value="0.016"/>
+    <point index="226" value="0.015"/>
+    <point index="227" value="0.050"/>
+    <point index="228" value="0.048"/>
+    <point index="229" value="0.051"/>
+    <point index="230" value="0.096"/>
+    <point index="231" value="0.092"/>
+    <point index="232" value="0.087"/>
+    <point index="233" value="0.046"/>
+    <point index="234" value="0.083"/>
+    <point index="236" value="0.003"/>
+    <point index="238" value="0.003"/>
+    <point index="239" value="0.015"/>
+    <point index="240" value="0.016"/>
+    <point index="242" value="0.002"/>
+    <point index="243" value="0.012"/>
+    <point index="244" value="0.049"/>
+    <point index="245" value="0.040"/>
+    <point index="246" value="0.073"/>
+    <point index="247" value="0.091"/>
+    <point index="248" value="0.051"/>
+    <point index="249" value="0.096"/>
+    <point index="251" value="0.003"/>
+    <point index="252" value="0.015"/>
+    <point index="254" value="0.003"/>
+    <point index="256" value="0.003"/>
+    <point index="257" value="0.016"/>
+    <point index="258" value="0.016"/>
+    <point index="259" value="0.051"/>
+    <point index="260" value="0.049"/>
+    <point index="261" value="0.051"/>
+    <point index="262" value="0.096"/>
+    <point index="263" value="0.096"/>
+    <point index="264" value="0.091"/>
+    <point index="266" value="0.003"/>
+    <point index="268" value="0.003"/>
+    <point index="269" value="0.015"/>
+    <point index="270" value="0.015"/>
+    <point index="272" value="0.003"/>
+    <point index="274" value="0.003"/>
+    <point index="275" value="0.014"/>
+    <point index="276" value="0.014"/>
+    <point index="277" value="0.046"/>
+    <point index="278" value="0.047"/>
+    <point index="279" value="0.046"/>
+    <point index="280" value="0.083"/>
+    <point index="281" value="0.083"/>
+    <point index="282" value="0.086"/>
+    <point index="283" value="0.050"/>
+    <point index="284" value="0.092"/>
+    <point index="286" value="0.003"/>
+    <point index="288" value="0.003"/>
+    <point index="289" value="0.014"/>
+    <point index="290" value="0.014"/>
+    <point index="292" value="0.003"/>
+    <point index="293" value="0.015"/>
+    <point index="294" value="0.046"/>
+    <point index="295" value="0.046"/>
+    <point index="296" value="0.084"/>
+    <point index="297" value="0.085"/>
+    <point index="298" value="0.046"/>
+    <point index="299" value="0.085"/>
+    <point index="300" value="0.084"/>
+    <point index="301" value="0.086"/>
+    <point index="302" value="0.090"/>
+    <point index="303" value="0.095"/>
+    <point index="304" value="0.100"/>
+    <point index="305" value="0.104"/>
+    <point index="306" value="0.105"/>
+    <point index="307" value="0.103"/>
+    <point index="308" value="0.100"/>
+    <point index="309" value="0.100"/>
+    <point index="310" value="0.106"/>
+    <point index="311" value="0.114"/>
+    <point index="312" value="0.119"/>
+    <point index="313" value="0.119"/>
+    <point index="314" value="0.111"/>
+    <point index="315" value="0.087"/>
+    <point index="316" value="0.112"/>
+    <point index="317" value="0.118"/>
+    <point index="318" value="0.119"/>
+    <point index="319" value="0.114"/>
+    <point index="320" value="0.104"/>
+    <point index="321" value="0.099"/>
+    <point index="322" value="0.100"/>
+    <point index="323" value="0.104"/>
+    <point index="324" value="0.107"/>
+    <point index="325" value="0.107"/>
+    <point index="326" value="0.100"/>
+    <point index="327" value="0.094"/>
+    <point index="328" value="0.089"/>
+    <point index="329" value="0.085"/>
+    <point index="361" value="0.003"/>
+    <point index="362" value="0.014"/>
+    <point index="363" value="0.043"/>
+    <point index="364" value="0.078"/>
+    <point index="365" value="0.092"/>
+    <point index="366" value="0.077"/>
+    <point index="367" value="0.042"/>
+    <point index="368" value="0.013"/>
+    <point index="369" value="0.002"/>
+    <point index="373" value="0.003"/>
+    <point index="374" value="0.014"/>
+    <point index="375" value="0.043"/>
+    <point index="376" value="0.079"/>
+    <point index="377" value="0.093"/>
+    <point index="378" value="0.077"/>
+    <point index="379" value="0.042"/>
+    <point index="380" value="0.013"/>
+    <point index="381" value="0.002"/>
+    <point index="385" value="0.003"/>
+    <point index="386" value="0.016"/>
+    <point index="387" value="0.049"/>
+    <point index="388" value="0.088"/>
+    <point index="389" value="0.101"/>
+    <point index="390" value="0.084"/>
+    <point index="391" value="0.045"/>
+    <point index="392" value="0.014"/>
+    <point index="393" value="0.003"/>
+    <point index="397" value="0.003"/>
+    <point index="398" value="0.016"/>
+    <point index="399" value="0.050"/>
+    <point index="400" value="0.091"/>
+    <point index="401" value="0.103"/>
+    <point index="402" value="0.084"/>
+    <point index="403" value="0.045"/>
+    <point index="404" value="0.014"/>
+    <point index="405" value="0.003"/>
+    <point index="409" value="0.005"/>
+    <point index="410" value="0.022"/>
+    <point index="411" value="0.056"/>
+    <point index="412" value="0.082"/>
+    <point index="413" value="0.083"/>
+    <point index="414" value="0.068"/>
+    <point index="415" value="0.038"/>
+    <point index="416" value="0.012"/>
+    <point index="417" value="0.002"/>
+    <point index="421" value="0.005"/>
+    <point index="422" value="0.022"/>
+    <point index="423" value="0.057"/>
+    <point index="424" value="0.083"/>
+    <point index="425" value="0.085"/>
+    <point index="426" value="0.068"/>
+    <point index="427" value="0.038"/>
+    <point index="428" value="0.012"/>
+    <point index="429" value="0.002"/>
+    <point index="468" value="0.089"/>
+    <point index="469" value="0.090"/>
+    <point index="470" value="0.092"/>
+    <point index="471" value="0.096"/>
+    <point index="472" value="0.101"/>
+    <point index="473" value="0.106"/>
+    <point index="474" value="0.109"/>
+    <point index="475" value="0.110"/>
+    <point index="476" value="0.106"/>
+    <point index="477" value="0.102"/>
+    <point index="478" value="0.102"/>
+    <point index="479" value="0.109"/>
+    <point index="480" value="0.120"/>
+    <point index="481" value="0.125"/>
+    <point index="482" value="0.125"/>
+    <point index="483" value="0.115"/>
+    <point index="484" value="0.103"/>
+    <point index="485" value="0.093"/>
+    <point index="486" value="0.087"/>
+    <point index="487" value="0.094"/>
+    <point index="488" value="0.106"/>
+    <point index="489" value="0.117"/>
+    <point index="490" value="0.124"/>
+    <point index="491" value="0.125"/>
+    <point index="492" value="0.120"/>
+    <point index="493" value="0.108"/>
+    <point index="494" value="0.101"/>
+    <point index="495" value="0.102"/>
+    <point index="496" value="0.107"/>
+    <point index="497" value="0.111"/>
+    <point index="498" value="0.113"/>
+    <point index="499" value="0.106"/>
+    <point index="500" value="0.099"/>
+    <point index="501" value="0.093"/>
+    <point index="502" value="0.090"/>
+    <point index="503" value="0.088"/>
+  </weights>
+</deformerWeight>

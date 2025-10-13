@@ -2,7 +2,7 @@
 
 from importlib import reload
 
-from nlol.scripts.rig_tools import random_generator
+from nlol.core.rig_tools import random_generator
 
 reload(random_generator)
 
@@ -35,7 +35,7 @@ def build_curve_list():
             "annotation": "Create nurbs sphere object.",
             "imageOverlayLabel": "SphNb",
             "backgroundColor": random_clrs_nurbs[0],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateNurbs(name='sphere_nrb').sphere_nurbs()",
             "sourceType": "python",
@@ -46,7 +46,7 @@ def build_curve_list():
             "annotation": "Create nurbs cube object.",
             "imageOverlayLabel": "SphNb",
             "backgroundColor": random_clrs_nurbs[1],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateNurbs(name='cube_nrb').cube_nurbs()",
             "sourceType": "python",
@@ -58,7 +58,7 @@ def build_curve_list():
             "annotation": "Create box curve object.",
             "imageOverlayLabel": "Box",
             "backgroundColor": random_clrs_other[0],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).box_curve()",
@@ -70,7 +70,7 @@ def build_curve_list():
             "annotation": "Create circle curve object.",
             "imageOverlayLabel": "Crcl",
             "backgroundColor": random_clrs_other[1],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).circle_curve()",
@@ -82,7 +82,7 @@ def build_curve_list():
             "annotation": "Create global curve object.",
             "imageOverlayLabel": "Globl",
             "backgroundColor": random_clrs_other[2],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).global_curve()",
@@ -94,7 +94,7 @@ def build_curve_list():
             "annotation": "Create pyramid curve object.",
             "imageOverlayLabel": "Pyrmd",
             "backgroundColor": random_clrs_other[3],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).pyramid_curve()",
@@ -106,7 +106,7 @@ def build_curve_list():
             "annotation": "Create sphere curve object.",
             "imageOverlayLabel": "Sphr",
             "backgroundColor": random_clrs_other[4],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).sphere_curve()",
@@ -118,7 +118,7 @@ def build_curve_list():
             "annotation": "Create sphere curve object.",
             "imageOverlayLabel": "TriCrc",
             "backgroundColor": random_clrs_other[5],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).tri_circle_curve()",
@@ -130,7 +130,7 @@ def build_curve_list():
             "annotation": "Create locator curve object.",
             "imageOverlayLabel": "Loctr",
             "backgroundColor": random_clrs_other[6],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).locator_curve()",
@@ -142,7 +142,7 @@ def build_curve_list():
             "annotation": "Create arrow twist curve object.",
             "imageOverlayLabel": "ArTwst",
             "backgroundColor": random_clrs[0],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).arrow_twist_curve()",
@@ -154,7 +154,7 @@ def build_curve_list():
             "annotation": "Create cylinder curve object.",
             "imageOverlayLabel": "Cylndr",
             "backgroundColor": random_clrs[1],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).cylinder_curve()",
@@ -166,7 +166,7 @@ def build_curve_list():
             "annotation": "Create four arrow curve object.",
             "imageOverlayLabel": "4Arw",
             "backgroundColor": random_clrs[2],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).four_arrow_curve()",
@@ -178,7 +178,7 @@ def build_curve_list():
             "annotation": "Create square curve object.",
             "imageOverlayLabel": "Sqr",
             "backgroundColor": random_clrs[3],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).square_curve()",
@@ -190,7 +190,7 @@ def build_curve_list():
             "annotation": "Create octagon curve object.",
             "imageOverlayLabel": "Octgn",
             "backgroundColor": random_clrs[4],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).octagon_curve()",
@@ -202,7 +202,7 @@ def build_curve_list():
             "annotation": "Create dodecagon curve object.",
             "imageOverlayLabel": "12Crcl",
             "backgroundColor": random_clrs[5],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).dodecagon_curve()",
@@ -214,7 +214,7 @@ def build_curve_list():
             "annotation": "Create hexadecagon curve object.",
             "imageOverlayLabel": "16Crcl",
             "backgroundColor": random_clrs[6],
-            "command": "from nlol.scripts.rig_components import create_nurbs_curves\n"
+            "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"
             "create_nurbs_curves.CreateCurves(use_curve_defaults=True, "
             "show_attrs=True).hexadecagon_curve()",

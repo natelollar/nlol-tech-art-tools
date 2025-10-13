@@ -12,6 +12,8 @@ maya/nlol/defaults/rig_human/model.ma
 maya/nlol/defaults/rig_human/skeleton.ma
 maya/nlol/defaults/rig_human/skin_weights.xml
 incrementalSave/
+tmp/
+.mayaSwatches/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

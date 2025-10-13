@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<deformerWeight>
+  <headerInfo fileName="" worldMatrix="1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 "/>
+  <shape name="flexiSurfaceSlingLoop_geoShape" group="0" stride="3" size="70" max="69">
+    <point index="0" value=" -78.300056 0.000000 0.570141"/>
+    <point index="1" value=" -75.902618 0.000000 0.715858"/>
+    <point index="2" value=" -78.168343 0.000000 -0.896479"/>
+    <point index="3" value=" -75.912865 0.000000 -0.851248"/>
+    <point index="4" value=" -88.376526 -0.000000 -2.486920"/>
+    <point index="5" value=" -88.002129 -0.000000 -1.014333"/>
+    <point index="6" value=" -84.576065 -0.000000 -2.066650"/>
+    <point index="7" value=" -84.898964 -0.000000 -0.507456"/>
+    <point index="8" value=" -80.254211 -0.000000 -1.163419"/>
+    <point index="9" value=" -80.451546 -0.000000 0.153364"/>
+    <point index="10" value=" -77.085670 0.000000 0.659846"/>
+    <point index="11" value=" -77.059425 0.000000 -0.866390"/>
+    <point index="12" value=" -90.423889 -0.000000 -0.353171"/>
+    <point index="13" value=" -89.007584 -0.000000 -0.196653"/>
+    <point index="14" value=" -88.934540 -0.000000 2.163094"/>
+    <point index="15" value=" -88.171257 -0.000000 0.849288"/>
+    <point index="16" value=" -85.171265 -0.000000 2.369399"/>
+    <point index="17" value=" -85.350266 -0.000000 0.860543"/>
+    <point index="18" value=" -82.426811 -0.000000 1.684468"/>
+    <point index="19" value=" -82.605812 -0.000000 0.175612"/>
+    <point index="20" value=" -79.474564 -0.000000 1.291489"/>
+    <point index="21" value=" -79.448402 -0.000000 0.465256"/>
+    <point index="22" value=" -78.559547 -0.000000 1.395540"/>
+    <point index="23" value=" -78.441658 -0.000000 0.700778"/>
+    <point index="24" value=" -89.789185 -0.000000 -1.671153"/>
+    <point index="25" value=" -88.706596 -0.000000 -0.802418"/>
+    <point index="26" value=" -90.045692 -0.000000 1.121470"/>
+    <point index="27" value=" -88.813095 -0.000000 0.496005"/>
+    <point index="28" value=" -87.132271 -0.000000 2.571642"/>
+    <point index="29" value=" -86.807144 -0.000000 1.068433"/>
+    <point index="30" value=" -86.405594 -0.000000 -2.480639"/>
+    <point index="31" value=" -86.507004 -0.000000 -0.940463"/>
+    <point index="32" value=" -82.422455 -0.000000 -1.597950"/>
+    <point index="33" value=" -82.712173 -0.000000 -0.091676"/>
+    <point index="34" value=" -83.798332 -0.000000 2.033091"/>
+    <point index="35" value=" -83.979660 -0.000000 0.462483"/>
+    <point index="36" value=" -80.984856 -0.000000 1.291384"/>
+    <point index="37" value=" -81.047676 -0.000000 0.290959"/>
+    <point index="38" value=" -79.214790 -0.000000 -0.998783"/>
+    <point index="39" value=" -79.376396 -0.000000 0.368290"/>
+    <point index="40" value=" -81.340378 -0.000000 -1.369807"/>
+    <point index="41" value=" -81.581505 -0.000000 0.029005"/>
+    <point index="42" value=" -83.499863 -0.000000 -1.829523"/>
+    <point index="43" value=" -83.811172 -0.000000 -0.269595"/>
+    <point index="44" value=" -85.486984 -0.000000 -2.308438"/>
+    <point index="45" value=" -85.699799 -0.000000 -0.747897"/>
+    <point index="46" value=" -87.411217 -0.000000 -2.601796"/>
+    <point index="47" value=" -87.256538 -0.000000 -1.045524"/>
+    <point index="48" value=" -89.162659 -0.000000 -2.190771"/>
+    <point index="49" value=" -88.390038 -0.000000 -0.963331"/>
+    <point index="50" value=" -90.236862 -0.000000 -1.054436"/>
+    <point index="51" value=" -88.925850 -0.000000 -0.529700"/>
+    <point index="52" value=" -90.366302 -0.000000 0.421757"/>
+    <point index="53" value=" -88.980492 -0.000000 0.180458"/>
+    <point index="54" value=" -89.564568 -0.000000 1.733976"/>
+    <point index="55" value=" -88.525421 -0.000000 0.719111"/>
+    <point index="56" value=" -88.060600 -0.000000 2.474984"/>
+    <point index="57" value=" -87.495407 -0.000000 1.017645"/>
+    <point index="58" value=" -86.147736 -0.000000 2.529426"/>
+    <point index="59" value=" -86.073944 -0.000000 1.009878"/>
+    <point index="60" value=" -84.482620 -0.000000 2.211713"/>
+    <point index="61" value=" -84.664902 -0.000000 0.661801"/>
+    <point index="62" value=" -83.112228 -0.000000 1.860072"/>
+    <point index="63" value=" -83.297287 -0.000000 0.275683"/>
+    <point index="64" value=" -81.709923 -0.000000 1.455460"/>
+    <point index="65" value=" -81.827347 -0.000000 0.198893"/>
+    <point index="66" value=" -80.232117 -0.000000 1.247338"/>
+    <point index="67" value=" -80.245308 -0.000000 0.362550"/>
+    <point index="68" value=" -79.016678 -0.000000 1.339098"/>
+    <point index="69" value=" -78.943390 -0.000000 0.573973"/>
+  </shape>
+  <weights deformer="flexiSurfaceSlingLoop_skinCluster" source="slingLoopRibbonOffset_01_jnt" shape="flexiSurfaceSlingLoop_geoShape" layer="0" defaultValue="0.000" size="24" max="47">
+    <point index="0" value="0.905"/>
+    <point index="1" value="0.976"/>
+    <point index="2" value="0.905"/>
+    <point index="3" value="0.976"/>
+    <point index="6" value="0.218"/>
+    <point index="7" value="0.213"/>
+    <point index="8" value="0.685"/>
+    <point index="9" value="0.684"/>
+    <point index="10" value="0.953"/>
+    <point index="11" value="0.952"/>
+    <point index="30" value="0.090"/>
+    <point index="31" value="0.086"/>
+    <point index="32" value="0.441"/>
+    <point index="33" value="0.440"/>
+    <point index="38" value="0.797"/>
+    <point index="39" value="0.797"/>
+    <point index="40" value="0.563"/>
+    <point index="41" value="0.563"/>
+    <point index="42" value="0.325"/>
+    <point index="43" value="0.323"/>
+    <point index="44" value="0.146"/>
+    <point index="45" value="0.143"/>
+    <point index="46" value="0.044"/>
+    <point index="47" value="0.043"/>
+  </weights>
+  <weights deformer="flexiSurfaceSlingLoop_skinCluster" source="slingLoopRibbonOffset_02_jnt" shape="flexiSurfaceSlingLoop_geoShape" layer="1" defaultValue="0.000" size="50" max="59">
+    <point index="0" value="0.095"/>
+    <point index="1" value="0.024"/>
+    <point index="2" value="0.095"/>
+    <point index="3" value="0.024"/>
+    <point index="4" value="0.932"/>
+    <point index="5" value="0.920"/>
+    <point index="6" value="0.769"/>
+    <point index="7" value="0.773"/>
+    <point index="8" value="0.315"/>
+    <point index="9" value="0.316"/>
+    <point index="10" value="0.047"/>
+    <point index="11" value="0.048"/>
+    <point index="12" value="0.567"/>
+    <point index="13" value="0.569"/>
+    <point index="14" value="0.128"/>
+    <point index="15" value="0.144"/>
+    <point index="16" value="0.011"/>
+    <point index="17" value="0.013"/>
+    <point index="24" value="0.772"/>
+    <point index="25" value="0.772"/>
+    <point index="26" value="0.347"/>
+    <point index="27" value="0.351"/>
+    <point index="28" value="0.051"/>
+    <point index="29" value="0.054"/>
+    <point index="30" value="0.875"/>
+    <point index="31" value="0.876"/>
+    <point index="32" value="0.559"/>
+    <point index="33" value="0.560"/>
+    <point index="38" value="0.203"/>
+    <point index="39" value="0.203"/>
+    <point index="40" value="0.437"/>
+    <point index="41" value="0.437"/>
+    <point index="42" value="0.675"/>
+    <point index="43" value="0.677"/>
+    <point index="44" value="0.832"/>
+    <point index="45" value="0.834"/>
+    <point index="46" value="0.904"/>
+    <point index="47" value="0.901"/>
+    <point index="48" value="0.866"/>
+    <point index="49" value="0.858"/>
+    <point index="50" value="0.668"/>
+    <point index="51" value="0.669"/>
+    <point index="52" value="0.458"/>
+    <point index="53" value="0.459"/>
+    <point index="54" value="0.239"/>
+    <point index="55" value="0.248"/>
+    <point index="56" value="0.086"/>
+    <point index="57" value="0.093"/>
+    <point index="58" value="0.026"/>
+    <point index="59" value="0.028"/>
+  </weights>
+  <weights deformer="flexiSurfaceSlingLoop_skinCluster" source="slingLoopRibbonOffset_03_jnt" shape="flexiSurfaceSlingLoop_geoShape" layer="2" defaultValue="0.000" size="48" max="67">
+    <point index="4" value="0.068"/>
+    <point index="5" value="0.080"/>
+    <point index="6" value="0.013"/>
+    <point index="7" value="0.014"/>
+    <point index="12" value="0.433"/>
+    <point index="13" value="0.431"/>
+    <point index="14" value="0.849"/>
+    <point index="15" value="0.836"/>
+    <point index="16" value="0.640"/>
+    <point index="17" value="0.653"/>
+    <point index="18" value="0.217"/>
+    <point index="19" value="0.219"/>
+    <point index="24" value="0.228"/>
+    <point index="25" value="0.228"/>
+    <point index="26" value="0.642"/>
+    <point index="27" value="0.638"/>
+    <point index="28" value="0.811"/>
+    <point index="29" value="0.810"/>
+    <point index="30" value="0.035"/>
+    <point index="31" value="0.038"/>
+    <point index="34" value="0.426"/>
+    <point index="35" value="0.428"/>
+    <point index="36" value="0.072"/>
+    <point index="37" value="0.072"/>
+    <point index="44" value="0.022"/>
+    <point index="45" value="0.023"/>
+    <point index="46" value="0.052"/>
+    <point index="47" value="0.056"/>
+    <point index="48" value="0.134"/>
+    <point index="49" value="0.142"/>
+    <point index="50" value="0.332"/>
+    <point index="51" value="0.331"/>
+    <point index="52" value="0.542"/>
+    <point index="53" value="0.541"/>
+    <point index="54" value="0.744"/>
+    <point index="55" value="0.736"/>
+    <point index="56" value="0.841"/>
+    <point index="57" value="0.835"/>
+    <point index="58" value="0.744"/>
+    <point index="59" value="0.747"/>
+    <point index="60" value="0.542"/>
+    <point index="61" value="0.547"/>
+    <point index="62" value="0.315"/>
+    <point index="63" value="0.315"/>
+    <point index="64" value="0.134"/>
+    <point index="65" value="0.135"/>
+    <point index="66" value="0.023"/>
+    <point index="67" value="0.023"/>
+  </weights>
+  <weights deformer="flexiSurfaceSlingLoop_skinCluster" source="slingLoopRibbonOffset_04_jnt" shape="flexiSurfaceSlingLoop_geoShape" layer="3" defaultValue="0.000" size="34" max="69">
+    <point index="14" value="0.023"/>
+    <point index="15" value="0.020"/>
+    <point index="16" value="0.349"/>
+    <point index="17" value="0.334"/>
+    <point index="18" value="0.783"/>
+    <point index="19" value="0.781"/>
+    <point index="20" value="1.000"/>
+    <point index="21" value="1.000"/>
+    <point index="22" value="1.000"/>
+    <point index="23" value="1.000"/>
+    <point index="26" value="0.011"/>
+    <point index="27" value="0.011"/>
+    <point index="28" value="0.138"/>
+    <point index="29" value="0.136"/>
+    <point index="34" value="0.574"/>
+    <point index="35" value="0.572"/>
+    <point index="36" value="0.928"/>
+    <point index="37" value="0.928"/>
+    <point index="54" value="0.017"/>
+    <point index="55" value="0.016"/>
+    <point index="56" value="0.073"/>
+    <point index="57" value="0.072"/>
+    <point index="58" value="0.230"/>
+    <point index="59" value="0.225"/>
+    <point index="60" value="0.458"/>
+    <point index="61" value="0.453"/>
+    <point index="62" value="0.685"/>
+    <point index="63" value="0.685"/>
+    <point index="64" value="0.866"/>
+    <point index="65" value="0.865"/>
+    <point index="66" value="0.977"/>
+    <point index="67" value="0.977"/>
+    <point index="68" value="1.000"/>
+    <point index="69" value="1.000"/>
+  </weights>
+</deformerWeight>

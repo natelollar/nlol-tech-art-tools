@@ -1,0 +1,8 @@
+{
+    "attach_vertices": [
+        "flexiSurfaceSling_geo.vtx[116:118]",
+        "flexiSurfaceSling_geo.vtx[177]"
+    ],
+    "vertex_mesh": "flexiSurfaceSling_geo",
+    "attach_mesh": "slingStartColl_geo"
+}

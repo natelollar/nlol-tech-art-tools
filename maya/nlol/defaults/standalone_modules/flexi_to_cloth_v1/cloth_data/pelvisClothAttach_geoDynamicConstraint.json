@@ -1,0 +1,33 @@
+{
+    "attach_vertices": [
+        "flexiSurface_geo.vtx[0]",
+        "flexiSurface_geo.vtx[2]",
+        "flexiSurface_geo.vtx[4]",
+        "flexiSurface_geo.vtx[6]",
+        "flexiSurface_geo.vtx[8]",
+        "flexiSurface_geo.vtx[10]",
+        "flexiSurface_geo.vtx[12]",
+        "flexiSurface_geo.vtx[14]",
+        "flexiSurface_geo.vtx[48:55]",
+        "flexiSurface_geo.vtx[64:65]",
+        "flexiSurface_geo.vtx[72:73]",
+        "flexiSurface_geo.vtx[86:89]",
+        "flexiSurface_geo.vtx[102:105]",
+        "flexiSurface_geo.vtx[118:121]",
+        "flexiSurface_geo.vtx[134:136]",
+        "flexiSurface_geo.vtx[138]",
+        "flexiSurface_geo.vtx[140]",
+        "flexiSurface_geo.vtx[142]",
+        "flexiSurface_geo.vtx[144]",
+        "flexiSurface_geo.vtx[146]",
+        "flexiSurface_geo.vtx[148]",
+        "flexiSurface_geo.vtx[150]",
+        "flexiSurface_geo.vtx[184:191]",
+        "flexiSurface_geo.vtx[206:209]",
+        "flexiSurface_geo.vtx[222:225]",
+        "flexiSurface_geo.vtx[238:241]",
+        "flexiSurface_geo.vtx[254:255]"
+    ],
+    "vertex_mesh": "flexiSurface_geo",
+    "attach_mesh": "pelvisClothAttach_geo"
+}

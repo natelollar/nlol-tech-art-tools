@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<deformerWeight>
+  <headerInfo fileName="" worldMatrix="1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 "/>
+  <shape name="slingEndColl_geoShape" group="0" stride="3" size="8" max="7">
+    <point index="0" value=" 90.591049 -3.620692 3.620692"/>
+    <point index="1" value=" 97.832428 -3.620692 3.620692"/>
+    <point index="2" value=" 90.591049 3.620692 3.620692"/>
+    <point index="3" value=" 97.832428 3.620692 3.620692"/>
+    <point index="4" value=" 90.591049 3.620692 -3.620692"/>
+    <point index="5" value=" 97.832428 3.620692 -3.620692"/>
+    <point index="6" value=" 90.591049 -3.620692 -3.620692"/>
+    <point index="7" value=" 97.832428 -3.620692 -3.620692"/>
+  </shape>
+  <weights deformer="slingEndColl_skinCluster" source="slingRibbonOffset_end_02_jnt" shape="slingEndColl_geoShape" layer="0" defaultValue="0.000" size="8" max="7">
+    <point index="0" value="1.000"/>
+    <point index="1" value="1.000"/>
+    <point index="2" value="1.000"/>
+    <point index="3" value="1.000"/>
+    <point index="4" value="1.000"/>
+    <point index="5" value="1.000"/>
+    <point index="6" value="1.000"/>
+    <point index="7" value="1.000"/>
+  </weights>
+</deformerWeight>

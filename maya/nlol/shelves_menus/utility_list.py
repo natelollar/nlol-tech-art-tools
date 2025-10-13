@@ -2,7 +2,7 @@
 
 from importlib import reload
 
-from nlol.scripts.rig_tools import random_generator
+from nlol.core.rig_tools import random_generator
 
 reload(random_generator)
 
@@ -35,11 +35,11 @@ def build_utility_list():
             'Meant to work with "tumble_tool_settings" set with shelf button. ',
             "imageOverlayLabel": "MsHtky",
             "backgroundColor": random_clrs[0],
-            "command": "from nlol.scripts.standalone.viewport_navigation "
+            "command": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_set_hotkeys\n"
             "from importlib import reload\nreload(camera_pivot_set_hotkeys)\n"
             "camera_pivot_set_hotkeys.cam_pivot_to_mouse_hotkey()",
-            "doubleClickCommand": "from nlol.scripts.standalone.viewport_navigation "
+            "doubleClickCommand": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_set_hotkeys\n"
             "from importlib import reload\nreload(camera_pivot_set_hotkeys)\n"
             "camera_pivot_set_hotkeys.delete_cam_mouse_hotkey()",
@@ -53,11 +53,11 @@ def build_utility_list():
             'Meant to work with "tumble_tool_settings" set with shelf button. ',
             "imageOverlayLabel": "SlHtky",
             "backgroundColor": random_clrs[1],
-            "command": "from nlol.scripts.standalone.viewport_navigation "
+            "command": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_set_hotkeys\n"
             "from importlib import reload\nreload(camera_pivot_set_hotkeys)\n"
             "camera_pivot_set_hotkeys.cam_pivot_to_selected_hotkey()",
-            "doubleClickCommand": "from nlol.scripts.standalone.viewport_navigation "
+            "doubleClickCommand": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_set_hotkeys\n"
             "from importlib import reload\nreload(camera_pivot_set_hotkeys)\n"
             "camera_pivot_set_hotkeys.delete_cam_selected_hotkey()",
@@ -70,11 +70,11 @@ def build_utility_list():
             "annotation": "Create locator curve to show camera tumble pivot.",
             "imageOverlayLabel": "CamLoc",
             "backgroundColor": random_clrs[2],
-            "command": "from nlol.scripts.standalone.viewport_navigation "
+            "command": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_locator\n"
             "from importlib import reload\nreload(camera_pivot_locator)\n"
             "camera_pivot_locator.create_curve_locator()",
-            "doubleClickCommand": "from nlol.scripts.standalone.viewport_navigation "
+            "doubleClickCommand": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_locator\n"
             "from importlib import reload\nreload(camera_pivot_locator)\n"
             "camera_pivot_locator.delete_curve_locator()",
@@ -86,11 +86,11 @@ def build_utility_list():
             "annotation": "Create small locator curve to show camera tumble pivot.",
             "imageOverlayLabel": "LocSml",
             "backgroundColor": random_clrs[3],
-            "command": "from nlol.scripts.standalone.viewport_navigation "
+            "command": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_locator\n"
             "from importlib import reload\nreload(camera_pivot_locator)\n"
             "camera_pivot_locator.create_curve_locator(small_locator=True)",
-            "doubleClickCommand": "from nlol.scripts.standalone.viewport_navigation "
+            "doubleClickCommand": "from nlol.core.standalone.viewport_navigation "
             "import camera_pivot_locator\n"
             "from importlib import reload\nreload(camera_pivot_locator)\n"
             "camera_pivot_locator.delete_curve_locator()",
@@ -105,7 +105,7 @@ def build_utility_list():
             'These settings can be set manually in "View < Camera Tools < Tumble Tool".',
             "imageOverlayLabel": "TmblSt",
             "backgroundColor": random_clrs[4],
-            "command": "from nlol.scripts.standalone.viewport_navigation "
+            "command": "from nlol.core.standalone.viewport_navigation "
             "import tumble_tool_settings\n"
             "from importlib import reload\nreload(tumble_tool_settings)\n"
             "tumble_tool_settings.apply_tumble_settings()",
@@ -118,7 +118,7 @@ def build_utility_list():
             'These settings can be set manually in "View < Camera Tools < Tumble Tool".',
             "imageOverlayLabel": "RstTmbl",
             "backgroundColor": random_clrs[5],
-            "command": "from nlol.scripts.standalone.viewport_navigation "
+            "command": "from nlol.core.standalone.viewport_navigation "
             "import tumble_tool_settings\n"
             "from importlib import reload\nreload(tumble_tool_settings)\n"
             "tumble_tool_settings.reset_tumble_settings()",

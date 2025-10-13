@@ -4,6 +4,7 @@ Adds project path to Maya.env.
 Tested in Maya 2025 on Windows 11.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -21,6 +22,14 @@ def onMayaDroppedPythonFile(*args) -> None:
     nlol_path_str = str(nlol_path)
     if nlol_path_str not in sys.path:
         sys.path.append(nlol_path_str)
+    # add icon path for current maya session
+    icons_path = nlol_path / "icons"
+    icons_path_str = str(icons_path)
+    existing = os.environ.get("XBMLANGPATH", "")
+    if existing:
+        os.environ["XBMLANGPATH"] = f"{existing}{os.pathsep}{icons_path_str}"
+    else:
+        os.environ["XBMLANGPATH"] = icons_path_str
 
     from importlib import reload
 

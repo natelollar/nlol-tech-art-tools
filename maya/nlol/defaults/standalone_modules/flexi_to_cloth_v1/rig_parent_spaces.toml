@@ -1,0 +1,55 @@
+# ----- main -----
+[[control]]
+control = "pelvis_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "spine_01_ctrl"
+parents = "pelvis_ctrl, root_ctrl"
+separate_transforms = true
+skip_translate = true
+skip_scale = true
+base_parent = true
+
+[[control]]
+control = "leg_left_01_ctrl"
+parents = "pelvis_ctrl, root_ctrl" 
+separate_transforms = true
+skip_translate = true
+skip_scale = true
+base_parent = true
+mirror_right = true
+
+# ----- aux ctrls -----
+[[control]]
+control = "ezorLeatherStripAttr_left_ctrl"
+parents = "root_ctrl"
+mirror_right = true
+
+[[control]]
+control = "nClothAux_ctrl"
+parents = "root_ctrl"
+
+# ----- ezor skirt -----
+[[control]]
+control = """
+fkEzorLeatherStrip_left_a01_ctrl,
+fkEzorLeatherStrip_left_b01_ctrl,
+fkEzorLeatherStrip_left_c01_ctrl,
+fkEzorLeatherStrip_left_d01_ctrl,
+fkEzorLeatherStrip_left_e01_ctrl,
+fkEzorLeatherStrip_left_f01_ctrl,
+fkEzorLeatherStrip_left_g01_ctrl,
+fkEzorLeatherStrip_left_h01_ctrl
+"""
+parents = "pelvis"
+mirror_right = true
+
+[[control]]
+control = """
+flexiSurfaceOffset_frontLeft_ctrl,
+flexiSurfaceOffset_outerLeft_ctrl,
+flexiSurfaceOffset_backLeft_ctrl
+"""
+parents = "thigh_l"
+mirror_right = true

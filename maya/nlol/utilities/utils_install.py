@@ -21,7 +21,7 @@ def update_project_env_path(project_path: str | Path, install: bool) -> None:
     maya_env_filepath = Path(maya_home_folder) / maya_version / "Maya.env"
     nlol_path = project_path
     nlol_path_str = str(nlol_path)
-    seperator = ";"
+    separator = os.pathsep  # ";" Windows or ":" Mac/Linux
 
     file_lines = []
     module_path_index = None
@@ -35,13 +35,13 @@ def update_project_env_path(project_path: str | Path, install: bool) -> None:
             module_path_index = i
 
     if module_path_index is not None:
-        current_paths = file_lines[module_path_index].split("=", 1)[1].split(seperator)
+        current_paths = file_lines[module_path_index].split("=", 1)[1].split(separator)
 
         # standardize path style then convert to string for comparison
-        # remove spaces and semicolons at start and end of paths
+        # remove spaces and semicolon/colon at start and end of paths
         # remove empty paths
         refined_paths = [
-            str(Path(py_path)).strip(f" {seperator}")
+            str(Path(py_path)).strip(f" {separator}")
             for py_path in current_paths
             if py_path and py_path.strip()
         ]
@@ -51,7 +51,7 @@ def update_project_env_path(project_path: str | Path, install: bool) -> None:
                 refined_paths.append(nlol_path_str)
             else:  # remove project folder path
                 refined_paths = [py_path for py_path in refined_paths if py_path != nlol_path_str]
-            joined_paths = seperator.join(str(py_path) for py_path in refined_paths)
+            joined_paths = separator.join(str(py_path) for py_path in refined_paths)
             file_lines[module_path_index] = f"MAYA_MODULE_PATH = {joined_paths}"
         elif install:
             print(f"Project path already in Maya.env MAYA_MODULE_PATH: {nlol_path_str}")

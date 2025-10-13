@@ -1,0 +1,130 @@
+{
+    "flexiSurfaceSlingCloth_geoNClothShape.isDynamic": true,
+    "flexiSurfaceSlingCloth_geoNClothShape.currentTime": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.evaluationTime": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.goalWeight": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.goalActive": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventValid": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventCount": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventEmit": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventSplit": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventDie": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventRandom": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventSpread": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.eventProc": [
+        []
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.playFromCache": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.thickness": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.bounce": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.friction": 0.6000000238418579,
+    "flexiSurfaceSlingCloth_geoNClothShape.damp": 8.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.stickiness": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.collideStrength": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.collisionFlag": 3,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfCollisionFlag": 3,
+    "flexiSurfaceSlingCloth_geoNClothShape.maxSelfCollisionIterations": 4,
+    "flexiSurfaceSlingCloth_geoNClothShape.maxIterations": 10000,
+    "flexiSurfaceSlingCloth_geoNClothShape.pointMass": 3.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.restLengthScale": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localForce": [
+        [
+            0.0,
+            0.0,
+            0.0
+        ]
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.localForceX": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localForceY": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localForceZ": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localWind": [
+        [
+            0.0,
+            0.0,
+            0.0
+        ]
+    ],
+    "flexiSurfaceSlingCloth_geoNClothShape.localWindX": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localWindY": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localWindZ": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.collide": true,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfCollide": true,
+    "flexiSurfaceSlingCloth_geoNClothShape.collisionLayer": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.windShadowDiffusion": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.windShadowDistance": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.airPushDistance": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.airPushVorticity": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pushOut": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pushOutRadius": 10.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.crossoverPush": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.trappedCheck": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.forceField": 0,
+    "flexiSurfaceSlingCloth_geoNClothShape.fieldMagnitude": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.fieldDistance": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pointForceField": 0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pointFieldMagnitude": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfAttract": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pointFieldDistance": 2.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.localSpaceOutput": true,
+    "flexiSurfaceSlingCloth_geoNClothShape.displayColorR": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.displayColorG": 0.800000011920929,
+    "flexiSurfaceSlingCloth_geoNClothShape.displayColorB": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.stretchResistance": 50.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.compressionResistance": 50.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.bendResistance": 10.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.bendAngleDropoff": 0.7272800207138062,
+    "flexiSurfaceSlingCloth_geoNClothShape.restitutionTension": 1000.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.restitutionAngle": 360.00001001791264,
+    "flexiSurfaceSlingCloth_geoNClothShape.shearResistance": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.rigidity": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.usePolygonShells": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.deformResistance": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.inputMeshAttract": 0.25,
+    "flexiSurfaceSlingCloth_geoNClothShape.collideLastThreshold": 0.20000000298023224,
+    "flexiSurfaceSlingCloth_geoNClothShape.inputAttractDamp": 0.5,
+    "flexiSurfaceSlingCloth_geoNClothShape.inputMotionDrag": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.wrinkleMapScale": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.bendAngleScale": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.sortLinks": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.addCrossLinks": true,
+    "flexiSurfaceSlingCloth_geoNClothShape.stretchDamp": 0.10000000149011612,
+    "flexiSurfaceSlingCloth_geoNClothShape.minimalStretch": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.minimalBend": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.minimalShear": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfCollideWidthScale": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfCollisionSoftness": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfCrossoverPush": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.selfTrappedCheck": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.pressure": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.startPressure": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.incompressibility": 5.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pressureDamping": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.pumpRate": 0.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.airTightness": 1.0,
+    "flexiSurfaceSlingCloth_geoNClothShape.sealHoles": true,
+    "flexiSurfaceSlingCloth_geoNClothShape.ignoreSolverGravity": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.ignoreSolverWind": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.windSelfShadow": false,
+    "flexiSurfaceSlingCloth_geoNClothShape.lift": 0.05000000074505806,
+    "flexiSurfaceSlingCloth_geoNClothShape.drag": 0.05000000074505806,
+    "flexiSurfaceSlingCloth_geoNClothShape.tangentialDrag": 0.20000000298023224,
+    "flexiSurfaceSlingCloth_geoNClothShape.lifespan": 1.0
+}
