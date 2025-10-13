@@ -1,8 +1,3 @@
-"""Create nCloth blendshape for flexi geometry.
-Create attribute for toggling this blendshape.
-And function to toggle nCloth on/off for specific flexi geo.
-"""
-
 import json
 from importlib import reload
 
@@ -23,6 +18,10 @@ collision_mesh_filepath = cloth_data_folderpath / "collision_meshes.json"
 
 
 class FlexiToCloth:
+    """Create nCloth blendshape setup for flexi/ribbon geometry.
+    Create ctrl for toggling on/off.
+    """
+
     def __init__(self):
         self.logger = get_logger()
 
@@ -59,7 +58,7 @@ class FlexiToCloth:
         top_nodes = cmds.ls(assemblies=True)
         for obj in top_nodes:
             if "_rigGrp" in obj:
-                cmds.parent(self.top_grp, obj)
+                cmds.parent(self.top_grp, obj)  # parent to main rig group
 
         for grp in [self.top_grp, self.components_grp]:
             for axis in "XYZ":
@@ -69,13 +68,16 @@ class FlexiToCloth:
         cmds.setAttr(f"{self.components_grp}.visibility", 0)
 
     def build_main(self, apply_cloth_settings: bool = True) -> None:
-        """Create nCloth setup for rigging. Constrains attach meshes with "Point to Surface".
-        Multiple cloth meshes and attach meshes allowed.
-        Save cloth data to cloth_data folder first. Save data with save_vertex_ids().
+        """Create nCloth setup for rigging. Constrains cloth mesh to attach meshes with
+        "Point to Surface". Multiple cloth meshes and attach meshes allowed.
+        Save cloth data to cloth_data folder first. Save data with save_vertex_ids(),
+        save_collision_meshes() if collision needed, and optionally save_ncloth_settings().
 
-        Setup nCloth for each *DynamicConstraint json in cloth_data folder.
+        This will set up nCloth for each "*DynamicConstraint.json" in cloth_data folder.
         Each dictionary in list returned from get_saved_vertex_ids() contains
-        vertex ids, vertex/cloth mesh, and constraint/attach mesh.
+        vertex ids, vertex/cloth mesh, and constraint/attach mesh. Also, the "collision_meshes.json"
+        contains collision mesh names. And any "*Settings.json" in cloth_data folder contain
+        saved nCloth settings that are applied at the end.
 
         Args:
             apply_cloth_settings: Use pre-saved nCloth settings in cloth_data folder.
@@ -445,8 +447,13 @@ class FlexiToCloth:
         # top grp parenting
         cmds.parent(self.aux_ctrl_grp, self.top_grp)
 
-    def aux_ctrl_nucleus_attrs(self, nucleus_nd):
-        """Set up auxiliary ctrl attributes fot the nucleus node."""
+    def aux_ctrl_nucleus_attrs(self, nucleus_nd) -> None:
+        """Set up auxiliary ctrl attributes fot the nucleus node.
+
+        Args:
+            nucleus_nd: The nCloth nucleus node.
+
+        """
         add_divider_attribue(control_name=self.aux_ctrl, divider_amount=10)
         cmds.addAttr(
             self.aux_ctrl,
@@ -474,8 +481,15 @@ class FlexiToCloth:
         )
         cmds.connectAttr(f"{self.aux_ctrl}.nucleusStartFrame", f"{nucleus_nd}.startFrame")
 
-    def aux_ctrl_ncloth_attrs(self, ncloth_nd_shp, blendshape_nd, output_cloth_mesh_shp):
-        """Set up auxiliary ctrl attributes fot nCloth components."""
+    def aux_ctrl_ncloth_attrs(self, ncloth_nd_shp, blendshape_nd, output_cloth_mesh_shp) -> None:
+        """Set up auxiliary ctrl attributes fot nCloth components.
+
+        Args:
+            ncloth_nd_shp: nCloth node shape.
+            blendshape_nd: Blendshape node being used for nCloth setup.
+            output_cloth_mesh_shp: Output cloth mesh shape.
+
+        """
         ncloth_base_nm = ncloth_nd_shp.split("_")[0]
         divider_attr_nm = f"_{ncloth_base_nm}_"
         if not cmds.objExists(f"{self.aux_ctrl}.{divider_attr_nm}"):
