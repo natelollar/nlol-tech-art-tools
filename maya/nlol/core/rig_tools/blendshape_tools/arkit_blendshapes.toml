@@ -1,0 +1,79 @@
+# arkit 52 blendshapes
+# https://developer.apple.com/documentation/arkit/arfaceanchor/blendshapelocation
+# Assign keyframe to each blendshape to quickly duplicate mesh 
+#   for each blendshape posed frame.
+
+[blendshapes]
+neutral_pose = 0
+
+# left eye
+eyeBlinkLeft = 1
+eyeLookDownLeft = 2
+eyeLookInLeft = 3
+eyeLookOutLeft = 4
+eyeLookUpLeft = 5
+eyeSquintLeft = 6
+eyeWideLeft = 7
+
+# right eye
+eyeBlinkRight = 8
+eyeLookDownRight = 9
+eyeLookInRight = 10
+eyeLookOutRight = 11
+eyeLookUpRight = 12
+eyeSquintRight = 13
+eyeWideRight = 14
+
+# jaw
+jawForward = 15
+jawLeft = 16
+jawRight = 17
+jawOpen = 18
+
+# mouth basic
+mouthClose = 19
+mouthFunnel = 20
+mouthPucker = 21
+mouthLeft = 22
+mouthRight = 23
+
+# mouth expression
+mouthSmileLeft = 24
+mouthSmileRight = 25
+mouthFrownLeft = 26
+mouthFrownRight = 27
+mouthDimpleLeft = 28
+mouthDimpleRight = 29
+mouthStretchLeft = 30
+mouthStretchRight = 31
+
+# mouth lips
+mouthRollLower = 32
+mouthRollUpper = 33
+mouthShrugLower = 34
+mouthShrugUpper = 35
+mouthPressLeft = 36
+mouthPressRight = 37
+mouthLowerDownLeft = 38
+mouthLowerDownRight = 39
+mouthUpperUpLeft = 40
+mouthUpperUpRight = 41
+
+# eyebrows
+browDownLeft = 42
+browDownRight = 43
+browInnerUp = 44
+browOuterUpLeft = 45
+browOuterUpRight = 46
+
+# cheeks
+cheekPuff = 47
+cheekSquintLeft = 48
+cheekSquintRight = 49
+
+# nose
+noseSneerLeft = 50
+noseSneerRight = 51
+
+# tongue
+tongueOut = 52

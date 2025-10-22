@@ -13,7 +13,7 @@ from nlol.core.rig_components import (
     create_ruler,
 )
 from nlol.core.rig_tools import get_aligned_axis
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
@@ -21,8 +21,8 @@ parent_constr = clean_constraints.parent_constr
 point_constr = clean_constraints.point_constr
 orient_constr = clean_constraints.orient_constr
 scale_constr = clean_constraints.scale_constr
-add_divider_attribue = utils_maya.add_divider_attribue
-cap = utils_maya.cap
+add_divider_attribue = general_utils.add_divider_attribue
+cap = general_utils.cap
 create_attached_ruler = create_ruler.create_attached_ruler
 
 

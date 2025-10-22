@@ -4,13 +4,13 @@ from importlib import reload
 from maya import cmds, mel
 from nlol.core.rig_components import create_control_groups, create_nurbs_curves
 from nlol.defaults import rig_folder_path
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(rig_folder_path)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
-add_divider_attribue = utils_maya.add_divider_attribue
+add_divider_attribue = general_utils.add_divider_attribue
 
 rig_folderpath = rig_folder_path.rig_folderpath
 cloth_data_folderpath = rig_folderpath / "cloth_data"
@@ -33,7 +33,7 @@ class FlexiToCloth:
         cloth_verts_filepaths = list(cloth_data_folderpath.glob("*DynamicConstraint.json"))
         if not list(cloth_verts_filepaths):
             msg = (
-                'No "*DynamicConstraint.json" files in rig "cloth_data" folder. '
+                '"*DynamicConstraint.json" files not in rig "cloth_data" folder. '
                 "Skipping cloth setup."
             )
             self.logger.info(msg)
@@ -225,7 +225,7 @@ class FlexiToCloth:
         self.apply_ncloth_settings()
 
         # ----- extend playback timeline -----
-        cmds.playbackOptions(minTime=0, maxTime=1200)
+        cmds.playbackOptions(minTime=0, maxTime=300)
 
     def get_saved_vertex_ids(self) -> list[dict]:
         """Query json data for nCloth mesh vertex IDs, vertex mesh and attach mesh.

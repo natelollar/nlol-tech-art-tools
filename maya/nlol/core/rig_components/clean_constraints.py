@@ -8,6 +8,7 @@ def parent_constr(
     skip_tran: bool | None = None,
     skip_rot: bool | None = None,
     offset: bool | None = None,
+    interp_type: int | None = None,
 ) -> str:
     """Parent constraint with clean name.
     Eliminates the need to name the constraint every time.
@@ -19,6 +20,7 @@ def parent_constr(
         skip_tran: Whether to skip constraining translate.
         skip_rot: Whether to skip constraining rotate.
         offset: Whether to maintain offset when constraining.
+        interp_type: "No Flip", "Average", "Shortest", "Longest", "Cache".
 
     Returns:
         The name of the constraint.
@@ -48,6 +50,10 @@ def parent_constr(
         skipRotate=skip_rot,
         maintainOffset=offset,
     )[0]
+
+    if interp_type is not None:
+        cmds.setAttr(f"{constraint}.interpType", interp_type)
+
     return constraint
 
 

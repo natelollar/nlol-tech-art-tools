@@ -19,11 +19,11 @@ def onMayaDroppedPythonFile(*args) -> None:
     from importlib import reload
 
     from nlol.shelves_menus import unload_shelves, unload_menus
-    from nlol.utilities import utils_install
+    from nlol.utilities import install_utils
 
     reload(unload_shelves)
     reload(unload_menus)
-    reload(utils_install)
+    reload(install_utils)
 
     # unload shelves
     unload_shelves.remove_nlol_shelves()
@@ -32,4 +32,4 @@ def onMayaDroppedPythonFile(*args) -> None:
     unload_menus.remove_nlol_menus()
 
     # remove project path from env
-    utils_install.update_project_env_path(project_path=nlol_path, install=False)
+    install_utils.update_project_env_path(project_path=nlol_path, install=False)

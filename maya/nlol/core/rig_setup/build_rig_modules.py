@@ -7,6 +7,7 @@ from importlib import reload
 from pathlib import Path
 
 from maya import cmds
+from nlol.core import general_utils
 from nlol.core.rig_components import create_display_layers
 from nlol.core.rig_modules import (
     biped_leg_mod,
@@ -21,7 +22,6 @@ from nlol.core.rig_modules import (
     world_control_mod,
 )
 from nlol.core.rig_tools import select_multiple_joints
-from nlol.utilities import utils_maya
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(biped_leg_mod)
@@ -33,11 +33,11 @@ reload(fk_ik_spline_chain_mod)
 reload(flexi_surface_ik_chain_mod)
 reload(flexi_surface_fk_ctrl_mod)
 reload(world_control_mod)
-reload(utils_maya)
+reload(general_utils)
 reload(eye_aim_mod)
 reload(create_display_layers)
 
-left_to_right_str = utils_maya.left_to_right_str
+left_to_right_str = general_utils.left_to_right_str
 objects_display_lyr = create_display_layers.objects_display_lyr
 
 

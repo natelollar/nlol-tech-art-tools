@@ -8,7 +8,7 @@ from nlol.core.rig_components import (
 )
 from nlol.core.rig_tools import get_aligned_axis
 from nlol.utilities.nlol_maya_logger import get_logger
-from nlol.utilities.utils_maya import cap, invert_axis_string
+from nlol.core.general_utils import cap, invert_axis_string
 
 reload(create_nurbs_curves)
 reload(clean_constraints)

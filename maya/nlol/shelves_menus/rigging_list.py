@@ -10,7 +10,7 @@ random_colors_dull = random_generator.random_colors_dull
 
 
 def build_rigging_list():
-    """Create a dictionary list of rigging men and shelf buttons, and their attributes."""
+    """Create a dictionary list of rigging menu and shelf buttons, and their attributes."""
     random_clrs = random_colors_dull()
 
     shelf_separator = {
@@ -529,6 +529,82 @@ def build_rigging_list():
             "command": "from nlol.core.standalone import small_functions\n"
             "from importlib import reload\nreload(small_functions)\n"
             "small_functions.query_skinned_joints()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Duplicate Blendshape Poses",
+            "image": "pythonFamily.png",
+            "annotation": "Duplicate selected mesh for each keyframed blendshape pose"
+            ' listed in "arkit_blendshapes.toml". Frame 1-52.',
+            "imageOverlayLabel": "DpBlnd",
+            "backgroundColor": random_clrs[20],
+            "command": "from nlol.core.rig_tools.blendshape_tools import blendshape_tools\n"
+            "from importlib import reload\nreload(blendshape_tools)\n"
+            "blendshape_tools.BlendShapeTools().run_extract_arkit_poses()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Connect Blendshapes",
+            "image": "pythonFamily.png",
+            "annotation": "Connect blendshapes to ctrl setup.",
+            "imageOverlayLabel": "CnBlnd",
+            "backgroundColor": random_clrs[29],
+            "command": "from nlol.core.rig_setup import build_blendshapes\n"
+            "from importlib import reload\nreload(build_blendshapes)\n"
+            "build_blendshapes.ConnectBlendShapes().setdrivenkey_connections()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Copy BlendShapes",
+            "image": "pythonFamily.png",
+            "annotation": "Copy BlendShapes from source to target mesh. Delete source mesh. "
+            'Source mesh name is same as target except contains string "Blendshapes". '
+            'No selection needed.',
+            "imageOverlayLabel": "CpyShp",
+            "backgroundColor": random_clrs[28],
+            "command": "from nlol.core.rig_setup import build_blendshapes\n"
+            "from importlib import reload\nreload(build_blendshapes)\n"
+            "build_blendshapes.ConnectBlendShapes().find_transfer_blendshapes()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Save Mirror Attributes",
+            "image": "pythonFamily.png",
+            "annotation": "Save mirror attributes for selected ctrls to rig folder. "
+            "Recommended to select all ctrls when saving. Will load back in when rebuilding rig. ",
+            "imageOverlayLabel": "SvMrAt",
+            "backgroundColor": random_clrs[21],
+            "command": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport().get_mirror_attrs()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Load Mirror Attributes",
+            "image": "pythonFamily.png",
+            "annotation": 'Load mirror attrs from saved "mirror_attributes.json" in rig folder.',
+            "imageOverlayLabel": "LdMrAt",
+            "backgroundColor": random_clrs[24],
+            "command": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport().apply_mirror_attrs()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Show Mirror Attributes",
+            "image": "pythonFamily.png",
+            "annotation": "Show mirror attributes in channel box for selected ctrls. "
+            "Double click to hide attrs.",
+            "imageOverlayLabel": "ShwMrr",
+            "backgroundColor": random_clrs[23],
+            "command": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport().show_mirror_attrs()",
+            "doubleClickCommand": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport().show_mirror_attrs(show_attrs=False)",
             "sourceType": "python",
         },
     ]

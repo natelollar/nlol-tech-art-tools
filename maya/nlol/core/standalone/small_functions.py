@@ -48,7 +48,17 @@ def reset_all_ctrls(all_keyable: bool = False) -> None:
     """
     all_ctrls = select_all_ctrls()
 
-    standard_attrs = ("translate", "rotate", "scale")
+    standard_attrs = (
+        "translateX",
+        "translateY",
+        "translateZ",
+        "rotateX",
+        "rotateY",
+        "rotateZ",
+        "scaleX",
+        "scaleY",
+        "scaleZ",
+    )
     custom_attrs = (
         "toeWiggle",
         "toeSpin",

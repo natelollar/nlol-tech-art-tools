@@ -7,7 +7,7 @@ from pathlib import Path
 
 from maya import cmds
 from nlol.core.rig_components import curve_library
-from nlol.core.rig_tools import show_attributes, load_curves
+from nlol.core.rig_tools import load_curves, show_attributes
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(show_attributes)
@@ -30,6 +30,7 @@ class CreateCurves:
         show_attrs: bool = False,
         use_curve_defaults: bool = False,
         curve_type: str = "",
+        mirror_attrs: bool = True,
     ) -> None:
         self.name = name
         self.size = size
@@ -38,6 +39,7 @@ class CreateCurves:
         self.show_attrs = show_attrs
         self.use_curve_defaults = use_curve_defaults
         self.nurbs_curve = None
+        self.mirror_attrs = mirror_attrs
         self.logger = get_logger()
 
         if curve_type:
@@ -141,7 +143,7 @@ class CreateCurves:
         nurbs_curve = self.curve_generator("hexadecagon_curve.json")
         return nurbs_curve
 
-    def curve_generator(self, curve_filename) -> str:
+    def curve_generator(self, curve_filename: str) -> str:
         """Generate curve shape from the "curve_library" folder.
 
         Args:
@@ -169,6 +171,18 @@ class CreateCurves:
         for shp in nurbs_curve_shapes:
             self.show_channel_box_attrs(shp)
 
+        if self.mirror_attrs:
+            for attr in ["mirrorTranslate", "mirrorRotate"]:
+                for axis in "XYZ":
+                    cmds.addAttr(
+                        nurbs_curve,
+                        longName=f"{attr}{axis}",
+                        attributeType="long",
+                        defaultValue=0,
+                        minValue=-1,
+                        maxValue=1,
+                    )
+
         cmds.select(nurbs_curve)
         return nurbs_curve
 
@@ -193,7 +207,7 @@ class CreateNurbs:
         """Create nurbs sphere object."""
         nurbs_object = self.nurbs_generator("sphere")
         return nurbs_object
-    
+
     def cube_nurbs(self) -> str:
         """Create nurbs cube object."""
         nurbs_object = self.nurbs_generator("cube")

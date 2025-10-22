@@ -1,9 +1,10 @@
 from importlib import reload
 
 from maya import cmds
-from nlol.shelves_menus import nurbs_curve_list, rigging_list, utility_list
+from nlol.shelves_menus import animation_list, nurbs_curve_list, rigging_list, utility_list
 from nlol.utilities.nlol_maya_logger import get_logger
 
+reload(animation_list)
 reload(nurbs_curve_list)
 reload(rigging_list)
 reload(utility_list)
@@ -25,15 +26,22 @@ def main_menu():
     nlol_menu = cmds.menu(nlol_menu_name, label="nLol Tools", parent="MayaWindow", tearOff=True)
     # ----- divider -----
     cmds.menuItem(
-        "rigging_tools_divider",
+        "tools_menu_divider",
         divider=True,
-        dividerLabel="Rig Tools",
+        dividerLabel="Tools Menu",
         parent=nlol_menu,
     )
     # ----- submenus -----
     rigging_submenu = cmds.menuItem(
         "rigging_submenu",
         label="Rigging",
+        parent=nlol_menu,
+        tearOff=True,
+        subMenu=True,
+    )
+    animation_submenu = cmds.menuItem(
+        "animation_submenu",
+        label="Animation",
         parent=nlol_menu,
         tearOff=True,
         subMenu=True,
@@ -62,6 +70,17 @@ def main_menu():
             if key in menu and menu[key] not in (None, "")
         }
         kwargs["parent"] = rigging_submenu
+        cmds.menuItem(**kwargs)
+
+    # add the animation menu items
+    animation_menu_list = animation_list.build_animation_list()
+    for menu in animation_menu_list:
+        kwargs = {
+            key: menu[key]
+            for key in ["label", "annotation", "image", "command"]
+            if key in menu and menu[key] not in (None, "")
+        }
+        kwargs["parent"] = animation_submenu
         cmds.menuItem(**kwargs)
 
     # add the nurbs curve menu items

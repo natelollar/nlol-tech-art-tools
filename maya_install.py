@@ -34,11 +34,11 @@ def onMayaDroppedPythonFile(*args) -> None:
     from importlib import reload
 
     from nlol.shelves_menus import reload_menus, reload_shelves
-    from nlol.utilities import utils_install
+    from nlol.utilities import install_utils
 
     reload(reload_shelves)
     reload(reload_menus)
-    reload(utils_install)
+    reload(install_utils)
 
     # load shelves
     reload_shelves.update_nlol_shelves()
@@ -47,4 +47,4 @@ def onMayaDroppedPythonFile(*args) -> None:
     reload_menus.main_menu()
 
     # add project directory path to MAYA_MODULE_PATH Maya.env
-    utils_install.update_project_env_path(project_path=nlol_path, install=True)
+    install_utils.update_project_env_path(project_path=nlol_path, install=True)

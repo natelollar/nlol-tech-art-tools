@@ -1,7 +1,7 @@
 from importlib import reload
 
 from nlol.core.rig_modules import biped_foot_submod, biped_limb_mod
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 
 reload(biped_limb_mod)
 reload(biped_foot_submod)
@@ -9,7 +9,7 @@ reload(biped_foot_submod)
 BipedLimbModule = biped_limb_mod.BipedLimbModule
 BipedFootModule = biped_foot_submod.BipedFootModule
 
-cap = utils_maya.cap
+cap = general_utils.cap
 
 
 class BipedLegModule(BipedLimbModule):

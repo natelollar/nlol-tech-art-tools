@@ -14,12 +14,12 @@ from nlol.core.rig_components import (
     create_ruler,
 )
 from nlol.core.rig_tools import get_aligned_axis, limb_hinge_vector
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(get_aligned_axis)
 reload(limb_hinge_vector)
-reload(utils_maya)
+reload(general_utils)
 reload(create_control_groups)
 reload(create_joint)
 reload(create_locators)
@@ -28,9 +28,9 @@ reload(clean_constraints)
 reload(create_ruler)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
-cap = utils_maya.cap
-snake_to_camel = utils_maya.snake_to_camel
-add_divider_attribue = utils_maya.add_divider_attribue
+cap = general_utils.cap
+snake_to_camel = general_utils.snake_to_camel
+add_divider_attribue = general_utils.add_divider_attribue
 parent_constr = clean_constraints.parent_constr
 point_constr = clean_constraints.point_constr
 orient_constr = clean_constraints.orient_constr

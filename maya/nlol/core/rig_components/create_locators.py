@@ -4,7 +4,7 @@ import random as rd
 
 from maya import cmds
 from nlol.core.rig_tools.show_attributes import ShowAttributes
-from nlol.utilities.utils_maya import cap
+from nlol.core.general_utils import cap
 
 
 def axis_locator(

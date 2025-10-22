@@ -58,7 +58,7 @@ class BuildMeshSkeleton:
             return None
         return self.rig_data.get("unreal_rig")
 
-    def import_mesh_skeleton(self):
+    def import_mesh_skeleton_other(self):
         """Import model geometry and skeleton into new Maya scene.
         Also, import rig helpers file. Containing foot locators, flexi surface, etc.
         """
@@ -70,6 +70,12 @@ class BuildMeshSkeleton:
         else:
             msg = '"rig_helpers.ma" not in rig folder. Skipping import...'
             self.logger.info(msg)
+
+        # remove leftover layers
+        scene_display_lyrs = cmds.ls(type="displayLayer")
+        for lyr in scene_display_lyrs:
+            if lyr != "defaultLayer":
+                cmds.delete(lyr)
 
     def build_skeletalmesh(self):
         """Skin the model geometry to the skeleton.
@@ -100,8 +106,8 @@ class BuildMeshSkeleton:
         # force open new maya file
         cmds.file(force=True, new=True)
 
-        # import mesh and skeleton
-        self.import_mesh_skeleton()
+        # import mesh and skeleton and other files
+        self.import_mesh_skeleton_other()
 
         # get root skeleton joint and other top joints
         top_nodes = cmds.ls(assemblies=True)

@@ -6,7 +6,7 @@ from nlol.core.rig_components import (
     follicle_at_surface,
 )
 from nlol.utilities.nlol_maya_logger import get_logger
-from nlol.utilities.utils_maya import add_divider_attribue, cap
+from nlol.core.general_utils import add_divider_attribue, cap
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 parent_constr = clean_constraints.parent_constr

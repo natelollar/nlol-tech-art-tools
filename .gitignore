@@ -8,6 +8,7 @@ scratch.py
 .vscode/
 docs/
 other_control_curves.json
+other_control_keyframes.json
 maya/nlol/defaults/rig_human/model.ma
 maya/nlol/defaults/rig_human/skeleton.ma
 maya/nlol/defaults/rig_human/skin_weights.xml

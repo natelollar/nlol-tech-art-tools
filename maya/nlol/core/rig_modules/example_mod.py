@@ -1,6 +1,6 @@
 from maya import cmds
 from nlol.utilities.nlol_maya_logger import get_logger
-from nlol.utilities.utils_maya import cap
+from nlol.core.general_utils import cap
 
 logger = get_logger()
 

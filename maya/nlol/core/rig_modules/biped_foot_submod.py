@@ -9,10 +9,10 @@ from nlol.core.rig_components import (
     create_nurbs_curves,
 )
 from nlol.core.rig_modules.biped_limb_mod import BipedLimbModule
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
-reload(utils_maya)
+reload(general_utils)
 reload(create_control_groups)
 reload(create_joint)
 reload(create_locators)
@@ -21,7 +21,7 @@ reload(clean_constraints)
 
 CreateCurves = create_nurbs_curves.CreateCurves
 create_ctrl_grps = create_control_groups.create_ctrl_grps
-cap = utils_maya.cap
+cap = general_utils.cap
 parent_constr = clean_constraints.parent_constr
 point_constr = clean_constraints.point_constr
 orient_constr = clean_constraints.orient_constr

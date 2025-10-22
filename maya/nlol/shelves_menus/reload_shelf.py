@@ -25,9 +25,11 @@ def update_reload_shelf():
         annotation="Reload nlol Shelves.",
         imageOverlayLabel="",
         backgroundColor=(0.3, 0.3, 0.0),
-        command="from nlol.shelves_menus import rigging_shelf, nurbs_curve_shelf, utility_shelf\n"
+        command="from nlol.shelves_menus "
+        "import rigging_shelf, animation_shelf, nurbs_curve_shelf, utility_shelf\n"
         "from importlib import reload\n"
         "reload(rigging_shelf)\nrigging_shelf.update_rigging_shelf()\n"
+        "reload(animation_shelf)\nanimation_shelf.update_animation_shelf()\n"
         "reload(nurbs_curve_shelf)\nnurbs_curve_shelf.update_nurbs_curve_shelf()\n"
         "reload(utility_shelf)\nutility_shelf.update_utility_shelf()\n",
         sourceType="python",

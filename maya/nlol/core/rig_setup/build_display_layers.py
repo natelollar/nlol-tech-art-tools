@@ -3,13 +3,13 @@ from importlib import reload
 from pathlib import Path
 
 from maya import cmds
+from nlol.core import general_utils
 from nlol.core.rig_components import create_display_layers
-from nlol.utilities import utils_maya
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(create_display_layers)
 
-left_to_right_str = utils_maya.left_to_right_str
+left_to_right_str = general_utils.left_to_right_str
 objects_display_lyr = create_display_layers.objects_display_lyr
 
 
@@ -84,6 +84,7 @@ class BuildDisplayLayers:
         scene_lyr_data_sorted = []
         for lyr in scene_display_lyrs:
             objects = cmds.editDisplayLayerMembers(lyr, query=True)
+
             reference = True if cmds.getAttr(f"{lyr}.displayType") == 2 else False
             hide = True if cmds.getAttr(f"{lyr}.visibility") == 0 else False
 

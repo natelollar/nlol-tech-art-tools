@@ -33,8 +33,8 @@ def objects_display_lyr(
     """
     if not isinstance(objects, list):
         objects = [  # single string or string list to regular list
-                stripped for txt in objects.split(",") if (stripped := txt.strip())
-            ]
+            stripped for txt in objects.split(",") if (stripped := txt.strip())
+        ]
 
     if base_name and display_layer:
         msg = (
@@ -52,10 +52,12 @@ def objects_display_lyr(
 
     if not name_only:
         if not cmds.objExists(display_layer):
-            cmds.createDisplayLayer(name=display_layer, noRecurse=True)
+            cmds.select(clear=True)  # clear selection to be safe
+            cmds.createDisplayLayer(name=display_layer, empty=True)
 
         objects = [obj for obj in objects if obj]  # remove empty strings
-        cmds.editDisplayLayerMembers(display_layer, objects, noRecurse=True)
+        if objects:
+            cmds.editDisplayLayerMembers(display_layer, objects, noRecurse=True)
 
         if reference:
             cmds.setAttr(f"{display_layer}.displayType", 2)

@@ -6,7 +6,7 @@ from nlol.core.rig_components import (
     create_control_groups,
     create_nurbs_curves,
 )
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(create_nurbs_curves)
@@ -17,7 +17,7 @@ CreateCurves = create_nurbs_curves.CreateCurves
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 parent_constr = clean_constraints.parent_constr
 scale_constr = clean_constraints.scale_constr
-add_divider_attribue = utils_maya.add_divider_attribue
+add_divider_attribue = general_utils.add_divider_attribue
 
 
 class FkControlModule:
@@ -180,7 +180,12 @@ class FkControlModule:
             self.logger.error(msg)
             raise ValueError(msg)
         # create constraints
-        prnt_const = parent_constr(self.blend_joints, self.fkctrl_aux_grp, offset=True)
+        prnt_const = parent_constr(
+            self.blend_joints,
+            self.fkctrl_aux_grp,
+            offset=True,
+            interp_type=0,
+        )  # No Flip
         scl_const = scale_constr(self.blend_joints, self.fkctrl_aux_grp, offset=True)
         # add blend attribute to control
         add_divider_attribue(control_name=self.fkctrl, divider_amount=5)

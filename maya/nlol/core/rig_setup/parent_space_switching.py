@@ -7,8 +7,8 @@ from importlib import reload
 from pathlib import Path
 
 from maya import cmds
+from nlol.core import general_utils
 from nlol.core.rig_components import clean_constraints, multi_point_constraint
-from nlol.utilities import utils_maya
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(multi_point_constraint)
@@ -17,7 +17,7 @@ reload(clean_constraints)
 multi_point_const = multi_point_constraint.multi_point_const
 parent_constr = clean_constraints.parent_constr
 scale_constr = clean_constraints.scale_constr
-left_to_right_str = utils_maya.left_to_right_str
+left_to_right_str = general_utils.left_to_right_str
 
 
 class ParentSpacing:
@@ -105,16 +105,16 @@ class ParentSpacing:
             if base_parents:
                 base_parents = base_parents.split(",")
                 base_parents = [txt.strip() for txt in base_parents if txt.strip()]
-            
+
             base_parent = ps_dict.get("base_parent")
-            if base_parents and base_parent: # redundant if both keys used
+            if base_parents and base_parent:  # redundant if both keys used
                 msg = (
                     f'Do not need both "base_parents" and "base_parent": {control}\n'
                     '"base_parent" copies and uses "parents" for "base_parents" values.'
                 )
                 self.logger.error(msg)
                 raise ValueError(msg)
-            if base_parent: # used instead of base_parents
+            if base_parent:  # used instead of base_parents
                 base_parents = parents
 
             # check if parent objects exist in scene
@@ -208,7 +208,8 @@ class ParentSpacing:
             and not self.base_parents
         ):
             errors.append(
-                f'{self.control}: Must have "base_parents" to skip transforms for parent switching.',
+                f'{self.control}: Must have "base_parents" to skip transforms '
+                "for parent switching.",
             )
         # ---------- log errors ----------
         if errors:
@@ -231,6 +232,9 @@ class ParentSpacing:
         # ----- multiple base_parents setup -----
         elif self.base_parents and len(self.base_parents) > 1:
             self.setup_multiple_base_parents()
+
+        # clear leftover selections
+        cmds.select(clear=True)
 
     def setup_main_parents(self):
         """Setup parent space switching for main parents."""

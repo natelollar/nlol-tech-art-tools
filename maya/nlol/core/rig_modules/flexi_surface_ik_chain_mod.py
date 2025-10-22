@@ -12,18 +12,18 @@ from nlol.core.rig_components import (
 )
 from nlol.core.rig_modules import fk_chain_mod
 from nlol.core.rig_tools import select_multiple_joints
-from nlol.utilities import utils_maya
+from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
-reload(utils_maya)
+reload(general_utils)
 reload(follicle_at_surface)
 reload(select_multiple_joints)
 
-cap = utils_maya.cap
+cap = general_utils.cap
 parent_constr = clean_constraints.parent_constr
 point_constr = clean_constraints.point_constr
 create_ctrl_grps = create_control_groups.create_ctrl_grps
-add_divider_attribue = utils_maya.add_divider_attribue
+add_divider_attribue = general_utils.add_divider_attribue
 create_attached_ruler = create_ruler.create_attached_ruler
 
 

@@ -2,7 +2,7 @@ from importlib import reload
 
 from maya import cmds
 from nlol.core.rig_tools import better_duplicate
-from nlol.utilities.utils_maya import left_to_right_str, maya_undo
+from nlol.core.general_utils import left_to_right_str, maya_undo
 
 reload(better_duplicate)
 

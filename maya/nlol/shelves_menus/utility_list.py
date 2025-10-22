@@ -15,13 +15,9 @@ def build_utility_list():
 
     shelf_separator = {
         "label": "=" * 35,
-        "annotation": "Shelf separator.",
-        "imageOverlayLabel": "",
-        "flexibleWidthType": 2,  # custom width
-        "flexibleWidthValue": 16,  # custom width pixels
-        "backgroundColor": (0.4, 0.4, 0.4),
-        "highlightColor": (0.4, 0.4, 0.4),
-        "command": "print('Shelf separator.')",
+        "image": "nlol_separator_03_blue.png",
+        "annotation": "Separator.",
+        "command": 'print("Separator.")',
         "sourceType": "python",
     }
 

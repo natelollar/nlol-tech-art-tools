@@ -12,7 +12,7 @@ from nlol.core.rig_components import (
 )
 from nlol.core.rig_tools import get_aligned_axis
 from nlol.utilities.nlol_maya_logger import get_logger
-from nlol.utilities.utils_maya import add_divider_attribue, cap
+from nlol.core.general_utils import add_divider_attribue, cap
 
 reload(create_ruler)
 reload(get_aligned_axis)
