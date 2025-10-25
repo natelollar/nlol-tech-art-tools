@@ -120,6 +120,16 @@ def build_utility_list():
             "tumble_tool_settings.reset_tumble_settings()",
             "sourceType": "python",
         },
+        shelf_separator,
+        {
+            "label": "nLol Renamer Tool",
+            "image": "pythonFamily.png",
+            "annotation": "Rename objects in Maya.",
+            "imageOverlayLabel": "RnmTl",
+            "backgroundColor": random_clrs[32],
+            "command": "from nlol.core.standalone import renamer_tool\nrenamer_tool.reload_tool()",
+            "sourceType": "python",
+        },
     ]
 
     return utility_list

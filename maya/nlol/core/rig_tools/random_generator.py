@@ -55,7 +55,7 @@ def random_colors_dull(seed_string_prefix: str = "") -> list[tuple]:
 
     """
     random_colors_dull = []
-    for i in range(30):
+    for i in range(101):
         color_dull = random_color(seed_string=f"{seed_string_prefix}{i}")[1]
         random_colors_dull.append(color_dull)
 

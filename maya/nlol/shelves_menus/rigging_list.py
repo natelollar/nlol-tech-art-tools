@@ -138,6 +138,33 @@ def build_rigging_list():
             "get_aligned_axis.snap_to_closest_axis(translate_only=True)",
             "sourceType": "python",
         },
+        {
+            "label": "Object Aim X",
+            "image": "pythonFamily.png",
+            "annotation": "Aim first selected objects main axis "
+            "at second object with aim constraint. "
+            'Defaults to "x" aim axis and "y" up axis.',
+            "imageOverlayLabel": "AimX",
+            "backgroundColor": random_clrs[30],
+            "command": "from nlol.core.rig_tools import aim_axis\n"
+            "from importlib import reload\n"
+            "reload(aim_axis)\n"
+            "aim_axis.aim_axis_aim_constraint()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Joint Orient X",
+            "image": "pythonFamily.png",
+            "annotation": "Aim first joint main axis at second joint with "
+            '"Skeleton < Orient Joint". Defaults to "x" main axis.',
+            "imageOverlayLabel": "OriX",
+            "backgroundColor": random_clrs[31],
+            "command": "from nlol.core.rig_tools import aim_axis\n"
+            "from importlib import reload\n"
+            "reload(aim_axis)\n"
+            "aim_axis.aim_axis_orient_joint()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Save Control Curves",
@@ -560,7 +587,7 @@ def build_rigging_list():
             "image": "pythonFamily.png",
             "annotation": "Copy BlendShapes from source to target mesh. Delete source mesh. "
             'Source mesh name is same as target except contains string "Blendshapes". '
-            'No selection needed.',
+            "No selection needed.",
             "imageOverlayLabel": "CpyShp",
             "backgroundColor": random_clrs[28],
             "command": "from nlol.core.rig_setup import build_blendshapes\n"
