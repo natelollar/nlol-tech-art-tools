@@ -1,7 +1,10 @@
 import sys
+from importlib import reload
 from pathlib import Path
 
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+from nlol.core.general_utils import maya_undo
+from nlol.utilities.nlol_maya_logger import get_logger
 from PySide6.QtCore import QSettings
 from PySide6.QtWidgets import (
     QHBoxLayout,
@@ -15,13 +18,11 @@ from shiboken6 import wrapInstance
 
 from maya import OpenMayaUI as omui
 from maya import cmds
-from nlol.core.general_utils import maya_undo
-from nlol.utilities.nlol_maya_logger import get_logger
 
 logger = get_logger()
 
 
-class RenamerTool(MayaQWidgetDockableMixin, QWidget):
+class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
     """Maya object renamer tool with UI and functionality."""
 
     _instance = None
@@ -38,12 +39,13 @@ class RenamerTool(MayaQWidgetDockableMixin, QWidget):
 
         super().__init__(parent)
 
-        self.setObjectName("nLolRenamerTool")
-        self.setWindowTitle("nLol Renamer Tool")
-        self.setGeometry(100, 100, 300, 200)
+        self.window_title = "Renamer Tool Standalone"
+        self.object_name = "".join(self.window_title.split())
+        self.workspace_control_name = f"{self.object_name}WorkspaceControl"
+
+        self.setObjectName(self.object_name)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(6, 6, 6, 6)
 
         name_layout = QHBoxLayout()
         name_layout.addWidget(QLabel("Name:"))
@@ -164,25 +166,25 @@ class RenamerTool(MayaQWidgetDockableMixin, QWidget):
 
     def load_settings(self):
         """Get previously saved text fields from ".ini" config file and load them."""
-        self.settings.beginGroup("RenamerTool")
+        self.settings.beginGroup(self.object_name)
         self.name_input.setText(self.settings.value("name_input", "", str))
         self.prefix_input.setText(self.settings.value("prefix_input", "", str))
         self.suffix_input.setText(self.settings.value("suffix_input", "", str))
         self.find_input.setText(self.settings.value("find_input", "", str))
         self.replace_with_input.setText(self.settings.value("replace_with_input", "", str))
         self.settings.endGroup()
-        logger.info(f"[nLol Renamer Tool] Loaded from: {self.prefs_path}")
+        logger.info(f"[Renamer Tool Standalone] Loaded from: {self.prefs_path}")
 
     def save_settings(self):
         """Save text fields to ".ini" config file."""
-        self.settings.beginGroup("RenamerTool")
+        self.settings.beginGroup(self.object_name)
         self.settings.setValue("name_input", self.name_input.text())
         self.settings.setValue("prefix_input", self.prefix_input.text())
         self.settings.setValue("suffix_input", self.suffix_input.text())
         self.settings.setValue("find_input", self.find_input.text())
         self.settings.setValue("replace_with_input", self.replace_with_input.text())
         self.settings.endGroup()
-        logger.debug(f"[nLol Renamer Tool] Saved to: {self.prefs_path}")
+        logger.debug(f"[Renamer Tool Standalone] Saved to: {self.prefs_path}")
 
 
 def _rebuild_ui():
@@ -190,7 +192,7 @@ def _rebuild_ui():
     Needed for saving tool window position and docking location
     between Maya sessions.
     """
-    workspace_control_name = "nLolRenamerToolWorkspaceControl"
+    workspace_control_name = RenamerToolStandalone().workspace_control_name
     pointer = omui.MQtUtil.findControl(workspace_control_name)
     if not pointer:
         return
@@ -198,15 +200,13 @@ def _rebuild_ui():
 
     from importlib import reload
 
-    from nlol.core.standalone import renamer_tool
+    from nlol.core.ui import renamer_tool_standalone
 
-    reload(renamer_tool)
-    widget = renamer_tool.RenamerTool()
+    reload(renamer_tool_standalone)
+    widget = renamer_tool_standalone.RenamerToolStandalone()
 
     layout = control.layout()
     if layout is None:
-        from PySide6.QtWidgets import QVBoxLayout
-
         layout = QVBoxLayout(control)
         control.setLayout(layout)
     layout.addWidget(widget)
@@ -218,38 +218,34 @@ def show_tool():
     Launch and show tool UI window.
     Also, saves "next Maya session" "reload script" to "workspaceControl".
     """
-    workspace_control_name = "nLolRenamerToolWorkspaceControl"
+    workspace_control_name = RenamerToolStandalone().workspace_control_name
 
     if cmds.workspaceControl(workspace_control_name, query=True, exists=True):
         cmds.workspaceControl(workspace_control_name, edit=True, restore=True, visible=True)
         return
 
-    tool = RenamerTool()
-    tool.show(dockable=True, floating=True)
-
     cmds.workspaceControl(
         workspace_control_name,
-        edit=True,
-        label="nLol Renamer Tool",
+        label=RenamerToolStandalone().window_title,
+        initialWidth=300,
+        initialHeight=200,
         uiScript=(
-            "from nlol.core.standalone import renamer_tool\n"
-            "from importlib import reload\n"
-            "reload(renamer_tool)\n"
-            "renamer_tool._rebuild_ui()"
+            "from nlol.core.ui import renamer_tool_standalone\n"
+            "renamer_tool_standalone._rebuild_ui()"
         ),
     )
 
 
 def reload_tool():
-    """Force reload the tool by closing the workspace and resetting the singleton."""
-    if cmds.workspaceControl("nLolRenamerToolWorkspaceControl", query=True, exists=True):
-        cmds.deleteUI("nLolRenamerToolWorkspaceControl")
+    """Force reload by closing tool and resetting singleton."""
+    workspace_control_name = RenamerToolStandalone().workspace_control_name
 
-    from importlib import reload
+    if cmds.workspaceControl(workspace_control_name, query=True, exists=True):
+        cmds.deleteUI(workspace_control_name)
 
     reload(sys.modules[__name__])
 
-    RenamerTool._instance = None
+    RenamerToolStandalone._instance = None
     show_tool()
 
 

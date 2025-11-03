@@ -5,7 +5,6 @@ test.py
 scratch/
 scratch.py
 .ruff_cache
-.vscode/
 docs/
 other_control_curves.json
 other_control_keyframes.json

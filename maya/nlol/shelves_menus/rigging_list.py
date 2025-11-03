@@ -102,12 +102,10 @@ def build_rigging_list():
             "imageOverlayLabel": "JntAtr",
             "backgroundColor": (0.4, 0.0, 0.9),
             "command": "from nlol.core.rig_tools import show_attributes\n"
-            "from importlib import reload\n"
-            "reload(show_attributes)\n"
+            "from importlib import reload\nreload(show_attributes)\n"
             "show_attributes.ShowAttributes().show_joint_attrs()",
             "doubleClickCommand": "from nlol.core.rig_tools import show_attributes\n"
-            "from importlib import reload\n"
-            "reload(show_attributes)\n"
+            "from importlib import reload\nreload(show_attributes)\n"
             "show_attributes.ShowAttributes(show_attrs=False).show_joint_attrs()",
             "sourceType": "python",
         },
@@ -119,8 +117,7 @@ def build_rigging_list():
             "imageOverlayLabel": "SnpAx",
             "backgroundColor": random_clrs[0],
             "command": "from nlol.core.rig_tools import get_aligned_axis\n"
-            "from importlib import reload\n"
-            "reload(get_aligned_axis)\n"
+            "from importlib import reload\nreload(get_aligned_axis)\n"
             "get_aligned_axis.snap_to_closest_axis()",
             "sourceType": "python",
         },
@@ -133,8 +130,7 @@ def build_rigging_list():
             "imageOverlayLabel": "SnpAxT",
             "backgroundColor": random_clrs[1],
             "command": "from nlol.core.rig_tools import get_aligned_axis\n"
-            "from importlib import reload\n"
-            "reload(get_aligned_axis)\n"
+            "from importlib import reload\nreload(get_aligned_axis)\n"
             "get_aligned_axis.snap_to_closest_axis(translate_only=True)",
             "sourceType": "python",
         },
@@ -147,8 +143,7 @@ def build_rigging_list():
             "imageOverlayLabel": "AimX",
             "backgroundColor": random_clrs[30],
             "command": "from nlol.core.rig_tools import aim_axis\n"
-            "from importlib import reload\n"
-            "reload(aim_axis)\n"
+            "from importlib import reload\nreload(aim_axis)\n"
             "aim_axis.aim_axis_aim_constraint()",
             "sourceType": "python",
         },
@@ -160,11 +155,35 @@ def build_rigging_list():
             "imageOverlayLabel": "OriX",
             "backgroundColor": random_clrs[31],
             "command": "from nlol.core.rig_tools import aim_axis\n"
-            "from importlib import reload\n"
-            "reload(aim_axis)\n"
+            "from importlib import reload\nreload(aim_axis)\n"
             "aim_axis.aim_axis_orient_joint()",
             "sourceType": "python",
         },
+        {
+            "label": "Snap Align X",
+            "image": "pythonFamily.png",
+            "annotation": "Snap first joint main axis to second joint. "
+            "Aligns child joint first before using aim constraint. "
+            "Maintains current joint positions.",
+            "imageOverlayLabel": "SnpX",
+            "backgroundColor": random_clrs[32],
+            "command": "from nlol.core.rig_tools import aim_axis\n"
+            "from importlib import reload\nreload(aim_axis)\n"
+            "aim_axis.snap_alignment()",
+            "sourceType": "python",
+        },
+        # {
+        #     "label": "Single Axis Aim",
+        #     "image": "pythonFamily.png",
+        #     "annotation": "Aim main axis by rotating single axis towards target object.",
+        #     "imageOverlayLabel": "AimX",
+        #     "backgroundColor": random_clrs[32],
+        #     "command": "from nlol.core.experiments import aim_axis_exp\n"
+        #     "from importlib import reload\n"
+        #     "reload(aim_axis_exp)\n"
+        #     "aim_axis_exp.rotate_single_axis()",
+        #     "sourceType": "python",
+        # },
         shelf_separator,
         {
             "label": "Save Control Curves",
@@ -222,32 +241,32 @@ def build_rigging_list():
             "image": "interactivePlayback.png",
             "annotation": "Start Interactive playback.",
             "imageOverlayLabel": "",
-            "command": "InteractivePlayback",
-            "sourceType": "mel",
+            "command": 'from maya import mel\nmel.eval("InteractivePlayback;")',
+            "sourceType": "python",
         },
         {
             "label": "Hierarchy",
             "image": "menuIconSelect.png",
             "annotation": "Select hierarchy",
             "imageOverlayLabel": "Hier",
-            "command": "SelectHierarchy",
-            "sourceType": "mel",
+            "command": 'from maya import mel\nmel.eval("SelectHierarchy;")',
+            "sourceType": "python",
         },
         {
             "label": "Backface Culling",
             "image": "menuIconDisplay.png",
             "annotation": "Toggle geometry backface visibility",
             "imageOverlayLabel": "BC",
-            "command": "ToggleBackfaceGeometry",
-            "sourceType": "mel",
+            "command": 'from maya import mel\nmel.eval("ToggleBackfaceGeometry;")',
+            "sourceType": "python",
         },
         {
             "label": "Go to Bind Pose",
             "image": "goToBindPose.png",
             "annotation": "Returns the skeleton to the position where its bind pose was set",
             "imageOverlayLabel": "",
-            "command": "GoToBindPose",
-            "sourceType": "mel",
+            "command": 'from maya import mel\nmel.eval("GoToBindPose;")',
+            "sourceType": "python",
         },
         {
             "label": "Print Object Type",
@@ -632,6 +651,18 @@ def build_rigging_list():
             "doubleClickCommand": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
             "from importlib import reload\nreload(mirror_attrs_export_import)\n"
             "mirror_attrs_export_import.MirrorAttrsExportImport().show_mirror_attrs(show_attrs=False)",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        # Miscellaneous
+        {
+            "label": "Rename Skin Cluster",
+            "image": "pythonFamily.png",
+            "annotation": "Rename selected mesh's skin cluster using nLol naming convention.",
+            "imageOverlayLabel": "RnmSkn",
+            "backgroundColor": random_clrs[34],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "small_functions.rename_skincluster()",
             "sourceType": "python",
         },
     ]

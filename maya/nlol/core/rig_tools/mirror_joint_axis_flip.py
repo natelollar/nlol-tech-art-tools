@@ -42,5 +42,5 @@ def mirr_jnt_axis_flip(
             cmds.setAttr(new_joint[0] + f".wireColor{color}", jnt_clr)
 
 
-# Test:
-# mirr_jnt_same_orient()
+if __name__ == "__main__":
+    mirr_jnt_axis_flip(axis_180_flip="x")
