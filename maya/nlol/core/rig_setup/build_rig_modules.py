@@ -19,6 +19,8 @@ from nlol.core.rig_modules import (
     fk_ik_spline_chain_mod,
     flexi_surface_fk_ctrl_mod,
     flexi_surface_ik_chain_mod,
+    piston_mod,
+    digitigrade_leg_mod,
     world_control_mod,
 )
 from nlol.core.rig_tools import select_multiple_joints
@@ -32,12 +34,14 @@ reload(fk_ik_single_chain_mod)
 reload(fk_ik_spline_chain_mod)
 reload(flexi_surface_ik_chain_mod)
 reload(flexi_surface_fk_ctrl_mod)
+reload(piston_mod)
 reload(world_control_mod)
 reload(general_utils)
 reload(eye_aim_mod)
+reload(digitigrade_leg_mod)
 reload(create_display_layers)
 
-left_to_right_str = general_utils.left_to_right_str
+swap_side_str = general_utils.swap_side_str
 objects_display_lyr = create_display_layers.objects_display_lyr
 
 
@@ -65,23 +69,28 @@ def build_modules(rig_data_filepath: str | Path):
         mirror_right = mod_dict.get("mirror_right")
         mirror_direction = mod_dict.get("mirror_direction")
         if mirror_right and mirror_direction and "left" in mirror_direction:
-            joints = left_to_right_str(mod_dict.get("joints"))
+            main_joints = swap_side_str(mod_dict.get("joints"))
             mirror_direction = (
                 mirror_direction.replace("left", "right") if mirror_direction else None
             )
-            upper_twist_joints = left_to_right_str(mod_dict.get("upper_twist_joints", ""))
-            lower_twist_joints = left_to_right_str(mod_dict.get("lower_twist_joints", ""))
+            upper_twist_joints = swap_side_str(mod_dict.get("upper_twist_joints", ""))
+            lower_twist_joints = swap_side_str(mod_dict.get("lower_twist_joints", ""))
             foot_locators = (
-                left_to_right_str(ft_locs) if (ft_locs := mod_dict.get("foot_locators")) else ""
+                swap_side_str(ft_locs) if (ft_locs := mod_dict.get("foot_locators")) else ""
             )
 
             joint_chains_str_list = mod_dict.get("joint_chains", [])
-            joint_chains = [left_to_right_str(string_list) for string_list in joint_chains_str_list]
+            joint_chains = [swap_side_str(string_list) for string_list in joint_chains_str_list]
+
+            origin_joint = swap_side_str(mod_dict.get("origin_joint", ""))
+            mid_joints = swap_side_str(mod_dict.get("mid_joints", ""))
+            top_joints = swap_side_str(mod_dict.get("top_joints", ""))
+            bot_joints = swap_side_str(mod_dict.get("bot_joints", ""))
 
             right_dict = {
                 "rig_module": rig_module,
                 "rig_module_name": rig_module_name,
-                "joints": joints,
+                "joints": main_joints,
                 "mirror_direction": mirror_direction,
                 "joint_chains": joint_chains,
                 "constraint": mod_dict.get("constraint"),
@@ -105,6 +114,10 @@ def build_modules(rig_data_filepath: str | Path):
                 "invert_foot_lean": mod_dict.get("invert_foot_lean"),
                 "invert_foot_tilt": mod_dict.get("invert_foot_tilt"),
                 "invert_foot_roll": mod_dict.get("invert_foot_roll"),
+                "origin_joint": origin_joint,
+                "mid_joints": mid_joints,
+                "top_joints": top_joints,
+                "bot_joints": bot_joints,
             }
             right_modules.append(right_dict)
         elif mirror_right and (mirror_direction is None or "left" not in mirror_direction):
@@ -167,6 +180,14 @@ def build_modules(rig_data_filepath: str | Path):
             invert_foot_lean = mod_dict.get("invert_foot_lean")
             invert_foot_tilt = mod_dict.get("invert_foot_tilt")
             invert_foot_roll = mod_dict.get("invert_foot_roll")
+            origin_joint = mod_dict.get("origin_joint", "").split(",")
+            origin_joint = [txt.strip() for txt in origin_joint if txt.strip()]
+            mid_joints = mod_dict.get("mid_joints", "").split(",")
+            mid_joints = [txt.strip() for txt in mid_joints if txt.strip()]
+            top_joints = mod_dict.get("top_joints", "").split(",")
+            top_joints = [txt.strip() for txt in top_joints if txt.strip()]
+            bot_joints = mod_dict.get("bot_joints", "").split(",")
+            bot_joints = [txt.strip() for txt in bot_joints if txt.strip()]
 
             aim_vector = mod_dict.get("aim_vector")
             up_vector = mod_dict.get("up_vector")
@@ -301,6 +322,36 @@ def build_modules(rig_data_filepath: str | Path):
                         aim_vector=aim_vector,
                         up_vector=up_vector,
                         reverse_right_vectors=reverse_right_vectors,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
+                case "piston_mod":
+                    module_instance = piston_mod.PistonMod(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        origin_joint=origin_joint,
+                        mid_joints=mid_joints,
+                        top_joints=top_joints,
+                        bot_joints=bot_joints,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
+                case "digitigrade_leg_mod":
+                    module_instance = digitigrade_leg_mod.DigitigradeLegMod(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        main_joints=main_joints,
+                        main_object_names=main_object_names,
+                        foot_locators=foot_locators,
+                        invert_toe_wiggle=invert_toe_wiggle,
+                        invert_toe_spin=invert_toe_spin,
+                        invert_foot_lean=invert_foot_lean,
+                        invert_foot_tilt=invert_foot_tilt,
+                        invert_foot_roll=invert_foot_roll,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)

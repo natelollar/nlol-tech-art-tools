@@ -2,7 +2,7 @@ from importlib import reload
 
 from maya import cmds
 from nlol.core.rig_tools import better_duplicate
-from nlol.core.general_utils import left_to_right_str, maya_undo
+from nlol.core.general_utils import swap_side_str, maya_undo
 
 reload(better_duplicate)
 
@@ -50,7 +50,7 @@ def mirror_curves(
 
         # find opposite side ctrl of orignal duplicated
         if not original_side:
-            crv_opp = left_to_right_str(crv)
+            crv_opp = swap_side_str(crv)
         else:
             crv_opp = crv.replace(original_side, flipped_side)
 

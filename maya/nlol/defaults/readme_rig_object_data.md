@@ -11,7 +11,7 @@ Rig object data for specified rig modules.
 - `mirror_direction` (str): Mirror side of control. Currently, works best with "left".  
     Optional.
 - `mirror_right` (bool): Use left rig module data for the right side. Currently works with mirror_direction "left"  
-    and joints containing "left" or with suffix "_l".  See "left_to_right_str()" function.  
+    and joints containing "left" or with suffix "_l".  See "swap_side_str()" function.  
     Optional.
 - `get_joint_chain` (bool): Gets joint chain from listed joints.  Include either first joint, or first and last joint.  
     Can use instead of "joints".
@@ -42,6 +42,9 @@ Rig object data for specified rig modules.
 - `aim_vector, up_vector` (str): Eye axis aiming out to the aim ctrl and directly up.  
     Chosen based on world space if parameter not included.  
     "eye_aim_mod" only.
+- `origin_joint, mid_joints, top_joints, bot_joints` (str): Custom joint lists for more complex rig modules.
+    "piston_mod" only.
+
 ---
 *Lists written as "string lists".*  
 *nLol naming convention: `<name>_<direction>_<id>_<type>`*

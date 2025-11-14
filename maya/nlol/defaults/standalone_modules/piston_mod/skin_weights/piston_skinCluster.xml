@@ -2404,7 +2404,7 @@
     <point index="2399" value=" -0.000000 22.127518 -3.200822"/>
     <point index="2400" value=" -0.000000 21.985277 -3.053563"/>
   </shape>
-  <weights deformer="piston_skinCluster" source="pistonMain_jnt" shape="piston_geoShape" layer="0" defaultValue="0.000" size="785" max="2225">
+  <weights deformer="piston_skinCluster" source="piston_mid_jnt" shape="piston_geoShape" layer="0" defaultValue="0.000" size="785" max="2225">
     <point index="125" value="1.000"/>
     <point index="126" value="1.000"/>
     <point index="127" value="1.000"/>
@@ -4819,4 +4819,5 @@
     <point index="2144" value="1.000"/>
     <point index="2145" value="1.000"/>
   </weights>
+  <weights deformer="piston_skinCluster" source="pistonMain_jnt" shape="piston_geoShape" layer="7" defaultValue="0.000" size="0" max="0"/>
 </deformerWeight>

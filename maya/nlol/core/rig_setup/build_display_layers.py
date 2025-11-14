@@ -9,7 +9,7 @@ from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(create_display_layers)
 
-left_to_right_str = general_utils.left_to_right_str
+swap_side_str = general_utils.swap_side_str
 objects_display_lyr = create_display_layers.objects_display_lyr
 
 
@@ -46,9 +46,9 @@ class BuildDisplayLayers:
         for lyr_dict in display_lyr_data:
             mirror_right = lyr_dict.get("mirror_right")
             if mirror_right:
-                objects = left_to_right_str(lyr_dict["objects"])
-                base_name = left_to_right_str(lyr_dict.get("base_name", ""))
-                display_layer = left_to_right_str(lyr_dict.get("display_layer", ""))
+                objects = swap_side_str(lyr_dict["objects"])
+                base_name = swap_side_str(lyr_dict.get("base_name", ""))
+                display_layer = swap_side_str(lyr_dict.get("display_layer", ""))
 
                 right_dict = {
                     "objects": objects,

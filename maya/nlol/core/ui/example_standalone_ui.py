@@ -69,7 +69,7 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
         suffix_layout.addWidget(self.suffix_input)
         layout.addLayout(suffix_layout)
 
-        apply_btn = QPushButton("Apply Prefix/Suffix")
+        apply_btn = QPushButton("Prefix/ Suffix")
         apply_btn.clicked.connect(self.apply_prefix_suffix)
         layout.addWidget(apply_btn)
 
@@ -81,11 +81,11 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
 
         replace_with_layout = QHBoxLayout()
         replace_with_layout.addWidget(QLabel("Replace:"))
-        self.replace_with_input = QLineEdit()
-        replace_with_layout.addWidget(self.replace_with_input)
+        self.replace_input = QLineEdit()
+        replace_with_layout.addWidget(self.replace_input)
         layout.addLayout(replace_with_layout)
 
-        replace_btn = QPushButton("Replace in Names")
+        replace_btn = QPushButton("Replace")
         replace_btn.clicked.connect(self.replace_in_names)
         layout.addWidget(replace_btn)
 
@@ -106,22 +106,28 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
                 logger.info("Select objects...")
                 return
 
-            new_name = self.name_input.text().strip()  # retrieve Qt string
+            new_name = self.name_input.text().strip()
             if not new_name:
                 logger.info("Enter a name...")
                 return
+
+            selected_uuids = cmds.ls(selection=True, uuid=True)  # keep original order
+            selected.sort(key=lambda x: x.count("|"), reverse=True)  # avoid dup name errors
 
             if len(selected) == 1:
                 cmds.rename(selected[0], new_name)
             else:
                 for i, obj in enumerate(selected):
+                    cmds.rename(obj, f"tmp_object_string_{i + 1:02d}")
+                for i, obj_uuid in enumerate(selected_uuids):
+                    obj = cmds.ls(obj_uuid, long=True)[0]
                     cmds.rename(obj, f"{new_name}_{i + 1:02d}")
         finally:
             self.save_settings()
 
     @maya_undo
     def apply_prefix_suffix(self):
-        """Add prefix and/or suffix to Maya object name."""
+        """Add prefix/suffix to Maya object name."""
         try:
             selected = cmds.ls(selection=True)
             if not selected:
@@ -133,9 +139,10 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
             if not prefix and not suffix:
                 logger.info("Enter a prefix or suffix...")
                 return
-
+            
+            selected.sort(key=lambda x: x.count("|"), reverse=True)  # avoid dup name errors
             for obj in selected:
-                short_name = obj.split("|")[-1]
+                short_name = obj.split("|")[-1]  # avoid dup name errors
                 cmds.rename(obj, f"{prefix}{short_name}{suffix}")
         finally:
             self.save_settings()
@@ -150,16 +157,18 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
                 return
 
             find_str = self.find_input.text().strip()
-            replace_str = self.replace_with_input.text().strip()
+            replace_str = self.replace_input.text().strip()
             if not find_str:
                 logger.info("Enter a string to find...")
                 return
-
+            
+            selected.sort(key=lambda x: x.count("|"), reverse=True)  # avoid dup name errors
             for obj in selected:
                 if find_str not in obj:
                     logger.info(f'"{find_str}" not in "{obj}"')
                     continue
-                new_name = obj.replace(find_str, replace_str)
+                short_name = obj.split("|")[-1]  # avoid dup name errors
+                new_name = short_name.replace(find_str, replace_str)
                 cmds.rename(obj, new_name)
         finally:
             self.save_settings()
@@ -171,7 +180,7 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
         self.prefix_input.setText(self.settings.value("prefix_input", "", str))
         self.suffix_input.setText(self.settings.value("suffix_input", "", str))
         self.find_input.setText(self.settings.value("find_input", "", str))
-        self.replace_with_input.setText(self.settings.value("replace_with_input", "", str))
+        self.replace_input.setText(self.settings.value("replace_input", "", str))
         self.settings.endGroup()
         logger.info(f"[Renamer Tool Standalone] Loaded from: {self.prefs_path}")
 
@@ -182,7 +191,7 @@ class RenamerToolStandalone(MayaQWidgetDockableMixin, QWidget):
         self.settings.setValue("prefix_input", self.prefix_input.text())
         self.settings.setValue("suffix_input", self.suffix_input.text())
         self.settings.setValue("find_input", self.find_input.text())
-        self.settings.setValue("replace_with_input", self.replace_with_input.text())
+        self.settings.setValue("replace_input", self.replace_input.text())
         self.settings.endGroup()
         logger.debug(f"[Renamer Tool Standalone] Saved to: {self.prefs_path}")
 

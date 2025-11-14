@@ -25,6 +25,7 @@ reload(build_mesh_skeleton)
 reload(build_rig_modules)
 reload(parent_space_switching)
 reload(save_control_curves)
+reload(rig_folder_path)
 
 rig_folderpath = rig_folder_path.rig_folderpath
 rig_data_filepath = rig_folderpath / "rig_object_data.toml"

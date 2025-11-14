@@ -98,7 +98,7 @@ def swap_side_str(text_str) -> str:
 
     """
     if not text_str:
-        return text_str
+        return ""
 
     original_text = text_str
 
@@ -151,24 +151,6 @@ def swap_side_str(text_str) -> str:
     text_str = text_str.replace(f" {from_abbr}_", f" {to_abbr}_")  # note whitespace in strings
 
     return text_str
-
-
-def left_to_right_str(text_str: str) -> str:
-    """Replace left character strings with right character strings.
-    Such as, replace any `left` with `right` and suffix `_l` with `_r`.
-    Example: Replaces `left` with `right` in `ikHand_left_ctrl`.
-    Specifically works with a string or string list.
-    Example: `hand_l` or `indexFinger_left_01_ctrl` or
-    `pinky_metacarpal_l, pinky_01_l, pinky_02_l, pinky_03_l`
-
-    Args:
-        text_str: Input string text containing left characters.
-
-    Returns:
-        New string text for right side.
-
-    """
-    return swap_side_str(text_str)
 
 
 def invert_axis_string(text_str: str) -> str:

@@ -55,7 +55,7 @@ class RenamerToolUI(DockableMayaUI):
         suffix_layout.addWidget(self.suffix_input)
         layout.addLayout(suffix_layout)
 
-        apply_btn = QPushButton("Apply Prefix/Suffix")
+        apply_btn = QPushButton("Prefix/ Suffix")
         apply_btn.clicked.connect(self.apply_prefix_suffix)
         layout.addWidget(apply_btn)
 
@@ -72,7 +72,7 @@ class RenamerToolUI(DockableMayaUI):
         replace_layout.addWidget(self.replace_input)
         layout.addLayout(replace_layout)
 
-        replace_btn = QPushButton("Replace in Names")
+        replace_btn = QPushButton("Replace")
         replace_btn.clicked.connect(self.replace_in_names)
         layout.addWidget(replace_btn)
 
@@ -90,10 +90,16 @@ class RenamerToolUI(DockableMayaUI):
                 logger.info("Enter a name...")
                 return
 
+            selected_uuids = cmds.ls(selection=True, uuid=True)  # keep original order
+            selected.sort(key=lambda x: x.count("|"), reverse=True)  # avoid dup name errors
+
             if len(selected) == 1:
                 cmds.rename(selected[0], new_name)
             else:
                 for i, obj in enumerate(selected):
+                    cmds.rename(obj, f"tmp_object_string_{i + 1:02d}")
+                for i, obj_uuid in enumerate(selected_uuids):
+                    obj = cmds.ls(obj_uuid, long=True)[0]
                     cmds.rename(obj, f"{new_name}_{i + 1:02d}")
         finally:
             self.save_settings()
@@ -112,9 +118,10 @@ class RenamerToolUI(DockableMayaUI):
             if not prefix and not suffix:
                 logger.info("Enter a prefix or suffix...")
                 return
-
+            
+            selected.sort(key=lambda x: x.count("|"), reverse=True)  # avoid dup name errors
             for obj in selected:
-                short_name = obj.split("|")[-1]
+                short_name = obj.split("|")[-1]  # avoid dup name errors
                 cmds.rename(obj, f"{prefix}{short_name}{suffix}")
         finally:
             self.save_settings()
@@ -133,12 +140,14 @@ class RenamerToolUI(DockableMayaUI):
             if not find_str:
                 logger.info("Enter a string to find...")
                 return
-
+            
+            selected.sort(key=lambda x: x.count("|"), reverse=True)  # avoid dup name errors
             for obj in selected:
                 if find_str not in obj:
                     logger.info(f'"{find_str}" not in "{obj}"')
                     continue
-                new_name = obj.replace(find_str, replace_str)
+                short_name = obj.split("|")[-1]  # avoid dup name errors
+                new_name = short_name.replace(find_str, replace_str)
                 cmds.rename(obj, new_name)
         finally:
             self.save_settings()

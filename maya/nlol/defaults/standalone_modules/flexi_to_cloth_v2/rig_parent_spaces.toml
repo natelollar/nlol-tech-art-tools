@@ -11,7 +11,7 @@ parents = "root_ctrl"
 # ----- sling finger loop -----
 [[control]]
 control = "fkSlingLoopParent_ctrl"
-base_parent = "slingRibbonOffsetParent_ctrl"  # for flexi surface control scaling
+base_parents = "slingRibbonOffsetParent_ctrl"  # for flexi surface control scaling
 
 [[control]]
 control = "slingLoopRibbonOffset_01_ctrl"
@@ -31,7 +31,7 @@ slingRibbonOffsetParent_ctrl
 # ----- sling main length -----
 [[control]]
 control = "fkSlingFlexiParent_ctrl" 
-base_parent = "slingRibbonOffsetParent_ctrl"  # for flexi surface control scaling
+base_parents = "slingRibbonOffsetParent_ctrl"  # for flexi surface control scaling
 
 [[control]]
 control = "slingRibbonOffset_start_01_ctrl"

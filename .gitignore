@@ -14,6 +14,7 @@ maya/nlol/defaults/rig_human/skin_weights.xml
 incrementalSave/
 tmp/
 .mayaSwatches/
+old/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

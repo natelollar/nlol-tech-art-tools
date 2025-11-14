@@ -132,7 +132,7 @@ def build_utility_list():
         },
         shelf_separator,
         {
-            "label": "Reload nLol Main UI",
+            "label": "nLol Main UI",
             "image": "pythonFamily.png",
             "annotation": "Reload the main UI for nLol Toolset.",
             "imageOverlayLabel": "MainUI",
@@ -141,56 +141,25 @@ def build_utility_list():
             "nlol_main_ui.reload_tool()",
             "sourceType": "python",
         },
-        {
-            "label": "Show nLol Main UI",
-            "image": "pythonFamily.png",
-            "annotation": "Show the main UI for nLol Toolset.",
-            "imageOverlayLabel": "MainUI",
-            "backgroundColor": random_clrs[33],
-            "command": "from nlol.core.ui import nlol_main_ui\n"
-            "nlol_main_ui.show_tool()",
-            "sourceType": "python",
-        },
         shelf_separator,
         {
-            "label": "Renamer Tool UI Reload",
+            "label": "Renamer Tool",
             "image": "pythonFamily.png",
             "annotation": "Rename selected objects. Reload tool.",
-            "imageOverlayLabel": "RnUIRe",
+            "imageOverlayLabel": "RenUI",
             "backgroundColor": random_clrs[34],
             "command": "from nlol.core.ui import renamer_tool_ui\n"
             "renamer_tool_ui.reload_tool()",
             "sourceType": "python",
         },
-        {
-            "label": "Renamer Tool UI Show",
-            "image": "pythonFamily.png",
-            "annotation": "Rename selected objects. Show tool.",
-            "imageOverlayLabel": "RnUISh",
-            "backgroundColor": random_clrs[36],
-            "command": "from nlol.core.ui import renamer_tool_ui\n"
-            "renamer_tool_ui.show_tool()",
-            "sourceType": "python",
-        },
-        # shelf_separator,
         # {
-        #     "label": "Renamer Tool Standalone",
+        #     "label": "Example Standalone UI",
         #     "image": "pythonFamily.png",
         #     "annotation": "Rename selected objects. Reload tool.",
-        #     "imageOverlayLabel": "RnStRe",
-        #     "backgroundColor": random_clrs[38],
-        #     "command": "from nlol.core.ui import renamer_tool_standalone\n"
-        #     "renamer_tool_standalone.reload_tool()",
-        #     "sourceType": "python",
-        # },
-        # {
-        #     "label": "Renamer Tool Standalone",
-        #     "image": "pythonFamily.png",
-        #     "annotation": "Rename selected objects. Show tool.",
-        #     "imageOverlayLabel": "RnStSh",
-        #     "backgroundColor": random_clrs[39],
-        #     "command": "from nlol.core.ui import renamer_tool_standalone\n"
-        #     "renamer_tool_standalone.show_tool()",
+        #     "imageOverlayLabel": "ExStAl",
+        #     "backgroundColor": random_clrs[34],
+        #     "command": "from nlol.core.ui import example_standalone_ui\n"
+        #     "example_standalone_ui.reload_tool()",
         #     "sourceType": "python",
         # },
     ]

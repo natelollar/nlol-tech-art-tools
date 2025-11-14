@@ -81,6 +81,7 @@ Notes for rigging setup.
 - dict = dictionary
 - dir = direction
 - dist = distance
+- drvr = driver
 - eff = effector
 - fk = forward kinematics
 - geo = geometry

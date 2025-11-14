@@ -1,8 +1,11 @@
 import tomllib
 from pathlib import Path
+from importlib import reload
 
 from maya import cmds
 from nlol.defaults import rig_folder_path
+
+reload(rig_folder_path)
 
 rig_folderpath = rig_folder_path.rig_folderpath
 default_rig_data_filepath = rig_folderpath / "rig_object_data.toml"

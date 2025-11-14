@@ -19,7 +19,7 @@ Entering the ctrl name will automatically find the parent switch group.
 - `base_parent` (bool): Used instead of "base_parents" string list. Copies and uses "parents" values in place of "base_parents".
 - `mirror_right` (str): Use left control data for the right side. 
     - Currently works with any "left" or parents with suffix "_l".
-    - See "left_to_right_str()" function.  
+    - See "swap_side_str()" function.  
 - `use_point_constraint` (bool): Use point constraint instead of parent translate constraint. Requires "base_parent/s". 
 - `skip_translate, skip_rotate, skip_scale` (bool): Skip translate (or point), rotate or scale parent switch setup. 
     - Requires "separate_transforms" and "base_parent/s". 

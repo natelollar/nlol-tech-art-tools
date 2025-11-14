@@ -1,0 +1,13 @@
+# piston_mod: Piston rig module with three-axis gimbal joint connection on both ends.
+#   Orient piston joints to world space scene Y-up.
+#   Should be one mid joint and three top and bot joints.
+#   The top and bot joints should be listed in order.
+#   See example skeleton for specific setup.
+
+[[rig_module]]
+rig_module = "piston_mod" 
+rig_module_name = "hydroPiston" 
+origin_joint = "pistonMain_jnt"  # optional. 1 joint exactly.
+mid_joints = "piston_mid_jnt"  # 1 joint exactly
+top_joints = "piston_top_01_jnt, piston_top_02_jnt, piston_top_03_jnt"  # 3 joints exactly
+bot_joints = "piston_bot_01_jnt, piston_bot_02_jnt, piston_bot_03_jnt"  # 3 joints exactly

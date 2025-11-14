@@ -77,14 +77,25 @@ def orient_constr(
     targets: str | list[str],
     object: str,
     offset: bool | None = None,
+    skip_x: bool | None = None,
+    skip_y: bool | None = None,
+    skip_z: bool | None = None,
 ) -> str:
     """Similar to parent_constr except uses orientConstraint."""
-    offset = True if offset else False
+    skip = []
+    if skip_x:
+        skip.append("x")
+    if skip_y:
+        skip.append("y")
+    if skip_z:
+        skip.append("z")
+
     constraint = cmds.orientConstraint(
         targets,
         object,
         name=f"{object}OrientConstraint",
-        maintainOffset=offset,
+        maintainOffset=bool(offset),
+        skip=skip
     )[0]
     return constraint
 
@@ -113,6 +124,9 @@ def aim_constr(
     aim_vector: str = "z",
     up_vector: str = "x",
     offset: bool | None = None,
+    skip_x: bool | None = None,
+    skip_y: bool | None = None,
+    skip_z: bool | None = None,
 ) -> str:
     """Aim constraint with clean name.
     Eliminates the need to name the constraint every time.
@@ -139,8 +153,14 @@ def aim_constr(
         "-y": (0, -1, 0),
         "-z": (0, 0, -1),
     }
+    skip = []
+    if skip_x:
+        skip.append("x")
+    if skip_y:
+        skip.append("y")
+    if skip_z:
+        skip.append("z")
 
-    offset = True if offset else False
     constraint = cmds.aimConstraint(
         targets,
         object,
@@ -148,7 +168,8 @@ def aim_constr(
         worldUpType=world_up_type,
         aimVector=axis_vectors[aim_vector.lower()],
         upVector=axis_vectors[up_vector.lower()],
-        maintainOffset=offset,
+        maintainOffset=bool(offset),
+        skip=skip,
         name=f"{object}AimConstraint",
     )[0]
 

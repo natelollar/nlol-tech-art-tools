@@ -17,15 +17,15 @@ class ExampleModule:
         --------------------------------------------------
 
         Returns:
-            Top group for rig module.
+            Top Maya group for rig module.
 
         """
-        self.build_top_groups()
+        self.setup_top_grps()
         self.build_main()
 
         return self.mod_top_grp
 
-    def build_top_groups(self):
+    def setup_top_grps(self):
         """Create top rig module groups for organization."""
         self.mod_top_grp = cmds.group(
             empty=True,

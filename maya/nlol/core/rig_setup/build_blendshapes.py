@@ -5,14 +5,17 @@ from pathlib import Path
 
 from maya import cmds, mel
 from nlol.core import general_utils
-from nlol.core.rig_setup.common_build_functions import CommonBuildFunctions
+from nlol.core.rig_setup import common_build_functions
 from nlol.defaults import rig_folder_path
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(general_utils)
+reload(common_build_functions)
+reload(rig_folder_path)
 
 swap_side_str = general_utils.swap_side_str
 get_top_parent = general_utils.get_top_parent
+CommonBuildFunctions = common_build_functions.CommonBuildFunctions
 
 rig_folderpath = rig_folder_path.rig_folderpath
 default_blendshapes_filepath = rig_folderpath / "blendshapes.ma"

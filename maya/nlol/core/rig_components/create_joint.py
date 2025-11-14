@@ -11,7 +11,7 @@ def single_joint(
     name: str = "example_joint",
     radius: float = 1.0,
     color_rgb: list | tuple = (1.0, 0.4, 0.0),
-    scale_compensate: bool = True,
+    scale_compensate: bool = False,
     parent_snap: str | None = None,
     axis_parent_snap: str | None = None,
     position: tuple = (0, 0, 0),

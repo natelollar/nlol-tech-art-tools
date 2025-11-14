@@ -1,0 +1,24 @@
+
+[[control]]
+control = "fkUpperLeg_left_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "legSwch_left_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "ikUpperLeg_left_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "ikLegUpperPoleVector_left_ctrl"
+parents = "ikAnkleLeg_left_ctrl, root_ctrl"
+
+[[control]]
+control = "ikLegLowerPoleVector_left_ctrl"
+parents = "ikAnkleLeg_left_ctrl, root_ctrl"
+
+[[control]]
+control = "ikAnkleLeg_left_ctrl"
+parents = "root_ctrl"

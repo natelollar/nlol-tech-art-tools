@@ -17,7 +17,7 @@ reload(clean_constraints)
 multi_point_const = multi_point_constraint.multi_point_const
 parent_constr = clean_constraints.parent_constr
 scale_constr = clean_constraints.scale_constr
-left_to_right_str = general_utils.left_to_right_str
+swap_side_str = general_utils.swap_side_str
 
 
 class ParentSpacing:
@@ -58,15 +58,15 @@ class ParentSpacing:
         for ps_dict in rig_ps_data:
             mirror_right = ps_dict.get("mirror_right")
             if mirror_right and "left" in ps_dict["control"].lower():
-                control = left_to_right_str(ps_dict["control"])
+                control = swap_side_str(ps_dict["control"])
 
                 parents = ps_dict.get("parents")
                 if parents:  # may be only base_parents exists
-                    parents = left_to_right_str(parents)
+                    parents = swap_side_str(parents)
 
                 base_parents = ps_dict.get("base_parents")
                 if base_parents:
-                    base_parents = left_to_right_str(base_parents)
+                    base_parents = swap_side_str(base_parents)
 
                 right_dict = {
                     "control": control,

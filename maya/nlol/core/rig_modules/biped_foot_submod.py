@@ -370,16 +370,17 @@ class BipedFootModule:
         # ---------- connect and setup foot attributes ----------
         # --------------- toe wiggle ---------------
         if self.invert_toe_wiggle:
-            toewiggle_reverse_nd = cmds.createNode(
-                "reverse",
-                name=f"{self.mod_name}ToeWiggle{self.mirr_side}reverse",
+            toewiggle_multiply_nd = cmds.createNode(
+                "multiply",
+                name=f"{self.mod_name}ToeWiggle{self.mirr_side}multiply",
             )
+            cmds.setAttr(f"{toewiggle_multiply_nd}.input[0]", -1)
             cmds.connectAttr(
                 f"{self.limb_mod.ik_ctrl}.toeWiggle",
-                f"{toewiggle_reverse_nd}.inputX",
+                f"{toewiggle_multiply_nd}.input[1]",
             )
             cmds.connectAttr(
-                f"{toewiggle_reverse_nd}.outputX",
+                f"{toewiggle_multiply_nd}.output",
                 f"{self.toe_wiggle_aux_ctrl_grp}.rotateZ",
             )
         else:
@@ -389,16 +390,17 @@ class BipedFootModule:
             )
         # --------------- top spin ---------------
         if self.invert_toe_spin:
-            toespin_reverse_nd = cmds.createNode(
-                "reverse",
-                name=f"{self.mod_name}ToeSpin{self.mirr_side}reverse",
+            toespin_multiply_nd = cmds.createNode(
+                "multiply",
+                name=f"{self.mod_name}ToeSpin{self.mirr_side}multiply",
             )
+            cmds.setAttr(f"{toespin_multiply_nd}.input[0]", -1)
             cmds.connectAttr(
                 f"{self.limb_mod.ik_ctrl}.toeSpin",
-                f"{toespin_reverse_nd}.inputX",
+                f"{toespin_multiply_nd}.input[1]",
             )
             cmds.connectAttr(
-                f"{toespin_reverse_nd}.outputX",
+                f"{toespin_multiply_nd}.output",
                 f"{self.foot_aux_ctrl_grps[2]}.rotateX",
             )
         else:
@@ -408,16 +410,17 @@ class BipedFootModule:
             )
         # --------------- lean ---------------
         if self.invert_foot_lean:
-            lean_reverse_nd = cmds.createNode(
-                "reverse",
-                name=f"{self.mod_name}Lean{self.mirr_side}reverse",
+            lean_multiply_nd = cmds.createNode(
+                "multiply",
+                name=f"{self.mod_name}Lean{self.mirr_side}multiply",
             )
+            cmds.setAttr(f"{lean_multiply_nd}.input[0]", -1)
             cmds.connectAttr(
                 f"{self.limb_mod.ik_ctrl}.lean",
-                f"{lean_reverse_nd}.inputX",
+                f"{lean_multiply_nd}.input[1]",
             )
             cmds.connectAttr(
-                f"{lean_reverse_nd}.outputX",
+                f"{lean_multiply_nd}.output",
                 f"{self.foot_aux_ctrl_grps[1]}.rotateY",
             )
         else:
@@ -436,24 +439,26 @@ class BipedFootModule:
         cmds.connectAttr(f"{self.limb_mod.ik_ctrl}.tilt", f"{tilt_clamp_nd}.inputR")
         cmds.connectAttr(f"{self.limb_mod.ik_ctrl}.tilt", f"{tilt_clamp_nd}.inputG")
         if self.invert_foot_tilt:
-            tilt_reverse_nd = cmds.createNode(
-                "reverse",
-                name=f"{self.mod_name}Tilt{self.mirr_side}reverse",
+            tilt_multiplydivid_nd = cmds.createNode(
+                "multiplyDivide",
+                name=f"{self.mod_name}Tilt{self.mirr_side}multiplyDivide",
             )
+            cmds.setAttr(f"{tilt_multiplydivid_nd}.input2X", -1)
+            cmds.setAttr(f"{tilt_multiplydivid_nd}.input2Y", -1)
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputR",
-                f"{tilt_reverse_nd}.inputX",
+                f"{tilt_multiplydivid_nd}.input1X",
             )
             cmds.connectAttr(
-                f"{tilt_reverse_nd}.outputX",
+                f"{tilt_multiplydivid_nd}.outputX",
                 f"{self.foot_aux_ctrl_grps[4]}.rotateY",
             )
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputG",
-                f"{tilt_reverse_nd}.inputY",
+                f"{tilt_multiplydivid_nd}.input1Y",
             )
             cmds.connectAttr(
-                f"{tilt_reverse_nd}.outputY",
+                f"{tilt_multiplydivid_nd}.outputY",
                 f"{self.foot_aux_ctrl_grps[5]}.rotateY",
             )
         else:
@@ -469,10 +474,12 @@ class BipedFootModule:
         # -------------------- roll --------------------
         # ----------
         if self.invert_foot_roll:
-            roll_reverse_nd = cmds.createNode(
-                "reverse",
-                name=f"{self.mod_name}Roll{self.mirr_side}reverse",
+            roll_multiplydivide_nd = cmds.createNode(
+                "multiplyDivide",
+                name=f"{self.mod_name}Roll{self.mirr_side}multiplyDivide",
             )
+            for axis in "XYZ":
+                cmds.setAttr(f"{roll_multiplydivide_nd}.input2{axis}", -1)
         # ----------
         toe_remapevalue_double_nd = cmds.createNode(
             "multiplyDivide",
@@ -509,10 +516,10 @@ class BipedFootModule:
         if self.invert_foot_roll:
             cmds.connectAttr(
                 f"{toe_roll_remap_nd}.outValue",
-                f"{roll_reverse_nd}.inputX",
+                f"{roll_multiplydivide_nd}.input1X",
             )
             cmds.connectAttr(
-                f"{roll_reverse_nd}.outputX",
+                f"{roll_multiplydivide_nd}.outputX",
                 f"{self.foot_aux_ctrl_grps[1]}.rotateZ",
             )
         else:
@@ -586,10 +593,10 @@ class BipedFootModule:
         if self.invert_foot_roll:
             cmds.connectAttr(
                 f"{toe_end_roll_remap_nd}.outValue",
-                f"{roll_reverse_nd}.inputY",
+                f"{roll_multiplydivide_nd}.input1Y",
             )
             cmds.connectAttr(
-                f"{roll_reverse_nd}.outputY",
+                f"{roll_multiplydivide_nd}.outputY",
                 f"{self.foot_aux_ctrl_grps[2]}.rotateZ",
             )
         else:
@@ -617,10 +624,10 @@ class BipedFootModule:
         if self.invert_foot_roll:
             cmds.connectAttr(
                 f"{heel_roll_remap_nd}.outValue",
-                f"{roll_reverse_nd}.inputZ",
+                f"{roll_multiplydivide_nd}.input1Z",
             )
             cmds.connectAttr(
-                f"{roll_reverse_nd}.outputZ",
+                f"{roll_multiplydivide_nd}.outputZ",
                 f"{self.foot_aux_ctrl_grps[3]}.rotateZ",
             )
         else:

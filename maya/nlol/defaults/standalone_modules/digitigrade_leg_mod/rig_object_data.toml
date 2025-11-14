@@ -1,0 +1,21 @@
+# digitigrade_leg_mod: For quadruped type legs that walk on their toes like on dogs or cats. Or birds.
+#   Requires 5 joints. Ankle X should be pointing worldspace down or up.  Otherwise, X down the chain.
+#   Foot locators rotation should be based off ankle joint.
+
+[[rig_module]]
+rig_module = "digitigrade_leg_mod" 
+rig_module_name = "leg"
+mirror_direction = "left" 
+joints = "hip_left_jnt, knee_left_jnt, ankle_left_jnt, foot_left_jnt, toeMain_left_jnt"
+#foot_locators="toeEnd_left_loc, heel_left_loc, lateral_left_loc, medial_left_loc"
+#invert_toe_wiggle = true
+#invert_toe_spin = true
+invert_foot_lean = true
+invert_foot_tilt = true
+#invert_foot_roll = true
+
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "root" 
+joints = "root_jnt"
