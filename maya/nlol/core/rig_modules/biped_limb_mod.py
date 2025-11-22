@@ -5,6 +5,7 @@ Works with human arms and legs, and other bipedal creatures.
 from importlib import reload
 
 from maya import cmds
+from nlol.core import general_utils
 from nlol.core.rig_components import (
     clean_constraints,
     create_control_groups,
@@ -14,7 +15,6 @@ from nlol.core.rig_components import (
     create_ruler,
 )
 from nlol.core.rig_tools import get_aligned_axis, limb_hinge_vector
-from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(get_aligned_axis)
@@ -57,7 +57,7 @@ class BipedLimbModule:
         ik_ctrl_size: float = 1,
         ik_hip_ctrl_size: float = 1.5,
         polevector_ctrl_size: float = 0.5,
-        polevector_ctrl_distance: float = 75,
+        polevector_ctrl_distance: float | None = None,
         switch_ctrl_size: float = 0.13,
         switch_ctrl_distance: float = 17,
         switch_ctrl_constraint: bool = False,
@@ -82,6 +82,7 @@ class BipedLimbModule:
             switch_ctrl_size: Fk ik blend control size.
             switch_ctrl_distance: Fk ik blend control distance from end limb joint.
             switch_ctrl_constraint: Whether to constrain switch control to limb by default.
+
         """
         self.logger = get_logger()
 
@@ -116,7 +117,9 @@ class BipedLimbModule:
         self.ik_ctrl_size = ik_ctrl_size
         self.ik_hip_ctrl_size = ik_hip_ctrl_size
         self.polevector_ctrl_size = polevector_ctrl_size
-        self.polevector_ctrl_distance = polevector_ctrl_distance
+        self.polevector_ctrl_distance = (
+            polevector_ctrl_distance if polevector_ctrl_distance is not None else 75
+        )
         self.switch_ctrl_size = switch_ctrl_size
         self.switch_ctrl_distance = switch_ctrl_distance
         self.switch_ctrl_constraint = switch_ctrl_constraint

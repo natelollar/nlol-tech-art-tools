@@ -23,7 +23,7 @@ scale_constr = clean_constraints.scale_constr
 create_attached_ruler = create_ruler.create_attached_ruler
 
 
-class DigitigradeLegMod:
+class DigitigradeLegModule:
     """Quadruped style leg rig module, specifically, a digitigrade leg,
     where the creature walks on its toes.  For example a dog, cat, or bird.
     """

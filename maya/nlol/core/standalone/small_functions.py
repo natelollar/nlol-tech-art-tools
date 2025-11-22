@@ -1,3 +1,6 @@
+import shiboken6
+from PySide6.QtWidgets import QApplication
+
 from maya import cmds
 from nlol.core.rig_tools import show_attributes
 from nlol.utilities.nlol_maya_logger import get_logger
@@ -177,3 +180,15 @@ def query_skinned_joints():
     skinned_joint = cmds.skinCluster(first_select, query=True, influence=True)
     logger.info(f"Joints skinned to: {first_select}\n{skinned_joint}")
     cmds.select(skinned_joint)
+
+
+def center_all_windows():
+    """Move Maya windows to center of primary screen.
+    Helpful after changing monitors and losing windows.
+    """
+    for widget in QApplication.allWidgets():
+        if shiboken6.isValid(widget) and widget.isWindow() and not widget.isHidden():
+            widget.move(
+                QApplication.primaryScreen().availableGeometry().center() - widget.rect().center(),
+            )
+            widget.showNormal()  # Restores the widget after it has been maximized or minimized.

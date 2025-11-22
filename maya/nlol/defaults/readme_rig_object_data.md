@@ -24,6 +24,8 @@ Rig object data for specified rig modules.
 - `upper_twist_name, lower_twist_name`: Main upper/lower twist object name instead of raw joint names. Single string name
     to be used as base name for all twist joints.
     "biped_leg_mod", "biped_limb_mod" only. 
+- `joint_chains` : (list[str])  List of string lists containing either start or start and end joints for a chain. 
+    "flexi_surface_ik_chain_mod" only. 
 - `foot_locators` (str): Foot locators instead of using default names, for reverse foot ctrls.  
     Should be 4 listed in order; toe end, heel, lateral foot side and medial foot side.
     "biped_leg_mod" only. 
@@ -42,8 +44,12 @@ Rig object data for specified rig modules.
 - `aim_vector, up_vector` (str): Eye axis aiming out to the aim ctrl and directly up.  
     Chosen based on world space if parameter not included.  
     "eye_aim_mod" only.
-- `origin_joint, mid_joints, top_joints, bot_joints` (str): Custom joint lists for more complex rig modules.
-    "piston_mod" only.
+- `origin_joint, mid_joints, top_joints, bot_joints, flexi_joints_main, flexi_joints_offset` (str):  
+    Custom joint lists for more complex rig modules.
+    "piston_mod", "tentacle_mod".
+- `flexi_surface`, `flexi_surface_main`, `flexi_surface_offset` (str): Name of flexi surface geo from "rig_helpers.ma" file.
+    This geo is used for creating stretchy joint setups and for applying cloth simulation. Usually has skinning and joints kept in  "rig_helpers.ma".
+    "flexi_surface_ik_chain_mod", "flexi_surface_fk_ctrl_mod", "tentacle_mod".
 
 ---
 *Lists written as "string lists".*  

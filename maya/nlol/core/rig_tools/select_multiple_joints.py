@@ -20,6 +20,9 @@ def select_joint_chain(start_end_joint: list[str]) -> list[str]:
         List of all joints in chain.
 
     """
+    if not start_end_joint:
+        return start_end_joint
+
     jnt_chain = [start_end_joint[0]]  # add start joint
     end_joint = None
 

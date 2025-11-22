@@ -1,0 +1,36 @@
+
+[[control]]
+control = "pelvis_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "shoulderSwch_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "armSwch_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "fkShoulder_01_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "ikShoulderStart_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "ikUpperArm_ctrl"
+parents = "offsetShoulder_02_jnt"
+
+[[control]]
+control = "fkUpperArm_ctrl"
+parents = "offsetShoulder_02_jnt"
+
+[[control]]
+control = "ikEndArm_ctrl"
+parents = "pelvis_jnt, root_jnt"
+
+[[control]]
+control = "ikArmPoleVector_ctrl"
+parents = "pelvis_jnt, root_jnt"

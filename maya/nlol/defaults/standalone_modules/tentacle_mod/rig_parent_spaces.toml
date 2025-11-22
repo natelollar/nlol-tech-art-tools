@@ -1,0 +1,28 @@
+[[control]]
+control = "fkTail_01_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "pelvis_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "tailSwch_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "nClothAux_ctrl"
+parents = "root_ctrl"
+
+#----------
+[[control]]
+control = "flxTail_01_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "flxTail_02_ctrl"
+parents = "pelvis_ctrl, flxTail_01_ctrl"
+
+[[control]]
+control = "flxTail_03_ctrl"
+parents = "pelvis_ctrl, flxTail_02_ctrl, flxTail_01_ctrl"

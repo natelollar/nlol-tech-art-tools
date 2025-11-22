@@ -1,0 +1,7 @@
+{
+    "attach_vertices": [
+        "flexiSurfaceTailMain_geo.vtx[18:19]"
+    ],
+    "vertex_mesh": "flexiSurfaceTailMain_geo",
+    "attach_mesh": "tailClothAttach_geo"
+}

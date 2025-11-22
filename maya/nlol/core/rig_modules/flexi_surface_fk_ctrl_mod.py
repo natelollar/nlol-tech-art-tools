@@ -1,4 +1,5 @@
 from maya import cmds
+from nlol.core.general_utils import add_divider_attribue, cap
 from nlol.core.rig_components import (
     clean_constraints,
     create_control_groups,
@@ -6,7 +7,6 @@ from nlol.core.rig_components import (
     follicle_at_surface,
 )
 from nlol.utilities.nlol_maya_logger import get_logger
-from nlol.core.general_utils import add_divider_attribue, cap
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 parent_constr = clean_constraints.parent_constr
@@ -25,6 +25,7 @@ class FlexiSurfaceFkCtrlModule:
         main_joints: list[str],
         flexi_surface: str = "flexiSurface_geo",
         hide_end_ctrl: bool = False,
+        hide_all_ctrls: bool = False,
     ):
         """Initialize rig module.
 
@@ -43,6 +44,7 @@ class FlexiSurfaceFkCtrlModule:
         self.main_joints = main_joints
         self.flexi_surface = flexi_surface
         self.hide_end_ctrl = hide_end_ctrl
+        self.hide_all_ctrls = hide_all_ctrls
 
         self.logger = get_logger()
 
@@ -150,6 +152,13 @@ class FlexiSurfaceFkCtrlModule:
                 cmds.setAttr(f"{self.fk_ctrls[-1]}.rotate{axis}", lock=True)
                 cmds.setAttr(f"{self.fk_ctrls[-1]}.scale{axis}", lock=True)
             cmds.setAttr(f"{self.fk_ctrl_grps[-1]}.visibility", 0)
+        if self.hide_all_ctrls:
+            for ctrl, grp in zip(self.fk_ctrls, self.fk_ctrl_grps, strict=False):
+                for axis in "XYZ":
+                    cmds.setAttr(f"{ctrl}.translate{axis}", lock=True)
+                    cmds.setAttr(f"{ctrl}.rotate{axis}", lock=True)
+                    cmds.setAttr(f"{ctrl}.scale{axis}", lock=True)
+                cmds.setAttr(f"{grp}.visibility", 0)
 
     def attach_fk_ctrls(self):
         """Attach fk controls to follices via parent constraint."""
@@ -167,7 +176,7 @@ class FlexiSurfaceFkCtrlModule:
         ).box_curve()
 
         # ----- control group -----
-        self.parent_fk_ctrl_grp, _, _, _, parent_fk_ctrl_aux_grp = create_ctrl_grps(
+        self.parent_fk_ctrl_grp, _, _, _, self.parent_fk_ctrl_aux_grp = create_ctrl_grps(
             self.parent_fk_ctrl,
             aux_offset_grp=True,
         )
@@ -176,7 +185,7 @@ class FlexiSurfaceFkCtrlModule:
         cmds.matchTransform(self.parent_fk_ctrl_grp, self.main_joints[0])
 
         # ----- attach to first follicle -----
-        parent_constr(self.follicles[0], parent_fk_ctrl_aux_grp, offset=True)
+        parent_constr(self.follicles[0], self.parent_fk_ctrl_aux_grp, offset=True)
 
         # ----- hide and lock -----
         lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
@@ -190,17 +199,17 @@ class FlexiSurfaceFkCtrlModule:
         """Setup UV slide attribute to stretch and compress follicles
         along the U parameter of the flexi surface.
         """
+        add_divider_attribue(control_name=self.parent_fk_ctrl, divider_amount=10)
+        cmds.addAttr(
+            self.parent_fk_ctrl,
+            longName="uvSlide",
+            defaultValue=1.0,
+            minValue=0.0,
+            maxValue=1.0,
+            keyable=True,
+        )
+
         for i, follicle_shape in enumerate(self.follicle_shapes):
-            if i == 0:
-                add_divider_attribue(control_name=self.parent_fk_ctrl, divider_amount=10)
-                cmds.addAttr(
-                    self.parent_fk_ctrl,
-                    longName="uvSlide",
-                    defaultValue=1.0,
-                    minValue=0.0,
-                    maxValue=1.0,
-                    keyable=True,
-                )
             multipydivide_nd = cmds.createNode(
                 "multiplyDivide",
                 name=f"{self.mod_name}UvSlide{self.mirr_side}{i + 1:02d}_multiplyDivide",

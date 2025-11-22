@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<deformerWeight>
+  <headerInfo fileName="" worldMatrix="1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 "/>
+  <shape name="flexiSurfaceTailStretch_geoShape" group="0" stride="3" size="38" max="37">
+    <point index="0" value=" -5.000000 141.429153 -5.241069"/>
+    <point index="1" value=" 5.000000 141.429153 -5.241069"/>
+    <point index="2" value=" -5.000000 133.909958 -22.863108"/>
+    <point index="3" value=" 5.000000 133.909958 -22.863108"/>
+    <point index="4" value=" -5.000000 121.500542 -63.086922"/>
+    <point index="5" value=" 5.000000 121.500542 -63.086922"/>
+    <point index="6" value=" -5.000000 111.964828 -96.674278"/>
+    <point index="7" value=" 5.000000 111.964828 -96.674278"/>
+    <point index="8" value=" -5.000000 105.519638 -131.871689"/>
+    <point index="9" value=" 5.000000 105.519638 -131.871689"/>
+    <point index="10" value=" -5.000000 102.182526 -163.681442"/>
+    <point index="11" value=" 5.000000 102.182526 -163.681442"/>
+    <point index="12" value=" -5.000000 102.171005 -192.411743"/>
+    <point index="13" value=" 5.000000 102.171005 -192.411743"/>
+    <point index="14" value=" -5.000000 102.520012 -224.048340"/>
+    <point index="15" value=" 5.000000 102.520012 -224.048340"/>
+    <point index="16" value=" -5.000000 100.496819 -283.462219"/>
+    <point index="17" value=" 5.000000 100.496819 -283.462219"/>
+    <point index="18" value=" -5.000000 142.943314 -1.798907"/>
+    <point index="19" value=" 5.000000 142.943314 -1.798907"/>
+    <point index="20" value=" -5.000000 100.496819 -288.427460"/>
+    <point index="21" value=" 5.000000 100.496819 -288.427460"/>
+    <point index="22" value=" -5.000000 108.213791 -114.171036"/>
+    <point index="23" value=" 5.000000 108.213791 -114.171036"/>
+    <point index="24" value=" -5.000000 116.472458 -79.812706"/>
+    <point index="25" value=" 5.000000 116.472458 -79.812706"/>
+    <point index="26" value=" -5.000000 127.320099 -42.835442"/>
+    <point index="27" value=" 5.000000 127.320099 -42.835445"/>
+    <point index="28" value=" -5.000000 137.519821 -13.994604"/>
+    <point index="29" value=" 5.000000 137.519821 -13.994604"/>
+    <point index="30" value=" -5.000000 103.431084 -147.744705"/>
+    <point index="31" value=" 5.000000 103.431084 -147.744705"/>
+    <point index="32" value=" -5.000000 101.952682 -178.039062"/>
+    <point index="33" value=" 5.000000 101.952682 -178.039062"/>
+    <point index="34" value=" -5.000000 102.481766 -208.231323"/>
+    <point index="35" value=" 5.000000 102.481766 -208.231323"/>
+    <point index="36" value=" -5.000000 101.520996 -253.755264"/>
+    <point index="37" value=" 5.000000 101.520996 -253.755264"/>
+  </shape>
+  <weights deformer="flexiSurfaceTailStretch_skinCluster" source="tailClothFlexi_start_jnt" shape="flexiSurfaceTailStretch_geoShape" layer="0" defaultValue="0.000" size="28" max="33">
+    <point index="0" value="0.994"/>
+    <point index="1" value="0.994"/>
+    <point index="2" value="0.927"/>
+    <point index="3" value="0.927"/>
+    <point index="4" value="0.577"/>
+    <point index="5" value="0.577"/>
+    <point index="6" value="0.228"/>
+    <point index="7" value="0.228"/>
+    <point index="8" value="0.052"/>
+    <point index="9" value="0.053"/>
+    <point index="10" value="0.008"/>
+    <point index="11" value="0.008"/>
+    <point index="12" value="0.001"/>
+    <point index="13" value="0.001"/>
+    <point index="18" value="1.000"/>
+    <point index="19" value="1.000"/>
+    <point index="22" value="0.110"/>
+    <point index="23" value="0.111"/>
+    <point index="24" value="0.394"/>
+    <point index="25" value="0.394"/>
+    <point index="26" value="0.777"/>
+    <point index="27" value="0.777"/>
+    <point index="28" value="0.970"/>
+    <point index="29" value="0.970"/>
+    <point index="30" value="0.019"/>
+    <point index="31" value="0.020"/>
+    <point index="32" value="0.003"/>
+    <point index="33" value="0.003"/>
+  </weights>
+  <weights deformer="flexiSurfaceTailStretch_skinCluster" source="tailClothFlexi_mid_jnt" shape="flexiSurfaceTailStretch_geoShape" layer="1" defaultValue="0.000" size="34" max="37">
+    <point index="0" value="0.006"/>
+    <point index="1" value="0.006"/>
+    <point index="2" value="0.073"/>
+    <point index="3" value="0.073"/>
+    <point index="4" value="0.423"/>
+    <point index="5" value="0.423"/>
+    <point index="6" value="0.771"/>
+    <point index="7" value="0.771"/>
+    <point index="8" value="0.920"/>
+    <point index="9" value="0.918"/>
+    <point index="10" value="0.838"/>
+    <point index="11" value="0.838"/>
+    <point index="12" value="0.627"/>
+    <point index="13" value="0.627"/>
+    <point index="14" value="0.358"/>
+    <point index="15" value="0.358"/>
+    <point index="16" value="0.021"/>
+    <point index="17" value="0.021"/>
+    <point index="22" value="0.885"/>
+    <point index="23" value="0.883"/>
+    <point index="24" value="0.606"/>
+    <point index="25" value="0.606"/>
+    <point index="26" value="0.223"/>
+    <point index="27" value="0.223"/>
+    <point index="28" value="0.030"/>
+    <point index="29" value="0.030"/>
+    <point index="30" value="0.912"/>
+    <point index="31" value="0.912"/>
+    <point index="32" value="0.744"/>
+    <point index="33" value="0.745"/>
+    <point index="34" value="0.487"/>
+    <point index="35" value="0.486"/>
+    <point index="36" value="0.171"/>
+    <point index="37" value="0.168"/>
+  </weights>
+  <weights deformer="flexiSurfaceTailStretch_skinCluster" source="tailClothFlexi_end_jnt" shape="flexiSurfaceTailStretch_geoShape" layer="2" defaultValue="0.000" size="24" max="37">
+    <point index="6" value="0.001"/>
+    <point index="7" value="0.001"/>
+    <point index="8" value="0.029"/>
+    <point index="9" value="0.029"/>
+    <point index="10" value="0.154"/>
+    <point index="11" value="0.153"/>
+    <point index="12" value="0.372"/>
+    <point index="13" value="0.372"/>
+    <point index="14" value="0.641"/>
+    <point index="15" value="0.642"/>
+    <point index="16" value="0.979"/>
+    <point index="17" value="0.979"/>
+    <point index="20" value="1.000"/>
+    <point index="21" value="1.000"/>
+    <point index="22" value="0.005"/>
+    <point index="23" value="0.006"/>
+    <point index="30" value="0.068"/>
+    <point index="31" value="0.069"/>
+    <point index="32" value="0.253"/>
+    <point index="33" value="0.252"/>
+    <point index="34" value="0.513"/>
+    <point index="35" value="0.514"/>
+    <point index="36" value="0.829"/>
+    <point index="37" value="0.832"/>
+  </weights>
+</deformerWeight>

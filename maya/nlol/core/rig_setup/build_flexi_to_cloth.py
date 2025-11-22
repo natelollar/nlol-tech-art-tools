@@ -2,15 +2,16 @@ import json
 from importlib import reload
 
 from maya import cmds, mel
+from nlol.core import general_utils
 from nlol.core.rig_components import create_control_groups, create_nurbs_curves
 from nlol.defaults import rig_folder_path
-from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(rig_folder_path)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 add_divider_attribue = general_utils.add_divider_attribue
+cap = general_utils.cap
 
 rig_folderpath = rig_folder_path.rig_folderpath
 cloth_data_folderpath = rig_folderpath / "cloth_data"
@@ -97,7 +98,12 @@ class FlexiToCloth:
                 flexi_base_name = flexi_mesh.split("_")[0]
                 cloth_mesh = flexi_mesh.replace(flexi_base_name, f"{flexi_base_name}Cloth")
                 if not cmds.objExists(cloth_mesh):
-                    cmds.duplicate(flexi_mesh, name=cloth_mesh)
+                    cmds.duplicate(  # duplicate with skinning
+                        flexi_mesh,
+                        name=cloth_mesh,
+                        inputConnections=True,
+                    )
+
                 # top grp parenting
                 cmds.parent(cloth_mesh, self.top_grp)
             attach_vertices = attach_mesh_data["attach_vertices"]
@@ -356,20 +362,56 @@ class FlexiToCloth:
         return collision_mesh_data
 
     def apply_ncloth_settings(self):
-        """Apply saved nCloth settings from "*Settings.json" files in cloth_data folder."""
+        """Apply saved nCloth settings from "*Settings.json" files in cloth_data folder.
+        Also, supports applying saved settings for a ramp connected to inputAttractMap
+        that was saved previously."""
         ncloth_settings = self.get_saved_ncloth_settings()
         for settings in ncloth_settings:
-            for obj_attr, value in settings.items():
+            # ----- apply main cloth settings -----
+            for cloth_shp_attr, value in settings["main"].items():
                 try:
                     if isinstance(value, list) and any(isinstance(v, (list, tuple)) for v in value):
                         value = value[0]
                         if not value:
                             continue
-                        cmds.setAttr(obj_attr, *value)
+                        cmds.setAttr(cloth_shp_attr, *value)
                     else:
-                        cmds.setAttr(obj_attr, value)
+                        cmds.setAttr(cloth_shp_attr, value)
                 except Exception:
-                    self.logger.debug(f"Failed to set nCloth attribute: {obj_attr = }, {value}")
+                    self.logger.debug(
+                        f"Failed to set nCloth attribute: {cloth_shp_attr = }, {value}",
+                    )
+
+            # ----- apply settings for ramp connections -----
+            for map_attr in self.ncloth_map_inputs():
+                if map_attr not in settings:
+                    continue
+
+                cloth_shp_attr, _ = next(iter(settings["main"].items()))
+                cloth_shp = cloth_shp_attr.split(".")[0]
+                cloth_shp_name = cloth_shp_attr.split("_")[0]
+
+                ramp_node = cmds.createNode("ramp", name=f"{cloth_shp_name}{cap(map_attr)}_ramp")
+                cmds.connectAttr(f"{ramp_node}.outAlpha", f"{cloth_shp}.{map_attr}")
+
+                for ramp_attr, value in settings[map_attr].items():
+                    old_ramp_node = ramp_attr.split(".")[0]
+                    ramp_attr = ramp_attr.replace(old_ramp_node, ramp_node)
+
+                    try:
+                        if isinstance(value, list) and any(
+                            isinstance(v, (list, tuple)) for v in value
+                        ):
+                            value = value[0]
+                            if not value:
+                                continue
+                            cmds.setAttr(ramp_attr, *value)
+                        else:
+                            cmds.setAttr(ramp_attr, value)
+                    except Exception:
+                        self.logger.debug(
+                            f"Failed to set nCloth Ramp attribute: {ramp_attr = }, {value}",
+                        )
 
     def get_saved_ncloth_settings(self) -> list[dict]:
         """Get saved nCloth settings for nCloth objects.
@@ -402,9 +444,14 @@ class FlexiToCloth:
             with open(ncloth_settings_filepath, "w") as f:
                 json.dump(ncloth_settings[obj], f, indent=4)
 
+    def ncloth_map_inputs(self):
+        return ["inputAttractMap"]
+
     def get_selected_cloth_settings(self) -> dict[str, dict]:
         """Get nCloth settings from selected nCloth objects.
-        Currently, supports "keyable" settings.
+        Also, supports saving a connected ramp to inputAttractMap.  Once ramp is connected
+        it will be recreated on rig build after initial save.  
+        Currently, supports "keyable" for nCloth settings and "settable" for ramp connections.
 
         Returns:
             Dictionary with nCloth settings for each selected nCloth object.
@@ -415,15 +462,49 @@ class FlexiToCloth:
         ncloth_settings = {}
         for obj in selected:
             obj_shp = cmds.listRelatives(obj, shapes=True)[0]
-            attrs = cmds.listAttr(obj_shp, keyable=True)  # settable=True, visible=True
-
             ncloth_settings.setdefault(obj_shp, {})
+
+            # ----- get main cloth settings -----
+            ncloth_settings[obj_shp].setdefault("main", {})
+            attrs = cmds.listAttr(obj_shp, keyable=True)  # settable=True, visible=True
             for attr in attrs:
                 try:
                     value = cmds.getAttr(f"{obj_shp}.{attr}")
-                    ncloth_settings[obj_shp][f"{obj_shp}.{attr}"] = value
+                    ncloth_settings[obj_shp]["main"][f"{obj_shp}.{attr}"] = value
                 except Exception:
                     pass
+
+            # ----- get settings for ramp connections -----
+            for map_attr in self.ncloth_map_inputs():  # inputAttractMap, etc
+                ramp_node = cmds.listConnections(
+                    f"{obj_shp}.{map_attr}",
+                    plugs=True,
+                    source=True,
+                    destination=False,
+                )
+                ramp_node = ramp_node[0].split(".")[0] if ramp_node else None
+                if ramp_node and cmds.objectType(ramp_node) == "ramp":
+                    ncloth_settings[obj_shp].setdefault(map_attr, {})
+
+                    attrs = cmds.listAttr(ramp_node, settable=True)
+                    for attr in attrs:
+                        try:
+                            value = cmds.getAttr(f"{ramp_node}.{attr}")
+                            ncloth_settings[obj_shp][map_attr][f"{ramp_node}.{attr}"] = value
+                        except Exception:
+                            pass
+
+                    num_entries = cmds.getAttr(f"{ramp_node}.colorEntryList", size=True)
+                    for i in range(num_entries):
+                        position = cmds.getAttr(f"{ramp_node}.colorEntryList[{i}].position")
+                        color = cmds.getAttr(f"{ramp_node}.colorEntryList[{i}].color")
+
+                        ncloth_settings[obj_shp][map_attr][
+                            f"{ramp_node}.colorEntryList[{i}].position"
+                        ] = position
+                        ncloth_settings[obj_shp][map_attr][
+                            f"{ramp_node}.colorEntryList[{i}].color"
+                        ] = color
 
         return ncloth_settings
 
@@ -490,8 +571,8 @@ class FlexiToCloth:
             output_cloth_mesh_shp: Output cloth mesh shape.
 
         """
-        ncloth_base_nm = ncloth_nd_shp.split("_")[0]
-        divider_attr_nm = f"_{ncloth_base_nm}_"
+        ncloth_end_nm = ncloth_nd_shp.split("_")[-1]
+        divider_attr_nm = ncloth_nd_shp.replace(ncloth_end_nm, "")
         if not cmds.objExists(f"{self.aux_ctrl}.{divider_attr_nm}"):
             cmds.addAttr(
                 self.aux_ctrl,

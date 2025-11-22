@@ -12,7 +12,9 @@ from nlol.core.rig_components import create_display_layers
 from nlol.core.rig_modules import (
     biped_leg_mod,
     biped_limb_mod,
+    digitigrade_leg_mod,
     eye_aim_mod,
+    fk_aim_mod,
     fk_chain_mod,
     fk_control_mod,
     fk_ik_single_chain_mod,
@@ -20,7 +22,7 @@ from nlol.core.rig_modules import (
     flexi_surface_fk_ctrl_mod,
     flexi_surface_ik_chain_mod,
     piston_mod,
-    digitigrade_leg_mod,
+    tentacle_mod,
     world_control_mod,
 )
 from nlol.core.rig_tools import select_multiple_joints
@@ -28,6 +30,9 @@ from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(biped_leg_mod)
 reload(biped_limb_mod)
+reload(eye_aim_mod)
+reload(digitigrade_leg_mod)
+reload(fk_aim_mod)
 reload(fk_chain_mod)
 reload(fk_control_mod)
 reload(fk_ik_single_chain_mod)
@@ -35,10 +40,9 @@ reload(fk_ik_spline_chain_mod)
 reload(flexi_surface_ik_chain_mod)
 reload(flexi_surface_fk_ctrl_mod)
 reload(piston_mod)
+reload(tentacle_mod)
 reload(world_control_mod)
 reload(general_utils)
-reload(eye_aim_mod)
-reload(digitigrade_leg_mod)
 reload(create_display_layers)
 
 swap_side_str = general_utils.swap_side_str
@@ -87,6 +91,13 @@ def build_modules(rig_data_filepath: str | Path):
             top_joints = swap_side_str(mod_dict.get("top_joints", ""))
             bot_joints = swap_side_str(mod_dict.get("bot_joints", ""))
 
+            flexi_joints_main = swap_side_str(mod_dict.get("flexi_joints_main", ""))
+            flexi_joints_offset = swap_side_str(mod_dict.get("flexi_joints_offset", ""))
+            flexi_surface_main = swap_side_str(mod_dict.get("flexi_surface_main", ""))
+            flexi_surface_offset = swap_side_str(mod_dict.get("flexi_surface_offset", ""))
+
+            aim_object = swap_side_str(mod_dict.get("aim_object", ""))
+
             right_dict = {
                 "rig_module": rig_module,
                 "rig_module_name": rig_module_name,
@@ -98,6 +109,8 @@ def build_modules(rig_data_filepath: str | Path):
                 "blend_joints": mod_dict.get("blend_joints"),
                 "get_joint_chain": mod_dict.get("get_joint_chain"),
                 "flexi_surface": mod_dict.get("flexi_surface"),
+                "flexi_surface_main": flexi_surface_main,
+                "flexi_surface_offset": flexi_surface_offset,
                 "hide_end_ctrl": mod_dict.get("hide_end_ctrl"),
                 "hide_translate": mod_dict.get("hide_translate"),
                 "hide_rotate": mod_dict.get("hide_rotate"),
@@ -108,6 +121,7 @@ def build_modules(rig_data_filepath: str | Path):
                 "main_object_names": mod_dict.get("main_object_names", ""),
                 "upper_twist_name": mod_dict.get("upper_twist_name"),
                 "lower_twist_name": mod_dict.get("lower_twist_name"),
+                "polevector_ctrl_distance": mod_dict.get("polevector_ctrl_distance"),
                 "foot_locators": foot_locators,
                 "invert_toe_wiggle": mod_dict.get("invert_toe_wiggle"),
                 "invert_toe_spin": mod_dict.get("invert_toe_spin"),
@@ -118,6 +132,9 @@ def build_modules(rig_data_filepath: str | Path):
                 "mid_joints": mid_joints,
                 "top_joints": top_joints,
                 "bot_joints": bot_joints,
+                "flexi_joints_main": flexi_joints_main,
+                "flexi_joints_offset": flexi_joints_offset,
+                "aim_object": aim_object
             }
             right_modules.append(right_dict)
         elif mirror_right and (mirror_direction is None or "left" not in mirror_direction):
@@ -142,8 +159,14 @@ def build_modules(rig_data_filepath: str | Path):
             if main_joints:
                 main_joints = mod_dict["joints"].split(",")
                 main_joints = [txt.strip() for txt in main_joints if txt.strip()]
+            flexi_joints_main = mod_dict.get("flexi_joints_main", "").split(",")
+            flexi_joints_main = [txt.strip() for txt in flexi_joints_main if txt.strip()]
+            flexi_joints_offset = mod_dict.get("flexi_joints_offset", "").split(",")
+            flexi_joints_offset = [txt.strip() for txt in flexi_joints_offset if txt.strip()]
             if mod_dict.get("get_joint_chain"):
                 main_joints = select_multiple_joints.select_joint_chain(main_joints)
+                flexi_joints_main = select_multiple_joints.select_joint_chain(flexi_joints_main)
+                flexi_joints_offset = select_multiple_joints.select_joint_chain(flexi_joints_offset)
 
             blend_joints = mod_dict.get("blend_joints")
             if blend_joints:
@@ -159,6 +182,8 @@ def build_modules(rig_data_filepath: str | Path):
             constraint = mod_dict.get("constraint")
             use_joint_names = mod_dict.get("use_joint_names")
             flexi_surface = mod_dict.get("flexi_surface")
+            flexi_surface_main = mod_dict.get("flexi_surface_main", "")
+            flexi_surface_offset = mod_dict.get("flexi_surface_offset", "")
             hide_end_ctrl = mod_dict.get("hide_end_ctrl")
             hide_translate = mod_dict.get("hide_translate")
             hide_rotate = mod_dict.get("hide_rotate")
@@ -173,6 +198,7 @@ def build_modules(rig_data_filepath: str | Path):
             main_object_names = [txt.strip() for txt in main_object_names if txt.strip()]
             upper_twist_name = mod_dict.get("upper_twist_name")
             lower_twist_name = mod_dict.get("lower_twist_name")
+            polevector_ctrl_distance = mod_dict.get("polevector_ctrl_distance")
             foot_locators = mod_dict.get("foot_locators", "").split(",")
             foot_locators = [txt.strip() for txt in foot_locators if txt.strip()]
             invert_toe_wiggle = mod_dict.get("invert_toe_wiggle")
@@ -193,6 +219,8 @@ def build_modules(rig_data_filepath: str | Path):
             up_vector = mod_dict.get("up_vector")
             reverse_right_vectors = mod_dict.get("reverse_right_vectors")
 
+            aim_object = mod_dict.get("aim_object", "")
+
             match rig_module:
                 case "biped_limb_mod":
                     module_instance = biped_limb_mod.BipedLimbModule(
@@ -204,6 +232,7 @@ def build_modules(rig_data_filepath: str | Path):
                         main_object_names=main_object_names,
                         upper_twist_name=upper_twist_name,
                         lower_twist_name=lower_twist_name,
+                        polevector_ctrl_distance=polevector_ctrl_distance,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -328,7 +357,7 @@ def build_modules(rig_data_filepath: str | Path):
                     display_layer and objects_display_lyr(module_top_group)
 
                 case "piston_mod":
-                    module_instance = piston_mod.PistonMod(
+                    module_instance = piston_mod.PistonModule(
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         origin_joint=origin_joint,
@@ -341,7 +370,7 @@ def build_modules(rig_data_filepath: str | Path):
                     display_layer and objects_display_lyr(module_top_group)
 
                 case "digitigrade_leg_mod":
-                    module_instance = digitigrade_leg_mod.DigitigradeLegMod(
+                    module_instance = digitigrade_leg_mod.DigitigradeLegModule(
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,
@@ -352,6 +381,34 @@ def build_modules(rig_data_filepath: str | Path):
                         invert_foot_lean=invert_foot_lean,
                         invert_foot_tilt=invert_foot_tilt,
                         invert_foot_roll=invert_foot_roll,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
+                case "tentacle_mod":
+                    module_instance = tentacle_mod.TentacleModule(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        main_joints=main_joints,
+                        flexi_joints_main=flexi_joints_main,
+                        flexi_joints_offset=flexi_joints_offset,
+                        flexi_surface_main=flexi_surface_main,
+                        flexi_surface_offset=flexi_surface_offset,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
+                case "fk_aim_mod":
+                    module_instance = fk_aim_mod.FkAimModule(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        main_joints=main_joints,
+                        aim_object=aim_object,
+                        aim_vector = aim_vector,
+                        up_vector = up_vector,
+                        reverse_right_vectors=reverse_right_vectors,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)

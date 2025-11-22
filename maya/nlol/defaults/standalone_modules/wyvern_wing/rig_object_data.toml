@@ -1,0 +1,27 @@
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "root" 
+joints = "root_jnt"
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "pelvis" 
+joints = "pelvis_jnt"
+
+[[rig_module]]
+rig_module = "fk_ik_single_chain_mod" 
+rig_module_name = "shoulder" 
+joints = "clavicle_left_jnt, shoulder_left_jnt" 
+
+[[rig_module]]
+rig_module = "biped_limb_mod" 
+rig_module_name = "arm" 
+joints = "shoulder_left_jnt, elbow_left_jnt, wrist_left_jnt" 
+polevector_ctrl_distance = 150
+
+[[rig_module]]
+rig_module = "fk_aim_mod" 
+rig_module_name = "elbow" 
+joints = "wingElbow_01_left_jnt"
+aim_object = "ikArmPoleVector_ctrl"

@@ -132,6 +132,17 @@ def build_utility_list():
         },
         shelf_separator,
         {
+            "label": "Center All Windows",
+            "image": "pythonFamily.png",
+            "annotation": "Center all Maya windows including custom PySide6 windows.",
+            "imageOverlayLabel": "CtrWnd",
+            "backgroundColor": random_clrs[31],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "small_functions.center_all_windows()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
             "label": "nLol Main UI",
             "image": "pythonFamily.png",
             "annotation": "Reload the main UI for nLol Toolset.",

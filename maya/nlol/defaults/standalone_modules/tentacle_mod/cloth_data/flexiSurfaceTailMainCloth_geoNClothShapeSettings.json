@@ -1,0 +1,240 @@
+{
+    "main": {
+        "flexiSurfaceTailMainCloth_geoNClothShape.isDynamic": true,
+        "flexiSurfaceTailMainCloth_geoNClothShape.currentTime": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.evaluationTime": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.goalWeight": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.goalActive": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventValid": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventCount": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventEmit": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventSplit": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventDie": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventRandom": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventSpread": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.eventProc": [
+            []
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.playFromCache": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.thickness": 0.8791224956512451,
+        "flexiSurfaceTailMainCloth_geoNClothShape.bounce": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.friction": 0.6000000238418579,
+        "flexiSurfaceTailMainCloth_geoNClothShape.damp": 8.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.stickiness": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.collideStrength": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.collisionFlag": 3,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfCollisionFlag": 3,
+        "flexiSurfaceTailMainCloth_geoNClothShape.maxSelfCollisionIterations": 4,
+        "flexiSurfaceTailMainCloth_geoNClothShape.maxIterations": 10000,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pointMass": 3.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.restLengthScale": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localForce": [
+            [
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.localForceX": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localForceY": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localForceZ": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localWind": [
+            [
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "flexiSurfaceTailMainCloth_geoNClothShape.localWindX": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localWindY": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localWindZ": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.collide": true,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfCollide": true,
+        "flexiSurfaceTailMainCloth_geoNClothShape.collisionLayer": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.windShadowDiffusion": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.windShadowDistance": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.airPushDistance": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.airPushVorticity": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pushOut": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pushOutRadius": 10.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.crossoverPush": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.trappedCheck": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.forceField": 0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.fieldMagnitude": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.fieldDistance": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pointForceField": 0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pointFieldMagnitude": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfAttract": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pointFieldDistance": 2.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.localSpaceOutput": true,
+        "flexiSurfaceTailMainCloth_geoNClothShape.displayColorR": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.displayColorG": 0.800000011920929,
+        "flexiSurfaceTailMainCloth_geoNClothShape.displayColorB": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.stretchResistance": 50.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.compressionResistance": 50.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.bendResistance": 10.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.bendAngleDropoff": 0.7272800207138062,
+        "flexiSurfaceTailMainCloth_geoNClothShape.restitutionTension": 1000.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.restitutionAngle": 360.00001001791264,
+        "flexiSurfaceTailMainCloth_geoNClothShape.shearResistance": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.rigidity": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.usePolygonShells": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.deformResistance": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.inputMeshAttract": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.collideLastThreshold": 0.20000000298023224,
+        "flexiSurfaceTailMainCloth_geoNClothShape.inputAttractDamp": 0.5,
+        "flexiSurfaceTailMainCloth_geoNClothShape.inputMotionDrag": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.wrinkleMapScale": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.bendAngleScale": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.sortLinks": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.addCrossLinks": true,
+        "flexiSurfaceTailMainCloth_geoNClothShape.stretchDamp": 0.10000000149011612,
+        "flexiSurfaceTailMainCloth_geoNClothShape.minimalStretch": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.minimalBend": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.minimalShear": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfCollideWidthScale": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfCollisionSoftness": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfCrossoverPush": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.selfTrappedCheck": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pressure": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.startPressure": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.incompressibility": 5.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pressureDamping": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.pumpRate": 0.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.airTightness": 1.0,
+        "flexiSurfaceTailMainCloth_geoNClothShape.sealHoles": true,
+        "flexiSurfaceTailMainCloth_geoNClothShape.ignoreSolverGravity": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.ignoreSolverWind": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.windSelfShadow": false,
+        "flexiSurfaceTailMainCloth_geoNClothShape.lift": 0.05000000074505806,
+        "flexiSurfaceTailMainCloth_geoNClothShape.drag": 0.05000000074505806,
+        "flexiSurfaceTailMainCloth_geoNClothShape.tangentialDrag": 0.20000000298023224,
+        "flexiSurfaceTailMainCloth_geoNClothShape.lifespan": 1.0
+    },
+    "inputAttractMap": {
+        "ramp1.caching": false,
+        "ramp1.frozen": false,
+        "ramp1.isHistoricallyInteresting": 2,
+        "ramp1.nodeState": 0,
+        "ramp1.binMembership": null,
+        "ramp1.uvCoord": [
+            [
+                0.0,
+                0.0
+            ]
+        ],
+        "ramp1.uCoord": 0.0,
+        "ramp1.vCoord": 0.0,
+        "ramp1.uvFilterSize": [
+            [
+                0.0,
+                0.0
+            ]
+        ],
+        "ramp1.uvFilterSizeX": 0.0,
+        "ramp1.uvFilterSizeY": 0.0,
+        "ramp1.filter": 1.0,
+        "ramp1.filterOffset": 0.0,
+        "ramp1.invert": false,
+        "ramp1.alphaIsLuminance": false,
+        "ramp1.colorGain": [
+            [
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "ramp1.colorGainR": 1.0,
+        "ramp1.colorGainG": 1.0,
+        "ramp1.colorGainB": 1.0,
+        "ramp1.colorOffset": [
+            [
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "ramp1.colorOffsetR": 0.0,
+        "ramp1.colorOffsetG": 0.0,
+        "ramp1.colorOffsetB": 0.0,
+        "ramp1.alphaGain": 1.0,
+        "ramp1.alphaOffset": 0.0,
+        "ramp1.defaultColor": [
+            [
+                0.5,
+                0.5,
+                0.5
+            ]
+        ],
+        "ramp1.defaultColorR": 0.5,
+        "ramp1.defaultColorG": 0.5,
+        "ramp1.defaultColorB": 0.5,
+        "ramp1.outColor": [
+            [
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "ramp1.outColorR": 1.0,
+        "ramp1.outColorG": 1.0,
+        "ramp1.outColorB": 1.0,
+        "ramp1.outAlpha": 1.0,
+        "ramp1.type": 1,
+        "ramp1.interpolation": 4,
+        "ramp1.uWave": 0.0,
+        "ramp1.vWave": 0.0,
+        "ramp1.noise": 0.0,
+        "ramp1.noiseFreq": 0.5,
+        "ramp1.hueNoise": 0.0,
+        "ramp1.satNoise": 0.0,
+        "ramp1.valNoise": 0.0,
+        "ramp1.hueNoiseFreq": 0.5,
+        "ramp1.satNoiseFreq": 0.5,
+        "ramp1.valNoiseFreq": 0.5,
+        "ramp1.aiUserOptions": "",
+        "ramp1.aiCurveImplicitUvs": true,
+        "ramp1.colorEntryList[0].position": 1.0,
+        "ramp1.colorEntryList[0].color": [
+            [
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "ramp1.colorEntryList[1].position": 0.0,
+        "ramp1.colorEntryList[1].color": [
+            [
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "ramp1.colorEntryList[2].position": 0.10057470947504044,
+        "ramp1.colorEntryList[2].color": [
+            [
+                0.024000000208616257,
+                0.024000000208616257,
+                0.024000000208616257
+            ]
+        ]
+    }
+}

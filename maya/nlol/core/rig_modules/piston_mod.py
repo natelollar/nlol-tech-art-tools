@@ -18,7 +18,7 @@ CreateCurves = create_nurbs_curves.CreateCurves
 logger = get_logger()
 
 
-class PistonMod:
+class PistonModule:
     """Create hydraulic style piston rig module with three-axis gimbal connection on both ends.
     Should be built at origin. Orient the piston joints to world space scene Y-up.
     Joints should be planar aligned on YZ plane. Piston center should be straight up and down.

@@ -1,9 +1,5 @@
-"""Single chain solver for ik between two joints.
-Blends with a simple 2 joint fk chain.
-Useful for clavicle control.
-"""
-
 from maya import cmds
+from nlol.core import general_utils
 from nlol.core.rig_components import (
     clean_constraints,
     create_control_groups,
@@ -13,7 +9,6 @@ from nlol.core.rig_components import (
     create_ruler,
 )
 from nlol.core.rig_tools import get_aligned_axis
-from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
@@ -27,7 +22,10 @@ create_attached_ruler = create_ruler.create_attached_ruler
 
 
 class FkIkSingleChainModule:
-    """A simple two joint fk ik blend with ik single chain solver."""
+    """A simple two joint fk ik blend with an ik single chain solver. In other words, a
+    single chain solver for ik between two joints blended with a simple two joint fk chain.
+    Useful for clavicle control.
+    """
 
     def __init__(
         self,
@@ -358,6 +356,7 @@ class FkIkSingleChainModule:
         """Create ik stretch with the help of a distanceDimension ruler.
         Create stretch attribute on ik ctrl.
         """
+        add_divider_attribue(control_name=self.ik_ctrl, divider_amount=10)
         cmds.addAttr(
             self.ik_ctrl,
             longName="stretch",

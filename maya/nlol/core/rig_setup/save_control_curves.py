@@ -55,6 +55,7 @@ class SaveControlCurves:
                     object_color = cmds.getAttr(f"{shape}.objectColor")
                     wire_color_rgb = cmds.getAttr(f"{shape}.wireColorRGB")[0]
                     line_width = cmds.getAttr(f"{shape}.lineWidth")
+                    visibility = cmds.getAttr(f"{shape}.visibility")
 
                     curve_degree = cmds.getAttr(f"{shape}.degree")
                     curve_spans = cmds.getAttr(f"{shape}.spans")
@@ -68,6 +69,7 @@ class SaveControlCurves:
                         "objectColor": object_color,
                         "wireColorRGB": str(wire_color_rgb),
                         "lineWidth": line_width,
+                        "visibility": visibility,
                         "curve_degree": curve_degree,
                         "curve_spans": curve_spans,
                         "curve_form": curve_form,
@@ -119,6 +121,7 @@ class SaveControlCurves:
             object_color = attr_list["objectColor"]
             wire_color_rgb = ast.literal_eval(attr_list["wireColorRGB"])
             line_width = attr_list["lineWidth"]
+            visibility = attr_list.get("visibility", True)
 
             curve_degree = attr_list["curve_degree"]
             curve_spans = attr_list["curve_spans"]
@@ -172,12 +175,13 @@ class SaveControlCurves:
             cmds.rename(new_curve_shape, shape)
             cmds.delete(new_curve_transform)
 
-            # ----- color and width attrs -----
+            # ----- color, width attrs, visibility -----
             if cmds.objExists(shape):
                 cmds.setAttr(f"{shape}.useObjectColor", use_object_color)
                 cmds.setAttr(f"{shape}.objectColor", object_color)
                 cmds.setAttr(f"{shape}.wireColorRGB", *wire_color_rgb)
                 cmds.setAttr(f"{shape}.lineWidth", line_width)
+                cmds.setAttr(f"{shape}.visibility", visibility)
             else:
                 self.logger.warning(f"{shape}: Shape does not exist. Cannot apply color.")
 
