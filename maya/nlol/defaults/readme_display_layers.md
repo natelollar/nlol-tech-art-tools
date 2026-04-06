@@ -6,7 +6,7 @@ Or, add per rig module display layers in "rig_object_data.py".
 Uses first object name for display_layer name. "Lyr" suffix added when built.
 Or use either base_name or display_layer keys, but not both.
 ```
-# Parameters:
+#### [[display_layer]] Parameters:
 - `objects` (str): Maya objects.
     - Works as display layer name too if no base_name or display_layer parameters.
 - `base_name` (str): camelCase name component for the layer. Do not include "_lyr".

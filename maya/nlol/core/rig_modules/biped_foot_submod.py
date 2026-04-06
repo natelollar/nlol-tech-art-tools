@@ -71,7 +71,7 @@ class BipedFootModule:
         Position locators in "rig_helpers.ma" file.
 
         Args:
-            base_foot_point: Wether to make the foot always
+            base_foot_point: Whether to make the foot always
                 aim towards the base foot control.
             reverse_foot_attrs: Add reverse foot attributes to main limb ik control.
 
@@ -271,60 +271,73 @@ class BipedFootModule:
         to make the foot always aim towards the base foot control.
         """
         # ---------- create foot aim joints ----------
-        foot_aim_jnts = []
-        for i, ctrl in enumerate(self.foot_ctrls[:3], 1):
+        foot_aim_jnts_a = []
+        for i, ctrl in enumerate(self.foot_ctrls[:2], 1):  # "ankle", "toe"
             foot_aim_jnt = create_joint.single_joint(
-                name=f"{self.mod_name}Aim{self.mirr_side}{i:02d}_jnt",
-                radius=5,
-                color_rgb=(1.0, 0.4, 0.0),
-                scale_compensate=False,
+                name=f"{self.mod_name}Aim{self.mirr_side}a{i:02d}_jnt",
+                radius=2,
+                color_rgb=(1.0, 0.6, 0.0),
                 parent_snap=ctrl,
             )
-            foot_aim_jnts.append(foot_aim_jnt)
+            foot_aim_jnts_a.append(foot_aim_jnt)
+
+        foot_aim_jnts_b = []
+        for i, ctrl in enumerate(self.foot_ctrls[1:3], 1):  # "toe", "toeEnd"
+            foot_aim_jnt = create_joint.single_joint(
+                name=f"{self.mod_name}Aim{self.mirr_side}b{i:02d}_jnt",
+                radius=1,
+                color_rgb=(1.0, 0.6, 0.0),
+                parent_snap=ctrl,
+            )
+            foot_aim_jnts_b.append(foot_aim_jnt)
 
         # parent joints together
-        for i, jnt in enumerate(foot_aim_jnts):
-            if jnt != foot_aim_jnts[0]:
-                cmds.parent(jnt, foot_aim_jnts[i - 1])
-
+        cmds.parent(foot_aim_jnts_a[1], foot_aim_jnts_a[0])
+        cmds.parent(foot_aim_jnts_b[1], foot_aim_jnts_b[0])
+        # constrain second joint segment under first. rotate done by ikHandle
+        point_constr(foot_aim_jnts_a[1], foot_aim_jnts_b[0])
+        scale_constr(foot_aim_jnts_a[1], foot_aim_jnts_b[0])
+        
         # ----- ik handles with single-chain solver -----
-        aim_ik_handle_01 = cmds.ikHandle(
-            name=f"{self.mod_name}Aim{self.mirr_side}01_ikHandle",
-            startJoint=foot_aim_jnts[0],
-            endEffector=foot_aim_jnts[1],
+        aim_ik_handle_a01 = cmds.ikHandle(
+            name=f"{self.mod_name}Aim{self.mirr_side}a01_ikHandle",
+            startJoint=foot_aim_jnts_a[0],
+            endEffector=foot_aim_jnts_a[1],
             solver="ikSCsolver",
         )
-        cmds.rename(aim_ik_handle_01[1], f"{aim_ik_handle_01[0]}Effector")
+        cmds.rename(aim_ik_handle_a01[1], f"{aim_ik_handle_a01[0]}Effector")
 
-        aim_ik_handle_02 = cmds.ikHandle(
-            name=f"{self.mod_name}Aim{self.mirr_side}02_ikHandle",
-            startJoint=foot_aim_jnts[1],
-            endEffector=foot_aim_jnts[2],
+        aim_ik_handle_b01 = cmds.ikHandle(
+            name=f"{self.mod_name}Aim{self.mirr_side}b01_ikHandle",
+            startJoint=foot_aim_jnts_b[0],
+            endEffector=foot_aim_jnts_b[1],
             solver="ikSCsolver",
         )
-        cmds.rename(aim_ik_handle_02[1], f"{aim_ik_handle_02[0]}Effector")
+        cmds.rename(aim_ik_handle_b01[1], f"{aim_ik_handle_b01[0]}Effector")
 
         # ----- constrain ik handles to foot controls  -----
-        parent_constr(self.foot_ctrls[1], aim_ik_handle_01[0])
-        parent_constr(self.foot_ctrls[2], aim_ik_handle_02[0])
+        parent_constr(self.foot_ctrls[1], aim_ik_handle_a01[0])
+        parent_constr(self.foot_ctrls[2], aim_ik_handle_b01[0])
         # ----- point and scale constrain top foot joint  -----
-        point_constr(self.limb_mod.ik_jnts[2], foot_aim_jnts[0])
-        scale_constr(self.foot_ctrls[0], foot_aim_jnts[0])
+        point_constr(self.limb_mod.ik_jnts[2], foot_aim_jnts_a[0])
+        scale_constr(self.foot_ctrls[0], foot_aim_jnts_a[0])
         # ----- constrain foot joints -----
         cmds.delete(self.foot_ankle_orient_const)  # remove default foot constraint
-        orient_constr(foot_aim_jnts[0], self.limb_mod.ik_jnts[2], offset=True)
+        orient_constr(foot_aim_jnts_a[0], self.limb_mod.ik_jnts[2], offset=True)
         # constraint wiggle ctrl to follow second foot aim joint
-        parent_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp, offset=True)
-        scale_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp)
+        parent_constr(foot_aim_jnts_b[0], self.toe_wiggle_ctrl_grp, offset=True)
+        scale_constr(foot_aim_jnts_b[0], self.toe_wiggle_ctrl_grp)
 
         # ---------- top parent group ----------
-        cmds.parent(foot_aim_jnts[0], self.foot_top_grp)
-        cmds.parent(aim_ik_handle_01[0], self.foot_top_grp)
-        cmds.parent(aim_ik_handle_02[0], self.foot_top_grp)
+        cmds.parent(foot_aim_jnts_a[0], self.foot_top_grp)
+        cmds.parent(foot_aim_jnts_b[0], self.foot_top_grp)
+        cmds.parent(aim_ik_handle_a01[0], self.foot_top_grp)
+        cmds.parent(aim_ik_handle_b01[0], self.foot_top_grp)
         # ---------- hide objects ----------
-        cmds.setAttr(f"{foot_aim_jnts[0]}.visibility", 0)
-        cmds.setAttr(f"{aim_ik_handle_01[0]}.visibility", 0)
-        cmds.setAttr(f"{aim_ik_handle_02[0]}.visibility", 0)
+        cmds.setAttr(f"{foot_aim_jnts_a[0]}.visibility", 0)
+        cmds.setAttr(f"{foot_aim_jnts_b[0]}.visibility", 0)
+        cmds.setAttr(f"{aim_ik_handle_a01[0]}.visibility", 0)
+        cmds.setAttr(f"{aim_ik_handle_b01[0]}.visibility", 0)
 
     def reverse_foot_attributes(self):
         """Add reverse foot attributes to main ik control.

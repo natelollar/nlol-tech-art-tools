@@ -41,6 +41,7 @@ class DigitigradeLegModule:
         invert_foot_lean: bool = False,
         invert_foot_tilt: bool = False,
         invert_foot_roll: bool = False,
+        flip_spring_solver: bool = False,
     ):
         """Initialize rig module.
 
@@ -57,6 +58,9 @@ class DigitigradeLegModule:
                 Or use the pre-determined locator names and skip the arg.
             invert_toe_wiggle, invert_toe_spin, invert_foot_lean, invert_foot_tilt,
                 invert_foot_roll: Invert direction of specific reverse foot ctrl.
+            flip_spring_solver: Flip the ikHandle twist attribute 180 degreees if needed,
+                for the driver joints ik spring solver. Length or bend of driver joints
+                may throw off original driver joints direction, and thus require a flip.
 
         """
         self.mod_name = rig_module_name
@@ -86,6 +90,7 @@ class DigitigradeLegModule:
         self.invert_foot_lean = invert_foot_lean
         self.invert_foot_tilt = invert_foot_tilt
         self.invert_foot_roll = invert_foot_roll
+        self.flip_spring_solver = flip_spring_solver
 
     def build(self):
         """Entry point. Run method to build rig module.
@@ -102,8 +107,10 @@ class DigitigradeLegModule:
         self.setup_switch_ctrl()
         self.setup_ik_driver_jnts()
         self.setup_ik_ctrls()
+        self.setup_ik_driver_ctrl()
         self.setup_soft_ik()
         self.setup_foot_ctrls()
+        self.cleanup_ik_driver()
 
         return self.mod_top_grp
 
@@ -385,8 +392,8 @@ class DigitigradeLegModule:
         for i, jnt in enumerate(self.main_joints[:4]):
             ik_drvr_jnt = create_joint.single_joint(
                 name=f"ikDrvr{cap(self.main_object_names[i])}{self.mirr_side}jnt",
-                radius=6,
-                color_rgb=(0.0, 0.0, 1.0),
+                radius=10,
+                color_rgb=(1.0, 0.0, 1.0),
                 parent_snap=jnt,
             )
             ik_drvr_jnts.append(ik_drvr_jnt)
@@ -408,15 +415,20 @@ class DigitigradeLegModule:
             solver="ikSpringSolver",
         )
         cmds.rename(ik_drvr_ikhandle[1], f"{ik_drvr_ikhandle[0]}Effector")
+        # disable ik spring solver until later. finicky flipping
+        cmds.ikHandle(ik_drvr_ikhandle[0], edit=True, disableHandles=True)
 
         # ----- place driver chain under main jnts parent -----
         if self.parent_loc:
-            cmds.parent(ik_drvr_jnts[0], self.parent_loc)
+            orient_constr(self.parent_loc, ik_drvr_jnts[0], offset=True)
+            scale_constr(self.parent_loc, ik_drvr_jnts[0])
 
         # ----------
         # organize parent
+        cmds.parent(ik_drvr_jnts[0], self.mod_top_grp)
         cmds.parent(ik_drvr_ikhandle[0], self.ik_top_grp)
         # hide
+        cmds.setAttr(f"{ik_drvr_jnts[0]}.visibility", 0)
         cmds.setAttr(f"{ik_drvr_ikhandle[0]}.visibility", 0)
 
         # assign instance variables
@@ -472,6 +484,28 @@ class DigitigradeLegModule:
         # constrain driver joint to control
         point_constr(ik_hip_ctrl, self.ik_drvr_jnts[0])
 
+        # ---------- lower pole vector ctrl ----------
+        # applying lower pv constraint first prevents cycle warning
+        # create pyramid curve
+        lower_polevector_ctrl = create_nurbs_curves.CreateCurves(
+            name=f"ik{cap(self.mod_name)}LowerPoleVector{self.mirr_side}ctrl",
+            size=0.5,
+            color_rgb=(1.0, 1.0, 0.0),
+        ).pyramid_curve()
+        lower_polevector_ctrl_grp = create_ctrl_grps(lower_polevector_ctrl)[0]
+        # pole vector control transformation
+        limb_hinge_vector.apply_hinge_vector(
+            limb_joints=self.ik_jnts[1:4],
+            control_object=lower_polevector_ctrl_grp,
+            control_object_distance=self.polevector_ctrl_distance,
+        )
+        # connect pole vector constraint
+        cmds.poleVectorConstraint(
+            lower_polevector_ctrl,
+            lower_ik_handle[0],
+            name=f"{lower_polevector_ctrl}PoleVectorConstraint",
+        )
+
         # --------------------------------------------
         # ---------- upper pole vector ctrl ----------
         # create pyramid curve
@@ -492,27 +526,6 @@ class DigitigradeLegModule:
             upper_polevector_ctrl,
             upper_ik_handle[0],
             name=f"{upper_polevector_ctrl}PoleVectorConstraint",
-        )
-
-        # ---------- lower pole vector ctrl ----------
-        # create pyramid curve
-        lower_polevector_ctrl = create_nurbs_curves.CreateCurves(
-            name=f"ik{cap(self.mod_name)}LowerPoleVector{self.mirr_side}ctrl",
-            size=0.5,
-            color_rgb=(1.0, 1.0, 0.0),
-        ).pyramid_curve()
-        lower_polevector_ctrl_grp = create_ctrl_grps(lower_polevector_ctrl)[0]
-        # pole vector control transformation
-        limb_hinge_vector.apply_hinge_vector(
-            limb_joints=self.ik_jnts[1:4],
-            control_object=lower_polevector_ctrl_grp,
-            control_object_distance=self.polevector_ctrl_distance,
-        )
-        # connect pole vector constraint
-        cmds.poleVectorConstraint(
-            lower_polevector_ctrl,
-            lower_ik_handle[0],
-            name=f"{lower_polevector_ctrl}PoleVectorConstraint",
         )
 
         # ------------------------------------------
@@ -559,10 +572,40 @@ class DigitigradeLegModule:
         self.ik_ctrl = ik_ctrl
         self.ik_hip_ctrl = ik_hip_ctrl
         self.ik_hip_ctrl_prntswtch_grp = ik_hip_ctrl_prntswtch_grp
+        self.upper_polevector_ctrl = upper_polevector_ctrl
         self.ik_lower_offs_ctrl_grp_aux = ik_lower_offs_ctrl_grp_aux
 
         # ----- add attr to control ik_lower_offs_ctrl rotate Z -----
         self.add_ik_offset_attr()
+
+    def setup_ik_driver_ctrl(self):
+        """Create a pole vector ctrl and constraint for the driver joints ik spring handle.
+        This helps prevent flipping of the driver joints in various dynamic poses.
+
+        Note:
+            Also, the driver joints must be parented under a world space hierarchy
+            or the ik spring solver may get confused. In other words, avoid parenting the
+            driver joints with the ik spring solver deep in a hierarchy with lots going on.
+
+        """
+        # create ctrl crv and grp
+        driver_polevector_ctrl = create_nurbs_curves.CreateCurves(
+            name=f"ik{cap(self.mod_name)}DriverPoleVector{self.mirr_side}ctrl",
+            size=1.0,
+            color_rgb=(1.0, 0.0, 1.0),
+        ).locator_curve()
+        driver_polevector_ctrl_grp = create_ctrl_grps(driver_polevector_ctrl)[0]
+        # position and parent ctrl
+        cmds.matchTransform(driver_polevector_ctrl_grp, self.upper_polevector_ctrl)
+        cmds.parent(driver_polevector_ctrl_grp, self.upper_polevector_ctrl)
+        # pole vector constraint between ctrl and ik spring handle
+        cmds.poleVectorConstraint(
+            driver_polevector_ctrl,
+            self.ik_drvr_ikhandle,
+            name=f"{driver_polevector_ctrl}PoleVectorConstraint",
+        )
+        # hide
+        cmds.setAttr(f"{driver_polevector_ctrl}.visibility", 0)
 
     def add_ik_offset_attr(self):
         """Add attribute to the ik lower offset ctrl for bending the lower knee forward."""
@@ -674,7 +717,7 @@ class DigitigradeLegModule:
             longName="softFalloff",
             defaultValue=3,
             minValue=0.01,
-            maxValue=20,
+            maxValue=100,
             keyable=True,
         )
 
@@ -869,7 +912,7 @@ class DigitigradeLegModule:
         and foot locators should be based on ankle joint rotation.
 
         Args:
-            base_foot_point: Wether to make the foot always
+            base_foot_point: Whether to make the foot always
                 aim towards the base foot control.
             reverse_foot_attrs: Add reverse foot attributes to main limb ik control.
 
@@ -1044,59 +1087,75 @@ class DigitigradeLegModule:
         to make the foot always aim towards the base foot control.
         """
         # ---------- create foot aim joints ----------
-        foot_aim_jnts = []
-        for i, ctrl in enumerate(self.foot_ctrls[:3], 1):
+        foot_aim_jnts_a = []
+        for i, ctrl in enumerate(self.foot_ctrls[:2], 1):  # "ankle", "toe"
             foot_aim_jnt = create_joint.single_joint(
-                name=f"{self.mod_name}FootAim{self.mirr_side}{i:02d}_jnt",
+                name=f"{self.mod_name}FootAim{self.mirr_side}a{i:02d}_jnt",
                 radius=7,
-                color_rgb=(1.0, 0.4, 0.0),
+                color_rgb=(1.0, 0.6, 0.0),
                 parent_snap=ctrl,
             )
-            foot_aim_jnts.append(foot_aim_jnt)
+            foot_aim_jnts_a.append(foot_aim_jnt)
+
+        foot_aim_jnts_b = []
+        for i, ctrl in enumerate(self.foot_ctrls[1:3], 1):  # "toe", "toeEnd"
+            foot_aim_jnt = create_joint.single_joint(
+                name=f"{self.mod_name}FootAim{self.mirr_side}b{i:02d}_jnt",
+                radius=5,
+                color_rgb=(1.0, 0.6, 0.0),
+                parent_snap=ctrl,
+            )
+            foot_aim_jnts_b.append(foot_aim_jnt)
 
         # parent joints together
-        for i, jnt in enumerate(foot_aim_jnts):
-            if jnt != foot_aim_jnts[0]:
-                cmds.parent(jnt, foot_aim_jnts[i - 1])
+        cmds.parent(foot_aim_jnts_a[1], foot_aim_jnts_a[0])
+        cmds.parent(foot_aim_jnts_b[1], foot_aim_jnts_b[0])
+        # constrain second joint segment under first. rotate done by ikHandle
+        point_constr(foot_aim_jnts_a[1], foot_aim_jnts_b[0])
+        scale_constr(foot_aim_jnts_a[1], foot_aim_jnts_b[0])
 
         # ----- ik handles with single-chain solver -----
-        aim_ik_handle_01 = cmds.ikHandle(
-            name=f"{self.mod_name}FootAim{self.mirr_side}01_ikHandle",
-            startJoint=foot_aim_jnts[0],
-            endEffector=foot_aim_jnts[1],
+        aim_ik_handle_a01 = cmds.ikHandle(
+            name=f"{self.mod_name}FootAim{self.mirr_side}a01_ikHandle",
+            startJoint=foot_aim_jnts_a[0],
+            endEffector=foot_aim_jnts_a[1],
             solver="ikSCsolver",
         )
-        cmds.rename(aim_ik_handle_01[1], f"{aim_ik_handle_01[0]}Effector")
+        cmds.rename(aim_ik_handle_a01[1], f"{aim_ik_handle_a01[0]}Effector")
 
-        aim_ik_handle_02 = cmds.ikHandle(
-            name=f"{self.mod_name}FootAim{self.mirr_side}02_ikHandle",
-            startJoint=foot_aim_jnts[1],
-            endEffector=foot_aim_jnts[2],
+        aim_ik_handle_b01 = cmds.ikHandle(
+            name=f"{self.mod_name}FootAim{self.mirr_side}b01_ikHandle",
+            startJoint=foot_aim_jnts_b[0],
+            endEffector=foot_aim_jnts_b[1],
             solver="ikSCsolver",
         )
-        cmds.rename(aim_ik_handle_02[1], f"{aim_ik_handle_02[0]}Effector")
+        cmds.rename(aim_ik_handle_b01[1], f"{aim_ik_handle_b01[0]}Effector")
 
         # ----- constrain ik handles to foot controls  -----
-        parent_constr(self.foot_ctrls[1], aim_ik_handle_01[0])
-        parent_constr(self.foot_ctrls[2], aim_ik_handle_02[0])
+        parent_constr(self.foot_ctrls[1], aim_ik_handle_a01[0])
+        parent_constr(self.foot_ctrls[2], aim_ik_handle_b01[0])
         # ----- point and scale constrain top foot joint  -----
-        point_constr(self.ik_jnts[3], foot_aim_jnts[0])
-        scale_constr(self.foot_ctrls[0], foot_aim_jnts[0])
+        point_constr(self.ik_jnts[3], foot_aim_jnts_a[0])
+        scale_constr(self.foot_ctrls[0], foot_aim_jnts_a[0])
         # ----- constrain foot joints -----
         cmds.delete(self.foot_ankle_orient_const)  # remove default foot constraint
-        orient_constr(foot_aim_jnts[0], self.ik_jnts[3], offset=True)
-        # constraint wiggle ctrl to follow second foot aim joint
-        parent_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp, offset=True)
-        scale_constr(foot_aim_jnts[1], self.toe_wiggle_ctrl_grp)
+        # NOTE: Orient constrained to object with world space rotation may cause flipping.
+        # This foot aim joint's ws rotation, may cause flipping when blending to fk foot.
+        orient_constr(foot_aim_jnts_a[0], self.ik_jnts[3], offset=True)
+        # constraint wiggle ctrl to follow second foot aim segments first joint
+        parent_constr(foot_aim_jnts_b[0], self.toe_wiggle_ctrl_grp, offset=True)
+        scale_constr(foot_aim_jnts_b[0], self.toe_wiggle_ctrl_grp)
 
         # ---------- top parent group ----------
-        cmds.parent(foot_aim_jnts[0], self.foot_top_grp)
-        cmds.parent(aim_ik_handle_01[0], self.foot_top_grp)
-        cmds.parent(aim_ik_handle_02[0], self.foot_top_grp)
+        cmds.parent(foot_aim_jnts_a[0], self.foot_top_grp)
+        cmds.parent(foot_aim_jnts_b[0], self.foot_top_grp)
+        cmds.parent(aim_ik_handle_a01[0], self.foot_top_grp)
+        cmds.parent(aim_ik_handle_b01[0], self.foot_top_grp)
         # ---------- hide objects ----------
-        cmds.setAttr(f"{foot_aim_jnts[0]}.visibility", 0)
-        cmds.setAttr(f"{aim_ik_handle_01[0]}.visibility", 0)
-        cmds.setAttr(f"{aim_ik_handle_02[0]}.visibility", 0)
+        cmds.setAttr(f"{foot_aim_jnts_a[0]}.visibility", 0)
+        cmds.setAttr(f"{foot_aim_jnts_b[0]}.visibility", 0)
+        cmds.setAttr(f"{aim_ik_handle_a01[0]}.visibility", 0)
+        cmds.setAttr(f"{aim_ik_handle_b01[0]}.visibility", 0)
 
     def reverse_foot_attributes(self):
         """Add reverse foot attributes to main ik control.
@@ -1407,3 +1466,13 @@ class DigitigradeLegModule:
                 f"{heel_roll_remap_nd}.outValue",
                 f"{self.foot_aux_ctrl_grps[3]}.rotateZ",
             )
+
+    def cleanup_ik_driver(self):
+        """Account for finicky ik spring solver flipping.
+        Waiting until the end to enable the ikHandle helps.
+        Also option to flip spring solver 180 at the end of the module buid.
+        """
+        cmds.ikHandle(self.ik_drvr_ikhandle, edit=True, enableHandles=True)
+        # flip spring solver option. set preferred angle doesn't work.
+        if self.flip_spring_solver:
+            cmds.setAttr(f"{self.ik_drvr_ikhandle}.twist", 180)

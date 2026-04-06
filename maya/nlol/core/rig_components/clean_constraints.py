@@ -20,7 +20,7 @@ def parent_constr(
         skip_tran: Whether to skip constraining translate.
         skip_rot: Whether to skip constraining rotate.
         offset: Whether to maintain offset when constraining.
-        interp_type: "No Flip", "Average", "Shortest", "Longest", "Cache".
+        interp_type: 0, 1, 2, 3, 4 (No Flip, Average, Shortest, Longest, Cache)
 
     Returns:
         The name of the constraint.
@@ -63,12 +63,11 @@ def point_constr(
     offset: bool | None = None,
 ) -> str:
     """Similar to parent_constr except uses pointConstraint."""
-    offset = True if offset else False
     constraint = cmds.pointConstraint(
         targets,
         object,
         name=f"{object}PointConstraint",
-        maintainOffset=offset,
+        maintainOffset=bool(offset),
     )[0]
     return constraint
 

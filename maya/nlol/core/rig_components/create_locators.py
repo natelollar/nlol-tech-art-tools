@@ -3,8 +3,8 @@
 import random as rd
 
 from maya import cmds
-from nlol.core.rig_tools.show_attributes import ShowAttributes
 from nlol.core.general_utils import cap
+from nlol.core.rig_tools.show_attributes import ShowAttributes
 
 
 def axis_locator(
@@ -18,6 +18,7 @@ def axis_locator(
 
     Args:
         objects: Joints or objects to parent locators under.
+        locator_name: Name of locator.
         local_scale: Optional base name for the locators.
         local_scale: Visuale scale in viewport.
         color_rgb: Tuple with 0-1.0 "r, g, b" values.
@@ -156,3 +157,34 @@ def locator_constrain_joints(
         cmds.scaleConstraint(loc, obj, name=f"{obj}ScaleConstraint")
 
     return locator_list
+
+
+def temp_locator(
+    locator_name: str | None = None,
+    local_scale: tuple[float, float, float] = (15, 15, 15),
+    color_rgb: tuple[float, float, float] = (1.0, 0, 0),
+) -> tuple[list[str], list[str]]:
+    """Create temporary locator at world origin.
+
+    Args:
+        locator_name: Name of locator.
+        local_scale: Optional base name for the locators.
+        local_scale: Visuale scale in viewport.
+        color_rgb: Tuple with 0-1.0 "r, g, b" values.
+
+    Returns:
+        Locator name.
+
+    """
+    r, g, b = color_rgb if color_rgb else (1.0, 0, 0)  # red
+    if not locator_name:
+        locator_name = "temp_locator"
+
+    locator = cmds.spaceLocator(name=locator_name)[0]
+    locator_shape = cmds.listRelatives(locator, shapes=True)[0]
+    cmds.setAttr(f"{locator_shape}.localScale", local_scale[0], local_scale[1], local_scale[2])
+    cmds.setAttr(f"{locator_shape}.useObjectColor", 2)
+    cmds.setAttr(f"{locator_shape}.wireColorRGB", r, g, b)
+    ShowAttributes(target_objects=locator_shape).show_curve_attrs()
+
+    return locator_name

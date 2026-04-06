@@ -16,13 +16,13 @@ parents = "root_ctrl"
 
 #----------
 [[control]]
-control = "flxTail_01_ctrl"
+control = "flexiTail_01_ctrl"
 parents = "pelvis_ctrl"
 
 [[control]]
-control = "flxTail_02_ctrl"
-parents = "pelvis_ctrl, flxTail_01_ctrl"
+control = "flexiTail_02_ctrl"
+parents = "pelvis_ctrl, flexiTail_01_ctrl"
 
 [[control]]
-control = "flxTail_03_ctrl"
-parents = "pelvis_ctrl, flxTail_02_ctrl, flxTail_01_ctrl"
+control = "flexiTail_03_ctrl"
+parents = "pelvis_ctrl, flexiTail_02_ctrl, flexiTail_01_ctrl"

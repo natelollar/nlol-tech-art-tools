@@ -32,6 +32,17 @@ def build_utility_list():
             "command": "from nlol.core.standalone import maya_debug\nmaya_debug.main()",
             "sourceType": "python",
         },
+        {
+            "label": "Port Connection",
+            "image": "pythonFamily.png",
+            "annotation": "Connect Maya to port 7001. For external tool connections.",
+            "imageOverlayLabel": "Port",
+            "backgroundColor": random_clrs[11],
+            "command": "from nlol.core.standalone import maya_debug\n"
+            "from importlib import reload\nreload(maya_debug)\n"
+            "maya_debug.connect_port()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": 'Set Hotkey for "Camera Pivot To Mouse"',
@@ -148,8 +159,7 @@ def build_utility_list():
             "annotation": "Reload the main UI for nLol Toolset.",
             "imageOverlayLabel": "MainUI",
             "backgroundColor": random_clrs[32],
-            "command": "from nlol.core.ui import nlol_main_ui\n"
-            "nlol_main_ui.reload_tool()",
+            "command": "from nlol.core.ui import nlol_main_ui\nnlol_main_ui.reload_tool()",
             "sourceType": "python",
         },
         shelf_separator,
@@ -159,8 +169,16 @@ def build_utility_list():
             "annotation": "Rename selected objects. Reload tool.",
             "imageOverlayLabel": "RenUI",
             "backgroundColor": random_clrs[34],
-            "command": "from nlol.core.ui import renamer_tool_ui\n"
-            "renamer_tool_ui.reload_tool()",
+            "command": "from nlol.core.ui import renamer_tool_ui\nrenamer_tool_ui.reload_tool()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Space Matcher",
+            "image": "pythonFamily.png",
+            "annotation": "Space switch matching. Keep ctrl position when switching parent spaces.",
+            "imageOverlayLabel": "SpSw",
+            "backgroundColor": random_clrs[36],
+            "command": "from nlol.core.ui import space_matcher_ui\nspace_matcher_ui.reload_tool()",
             "sourceType": "python",
         },
         # {

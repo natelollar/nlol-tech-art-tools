@@ -6,7 +6,7 @@ Constrain child ctrls to parent ctrls or objects.
 Entering the ctrl name will automatically find the parent switch group.
 ```
 
-#### Parameters:
+#### [[control]] Parameters:
 - `control` (str): Child contrl to set up parent spaces for.  May contain single ctrl or multiple in a string list.
     - May want to list multiple ctrls for certain cases where all other parameter values are the same.
 - `parents` (str): Parent objects. Usually other ctrls but may be any Maya transform. 

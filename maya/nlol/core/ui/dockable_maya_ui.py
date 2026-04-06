@@ -3,7 +3,6 @@ from importlib import reload
 from pathlib import Path
 
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
-from nlol.utilities.nlol_maya_logger import get_logger
 from PySide6.QtCore import QSettings
 from PySide6.QtWidgets import (
     QVBoxLayout,
@@ -13,6 +12,7 @@ from shiboken6 import wrapInstance
 
 from maya import OpenMayaUI as omui
 from maya import cmds
+from nlol.utilities.nlol_maya_logger import get_logger
 
 logger = get_logger()
 
@@ -93,9 +93,18 @@ class DockableMayaUI(MayaQWidgetDockableMixin, QWidget):
         self.settings.beginGroup(settings_group)
 
         for key, widget in self.get_settings_keys().items():
-            value = self.settings.value(key, "", str)
-            if hasattr(widget, "setText"):
-                widget.setText(value)
+            if hasattr(widget, "button"):
+                saved_id = self.settings.value(key, 0, type=int)
+                btn = widget.button(saved_id)
+                if btn:
+                    btn.setChecked(True)
+            elif hasattr(widget, "setChecked"):
+                value = self.settings.value(key, False, bool)
+                widget.setChecked(value)
+            elif hasattr(widget, "setText"):
+                value = self.settings.value(key, "", str)
+                if value is not None and value.strip():
+                    widget.setText(value)
         # Example: self.name_input.setText(self.settings.value("name_input", "", str))
 
         self.settings.endGroup()
@@ -107,12 +116,16 @@ class DockableMayaUI(MayaQWidgetDockableMixin, QWidget):
         self.settings.beginGroup(settings_group)
 
         for key, widget in self.get_settings_keys().items():
-            if hasattr(widget, "text"):
+            if hasattr(widget, "checkedId"):
+                self.settings.setValue(key, widget.checkedId())
+            elif hasattr(widget, "isChecked"):
+                self.settings.setValue(key, widget.isChecked())
+            elif hasattr(widget, "text"):
                 self.settings.setValue(key, widget.text())
         # Example: self.settings.setValue("name_input", self.name_input.text())
 
         self.settings.endGroup()
-        logger.info(f"[{self.get_window_title()}] Saved to: {self.prefs_path}")
+        logger.debug(f"[{self.get_window_title()}] Saved to: {self.prefs_path}")
 
     def show_tool(self):
         """Show tool UI. Will have previous position and size."""

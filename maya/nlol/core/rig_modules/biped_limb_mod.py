@@ -1032,7 +1032,7 @@ class BipedLimbModule:
             longName="softFalloff",
             defaultValue=3,
             minValue=0.01,
-            maxValue=20,
+            maxValue=100,
             keyable=True,
         )
 

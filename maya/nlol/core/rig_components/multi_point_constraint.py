@@ -1,5 +1,6 @@
-from maya import cmds
 from maya.api import OpenMaya
+
+from maya import cmds
 
 
 def multi_point_const(
@@ -28,6 +29,10 @@ def multi_point_const(
     )[0]
 
     choice_nd = cmds.shadingNode("choice", asUtility=True, name=f"{child_object}Choice")
+
+    # load "lookdevKit" for colorConstant node for Maya 2026. # TODO: replace node
+    if not cmds.pluginInfo("lookdevKit.mll", query=True, loaded=True):
+        cmds.loadPlugin("lookdevKit.mll")
 
     for i, prnt_obj in enumerate(parent_objects):
         id_base_name = child_object.replace("_", f"_{i:02d}_", 2)

@@ -1,0 +1,26 @@
+# flexi_surface_ik_chain_simple_mod:  Flexi surface that uses single ik chains 
+#    instead of separated fk ctrls. Has stretch and uv slide.  Slide works when stretch on.
+# entry points: 
+#   scale constrain the parent ctrl
+#   parent & scale constrain the top flexiSurface skin joint
+# notes:
+#   test movement via flexi skinned joints (tailCloth_01_jnt...)
+
+# ----------
+[[rig_module]]
+rig_module = "flexi_surface_ik_chain_simple_mod" 
+rig_module_name = "tail"
+joints = "tail_01_jnt, tail_09_jnt"
+flexi_surface = "flexiSurfaceTailMain_geo"
+get_joint_chain = true
+
+# ----------
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "root" 
+joints = "root_jnt"
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "pelvis" 
+joints = "pelvis_jnt"

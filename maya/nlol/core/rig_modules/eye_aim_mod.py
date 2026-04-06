@@ -102,9 +102,9 @@ class EyeAimModule:
                 size=0.4,
                 color_rgb=(0.9, 0.9, 0.0),
             ).box_curve()
-            fkctrl_top_grp, fkctrl_prnt_grp, _, _, fkctrl_aux_grp = create_ctrl_grps(
+            fkctrl_top_grp, fkctrl_prnt_grp, _, _, fkctrl_aux_grp_01, _ = create_ctrl_grps(
                 fkctrl,
-                aux_offset_grp=True,
+                aux_offset_grp=2,
             )
             cmds.matchTransform(fkctrl_top_grp, jnt)  # snap control to joint
             # constrain joint to control
@@ -170,7 +170,7 @@ class EyeAimModule:
             # aim the fkctrl at aimctrl
             aim_constr(
                 targets=aimctrl,
-                object=fkctrl_aux_grp,
+                object=fkctrl_aux_grp_01,
                 world_up_object=upvector_curve,
                 aim_vector=self.aim_vector,
                 up_vector=self.up_vector,

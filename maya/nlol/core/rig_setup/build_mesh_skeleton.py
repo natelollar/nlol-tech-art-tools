@@ -155,11 +155,11 @@ class BuildMeshSkeleton:
 
         # parent meshes and skeletons to top groups. hide joints and flexi meshes.
         cmds.parent(skeleton_root, skeletalmesh_grp)
-        #cmds.setAttr(f"{skeleton_root}.visibility", 0)
         objects_display_lyr(  # skeleton_root to display layer
             objects=skeleton_root,
             display_layer="joints_lyr",
             reference=True,
+            hide=True,
         )
         if other_top_joints:
             cmds.parent(other_top_joints, main_rig_group)

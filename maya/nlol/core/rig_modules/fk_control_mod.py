@@ -37,6 +37,7 @@ class FkControlModule:
         hide_translate: bool = False,
         hide_rotate: bool = False,
         hide_scale: bool = False,
+        add_aux_grp: bool = False,
     ):
         """Args:
         rig_module_name: Custom name for the rig module.
@@ -66,6 +67,7 @@ class FkControlModule:
         self.hide_translate = hide_translate
         self.hide_rotate = hide_rotate
         self.hide_scale = hide_scale
+        self.add_aux_grp = add_aux_grp
 
         self.logger = get_logger()
 
@@ -99,7 +101,7 @@ class FkControlModule:
             ).nurbs_curve
             # ----- create control groups -----
             self.fkctrl_aux_grp = None
-            if self.blend_joints:
+            if self.blend_joints or self.add_aux_grp:
                 self.fkctrl_grp, _, _, _, self.fkctrl_aux_grp = create_ctrl_grps(
                     self.fkctrl,
                     aux_offset_grp=True,
@@ -184,8 +186,8 @@ class FkControlModule:
             self.blend_joints,
             self.fkctrl_aux_grp,
             offset=True,
-            interp_type=0,
-        )  # No Flip
+            interp_type=2,  # Shortest. Otherwise, try Average. No Flip caused flipping.
+        )
         scl_const = scale_constr(self.blend_joints, self.fkctrl_aux_grp, offset=True)
         # add blend attribute to control
         add_divider_attribue(control_name=self.fkctrl, divider_amount=5)

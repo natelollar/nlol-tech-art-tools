@@ -85,16 +85,18 @@ def maya_undo(func):
     return wrapper
 
 
-def swap_side_str(text_str) -> str:
+def swap_side_str(text_str, return_side: bool = False) -> str | tuple[str, str]:
     """Auto-detect and swap left/right character strings.
     Detects whether the string contains left or right indicators
     and swap to the opposite side.
 
     Args:
         text_str: Input string text with left or right characters.
+        return_side: Whether to return the original input text side, "right" or "left".
 
     Returns:
         New string text with sides swapped, or original if no side detected.
+        Optionally, return the current input side. Whether the original side was "right" or "left".
 
     """
     if not text_str:
@@ -128,12 +130,15 @@ def swap_side_str(text_str) -> str:
     )
 
     # determin direction
+    current_side = ""
     if has_left and not has_right:
         from_side, to_side = "left", "right"
         from_abbr, to_abbr = "l", "r"
+        current_side = "left"
     elif has_right and not has_left:
         from_side, to_side = "right", "left"
         from_abbr, to_abbr = "r", "l"
+        current_side = "right"
     else:
         logger.debug(f"Could not determine side for: {original_text}")
         return text_str
@@ -150,7 +155,10 @@ def swap_side_str(text_str) -> str:
     text_str = text_str.replace(f",{from_abbr}_", f",{to_abbr}_")
     text_str = text_str.replace(f" {from_abbr}_", f" {to_abbr}_")  # note whitespace in strings
 
-    return text_str
+    if return_side:
+        return text_str, current_side
+    else:
+        return text_str
 
 
 def invert_axis_string(text_str: str) -> str:

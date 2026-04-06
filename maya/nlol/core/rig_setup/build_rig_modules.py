@@ -21,6 +21,7 @@ from nlol.core.rig_modules import (
     fk_ik_spline_chain_mod,
     flexi_surface_fk_ctrl_mod,
     flexi_surface_ik_chain_mod,
+    flexi_surface_ik_chain_simple_mod,
     piston_mod,
     tentacle_mod,
     world_control_mod,
@@ -38,6 +39,7 @@ reload(fk_control_mod)
 reload(fk_ik_single_chain_mod)
 reload(fk_ik_spline_chain_mod)
 reload(flexi_surface_ik_chain_mod)
+reload(flexi_surface_ik_chain_simple_mod)
 reload(flexi_surface_fk_ctrl_mod)
 reload(piston_mod)
 reload(tentacle_mod)
@@ -97,6 +99,7 @@ def build_modules(rig_data_filepath: str | Path):
             flexi_surface_offset = swap_side_str(mod_dict.get("flexi_surface_offset", ""))
 
             aim_object = swap_side_str(mod_dict.get("aim_object", ""))
+            ik_wrist_ctrl = swap_side_str(mod_dict.get("ik_wrist_ctrl", ""))
 
             right_dict = {
                 "rig_module": rig_module,
@@ -115,6 +118,7 @@ def build_modules(rig_data_filepath: str | Path):
                 "hide_translate": mod_dict.get("hide_translate"),
                 "hide_rotate": mod_dict.get("hide_rotate"),
                 "hide_scale": mod_dict.get("hide_scale"),
+                "add_aux_grp": mod_dict.get("add_aux_grp"),
                 "display_layer": mod_dict.get("display_layer"),
                 "upper_twist_joints": upper_twist_joints,
                 "lower_twist_joints": lower_twist_joints,
@@ -128,13 +132,18 @@ def build_modules(rig_data_filepath: str | Path):
                 "invert_foot_lean": mod_dict.get("invert_foot_lean"),
                 "invert_foot_tilt": mod_dict.get("invert_foot_tilt"),
                 "invert_foot_roll": mod_dict.get("invert_foot_roll"),
+                "flip_spring_solver": mod_dict.get("flip_spring_solver", False),
                 "origin_joint": origin_joint,
                 "mid_joints": mid_joints,
                 "top_joints": top_joints,
                 "bot_joints": bot_joints,
                 "flexi_joints_main": flexi_joints_main,
                 "flexi_joints_offset": flexi_joints_offset,
-                "aim_object": aim_object
+                "aim_object": aim_object,
+                "separate_flexi_ctrls": mod_dict.get("separate_flexi_ctrls"),
+                "enable_auto_clav": mod_dict.get("enable_auto_clav", False),
+                "ik_wrist_ctrl": ik_wrist_ctrl,
+                "use_flexi_ik_chain": mod_dict.get("use_flexi_ik_chain", False),
             }
             right_modules.append(right_dict)
         elif mirror_right and (mirror_direction is None or "left" not in mirror_direction):
@@ -188,6 +197,7 @@ def build_modules(rig_data_filepath: str | Path):
             hide_translate = mod_dict.get("hide_translate")
             hide_rotate = mod_dict.get("hide_rotate")
             hide_scale = mod_dict.get("hide_scale")
+            add_aux_grp = mod_dict.get("add_aux_grp")
             display_layer = mod_dict.get("display_layer")
 
             upper_twist_joints = mod_dict.get("upper_twist_joints", "").split(",")
@@ -206,6 +216,7 @@ def build_modules(rig_data_filepath: str | Path):
             invert_foot_lean = mod_dict.get("invert_foot_lean")
             invert_foot_tilt = mod_dict.get("invert_foot_tilt")
             invert_foot_roll = mod_dict.get("invert_foot_roll")
+            flip_spring_solver = mod_dict.get("flip_spring_solver", False)
             origin_joint = mod_dict.get("origin_joint", "").split(",")
             origin_joint = [txt.strip() for txt in origin_joint if txt.strip()]
             mid_joints = mod_dict.get("mid_joints", "").split(",")
@@ -220,6 +231,10 @@ def build_modules(rig_data_filepath: str | Path):
             reverse_right_vectors = mod_dict.get("reverse_right_vectors")
 
             aim_object = mod_dict.get("aim_object", "")
+            separate_flexi_ctrls = mod_dict.get("separate_flexi_ctrls", False)
+            enable_auto_clav = mod_dict.get("enable_auto_clav", False)
+            ik_wrist_ctrl = mod_dict.get("ik_wrist_ctrl", "")
+            use_flexi_ik_chain = mod_dict.get("use_flexi_ik_chain", False)
 
             match rig_module:
                 case "biped_limb_mod":
@@ -272,6 +287,7 @@ def build_modules(rig_data_filepath: str | Path):
                         ("hide_translate", hide_translate),
                         ("hide_rotate", hide_rotate),
                         ("hide_scale", hide_scale),
+                        ("add_aux_grp", add_aux_grp),
                     ]
                     for key, value in kwargs_optional:
                         if value is not None:
@@ -305,6 +321,8 @@ def build_modules(rig_data_filepath: str | Path):
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,
+                        enable_auto_clav=enable_auto_clav,
+                        ik_wrist_ctrl=ik_wrist_ctrl,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -327,6 +345,20 @@ def build_modules(rig_data_filepath: str | Path):
                         joint_chains=joint_chains,
                         flexi_surface=flexi_surface,
                         hide_end_ctrl=hide_end_ctrl,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
+                case "flexi_surface_ik_chain_simple_mod":
+                    module_instance = (
+                        flexi_surface_ik_chain_simple_mod.FlexiSurfaceIkChainSimpleModule(
+                            rig_module_name=rig_module_name,
+                            mirror_direction=mirror_direction,
+                            main_joints=main_joints,
+                            flexi_surface=flexi_surface,
+                            hide_end_ctrl=hide_end_ctrl,
+                        )
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -381,6 +413,7 @@ def build_modules(rig_data_filepath: str | Path):
                         invert_foot_lean=invert_foot_lean,
                         invert_foot_tilt=invert_foot_tilt,
                         invert_foot_roll=invert_foot_roll,
+                        flip_spring_solver=flip_spring_solver,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -395,6 +428,8 @@ def build_modules(rig_data_filepath: str | Path):
                         flexi_joints_offset=flexi_joints_offset,
                         flexi_surface_main=flexi_surface_main,
                         flexi_surface_offset=flexi_surface_offset,
+                        separate_flexi_ctrls=separate_flexi_ctrls,
+                        use_flexi_ik_chain=use_flexi_ik_chain,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -406,8 +441,8 @@ def build_modules(rig_data_filepath: str | Path):
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,
                         aim_object=aim_object,
-                        aim_vector = aim_vector,
-                        up_vector = up_vector,
+                        aim_vector=aim_vector,
+                        up_vector=up_vector,
                         reverse_right_vectors=reverse_right_vectors,
                     )
                     module_top_group = module_instance.build()

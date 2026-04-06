@@ -1,3 +1,4 @@
+import re
 from importlib import reload
 
 from maya import cmds
@@ -31,7 +32,7 @@ class FkChainModule:
     ):
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
-        self.mirr_side = self.mirr_side.replace("__", "_")
+        self.mirr_side = re.sub(r"_+", "_", self.mirr_side)
         self.main_joints = main_joints
         self.iteration_id = iteration_id
         self.aux_offset_grp = aux_offset_grp

@@ -11,6 +11,7 @@ def single_joint(
     name: str = "example_joint",
     radius: float = 1.0,
     color_rgb: list | tuple = (1.0, 0.4, 0.0),
+    color_index: int | None = None,
     scale_compensate: bool = False,
     parent_snap: str | None = None,
     axis_parent_snap: str | None = None,
@@ -22,7 +23,9 @@ def single_joint(
         name: Joint name.
         radius: Joint radius (viewport size).
         color_rgb: RGB color values.
-        scale_compensate: If true, parent scaling will not affect joint ".scale".  
+        color_index: Joint color based on preset. Overrides color_rgb.
+            Values are 0-7.
+        scale_compensate: If true, parent scaling will not affect joint ".scale".
             True by default in Maya.
         parent_snap: Object to snap the created joint to.  Does not parent under.
         axis_parent_snap: Same as align_to_object_axis().
@@ -32,10 +35,16 @@ def single_joint(
     cmds.select(clear=True)
     joint = cmds.joint(name=name, position=position)
 
-    # size and color
+    # size
     cmds.setAttr(".radius", radius)
-    cmds.setAttr(".useObjectColor", 2)
-    cmds.setAttr(".wireColorRGB", color_rgb[0], color_rgb[1], color_rgb[2])
+
+    # color
+    if color_index:
+        cmds.setAttr(".useObjectColor", 1)
+        cmds.setAttr(".objectColor", color_index)
+    else:
+        cmds.setAttr(".useObjectColor", 2)
+        cmds.setAttr(".wireColorRGB", color_rgb[0], color_rgb[1], color_rgb[2])
 
     # scale compensate
     cmds.setAttr(".segmentScaleCompensate", scale_compensate)

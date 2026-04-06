@@ -4,6 +4,7 @@ from pathlib import Path
 from nlol.core.ui.dockable_maya_ui import DockableMayaUI
 from nlol.shelves_menus import (
     animation_list,
+    modeling_list,
     nurbs_curve_list,
     rigging_list,
     utility_list,
@@ -22,9 +23,10 @@ from PySide6.QtWidgets import (
 logger = get_logger()
 
 CATEGORIES = {
-    "Rigging": rigging_list.build_rigging_list,
     "Animation": animation_list.build_animation_list,
+    "Modeling": modeling_list.build_modeling_list,
     "Nurbs Curves": nurbs_curve_list.build_curve_list,
+    "Rigging": rigging_list.build_rigging_list,
     "Utils": utility_list.build_utility_list,
 }
 

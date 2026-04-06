@@ -23,7 +23,8 @@ def build_curve_list():
         "sourceType": "python",
     }
 
-    curve_list = [   
+    curve_list = [  
+        shelf_separator, 
         {
             "label": "Nurbs Sphere",
             "image": "pythonFamily.png",
@@ -39,7 +40,7 @@ def build_curve_list():
             "label": "Nurbs Cube",
             "image": "pythonFamily.png",
             "annotation": "Create nurbs cube object.",
-            "imageOverlayLabel": "SphNb",
+            "imageOverlayLabel": "CubNb",
             "backgroundColor": random_clrs_nurbs[1],
             "command": "from nlol.core.rig_components import create_nurbs_curves\n"
             "from importlib import reload\nreload(create_nurbs_curves)\n"

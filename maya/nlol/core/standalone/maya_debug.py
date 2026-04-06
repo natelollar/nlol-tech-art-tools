@@ -2,11 +2,13 @@ import debugpy
 
 from maya import cmds
 
-def main():
+
+def main() -> None:
     maya_install_dir = cmds.internalVar(mayaInstallDir=True)
     maya_python_path = f"{maya_install_dir}/bin/mayapy.exe"
     debugpy.configure(python=maya_python_path)
     debugpy.listen(5678)
+
 
 # https://gist.github.com/joaen/bdc154ecb3f28d8481b9fb23411d1008
 
@@ -29,5 +31,11 @@ def main():
 
 # Download debugpy release: https://github.com/microsoft/debugpy/releases
 # Copy folder "debugpy" from "src" folder.
-# Paste debugpy folder into Maya scripts folder. 
+# Paste debugpy folder into Maya scripts folder.
 #   C:\Users\%USERNAME%\Documents\maya\MAYA_VERSION\scripts
+
+
+def connect_port() -> None:
+    """Connect Maya to port 7001. For external tool connections."""
+    port = 7001
+    cmds.commandPort(name=f":{port}", sourceType="python", echoOutput=True)

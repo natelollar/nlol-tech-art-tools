@@ -301,6 +301,17 @@ def build_rigging_list():
             "small_functions.print_selected_list(string_format=True)",
             "sourceType": "python",
         },
+        {
+            "label": "Hide Rig Clutter",
+            "image": "pythonFamily.png",
+            "annotation": "Hide rig clutter after showing entire hierarchy.",
+            "imageOverlayLabel": "HidClu",
+            "backgroundColor": random_clrs[3],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.hide_rig_clutter()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Build Skeletal Mesh Only",
@@ -510,9 +521,9 @@ def build_rigging_list():
             "annotation": "Assign standard surface material with random color to selected objects.",
             "imageOverlayLabel": "RndMat",
             "backgroundColor": random_clrs[15],
-            "command": "from nlol.core.standalone import assign_random_materials\n"
-            "from importlib import reload\nreload(assign_random_materials)\n"
-            "assign_random_materials.assign_rand_mat()",
+            "command": "from nlol.core.standalone import assign_random_colors\n"
+            "from importlib import reload\nreload(assign_random_colors)\n"
+            "assign_random_colors.assign_rand_mat()",
             "sourceType": "python",
         },
         {
@@ -579,7 +590,29 @@ def build_rigging_list():
         },
         shelf_separator,
         {
-            "label": "Duplicate Blendshape Poses",
+            "label": "Duplicate Out Blendshapes",
+            "image": "pythonFamily.png",
+            "annotation": "For selected meshes, create duplicate for each blendshape weight. ",
+            "imageOverlayLabel": "DupBln",
+            "backgroundColor": random_clrs[18],
+            "command": "from nlol.core.rig_tools.blendshape_tools import blendshape_tools\n"
+            "from importlib import reload\nreload(blendshape_tools)\n"
+            "blendshape_tools.BlendShapeTools().duplicate_out_blendshapes()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Copy Blendshapes",
+            "image": "pythonFamily.png",
+            "annotation": "Copy blendshapes from first selected mesh to second. ",
+            "imageOverlayLabel": "CpyBln",
+            "backgroundColor": random_clrs[19],
+            "command": "from nlol.core.rig_tools.blendshape_tools import blendshape_tools\n"
+            "from importlib import reload\nreload(blendshape_tools)\n"
+            "blendshape_tools.BlendShapeTools().copy_blendshapes()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Duplicate Arkit Blendshapes (Frame 1-52)",
             "image": "pythonFamily.png",
             "annotation": "Duplicate selected mesh for each keyframed blendshape pose"
             ' listed in "arkit_blendshapes.toml". Frame 1-52.',
@@ -602,55 +635,16 @@ def build_rigging_list():
             "sourceType": "python",
         },
         {
-            "label": "Copy BlendShapes",
+            "label": "Copy BlendShapes (No Selection)",
             "image": "pythonFamily.png",
             "annotation": "Copy BlendShapes from source to target mesh. Delete source mesh. "
             'Source mesh name is same as target except contains string "Blendshapes". '
             "No selection needed.",
-            "imageOverlayLabel": "CpyShp",
+            "imageOverlayLabel": "CpyNoS",
             "backgroundColor": random_clrs[28],
             "command": "from nlol.core.rig_setup import build_blendshapes\n"
             "from importlib import reload\nreload(build_blendshapes)\n"
             "build_blendshapes.ConnectBlendShapes().find_transfer_blendshapes()",
-            "sourceType": "python",
-        },
-        shelf_separator,
-        {
-            "label": "Save Mirror Attributes",
-            "image": "pythonFamily.png",
-            "annotation": "Save mirror attributes for selected ctrls to rig folder. "
-            "Recommended to select all ctrls when saving. Will load back in when rebuilding rig. ",
-            "imageOverlayLabel": "SvMrAt",
-            "backgroundColor": random_clrs[21],
-            "command": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
-            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
-            "mirror_attrs_export_import.MirrorAttrsExportImport().get_mirror_attrs()",
-            "sourceType": "python",
-        },
-        {
-            "label": "Load Mirror Attributes",
-            "image": "pythonFamily.png",
-            "annotation": 'Load mirror attrs from saved "mirror_attributes.json" in rig folder.',
-            "imageOverlayLabel": "LdMrAt",
-            "backgroundColor": random_clrs[24],
-            "command": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
-            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
-            "mirror_attrs_export_import.MirrorAttrsExportImport().apply_mirror_attrs()",
-            "sourceType": "python",
-        },
-        {
-            "label": "Show Mirror Attributes",
-            "image": "pythonFamily.png",
-            "annotation": "Show mirror attributes in channel box for selected ctrls. "
-            "Double click to hide attrs.",
-            "imageOverlayLabel": "ShwMrr",
-            "backgroundColor": random_clrs[23],
-            "command": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
-            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
-            "mirror_attrs_export_import.MirrorAttrsExportImport().show_mirror_attrs()",
-            "doubleClickCommand": "from nlol.core.rig_tools import mirror_attrs_export_import\n"
-            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
-            "mirror_attrs_export_import.MirrorAttrsExportImport().show_mirror_attrs(show_attrs=False)",
             "sourceType": "python",
         },
         shelf_separator,

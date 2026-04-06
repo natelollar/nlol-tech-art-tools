@@ -103,6 +103,7 @@ Notes for rigging setup.
 - rot = rotate
 - scl = scale
 - shp = shape
+- stnd = standard
 - str = string
 - strt = start
 - swch = switch

@@ -9,10 +9,11 @@ from nlol.core.rig_components import (
     create_locators,
     create_nurbs_curves,
 )
-from nlol.core.rig_modules import flexi_surface_fk_ctrl_mod
+from nlol.core.rig_modules import flexi_surface_fk_ctrl_mod, flexi_surface_ik_chain_simple_mod
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(flexi_surface_fk_ctrl_mod)
+reload(flexi_surface_ik_chain_simple_mod)
 
 logger = get_logger()
 
@@ -23,7 +24,7 @@ create_ctrl_grps = create_control_groups.create_ctrl_grps
 
 class TentacleModule:
     """Rig module good for tentacle, tail, stretchy spine, etc.
-    Has a main base layer of flexi joints. This base layer of flexi joints blends 
+    Has a main base layer of flexi joints. This base layer of flexi joints blends
     between fk ctrls and offset flexi ctrls.
     See example in "defaults/standalone_modules/tentacle_mod".
     """
@@ -37,6 +38,8 @@ class TentacleModule:
         flexi_joints_offset: list[str],
         flexi_surface_main: str,
         flexi_surface_offset: str,
+        separate_flexi_ctrls: bool = False,
+        use_flexi_ik_chain: bool = False,
     ):
         """Initialize rig module class.
 
@@ -52,8 +55,13 @@ class TentacleModule:
             flexi_surface_main: Main base layer of flexi geo that will be skinned
                 to flexi_joints_main. If using cloth sim, apply to this geo.
             flexi_surface_offset: Flexi geo skinned to flexi_joints_offset. A joint chain
-                will be created in this class called flx_jnts that will be attached
+                will be created in this class called flexi_jnts that will be attached
                 to this geo via follicles.
+            separate_flexi_ctrls: Whether to leave ctrls grouped to eachother in a hierarchy,
+                or separate them as individual ctrls. Useful for complex parent spacing.
+            use_flexi_ik_chain: Enable chain of single solver ikHandles for flexi ctrls
+                instead of regular fk attachments.  Allows adding stretch attribute toggle,
+                to maintain chain length.
 
         """
         self.mod_name = rig_module_name
@@ -64,6 +72,8 @@ class TentacleModule:
         self.flexi_joints_offset = flexi_joints_offset
         self.flexi_surface_main = flexi_surface_main
         self.flexi_surface_offset = flexi_surface_offset
+        self.separate_flexi_ctrls = separate_flexi_ctrls
+        self.use_flexi_ik_chain = use_flexi_ik_chain
 
     def build(self):
         """Entry point. Run method to build rig module.
@@ -74,15 +84,16 @@ class TentacleModule:
 
         """
         self.setup_top_grps()
-        self.setup_fk_flx_jnts()
+        self.setup_fk_flexi_jnts()
         self.build_flexi_base()
         self.build_flexi_offset()
         self.setup_fk_ctrls()
-        self.setup_flx_ctrls()
+        self.setup_flexi_ctrls()
         self.setup_switch_ctrl()
         self.setup_switch_hide_flexi()
         self.setup_global_scale()
-        self.setup_flexi_slide_attrs()
+        self.setup_slide_stretch_attrs()
+        self.hide_lock_items()
 
         return self.mod_top_grp
 
@@ -96,12 +107,12 @@ class TentacleModule:
             empty=True,
             name=f"fk{cap(self.mod_name)}{self.mirr_side}grp",
         )
-        self.flx_top_grp = cmds.group(
+        self.flexi_top_grp = cmds.group(
             empty=True,
-            name=f"flx{cap(self.mod_name)}{self.mirr_side}grp",
+            name=f"flexi{cap(self.mod_name)}{self.mirr_side}grp",
         )
         cmds.parent(self.fk_top_grp, self.mod_top_grp)
-        cmds.parent(self.flx_top_grp, self.mod_top_grp)
+        cmds.parent(self.flexi_top_grp, self.mod_top_grp)
 
     def build_flexi_base(self):
         """Create base flexi surface that will blend between the two joint chains.
@@ -120,34 +131,46 @@ class TentacleModule:
         """This flexi surface is one of the blended chains.
         Attaches to the flexi joint chain that is opposite to the fk chain.
         """
-        self.flexi_offset_mod = flexi_surface_fk_ctrl_mod.FlexiSurfaceFkCtrlModule(
-            rig_module_name=f"{self.mod_name}Offset",
-            mirror_direction=self.mirror_direction,
-            main_joints=self.flx_jnts,
-            flexi_surface=self.flexi_surface_offset,
-            hide_all_ctrls=True,
-        )
-        flexi_offset_top_grp = self.flexi_offset_mod.build()
-        cmds.parent(flexi_offset_top_grp, self.mod_top_grp)
+        if self.use_flexi_ik_chain:
+            self.flexi_offset_mod = (
+                flexi_surface_ik_chain_simple_mod.FlexiSurfaceIkChainSimpleModule(
+                    rig_module_name=f"{self.mod_name}Offset",
+                    mirror_direction=self.mirror_direction,
+                    main_joints=self.flexi_jnts,
+                    flexi_surface=self.flexi_surface_offset,
+                )
+            )
+            flexi_offset_top_grp = self.flexi_offset_mod.build()
+            cmds.parent(flexi_offset_top_grp, self.mod_top_grp)
+        else:
+            self.flexi_offset_mod = flexi_surface_fk_ctrl_mod.FlexiSurfaceFkCtrlModule(
+                rig_module_name=f"{self.mod_name}Offset",
+                mirror_direction=self.mirror_direction,
+                main_joints=self.flexi_jnts,
+                flexi_surface=self.flexi_surface_offset,
+                hide_all_ctrls=True,
+            )
+            flexi_offset_top_grp = self.flexi_offset_mod.build()
+            cmds.parent(flexi_offset_top_grp, self.mod_top_grp)
 
-    def setup_fk_flx_jnts(self):
+    def setup_fk_flexi_jnts(self):
         """Fk and offset flexi blended joint chains.
         Creates fk and flexi surface joint chains to blend main joint chain between.
         """
         fk_jnts = []
-        flx_jnts = []
-        fk_flx_scale_consts = []
+        flexi_jnts = []
+        fk_flexi_scale_consts = []
         for i, jnt in enumerate(self.flexi_joints_main):
             # -------------------------------------------------------------
-            # -------------------- create fk flx chains --------------------
+            # -------------------- create fk flexi chains --------------------
             fk_jnt = create_joint.single_joint(
                 name=f"fk{cap(self.mod_name)}{self.mirr_side}{i + 1:02d}_jnt",
                 radius=5,
                 color_rgb=(1.0, 0.0, 0.1),
                 parent_snap=jnt,
             )
-            flx_jnt = create_joint.single_joint(
-                name=f"flx{cap(self.mod_name)}{self.mirr_side}{i + 1:02d}_jnt",
+            flexi_jnt = create_joint.single_joint(
+                name=f"flexi{cap(self.mod_name)}{self.mirr_side}{i + 1:02d}_jnt",
                 radius=4,
                 color_rgb=(0.0, 0.9, 0.1),
                 parent_snap=jnt,
@@ -156,28 +179,28 @@ class TentacleModule:
             cmds.setAttr(f"{jnt}.segmentScaleCompensate", 0)
 
             # better scaling with constraint instead of blendColors scale
-            fk_flx_scale_const = scale_constr((fk_jnt, flx_jnt), jnt)
+            fk_flexi_scale_const = scale_constr((fk_jnt, flexi_jnt), jnt)
 
             fk_jnts.append(fk_jnt)
-            flx_jnts.append(flx_jnt)
-            fk_flx_scale_consts.append(fk_flx_scale_const)
+            flexi_jnts.append(flexi_jnt)
+            fk_flexi_scale_consts.append(fk_flexi_scale_const)
 
-        # parent fk flx joints into chains
+        # parent fk flexi joints into chains
         for i, jnt in enumerate(fk_jnts):
             if jnt != fk_jnts[0]:
                 cmds.parent(jnt, fk_jnts[i - 1])
-        for i, jnt in enumerate(flx_jnts):
-            if jnt != flx_jnts[0]:
-                cmds.parent(jnt, flx_jnts[i - 1])
+        for i, jnt in enumerate(flexi_jnts):
+            if jnt != flexi_jnts[0]:
+                cmds.parent(jnt, flexi_jnts[i - 1])
 
         # ---------------------------------------------------------------------
         # -------------------- blend joint chains together --------------------
         translate_blend_nodes = []
         rotate_blend_nodes = []
-        for i, (fk_jnt, flx_jnt, jnt) in enumerate(
+        for i, (fk_jnt, flexi_jnt, jnt) in enumerate(
             zip(
                 fk_jnts,
-                flx_jnts,
+                flexi_jnts,
                 self.flexi_joints_main,
                 strict=False,
             ),
@@ -193,17 +216,17 @@ class TentacleModule:
             )
             # translate blend
             cmds.connectAttr(f"{fk_jnt}.translate", f"{tran_blend_node}.color1")
-            cmds.connectAttr(f"{flx_jnt}.translate", f"{tran_blend_node}.color2")
+            cmds.connectAttr(f"{flexi_jnt}.translate", f"{tran_blend_node}.color2")
             cmds.connectAttr(f"{tran_blend_node}.output", f"{jnt}.translate")
             # rotate blend
             cmds.connectAttr(f"{fk_jnt}.rotate", f"{rot_blend_node}.color1")
-            cmds.connectAttr(f"{flx_jnt}.rotate", f"{rot_blend_node}.color2")
+            cmds.connectAttr(f"{flexi_jnt}.rotate", f"{rot_blend_node}.color2")
             cmds.connectAttr(f"{rot_blend_node}.output", f"{jnt}.rotate")
 
             translate_blend_nodes.append(tran_blend_node)
             rotate_blend_nodes.append(rot_blend_node)
 
-        # parent top fk flx joints to locator constrained to main_joints parent
+        # parent top fk flexi joints to locator constrained to main_joints parent
         # accounts for needed blendColor node transform offset
         self.main_joints_parent = cmds.listRelatives(self.main_joints[0], parent=True)
         parent_loc = None
@@ -214,27 +237,27 @@ class TentacleModule:
                 local_scale=(5, 5, 5),
             )[0]
             cmds.parent(fk_jnts[0], parent_loc)
-            cmds.parent(flx_jnts[0], parent_loc)
+            cmds.parent(flexi_jnts[0], parent_loc)
             cmds.parent(self.flexi_joints_main[0], parent_loc)
 
             # parent and hide joint locator and joints
             cmds.parent(parent_loc, self.mod_top_grp)
             cmds.setAttr(f"{parent_loc}.visibility", 0)
         else:
-            for jnt in [fk_jnts[0], flx_jnts[0], self.flexi_joints_main[0]]:
+            for jnt in [fk_jnts[0], flexi_jnts[0], self.flexi_joints_main[0]]:
                 cmds.parent(jnt, self.mod_top_grp)
                 cmds.setAttr(f"{jnt}.visibility", 0)
 
         # assign instance variables
         self.fk_jnts = fk_jnts
-        self.flx_jnts = flx_jnts
-        self.fk_flx_scale_consts = fk_flx_scale_consts
+        self.flexi_jnts = flexi_jnts
+        self.fk_flexi_scale_consts = fk_flexi_scale_consts
         self.translate_blend_nodes = translate_blend_nodes
         self.rotate_blend_nodes = rotate_blend_nodes
         self.parent_loc = parent_loc
 
     def setup_switch_ctrl(self):
-        """Create fk flx switch ctrl."""
+        """Create fk flexi switch ctrl."""
         # ---------- create control crv and grp ----------
         switch_ctrl = create_nurbs_curves.CreateCurves(
             name=f"{self.mod_name}Swch{self.mirr_side}ctrl",
@@ -244,11 +267,11 @@ class TentacleModule:
         switch_ctrl_grp = create_ctrl_grps(switch_ctrl)[0]
 
         # ---------- add attributes ----------
-        # fk flx blend attr
+        # fk flexi blend attr
         add_divider_attribue(control_name=switch_ctrl, divider_amount=10)
         cmds.addAttr(
             switch_ctrl,
-            longName="fkFlxBlend",
+            longName="fkFlexiBlend",
             minValue=0.0,
             maxValue=1.0,
             keyable=True,
@@ -261,12 +284,12 @@ class TentacleModule:
             strict=False,
         ):
             cmds.connectAttr(
-                f"{switch_ctrl}.fkFlxBlend",
+                f"{switch_ctrl}.fkFlexiBlend",
                 f"{node_translate}.blender",
                 force=True,
             )
             cmds.connectAttr(
-                f"{switch_ctrl}.fkFlxBlend",
+                f"{switch_ctrl}.fkFlexiBlend",
                 f"{node_rotate}.blender",
                 force=True,
             )
@@ -276,19 +299,24 @@ class TentacleModule:
             "reverse",
             name=f"{self.mod_name}Swch{self.mirr_side}reverse",
         )
-        cmds.connectAttr(f"{switch_ctrl}.fkFlxBlend", f"{self.fk_top_grp}.visibility")
-        cmds.connectAttr(f"{switch_ctrl}.fkFlxBlend", f"{swch_reverse_nd}.inputX")
-        cmds.connectAttr(f"{swch_reverse_nd}.outputX", f"{self.flx_top_grp}.visibility")
+        cmds.connectAttr(f"{switch_ctrl}.fkFlexiBlend", f"{self.fk_top_grp}.visibility")
+        cmds.connectAttr(f"{switch_ctrl}.fkFlexiBlend", f"{swch_reverse_nd}.inputX")
+        cmds.connectAttr(f"{swch_reverse_nd}.outputX", f"{self.flexi_top_grp}.visibility")
+        if self.use_flexi_ik_chain:
+            cmds.connectAttr(
+                f"{swch_reverse_nd}.outputX",
+                f"{self.flexi_offset_mod.fk_ctrl_top_grp}.visibility",
+            )
 
         # ----- connect switch control scale constraints -----
-        for fk_jnt, flx_jnt, scale_const in zip(
+        for fk_jnt, flexi_jnt, scale_const in zip(
             self.fk_jnts,
-            self.flx_jnts,
-            self.fk_flx_scale_consts,
+            self.flexi_jnts,
+            self.fk_flexi_scale_consts,
             strict=False,
         ):
             cmds.connectAttr(
-                f"{switch_ctrl}.fkFlxBlend",
+                f"{switch_ctrl}.fkFlexiBlend",
                 f"{scale_const}.target[0].targetWeight",
                 force=True,
             )
@@ -331,6 +359,20 @@ class TentacleModule:
             f"{self.flexi_base_mod.fk_ctrl_top_grp}.visibility",
         )
 
+        if self.use_flexi_ik_chain:
+            cmds.addAttr(
+                self.switch_ctrl,
+                longName="flexiOffsetVis",
+                defaultValue=1.0,
+                minValue=0.0,
+                maxValue=1.0,
+                keyable=True,
+            )
+            cmds.connectAttr(
+                f"{self.switch_ctrl}.flexiOffsetVis",
+                f"{self.flexi_offset_mod.fk_ctrl_grps[0]}.visibility",
+            )
+
     def setup_fk_ctrls(self):
         """Create fk ctrl chain. Constrain fk joints to follow fk ctrls."""
         fk_ctrl_grps = []
@@ -368,61 +410,61 @@ class TentacleModule:
         # parent under main fk group
         cmds.parent(fk_ctrl_grps[0], self.fk_top_grp)
 
-        # assign instance variable
-        self.fk_ctrls = fk_ctrls
-
-    def setup_flx_ctrls(self):
+    def setup_flexi_ctrls(self):
         """Create main flexi offset ctrls, opposite to fk ctrl chain.
         Constrain flexi offset joints to main flexi offset ctrls.
         """
-        flx_ctrl_grps = []
-        flx_ctrls = []
+        flexi_ctrl_grps = []
+        flexi_ctrls = []
         for i, jnt in enumerate(self.flexi_joints_offset):
             # control curve and group
-            flx_ctrl = create_nurbs_curves.CreateCurves(
-                name=f"flx{cap(self.mod_name)}{self.mirr_side}{i + 1:02d}_ctrl",
+            flexi_ctrl = create_nurbs_curves.CreateCurves(
+                name=f"flexi{cap(self.mod_name)}{self.mirr_side}{i + 1:02d}_ctrl",
                 size=1.0,
                 color_rgb=(0.4, 0.0, 1.0),
             ).sphere_curve()
-            flx_ctrl_grp = create_ctrl_grps(flx_ctrl)[0]
+            flexi_ctrl_grp = create_ctrl_grps(flexi_ctrl)[0]
 
             # snap ctrl group to joint
-            cmds.matchTransform(flx_ctrl_grp, jnt)
+            cmds.matchTransform(flexi_ctrl_grp, jnt)
 
-            # constrain flx joints to follow ctrls
-            parent_constr(flx_ctrl, jnt)
-            scale_constr(flx_ctrl, jnt)
+            # constrain flexi joints to follow ctrls
+            parent_constr(flexi_ctrl, jnt)
+            scale_constr(flexi_ctrl, jnt)
 
             # lock and hide attributes
             lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
             for axis in "XYZ":
-                cmds.setAttr(f"{flx_ctrl}.scale{axis}", **lock_hide_kwargs)
-            cmds.setAttr(f"{flx_ctrl}.visibility", **lock_hide_kwargs)
+                cmds.setAttr(f"{flexi_ctrl}.scale{axis}", **lock_hide_kwargs)
+            cmds.setAttr(f"{flexi_ctrl}.visibility", **lock_hide_kwargs)
 
             # create group list for parenting
-            flx_ctrl_grps.append(flx_ctrl_grp)
-            flx_ctrls.append(flx_ctrl)
+            flexi_ctrl_grps.append(flexi_ctrl_grp)
+            flexi_ctrls.append(flexi_ctrl)
 
-        # parent controls and groups together
-        for grp, ctrl in zip(flx_ctrl_grps[1:], flx_ctrls, strict=False):
-            cmds.parent(grp, ctrl)
-
-        # parent under main flx group
-        cmds.parent(flx_ctrl_grps[0], self.flx_top_grp)
+        if self.separate_flexi_ctrls:  # avoid parenting ctrls in hierarchy
+            for grp in flexi_ctrl_grps:
+                cmds.parent(grp, self.flexi_top_grp)
+        else:
+            # parent controls and groups together
+            for grp, ctrl in zip(flexi_ctrl_grps[1:], flexi_ctrls, strict=False):
+                cmds.parent(grp, ctrl)
+            # parent under main flexi group
+            cmds.parent(flexi_ctrl_grps[0], self.flexi_top_grp)
 
         # assign instance variable
-        self.flx_ctrls = flx_ctrls
+        self.flexi_ctrls = flexi_ctrls
 
     def setup_global_scale(self):
         """Setup global scale for flexi surfaces."""
         scale_constr(self.parent_loc, self.flexi_base_mod.parent_fk_ctrl_aux_grp)
         scale_constr(self.parent_loc, self.flexi_offset_mod.parent_fk_ctrl_aux_grp)
 
-        cmds.setAttr(f"{self.flexi_base_mod.parent_fk_ctrl_grp}.visibility", 0)
-        cmds.setAttr(f"{self.flexi_offset_mod.parent_fk_ctrl_grp}.visibility", 0)
-
-    def setup_flexi_slide_attrs(self):
-        """Setup flexi slide attributes on first ctrls."""
+    def setup_slide_stretch_attrs(self):
+        """Setup uv slide attribute on first ctrls. Also, set up ik stretch
+        if using flexi ik chain.
+        """
+        # ----- base fk ctrl attrs -----
         add_divider_attribue(control_name=self.flexi_base_mod.fk_ctrls[0], divider_amount=10)
         cmds.addAttr(
             self.flexi_base_mod.fk_ctrls[0],
@@ -437,9 +479,10 @@ class TentacleModule:
             f"{self.flexi_base_mod.parent_fk_ctrl}.uvSlide",
         )
 
-        add_divider_attribue(control_name=self.flx_ctrls[0], divider_amount=10)
+        # ----- flexi ctrl attrs -----
+        add_divider_attribue(control_name=self.flexi_ctrls[0], divider_amount=10)
         cmds.addAttr(
-            self.flx_ctrls[0],
+            self.flexi_ctrls[0],
             longName="uvSlide",
             defaultValue=1.0,
             minValue=0.0,
@@ -447,6 +490,39 @@ class TentacleModule:
             keyable=True,
         )
         cmds.connectAttr(
-            f"{self.flx_ctrls[0]}.uvSlide",
+            f"{self.flexi_ctrls[0]}.uvSlide",
             f"{self.flexi_offset_mod.parent_fk_ctrl}.uvSlide",
         )
+        # add ik stretch attribute
+        if self.use_flexi_ik_chain:
+            add_divider_attribue(control_name=self.flexi_ctrls[0], divider_amount=11)
+            cmds.addAttr(
+                self.flexi_ctrls[0],
+                longName="ikStretch",
+                defaultValue=1.0,
+                minValue=0.0,
+                maxValue=1.0,
+                keyable=True,
+            )
+            cmds.connectAttr(
+                f"{self.flexi_ctrls[0]}.ikStretch",
+                f"{self.flexi_offset_mod.parent_fk_ctrl}.ikStretch",
+            )
+
+    def hide_lock_items(self):
+        """Hide and lock objects and attrs."""
+        cmds.setAttr(f"{self.flexi_base_mod.parent_fk_ctrl_grp}.visibility", 0)
+
+        if self.use_flexi_ik_chain:
+            cmds.setAttr(f"{self.flexi_offset_mod.ik_parent_jnt}.visibility", 0)
+
+            parent_ctrl_shp = cmds.listRelatives(self.flexi_offset_mod.parent_fk_ctrl, shapes=True)
+            # shape vis needs to be saved with crv shape json
+            cmds.setAttr(f"{parent_ctrl_shp[0]}.visibility", 0)
+
+            for fk_ctrl in self.flexi_offset_mod.fk_ctrls:
+                lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
+                for axis in "XYZ":
+                    cmds.setAttr(f"{fk_ctrl}.scale{axis}", **lock_hide_kwargs)
+        else:
+            cmds.setAttr(f"{self.flexi_offset_mod.parent_fk_ctrl_grp}.visibility", 0)

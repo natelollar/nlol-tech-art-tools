@@ -2,15 +2,17 @@ from importlib import reload
 
 from maya import mel
 from nlol.shelves_menus import (
-    animation_shelf,
-    nurbs_curve_shelf,
     reload_shelf,
+    animation_shelf,
+    modeling_shelf,
+    nurbs_curve_shelf,
     rigging_shelf,
     utility_shelf,
 )
 
-reload(animation_shelf)
 reload(reload_shelf)
+reload(animation_shelf)
+reload(modeling_shelf)
 reload(nurbs_curve_shelf)
 reload(rigging_shelf)
 reload(utility_shelf)
@@ -19,9 +21,10 @@ reload(utility_shelf)
 def update_nlol_shelves():
     """Reload nLol shelves."""
     reload_shelf.update_reload_shelf()
-    rigging_shelf.update_rigging_shelf()
     animation_shelf.update_animation_shelf()
+    modeling_shelf.update_modeling_shelf()
     nurbs_curve_shelf.update_nurbs_curve_shelf()
+    rigging_shelf.update_rigging_shelf()
     utility_shelf.update_utility_shelf()
 
     # save all shelves.  otherwise restarting maya may change shelves.

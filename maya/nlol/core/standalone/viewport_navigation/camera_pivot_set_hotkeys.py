@@ -26,6 +26,7 @@ def cam_pivot_to_mouse_hotkey(create_empty_hotkey: bool = False):
     if create_empty_hotkey:  # set empty for when deleting hotkey
         cmds.hotkey(keyShortcut="f", altModifier=True, name="")
     else:
+        cmds.hotkey(keyShortcut="f", altModifier=True, name="CameraPivotToMouse") 
         # requires "NameCommand" suffix for some odd reason
         # suffix required or "alt+f" doesn't get added
         cmds.hotkey(keyShortcut="f", altModifier=True, name="CameraPivotToMouseNameCommand")
@@ -72,6 +73,7 @@ def cam_pivot_to_selected_hotkey(create_empty_hotkey: bool = False):
     if create_empty_hotkey:
         cmds.hotkey(keyShortcut="f", shiftModifier=True, name="")
     else:
+        cmds.hotkey(keyShortcut="f", shiftModifier=True, name="CameraPivotToSelected")
         cmds.hotkey(keyShortcut="f", shiftModifier=True, name="CameraPivotToSelectedNameCommand")
 
     hotkey_query = cmds.hotkey("f", query=True, keyShortcut=True, shiftModifier=True, name=True)

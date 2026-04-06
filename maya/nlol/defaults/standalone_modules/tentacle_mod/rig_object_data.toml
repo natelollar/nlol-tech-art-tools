@@ -9,7 +9,7 @@ flexi_joints_offset = "tailClothFlexi_start_jnt, tailClothFlexi_end_jnt"
 get_joint_chain = true
 flexi_surface_main = "flexiSurfaceTailMain_geo"
 flexi_surface_offset = "flexiSurfaceTailStretch_geo"
-
+use_flexi_ik_chain = true
 
 # ----------
 

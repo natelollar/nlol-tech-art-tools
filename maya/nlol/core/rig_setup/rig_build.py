@@ -11,7 +11,7 @@ from nlol.core.rig_setup import (
     parent_space_switching,
     save_control_curves,
 )
-from nlol.core.rig_tools import mirror_attrs_export_import
+from nlol.core.animation_tools import mirror_attrs_export_import
 from nlol.defaults import rig_folder_path
 from nlol.utilities.nlol_maya_logger import get_logger
 
@@ -45,8 +45,8 @@ def run_rig_build():
     # code modules that import files and cannot be undone
     # ----- skeletal mesh, import "rig_helpers.ma" -----
     build_mesh_skeleton.BuildMeshSkeleton(rig_data_filepath).build_skeletalmesh()
-    # ----- blendshape setup -----
-    build_blendshapes.ConnectBlendShapes(blendshapes_filepath, setdrivenkeys_filepath).build()
+    # ----- import apply blendshapes -----
+    blendshapes_meshes = build_blendshapes.ConnectBlendShapes(blendshapes_filepath).build_import()
     # clear undo after importing
     cmds.select(clear=True)
     cmds.flushUndo()
@@ -60,11 +60,15 @@ def run_rig_build():
         build_flexi_to_cloth.FlexiToCloth().build()
         # ----- rig modules -----
         build_rig_modules.build_modules(rig_data_filepath)
+        # ----- blendshape ctrl connections -----
+        build_blendshapes.ConnectBlendShapes(setdrivenkeys_filepath).build_connect(
+            blendshapes_meshes,
+        )
         # ----- ctrl shapes -----
         save_control_curves.SaveControlCurves(rig_ctrl_crvs_filepath).apply_curve_attributes()
         # ----- parent spaces -----
         parent_space_switching.ParentSpacing(rig_ps_filepath).build()
-        # # ----- load mirror attributes -----
+        # ----- load mirror attributes -----
         mirror_attrs_export_import.MirrorAttrsExportImport(
             mirror_attrs_filepath,
         ).apply_mirror_attrs()

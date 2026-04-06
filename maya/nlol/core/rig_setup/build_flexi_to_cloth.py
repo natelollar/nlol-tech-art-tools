@@ -106,6 +106,7 @@ class FlexiToCloth:
 
                 # top grp parenting
                 cmds.parent(cloth_mesh, self.top_grp)
+                cmds.setAttr(f"{cloth_mesh}.visibility", 0)  # hide
             attach_vertices = attach_mesh_data["attach_vertices"]
             attach_vertices = [vert.replace(flexi_mesh, cloth_mesh) for vert in attach_vertices]
             attach_mesh = attach_mesh_data["attach_mesh"]
@@ -170,9 +171,6 @@ class FlexiToCloth:
             except Exception as e:
                 self.logger.warning(f"Failed to find or apply nCloth preset: {ncloth_preset}\n{e}")
 
-            # other settings
-            cmds.setAttr(f"{ncloth_nd_shp}.inputMeshAttract", 0.10)
-
             # ----- output cloth mesh blendshape -----
             if flexi_mesh != flexi_mesh_current:
                 output_cloth_mesh_shp = cmds.listConnections(
@@ -218,8 +216,10 @@ class FlexiToCloth:
                 nrigid_nd = cmds.listConnections(obj_shp, type="nRigid")[0]
                 nrigid_nd = cmds.rename(nrigid_nd, f"{obj}NRigid")
                 # top grp parenting
-                cmds.parent(nrigid_nd, self.components_grp)
-                cmds.parent(obj, self.top_grp)
+                if cmds.listRelatives(nrigid_nd, parent=True) != [self.components_grp]:
+                    cmds.parent(nrigid_nd, self.components_grp)
+                if cmds.listRelatives(obj, parent=True) != [self.top_grp]:
+                    cmds.parent(obj, self.top_grp)
                 cmds.setAttr(f"{obj}.visibility", 0)
         else:
             self.logger.info('No "collision_meshes.json" in cloth_data rig folder.')
@@ -364,7 +364,8 @@ class FlexiToCloth:
     def apply_ncloth_settings(self):
         """Apply saved nCloth settings from "*Settings.json" files in cloth_data folder.
         Also, supports applying saved settings for a ramp connected to inputAttractMap
-        that was saved previously."""
+        that was saved previously.
+        """
         ncloth_settings = self.get_saved_ncloth_settings()
         for settings in ncloth_settings:
             # ----- apply main cloth settings -----
@@ -375,6 +376,15 @@ class FlexiToCloth:
                         if not value:
                             continue
                         cmds.setAttr(cloth_shp_attr, *value)
+                    elif cloth_shp_attr.split(".")[1] == "inputMeshAttract":
+                        connections = cmds.listConnections(  # aux ctrl connection
+                            cloth_shp_attr,
+                            source=True,
+                            destination=False,
+                            plugs=True,
+                        )
+                        if connections:
+                            cmds.setAttr(connections[0], value)
                     else:
                         cmds.setAttr(cloth_shp_attr, value)
                 except Exception:
@@ -391,6 +401,9 @@ class FlexiToCloth:
                 cloth_shp = cloth_shp_attr.split(".")[0]
                 cloth_shp_name = cloth_shp_attr.split("_")[0]
 
+                ramp_node = cmds.listConnections(f"{cloth_shp}.{map_attr}", source=True)
+                if ramp_node:
+                    cmds.delete(ramp_node[0])
                 ramp_node = cmds.createNode("ramp", name=f"{cloth_shp_name}{cap(map_attr)}_ramp")
                 cmds.connectAttr(f"{ramp_node}.outAlpha", f"{cloth_shp}.{map_attr}")
 
@@ -450,7 +463,7 @@ class FlexiToCloth:
     def get_selected_cloth_settings(self) -> dict[str, dict]:
         """Get nCloth settings from selected nCloth objects.
         Also, supports saving a connected ramp to inputAttractMap.  Once ramp is connected
-        it will be recreated on rig build after initial save.  
+        it will be recreated on rig build after initial save.
         Currently, supports "keyable" for nCloth settings and "settable" for ramp connections.
 
         Returns:
@@ -476,6 +489,9 @@ class FlexiToCloth:
 
             # ----- get settings for ramp connections -----
             for map_attr in self.ncloth_map_inputs():  # inputAttractMap, etc
+                if not cmds.objExists(f"{obj_shp}.{map_attr}"):
+                    msg = 'Make sure "nCloth transform" is selected when exporting cloth settings.'
+                    self.logger.warning(msg)
                 ramp_node = cmds.listConnections(
                     f"{obj_shp}.{map_attr}",
                     plugs=True,
@@ -607,6 +623,18 @@ class FlexiToCloth:
             cmds.connectAttr(
                 f"{self.aux_ctrl}.blendShape{self.ncloth_attr_index}",
                 f"{blendshape_nd}.{output_cloth_mesh_shp}",
+            )
+
+            cmds.addAttr(
+                self.aux_ctrl,
+                longName=f"inputMeshAttract{self.ncloth_attr_index}",
+                attributeType="double",
+                defaultValue=0.10,
+                keyable=True,
+            )
+            cmds.connectAttr(
+                f"{self.aux_ctrl}.inputMeshAttract{self.ncloth_attr_index}",
+                f"{ncloth_nd_shp}.inputMeshAttract",
             )
 
             self.ncloth_attr_index += 1  # index skips over non-ncloth iterations

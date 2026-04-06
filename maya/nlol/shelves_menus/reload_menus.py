@@ -1,10 +1,17 @@
 from importlib import reload
 
 from maya import cmds
-from nlol.shelves_menus import animation_list, nurbs_curve_list, rigging_list, utility_list
+from nlol.shelves_menus import (
+    animation_list,
+    modeling_list,
+    nurbs_curve_list,
+    rigging_list,
+    utility_list,
+)
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(animation_list)
+reload(modeling_list)
 reload(nurbs_curve_list)
 reload(rigging_list)
 reload(utility_list)
@@ -32,13 +39,6 @@ def main_menu():
         parent=nlol_menu,
     )
     # ----- submenus -----
-    rigging_submenu = cmds.menuItem(
-        "rigging_submenu",
-        label="Rigging",
-        parent=nlol_menu,
-        tearOff=True,
-        subMenu=True,
-    )
     animation_submenu = cmds.menuItem(
         "animation_submenu",
         label="Animation",
@@ -46,9 +46,23 @@ def main_menu():
         tearOff=True,
         subMenu=True,
     )
+    modeling_submenu = cmds.menuItem(
+        "modeling_submenu",
+        label="Modeling",
+        parent=nlol_menu,
+        tearOff=True,
+        subMenu=True,
+    )
     nurbs_curve_submenu = cmds.menuItem(
         "nurbs_curve_submenu",
         label="Nurbs Curves",
+        parent=nlol_menu,
+        tearOff=True,
+        subMenu=True,
+    )
+    rigging_submenu = cmds.menuItem(
+        "rigging_submenu",
+        label="Rigging",
         parent=nlol_menu,
         tearOff=True,
         subMenu=True,
@@ -61,17 +75,6 @@ def main_menu():
         subMenu=True,
     )
 
-    # add the rigging menu items
-    rigging_menu_list = rigging_list.build_rigging_list()
-    for menu in rigging_menu_list:
-        kwargs = {
-            key: menu[key]
-            for key in ["label", "annotation", "image", "command"]
-            if key in menu and menu[key] not in (None, "")
-        }
-        kwargs["parent"] = rigging_submenu
-        cmds.menuItem(**kwargs)
-
     # add the animation menu items
     animation_menu_list = animation_list.build_animation_list()
     for menu in animation_menu_list:
@@ -83,6 +86,17 @@ def main_menu():
         kwargs["parent"] = animation_submenu
         cmds.menuItem(**kwargs)
 
+    # add the modeling menu items
+    modeling_menu_list = modeling_list.build_modeling_list()
+    for menu in modeling_menu_list:
+        kwargs = {
+            key: menu[key]
+            for key in ["label", "annotation", "image", "command"]
+            if key in menu and menu[key] not in (None, "")
+        }
+        kwargs["parent"] = modeling_submenu
+        cmds.menuItem(**kwargs)
+
     # add the nurbs curve menu items
     curve_menu_list = nurbs_curve_list.build_curve_list()
     for menu in curve_menu_list:
@@ -92,6 +106,17 @@ def main_menu():
             if key in menu and menu[key] not in (None, "")
         }
         kwargs["parent"] = nurbs_curve_submenu
+        cmds.menuItem(**kwargs)
+
+    # add the rigging menu items
+    rigging_menu_list = rigging_list.build_rigging_list()
+    for menu in rigging_menu_list:
+        kwargs = {
+            key: menu[key]
+            for key in ["label", "annotation", "image", "command"]
+            if key in menu and menu[key] not in (None, "")
+        }
+        kwargs["parent"] = rigging_submenu
         cmds.menuItem(**kwargs)
 
     # add the utilities menu items

@@ -90,6 +90,9 @@ def import_skin_weights(selected_only: bool = False):
         bind_joints = [weights.get("source") for weights in weights_elements]
         logger.debug(f"bind_joints: {bind_joints}")
 
+        if not cmds.objExists(mesh_shape):
+            logger.debug(f"Skipping skin weights. Shape not in scene: {mesh_shape}")
+            continue
         # ---------- apply skin weights ----------
         # unbind old skin weights
         mesh = cmds.listRelatives(mesh_shape, parent=True)[0]

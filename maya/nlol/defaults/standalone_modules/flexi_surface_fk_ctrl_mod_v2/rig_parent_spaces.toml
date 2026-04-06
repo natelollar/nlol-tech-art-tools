@@ -1,0 +1,11 @@
+[[control]]
+control = "pelvis_ctrl"
+parents = "root_ctrl"
+
+# [[control]]
+# control = "fkTail_01_ctrl"
+# parents = "pelvis_ctrl"
+
+[[control]]
+control = "fkTailParent_ctrl"
+parents = "pelvis_ctrl"  # only scale needed. parent ctrl constrained to first follice too.

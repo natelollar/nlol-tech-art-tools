@@ -33,22 +33,30 @@ class ConnectBlendShapes:
 
         self.logger = get_logger()
 
-    def build(self):
+    def build_import(self):
         """Create setup for rig blendshapes.
         --------------------------------------------------
         Import and transfer blendshapes from "blendshapes.ma".
-        Connect blendshapes to ctrls from "rig_helpers.ma".
         Useful for face blendshape setup.
         """
-        cmds.undoInfo(openChunk=True)
-        try:
-            self.blendshapes_file_import()
-            self.find_transfer_blendshapes()
-            top_ctrl_grp = self.setdrivenkey_connections()
-            self.top_grouping(top_ctrl_grp)
-            self.cleanup_leftovers()
-        finally:
-            cmds.undoInfo(closeChunk=True)
+        self.blendshapes_file_import()
+        meshes_with_blendshapes = self.find_transfer_blendshapes()
+        self.cleanup_leftovers()
+
+        return meshes_with_blendshapes
+
+    def build_connect(self, meshes_with_blendshapes: list[str]):
+        """Finish setup for rig blendshapes.
+        --------------------------------------------------
+        Connects blendshapes to ctrls from "rig_helpers.ma" or
+        connect to ctrls built from a rig module.
+
+        Args:
+            Scene mesh transforms that have a connected blendshape node.
+
+        """
+        top_ctrl_grps = self.setdrivenkey_connections(meshes_with_blendshapes)
+        self.top_grouping(top_ctrl_grps)
 
     def blendshapes_file_import(self):
         """Import blendshapes file containing meshes with blendshape nodes
@@ -66,9 +74,14 @@ class ConnectBlendShapes:
 
         cmds.file(self.blendshapes_filepath, i=True)
 
-    def find_transfer_blendshapes(self):
+    def find_transfer_blendshapes(self) -> list[str]:
         """Find blendshape meshes and there matches.
         Then transfer blendshapes to the matching meshes.
+
+        Returns:
+            List of scene mesh transforms with blendshapes.
+            Meshes that found a match and had blendshapes applied from imported meshes.
+
         """
         mesh_shps = cmds.ls(type="mesh", noIntermediate=True)
         meshes = [cmds.listRelatives(shp, parent=True)[0] for shp in mesh_shps]
@@ -95,8 +108,7 @@ class ConnectBlendShapes:
                     f'Target mesh not exist: "{target_mesh}". Skipping blendshape transfer.',
                 )
 
-        # instance variables
-        self.meshes_with_blendshapes = matching_meshes
+        return matching_meshes
 
     def transfer_blendshapes(self, source_mesh, target_mesh):
         """Transfer blendshapes from "source mesh" to "target mesh".
@@ -136,12 +148,12 @@ class ConnectBlendShapes:
         blendshape_nd_name = f"{target_mesh}BlendShape"
         cmds.rename(target_blendshape_nd, blendshape_nd_name)
 
-    def setdrivenkey_connections(self) -> str:
+    def setdrivenkey_connections(self, meshes_with_blendshapes) -> str:
         """Connect blendshapes or other object attributes to transform ctrls
         via set driven keys.
 
         Returns:
-            Top grp for setdrivenkey ctrls.
+            Scene top grp for setdrivenkey ctrls.
 
         """
         if not Path(self.setdrivenkeys_filepath).is_file():
@@ -158,7 +170,7 @@ class ConnectBlendShapes:
         # ----- base values -----
         # get blendshape nodes from meshes
         try:
-            blendshape_objs = self.meshes_with_blendshapes  # get mesh names from already imported
+            blendshape_objs = meshes_with_blendshapes  # get mesh names from already imported
         except Exception:
             blendshape_objs = toml_data.get("blendshape_objs", "")  # get mesh names from toml
             blendshape_objs = blendshape_objs.split(",")
@@ -177,10 +189,6 @@ class ConnectBlendShapes:
         # data list
         setdrivenkeys_data = toml_data["setdrivenkeys"]
 
-        # ----- get top ctrl grp -----
-        first_crv = setdrivenkeys_data[0]["transform_crv"]
-        top_ctrl_grp = get_top_parent(first_crv)
-
         # ----- get mirrored "setdrivenkeys" -----
         right_setdrivenkeys_data = []
         for data in setdrivenkeys_data:
@@ -196,6 +204,8 @@ class ConnectBlendShapes:
                 if mirror_right_invert:
                     crv_end = -crv_end  # invert float
 
+                blendshape_fix_attrs = swap_side_str(data.get("blendshape_fix_attrs", ""))
+
                 data_dict = {
                     "blendshape_attr": blendshape_attr,
                     "object_attr": object_attr,
@@ -205,20 +215,25 @@ class ConnectBlendShapes:
                     "blendshape_end": data.get("blendshape_end"),
                     "crv_start": data.get("crv_start"),
                     "crv_end": crv_end,
+                    "blendshape_fix_attrs": blendshape_fix_attrs,
                 }
                 right_setdrivenkeys_data.append(data_dict)
         setdrivenkeys_data.extend(right_setdrivenkeys_data)
 
         # ----- iterate through "setdrivenkeys" -----
+        active_transform_values = {}  # transform data for transformLimits
+        crv_top_grps = []
         for data in setdrivenkeys_data:
             blendshape_attr = data.get("blendshape_attr", "")
-            object_attr = data.get("object_attr")
+            object_attr = data.get("object_attr", "")
             transform_crv = data["transform_crv"]
             crv_attr = data["crv_attr"]
             blendshape_start = data.get("blendshape_start")
             blendshape_end = data.get("blendshape_end")
             crv_start = data.get("crv_start")
             crv_end = data.get("crv_end")
+            blendshape_fix_attrs = data.get("blendshape_fix_attrs", "").split(",")
+            blendshape_fix_attrs = [txt.strip() for txt in blendshape_fix_attrs if txt.strip()]
 
             blendshape_start = blendshape_start or 0.0
             blendshape_end = blendshape_end or 1.0
@@ -234,32 +249,38 @@ class ConnectBlendShapes:
                 self.logger.error(msg)
                 raise ValueError(msg)
 
-            if object_attr:
-                # start
-                cmds.setDrivenKeyframe(
-                    object_attr,
-                    currentDriver=f"{transform_crv}.{crv_attr}",
-                    value=blendshape_start,
-                    driverValue=crv_start,
-                    inTangentType=in_tangent_type,
-                    outTangentType=out_tangent_type,
-                )
-                # end
-                cmds.setDrivenKeyframe(
-                    object_attr,
-                    currentDriver=f"{transform_crv}.{crv_attr}",
-                    value=blendshape_end,
-                    driverValue=crv_end,
-                    inTangentType=in_tangent_type,
-                    outTangentType=out_tangent_type,
-                )
+            # key object transform based on crv positions
+            if object_attr:  # example: "mouthCorner_left_ctrl.translateY"
+                if cmds.objExists(object_attr):
+                    cmds.setDrivenKeyframe(  # start
+                        object_attr,
+                        currentDriver=f"{transform_crv}.{crv_attr}",
+                        value=blendshape_start,
+                        driverValue=crv_start,
+                        inTangentType=in_tangent_type,
+                        outTangentType=out_tangent_type,
+                    )
+                    cmds.setDrivenKeyframe(  # end
+                        object_attr,
+                        currentDriver=f"{transform_crv}.{crv_attr}",
+                        value=blendshape_end,
+                        driverValue=crv_end,
+                        inTangentType=in_tangent_type,
+                        outTangentType=out_tangent_type,
+                    )
+                    active_transform_values.setdefault(f"{transform_crv}.{crv_attr}", []).extend(
+                        [crv_start, crv_end],
+                    )
+                else:
+                    msg = f'Does not exist. Skipping connection: "{object_attr}"'
+                    self.logger.info(msg)
 
-            if not blendshape_nds:  # skip
+            if not blendshape_nds or not blendshape_attr:  # skip
                 continue
+            # key blendshape weights based on crv positions
             for blendshape_nd in blendshape_nds:
                 if cmds.objExists(f"{blendshape_nd}.{blendshape_attr}"):
-                    # start
-                    cmds.setDrivenKeyframe(
+                    cmds.setDrivenKeyframe(  # start
                         f"{blendshape_nd}.{blendshape_attr}",
                         currentDriver=f"{transform_crv}.{crv_attr}",
                         value=blendshape_start,
@@ -267,8 +288,7 @@ class ConnectBlendShapes:
                         inTangentType=in_tangent_type,
                         outTangentType=out_tangent_type,
                     )
-                    # end
-                    cmds.setDrivenKeyframe(
+                    cmds.setDrivenKeyframe(  # end
                         f"{blendshape_nd}.{blendshape_attr}",
                         currentDriver=f"{transform_crv}.{crv_attr}",
                         value=blendshape_end,
@@ -276,22 +296,130 @@ class ConnectBlendShapes:
                         inTangentType=in_tangent_type,
                         outTangentType=out_tangent_type,
                     )
+                    active_transform_values.setdefault(f"{transform_crv}.{crv_attr}", []).extend(
+                        [crv_start, crv_end],
+                    )
                 else:
                     msg = (
                         f'Does not exist. Skipping connection: "{blendshape_nd}.{blendshape_attr}"'
                     )
-                    self.logger.info(msg)
+                    self.logger.debug(msg)
 
-        return top_ctrl_grp
+                # connect corrective blendshape weights
+                for fix_attr in blendshape_fix_attrs:
+                    if cmds.objExists(f"{blendshape_nd}.{fix_attr}"):
+                        multiply_nd = cmds.listConnections(
+                            f"{blendshape_nd}.{fix_attr}",
+                            source=True,
+                            type="multiply",
+                        )
+                        if multiply_nd:  # if mult node, get attached set range node
+                            setrange_nd = list(
+                                set(
+                                    cmds.listConnections(
+                                        multiply_nd,
+                                        source=True,
+                                        type="setRange",
+                                    ),
+                                ),
+                            )
+                            multiply_nd = multiply_nd[0]
+                            setrange_nd = setrange_nd[0]
+                        else:
+                            multiply_nd = cmds.createNode(
+                                "multiply",
+                                name=f"{fix_attr}Multiply",
+                            )
+                            setrange_nd = cmds.createNode(
+                                "setRange",
+                                name=f"{fix_attr}SetRange",
+                            )
+                            cmds.connectAttr(f"{multiply_nd}.output", f"{blendshape_nd}.{fix_attr}")
+                            cmds.connectAttr(f"{setrange_nd}.outValueX", f"{multiply_nd}.input[0]")
+                            cmds.connectAttr(f"{setrange_nd}.outValueY", f"{multiply_nd}.input[1]")
+                            cmds.connectAttr(f"{setrange_nd}.outValueZ", f"{multiply_nd}.input[2]")
+                            cmds.setAttr(f"{setrange_nd}.valueX", 1.0)
+                            cmds.setAttr(f"{setrange_nd}.valueY", 1.0)
+                            cmds.setAttr(f"{setrange_nd}.valueZ", 1.0)
+                            cmds.setAttr(f"{setrange_nd}.maxX", 1.0)
+                            cmds.setAttr(f"{setrange_nd}.maxY", 1.0)
+                            cmds.setAttr(f"{setrange_nd}.maxZ", 1.0)
 
-    def top_grouping(self, top_ctrl_grp: str):
+                        # transform crv (ctrl) to setRange node, to control corrective blendshape
+                        crv_attr_axis = (crv_attr[-1]).capitalize()
+                        cmds.connectAttr(
+                            f"{transform_crv}.{crv_attr}",
+                            f"{setrange_nd}.value{crv_attr_axis}",
+                        )
+                        crv_start_end = [crv_start, crv_end]  # set negative end values to Min
+                        low_val, high_val = min(crv_start_end), max(crv_start_end)
+                        cmds.setAttr(f"{setrange_nd}.oldMin{crv_attr_axis}", low_val)
+                        cmds.setAttr(f"{setrange_nd}.oldMax{crv_attr_axis}", high_val)
+                        # reverse min max range if crv_end in negative
+                        if low_val < 0:
+                            cmds.setAttr(f"{setrange_nd}.min{crv_attr_axis}", 1.0)
+                            cmds.setAttr(f"{setrange_nd}.max{crv_attr_axis}", 0.0)
+
+            # get top grps for parenting
+            crv_top_grp = get_top_parent(transform_crv)
+            crv_top_grps.append(crv_top_grp)
+
+        # ----- set transform limits -----
+        # lock and hide attrs first
+        for transform_crv_attr in active_transform_values:
+            transform_crv = transform_crv_attr.split(".")[0]
+            lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
+            for axis in "XYZ":
+                cmds.setAttr(f"{transform_crv}.translate{axis}", **lock_hide_kwargs)
+                cmds.setAttr(f"{transform_crv}.rotate{axis}", **lock_hide_kwargs)
+                cmds.setAttr(f"{transform_crv}.scale{axis}", **lock_hide_kwargs)
+            cmds.setAttr(f"{transform_crv}.visibility", **lock_hide_kwargs)
+
+        for transform_crv_attr, values in active_transform_values.items():
+            transform_crv = transform_crv_attr.split(".")[0]
+            crv_attr = transform_crv_attr.split(".")[1]
+            low_val, high_val = min(values), max(values)
+            self.logger.debug(f"{transform_crv_attr = }")
+            self.logger.debug(f"{values = }")
+            self.logger.debug(f"{low_val = }")
+            self.logger.debug(f"{high_val = }")
+
+            # unlock and show attr to limit
+            cmds.setAttr(transform_crv_attr, keyable=True, lock=False)
+
+            # enable and set limit values on attr
+            if crv_attr in ["translateY", "ty"]:
+                cmds.transformLimits(
+                    transform_crv,
+                    translationY=[low_val, high_val],
+                    enableTranslationY=[1, 1],
+                )
+            elif crv_attr in ["translateX", "tx"]:
+                cmds.transformLimits(
+                    transform_crv,
+                    translationX=[low_val, high_val],
+                    enableTranslationX=[1, 1],
+                )
+            elif crv_attr in ["translateZ", "tz"]:
+                cmds.transformLimits(
+                    transform_crv,
+                    translationZ=[low_val, high_val],
+                    enableTranslationZ=[1, 1],
+                )
+
+        # ----- remove duplicate top group strings -----
+        top_ctrl_grps = list(set(crv_top_grps))
+
+        return top_ctrl_grps
+
+    def top_grouping(self, top_ctrl_grps: str):
         """Parent ctrl grp to top rig grp.
 
         Args:
-            top_ctrl_grp: Main ctrl grp.
+            top_ctrl_grps: Main ctrl grp.
 
         """
-        CommonBuildFunctions().top_rig_grouping(top_ctrl_grp)
+        CommonBuildFunctions().top_rig_grouping(top_ctrl_grps)
 
     def cleanup_leftovers(self):
         """Remove unused nodes, specifically,

@@ -1,3 +1,5 @@
+import math
+
 import shiboken6
 from PySide6.QtWidgets import QApplication
 
@@ -192,3 +194,71 @@ def center_all_windows():
                 QApplication.primaryScreen().availableGeometry().center() - widget.rect().center(),
             )
             widget.showNormal()  # Restores the widget after it has been maximized or minimized.
+
+
+def distance_between(object_1: str, object_2: str, use_bbox: bool = False) -> float:
+    """Calculate distance between to object pivots in 3D space. Optionally,
+    use bounding box center to calculate distance between.
+
+    Args:
+        object_1: Starting object for distance measurement.
+        object_2: Ending object for distance measurement.
+        use_bbox: Use bounding box center point instead of rotate pivot for start and end points.
+
+    Returns:
+        Distance between the two objects.
+
+    """
+    if use_bbox:
+        # xmin, ymin, zmin, xmax, ymax, zmax
+        bbox_1 = cmds.exactWorldBoundingBox(object_1)
+        bbox_2 = cmds.exactWorldBoundingBox(object_2)
+
+        pos_1 = (
+            (bbox_1[0] + bbox_1[3]) / 2,
+            (bbox_1[1] + bbox_1[4]) / 2,
+            (bbox_1[2] + bbox_1[5]) / 2,
+        )
+        pos_2 = (
+            (bbox_2[0] + bbox_2[3]) / 2,
+            (bbox_2[1] + bbox_2[4]) / 2,
+            (bbox_2[2] + bbox_2[5]) / 2,
+        )
+    else:
+        pos_1 = cmds.xform(object_1, query=True, worldSpace=True, rotatePivot=True)
+        pos_2 = cmds.xform(object_2, query=True, worldSpace=True, rotatePivot=True)
+
+    # euclidean distance formula, distance formula, pythagorean distance
+    distance = math.sqrt(
+        (pos_2[0] - pos_1[0]) ** 2 + (pos_2[1] - pos_1[1]) ** 2 + (pos_2[2] - pos_1[2]) ** 2,
+    )
+
+    return distance
+
+
+def hide_shape_transforms(shape_types: str | list[str]) -> None:
+    """Hide transform of shape type."""
+    if isinstance(shape_types, str):
+        shape_types = [shape_types]
+
+    for shape_type in shape_types:
+        shapes = cmds.ls(type=shape_type)
+        transforms = [cmds.listRelatives(shp, parent=True)[0] for shp in shapes]
+        for transform in transforms:
+            cmds.setAttr(f"{transform}.visibility", 0)
+
+
+def hide_rig_clutter():
+    """Hide rig clutter after showing entire hierarchy."""
+    hide_shape_transforms(["distanceDimShape"])
+
+
+def multi_parent_const():
+    """Parent multiple objects to a single object.
+    Useful for constraining multiple ctrls to a single locator
+    for a temporary pivot. Constrain to last selected object.
+    """
+    selected = cmds.ls(sl=True)
+    for obj in selected:
+        if obj != selected[-1]:
+            cmds.parentConstraint(selected[-1], obj, maintainOffset=True, weight=1.0)
