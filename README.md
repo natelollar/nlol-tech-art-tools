@@ -7,14 +7,14 @@
 - Build the same rig across multiple character versions with ease.
 - Adjust joints and rebuild without starting over.
 - Easily edit and adapt rig build setup to custom rigs.
-- Add any number of modules to a rig.
+- Add any number of rig modules to a character.
 - Config-driven setup via TOML files.
   - Set up rig modules via `rig_object_data.toml`.
   - Set up parent spaces via `rig_parent_spaces.toml`.
   - Set up display layers via `rig_display_layers.toml`.
 - Rig build entry point: `.../nlol-tech-art-tools/maya/nlol/core/rig_setup/rig_build.py`
 - Launch rig build via menu/shelf button: `nLol Rigging < Build Rig`
-- Example rig setup: `maya/nlol/defaults/rig_unreal`
+- Example rig setup: `maya/nlol/defaults/rig_unreal/`
 - Additional tools include animation retargeting, control mirroring, asset scattering, and more.  
 - Also, saving/loading of skin weights, control shapes, materials, cloth settings, and animations.
 
@@ -22,19 +22,22 @@
 1. Drag and drop `maya_install.py` into the Maya viewport.
 2. Creates Maya menu and shelves automatically.
 3. Updates `Maya.env` with `MAYA_MODULE_PATH` pointing to `.../nlol-tech-art-tools/maya/`.
-4. Allows nLol Tools to locate `nlol_env.mod`.
+   - Points to wherever user has placed folder.
+4. Allows nLol Tools in Maya to locate `nlol_env.mod`.
 
 ### *Locations*
 - Generic save location for json files is the `/defaults` folder.
   - `.../nlol-tech-art-tools/maya/nlol/defaults/`.
   - The defaults folder also contains readmes for certain config files.
-- Custom rig folder path is defined in `/defaults/rig_folder_path.py`.
+- Custom **rig folder path** is defined in `/defaults/rig_folder_path.py`.
+  - Must be adjusted to user custom rig folder.
+  - Example: `D:/projects/fantasy_world/characters/dragon/rig/auto_rig/`
 
 # *Modular Auto Rigger*
 - For rig building example, see custom rig folder `/defaults/rig_unreal/`.
   - Set custom rig folder here to test rig building.
-  - Also, set custom rig folder to folders in `/defaults/standalone_modules/` for additional examples.
-- Readme files to aid in creating the toml config files can be found in the `/defaults` folder.
+  - Or set to custom rig folders in `/defaults/standalone_modules/` for additional testing.
+- Readmes to aid in creating the toml configs can be found in the `/defaults` folder.
   - Example: `.../nlol-tech-art-tools/maya/nlol/defaults/readme_rig_object_data.md`
 ### *Basic Steps:*   
 1. Add custom rig folder path to `/defaults/rig_folder_path.py` using the `rig_folderpath` variable.
@@ -44,6 +47,7 @@
 3. Create a skeleton for the model/s and save as `skeleton.ma` in `/custom_rig_folder`.
 4. Skin skeleton to model/s. Export weights to `/custom_rig_folder/skin_weights/`.
    - Rename model skin clusters to "meshBaseName_skinCluster" before exporting.
+     - Easily rename with `nLol Rigging < Rename Skin Cluster`.
    - Export in one click via `nLol Rigging < Export Skin Cluster`.
      - Or manually export weights with Maya `Modeling < Deform < Export Weights...` as XML.
 5. Now test that the skeletal mesh builds via `nLol Rigging < Build Skeletal Mesh Only`.
@@ -76,8 +80,7 @@
   - Or manually apply to controls with `nLol Animation < Load Mirror Attributes`.
 - This allows rig controls to be mirrored across local X axis when animating.
 #### *Rig Cloth Setup:*  
-- Cloth setup for rig.
-  - Cloth data saves to `/custom_rig_folder/cloth_data`.
+- Cloth data saves to `/custom_rig_folder/cloth_data/`.
 - Use `nLol Animation < Save Attach Verts and Object` to export cloth data.
   - Select verts of cloth mesh and attach object, then run.
   - Saves to file with suffix `*DynamicConstraint.json`.
@@ -87,13 +90,12 @@
 - Use `nLol Animation < Save nCloth Settings` to save cloth settings.
   - Settings are applied when rig is built.
   - An nCloth object must be selected when saving out the settings.
-  - Easiest to adjust cloth settings after rig has been built. Then export and rebuild rig.
+  - Easiest to adjust cloth settings with rig built. Then export and rebuild rig.
 - Save cloth geometry in `rig_helpers.ma`.
-  - Or if cloth is part of final model, its okay to save in `model.ma`.
+  - Or if cloth is part of final model its okay to save in `model.ma`.
 - Cloth setup will be applied when rig is built.
   - A cloth auxiliary control will be added to the rig, with scene cloth attributes.
 #### *Rig Blendshape Setup:*  
-- Blendshape setup for rig.
 - Save blendshapes to `/custom_rig_folder/blendshapes.ma`.
 - Blendshapes should be on a single mesh. 
   - Mesh should be same name as original except with string "BlendShapes".
@@ -101,7 +103,7 @@
 - Add rig controls for blendshapes to `rig_helpers.ma`.
 - Configure setup for blendshapes and controls in `/custom_rig_folder/blendshape_setdrivenkeys.toml`.
   - This config file needs to be manually created.
-  - Contains data for connecting rig control to blendshapes via set driven keys.
+  - Contains data for connecting rig controls to blendshapes via set driven keys.
 - See `/defaults/readme_blendshape_setdrivekeys.md` for more details on toml setup.
 
 # *'Animation' Shelf/Submenu*  
@@ -371,6 +373,9 @@
 - *Center All Windows*
   - Centers all Maya windows to primary monitor, including custom PySide windows.
   - Useful if windows lost from adjusting multi-monitor display.
+- *nLol Main UI*
+  - Opens nLol dockable UI that contains all nLol buttons.
+  - An alternative to the shelf or menu. 
 - *Renamer Tool UI*
   - Helpful tool for quickly renaming objects in Maya. 
 
