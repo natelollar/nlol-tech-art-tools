@@ -92,7 +92,7 @@ def build_animation_list():
             "sourceType": "python",
         },
         {
-            "label": "Apply All Keyframes",
+            "label": "Load All Keyframes",
             "image": "pythonFamily.png",
             "annotation": "Load keyframe data for SAVED objects for all frames "
             "in the saved animation playback range. "
@@ -217,7 +217,7 @@ def build_animation_list():
             "label": "Multi Parent Constraint",
             "image": "pythonFamily.png",
             "annotation": "Useful for constraining multiple ctrls to a single locator "
-            "for a temporary pivot. Constrain to last selected object.",
+            "for a temporary pivot. Constrains to last selected object.",
             "imageOverlayLabel": "MltPrt",
             "backgroundColor": random_clrs[26],
             "command": "from nlol.core.standalone import small_functions\n"
@@ -264,7 +264,7 @@ def build_animation_list():
         },
         shelf_separator,
         {
-            "label": "Save Load Anim UI",
+            "label": "Animation Save Load UI",
             "image": "pythonFamily.png",
             "annotation": "UI for saving and loading animation data for selected objects.",
             "imageOverlayLabel": "KeyUI",

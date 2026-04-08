@@ -196,7 +196,7 @@ def build_modeling_list():
         },
         shelf_separator,
         {
-            "label": "Scatter Tool",
+            "label": "Scatter Tool UI",
             "image": "pythonFamily.png",
             "annotation": "Scatter selected objects to last selected object.",
             "imageOverlayLabel": "SctrUI",
@@ -206,7 +206,7 @@ def build_modeling_list():
         },
         shelf_separator,
         {
-            "label": "Export Import Tool",
+            "label": "Export Import Tool UI",
             "image": "pythonFamily.png",
             "annotation": "Export and import multiple selected objects.",
             "imageOverlayLabel": "ExImUI",
