@@ -161,13 +161,14 @@
   - Exports materials to `/custom_rig_folder/materials/`.
   - Select objects with materials connected via hypershade and click export.
   - Example material name: "characterProp_mat"
-  - Materials saved in Maya ".ma" files named after saved materials.
+  - Materials saved to MA files named after materials.
 - *Import Materials to Selected*  
-  - Import materials for selected mesh objects from nLol rig folder path.
+  - Import materials for selected mesh objects from `/materials` folder.
   - Mesh should have same base name as material.
 - *Update materials*
   - Updates all materials in scene based off whats in the `/materials` folder.
   - Or update materials of only selected objects.
+  - Scene materials will be updated if they have same name as a saved material.
 - *Substance Arnold Material*
   - Drag and drop "BaseColor", "OcclusionRoughnessMetallic", and "Normal" map into hypershade window.
   - Select the three file nodes and a shading group node, then click the button to create material.
@@ -223,9 +224,9 @@
   - Saves to and loads from `/defaults/other_control_curves.json`.  
   - No selection needed to load shapes in.
 - *Replace Curve Shapes*
-  - Replace rig control curves shapes with first select curve.
+  - Replace rig control curves shapes with first selected curve.
 - *Mirror Control Curves*
-  - Mirror selected control curve's shapes to opposite side controls, across world space X.
+  - Mirror selected control curves shapes to opposite side controls, across world space X.
 --------------------  
 - *Build Skeletal Mesh Only*
   - Build rig up to the skeletal mesh, then stop.
@@ -233,7 +234,7 @@
 - *Build Rig*
   - Build entire rig from `/custom_rig_folder/rig_object_data.toml`.
     - Saves rig module data, including what rig modules build on what joints.
-    - See `/defaults/rig_object_data.toml` for more detail.  
+    - See `/defaults/readme_rig_object_data.md` for more detail.  
   - Other config files, scripts, and Maya files that help build the the rig include:
     - These files are placed in the root `/custom_rig_folder`. Not all are required.
     - `rig_parent_spaces.toml` 
