@@ -18,6 +18,7 @@ incrementalSave/
 tmp/
 .mayaSwatches/
 old/
+nlol-tech-art-tools.code-workspace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

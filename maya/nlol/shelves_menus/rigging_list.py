@@ -210,7 +210,7 @@ def build_rigging_list():
             "sourceType": "python",
         },
         {
-            "label": "Replace Curve Shape",
+            "label": "Replace Curve Shapes",
             "image": "pythonFamily.png",
             "annotation": "Replace last selected curves with first selected curve."
             " This will replace the curve shapes underneath each curve transform.",
@@ -338,7 +338,7 @@ def build_rigging_list():
             "sourceType": "python",
         },
         {
-            "label": "Save Control Curves",
+            "label": "Save Rig Control Curves",
             "image": "pythonFamily.png",
             "annotation": "Save control curve shape attributes to load back in when building the rig.",
             "imageOverlayLabel": "SvCrvs",
@@ -540,6 +540,16 @@ def build_rigging_list():
         },
         shelf_separator,
         {
+            "label": "Rename Skin Cluster",
+            "image": "pythonFamily.png",
+            "annotation": "Rename selected mesh's skin cluster using nLol naming convention.",
+            "imageOverlayLabel": "RnmSkn",
+            "backgroundColor": random_clrs[34],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "small_functions.rename_skincluster()",
+            "sourceType": "python",
+        },
+        {
             "label": "Export Skin Clusters",
             "image": "pythonFamily.png",
             "annotation": "Select one or more skinned meshes and export their skin clusters to xml."
@@ -648,17 +658,6 @@ def build_rigging_list():
             "sourceType": "python",
         },
         shelf_separator,
-        # Miscellaneous
-        {
-            "label": "Rename Skin Cluster",
-            "image": "pythonFamily.png",
-            "annotation": "Rename selected mesh's skin cluster using nLol naming convention.",
-            "imageOverlayLabel": "RnmSkn",
-            "backgroundColor": random_clrs[34],
-            "command": "from nlol.core.standalone import small_functions\n"
-            "small_functions.rename_skincluster()",
-            "sourceType": "python",
-        },
     ]
 
     return rigging_list

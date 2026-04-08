@@ -2,7 +2,12 @@
 ```
 Rig object data for specified rig modules.  
 ```
----
+#### Root Level Parameters:
+- `rig_name` (str): Name string used for top rig and skeletal mesh groups.  
+    Optional.
+- `unreal_rig` (bool): Sets skeletal mesh group rotate "x" to -90.  
+    Optional.
+
 #### [[rig_module]] Parameters:
 - `rig_module` (str): Existing rig module.
 - `rig_module_name` (str): Custom rig module name. 
@@ -51,16 +56,183 @@ Rig object data for specified rig modules.
     This geo is used for creating stretchy joint setups and for applying cloth simulation. Usually has skinning and joints kept in  "rig_helpers.ma".
     "flexi_surface_ik_chain_mod", "flexi_surface_fk_ctrl_mod", "tentacle_mod".
 
----
-*Lists written as "string lists".*  
-*nLol naming convention: `<name>_<direction>_<id>_<type>`*
-
-#### Root Level Parameters:
-- `rig_name` (str): Name string used for top rig and skeletal mesh groups.
-- `unreal_rig` (bool): Sets skeletal mesh group rotate "x" to -90.
-
 #### Parent Space Switching:
 - Each built rig module will have objects to constrain for parent space switching and general parenting.  
     - Often the top or end ctrl can be used. 
 - Parent space switching can be set up in "rig_parent_spaces.toml".
     - "parent_space_switching.py" will find the parent space switch group based on the input ctrl.
+---
+*Lists written as "string lists".*  
+*nLol naming convention: `<name>_<direction>_<id>_<type>`*
+<br/> 
+<br/> 
+
+### *Example `rig_object_data.toml`*:
+```
+[[rig_module]]
+rig_module = "world_control_mod" 
+rig_module_name = "world" 
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "global" 
+joints = "root_jnt"
+constraint = false
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "root" 
+joints = "root_jnt"
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "cog" 
+joints = "cog_loc"
+constraint = false
+display_layer = true
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "pelvis" 
+joints = "pelvis_jnt"
+
+# ---------- legs ----------
+[[rig_module]]
+rig_module = "digitigrade_leg_mod" 
+rig_module_name = "leg"
+mirror_direction = "left" 
+joints = "hip_left_jnt, knee_left_jnt, ankle_left_jnt, foot_left_jnt, toeMain_left_jnt"
+invert_foot_lean = true
+invert_foot_tilt = true
+mirror_right = true
+# flip_spring_solver = true
+
+# ---------- tail ----------
+[[rig_module]]
+rig_module = "tentacle_mod" 
+rig_module_name = "tail"
+joints = "tail_01_jnt, tail_09_jnt"
+flexi_joints_main = "tailBase_01_jnt, tailBase_09_jnt"
+flexi_joints_offset = "tailOffset_01_jnt, tailOffset_03_jnt"
+get_joint_chain = true
+flexi_surface_main = "flexiSurfaceTailBase_geo"
+flexi_surface_offset = "flexiSurfaceTailOffset_geo"
+use_flexi_ik_chain = true
+
+# ---------- spine ----------
+[[rig_module]]
+rig_module = "fk_ik_spline_chain_mod" 
+rig_module_name = "spine" 
+joints = "spine_01_jnt, spine_04_jnt"
+get_joint_chain = true
+
+# ----- arms/wings -----
+[[rig_module]]
+rig_module = "biped_limb_mod" 
+rig_module_name = "arm" 
+mirror_direction = "left"
+joints = "shoulder_left_jnt, elbow_left_jnt, wrist_left_jnt" 
+polevector_ctrl_distance = 150
+mirror_right = true
+
+[[rig_module]]
+rig_module = "fk_aim_mod" 
+rig_module_name = "elbow" 
+mirror_direction = "left"
+joints = "wingElbow_01_left_jnt"
+aim_object = "ikArmPoleVector_left_ctrl"
+mirror_right = true
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "wingFinger" 
+mirror_direction = "left" 
+joints = """
+wingFinger_a01_left_jnt, 
+wingFinger_b01_left_jnt,
+wingFinger_c01_left_jnt,
+wingFinger_c02_left_jnt,
+wingFinger_d01_left_jnt,
+wingFinger_e01_left_jnt
+"""
+use_joint_names = true
+mirror_right = true
+
+# ----- shoulder/clavicle -----
+[[rig_module]]
+rig_module = "fk_ik_single_chain_mod" 
+rig_module_name = "shoulder" 
+mirror_direction = "left"
+joints = "clavicle_left_jnt, shoulder_left_jnt" 
+mirror_right = true
+enable_auto_clav = true
+ik_wrist_ctrl = "ikEndArm_left_ctrl"
+
+# ----- neck -----
+[[rig_module]]
+rig_module = "fk_ik_spline_chain_mod" 
+rig_module_name = "neck" 
+joints = "neck_01_jnt, head_jnt"
+get_joint_chain = true
+
+# ----- face -----
+# lower face
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "lowerFace" 
+joints = "lip_botCenter_jnt"
+use_joint_names = true
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "lowerFace" 
+mirror_direction = "left" 
+joints = "lip_botLeft_01_jnt, lip_botLeft_02_jnt"
+use_joint_names = true
+mirror_right = true
+
+# upper face
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "upperFace" 
+joints = "lip_topCenter_jnt, nose_jnt, jaw_jnt"
+use_joint_names = true
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "upperFace" 
+mirror_direction = "left" 
+joints = "lip_topLeft_01_jnt, lip_topLeft_02_jnt, eyeLid_topLeft_jnt, eyeLid_botLeft_jnt, horn_left_jnt"
+use_joint_names = true
+mirror_right = true
+
+[[rig_module]]
+rig_module = "fk_control_mod" 
+rig_module_name = "upperFace" 
+mirror_direction = "left" 
+joints = "eye_left_jnt"
+use_joint_names = true
+mirror_right = true
+add_aux_grp = true
+
+# tongue
+[[rig_module]]
+rig_module = "fk_chain_mod" 
+rig_module_name = "tongue" 
+joints = "tongue_01_jnt, tongue_03_jnt"
+get_joint_chain = true
+
+# ---------- chin ----------
+[[rig_module]]
+rig_module = "tentacle_mod" 
+rig_module_name = "chinTentacle"
+mirror_direction = "left"
+joints = "chinTentacle_01_left_jnt"
+flexi_joints_main = "chinTentacleBase_01_left_jnt"
+flexi_joints_offset = "chinTentacleOffset_01_left_jnt"
+get_joint_chain = true
+flexi_surface_main = "flexiSurfaceChinBase_left_geo"
+flexi_surface_offset = "flexiSurfaceChinOffset_left_geo"
+mirror_right = true
+
+```

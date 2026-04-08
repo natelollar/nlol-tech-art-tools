@@ -10,6 +10,7 @@ def main() -> None:
     debugpy.listen(5678)
 
 
+# Maya debugger setup:
 # https://gist.github.com/joaen/bdc154ecb3f28d8481b9fb23411d1008
 
 # Create ".vscode/launch.json"
