@@ -2,8 +2,6 @@
 > Modular rigging system and tech art pipeline tools for Maya.  
 
 ![Maya 2026.3](https://img.shields.io/badge/Maya-2026.3-blue) ![Windows 11](https://img.shields.io/badge/Windows-11-blue)
---------------------
--------------------- 
 
 ## *Overview*
 - Build the same rig across multiple character versions with ease.
@@ -28,11 +26,8 @@
   - `.../nlol-tech-art-tools/maya/nlol/defaults/`.
   - The defaults folder also contains readmes for certain config files.
 - Custom rig folder path is defined in `/defaults/rig_folder_path.py`.
---------------------  
---------------------  
-<br>
 
-## *'Modular Auto Rigger' General Overview*
+# *Modular Auto Rigger*
 - For rig building example, see custom rig folder `/default/rig_unreal/`.
   - Set custom rig folder here to test rig building.
   - Also, set custom rig folder to folders in `/default/standalone_modules/` for additional examples.
@@ -105,22 +100,21 @@
   - This config file needs to be manually created.
   - Contains data for connecting rig control to blendshapes via set driven keys.
 - See `/defaults/readme_blendshape_setdrivekeys.md` for more details on toml setup.
---------------------  
---------------------  
-<br>
 
-## *'Animation' Shelf/Submenu*  
+# *'Animation' Shelf/Submenu*  
 - *Save/Load Transforms for Selected*
-  - Save/load "translate/rotate/scale" for selected objects.
+  - Saves "translate", "rotate", "scale" for selected objects.
   - Saves to `/defaults/other_control_transforms.json`.  
 - *Save/Load Keyframe for Selected*
-  - Save/load current keyframe data for selected objects.
+  - Saves current keyframe data for selected objects.
+  - Saves to `/defaults/other_control_keyframes.json`.
 - *Save/Load All keyframes* 
   - Saves all keyframes within current playback range for selected objects.
   - Saves to `/defaults/other_control_keyframes.json`.
 - *Mirror Opposite Ctrl, Mirror Selected Ctrl*
   - Mirror selected controls "left to right" or "right to left".
-  - Mirror to opposite side controls or mirror opposite to selected. 
+  - Mirror to opposite side controls or mirror opposite to selected.
+  - Requires mirror attributes.  Mirrors across X axis in rig local space. 
 - *Add Mirror Attributes*
   - Add mirror attributes to rig controls via `nLol Animation < Add Mirror Attributes`.
   - Example: ".mirrorTranslateX", ".mirrorRotateX"
@@ -157,7 +151,7 @@
   - Choose custom save location or saves to `/defaults/other_animation_data.json`.
   - Select controls and click save.
 
-## *'Modeling' Shelf/Submenu*  
+# *'Modeling' Shelf/Submenu*  
 - *Export Materials*
   - Exports materials to `/custom_rig_folder/materials/`.
   - Select objects with materials connected via hypershade and click export.
@@ -195,12 +189,12 @@
   - Each object saved to its own file named after object.
   - Import multiple files as well.
 
-## *'Nurbs Curves' Shelf/Submenu*  
+# *'Nurbs Curves' Shelf/Submenu*  
 - Create different ready to go curve shapes with the click of a button.
   - Useful when creating rig controls.  
 
-## *'Rigging' Shelf/Submenu*  
-- *Create joint*
+# *'Rigging' Shelf/Submenu*  
+- *Create Joint*
   - Creates joint at world origin.
 - *Joint Axis Locator*
   - Create locator parented under joint for visualizing axis.
@@ -345,7 +339,7 @@
    - Source mesh name is same as target except contains string "BlendShapes".
    - No selection needed.
 
-## *'Utils' Shelf/Submenu*  
+# *'Utils' Shelf/Submenu*  
 - *Maya Debugger*
   - Start python debugger for Maya.
   - Assumes "debugpy" folder already setup in Maya "scripts" folder.
@@ -377,15 +371,12 @@
 - *Renamer Tool UI*
   - Helpful tool for quickly renaming objects in Maya. 
 
-## *'Reload' Shelf*
+# *'Reload' Shelf*
 - *Reload nLol Shelves*
   - Helpful when adding new shelf buttons via `/shelves_menus/*_list.py` files.
 - *Reload nLol Menus*
---------------------  
---------------------  
-<br>
 
-## *nLol naming convention*
+# *nLol Naming Convention*
 - nLol naming convention: `<name>_<direction>_<id>_<type>`
   - `<name>` as in base name of an object
   - `<direction>` as in "left" or "right"
