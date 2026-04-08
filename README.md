@@ -6,7 +6,8 @@
 ## *Overview*
 - Build the same rig across multiple character versions with ease.
 - Adjust joints and rebuild without starting over.
-- Easily edit and adapt rig build setup to custom rigs.  
+- Easily edit and adapt rig build setup to custom rigs.
+- Add any number of modules to a rig.
 - Config-driven setup via TOML files.
   - Set up rig modules via `rig_object_data.toml`.
   - Set up parent spaces via `rig_parent_spaces.toml`.
@@ -14,11 +15,13 @@
 - Rig build entry point: `.../nlol-tech-art-tools/maya/nlol/core/rig_setup/rig_build.py`
 - Launch rig build via menu/shelf button: `nLol Rigging < Build Rig`
 - Example rig setup: `maya/nlol/defaults/rig_unreal`
+- Additional tools include animation retargeting, control mirroring, asset scattering, and more.  
+- Also, saving/loading of skin weights, control shapes, materials, cloth settings, and animations.
 
 ### *Installation*
 1. Drag and drop `maya_install.py` into the Maya viewport.
 2. Creates Maya menu and shelves automatically.
-3. Updates `Maya.env` with `MAYA_MODULE_PATH` pointing to `.../nlol-tech-art-tools/maya`.
+3. Updates `Maya.env` with `MAYA_MODULE_PATH` pointing to `.../nlol-tech-art-tools/maya/`.
 4. Allows nLol Tools to locate `nlol_env.mod`.
 
 ### *Locations*
@@ -28,9 +31,9 @@
 - Custom rig folder path is defined in `/defaults/rig_folder_path.py`.
 
 # *Modular Auto Rigger*
-- For rig building example, see custom rig folder `/default/rig_unreal/`.
+- For rig building example, see custom rig folder `/defaults/rig_unreal/`.
   - Set custom rig folder here to test rig building.
-  - Also, set custom rig folder to folders in `/default/standalone_modules/` for additional examples.
+  - Also, set custom rig folder to folders in `/defaults/standalone_modules/` for additional examples.
 - Readme files to aid in creating the toml config files can be found in the `/defaults` folder.
   - Example: `.../nlol-tech-art-tools/maya/nlol/defaults/readme_rig_object_data.md`
 ### *Basic Steps:*   
@@ -50,7 +53,7 @@
 7. If needed, add extra rig objects to `rig_helpers.ma`.
    - For instance, reverse foot control locators or COG control locator. 
 8. Test that everything builds so far via `nLol Rigging < Build Rig`.
-9. Once rig is building succesfully, adjust rig control curve shapes.
+9. Once rig is building successfully, adjust rig control curve shapes.
    - Save to `rig_control_curves.json` via `nLol Rigging < Save Rig Control Curves`.
 10. Next, set up parent spaces with `rig_parent_spaces.toml`.
     - Manually create toml in rig folder.
@@ -62,7 +65,7 @@
 #### *Rig Materials:*  
 - Currently, materials need to be manually updated in `model.ma`.
   - Thankfully, this can be quickly done with `nLol Modeling < Update Materials`.
-  - Make sure materials have been previosly exported to `/custom_rig_folder/materials`.
+  - Make sure materials have been previously exported to `/custom_rig_folder/materials`.
 - Export materials from raw working file with `nLol Modeling < Export Materials`.
 #### *Rig Mirror Attributes:*  
 - Set up mirror attributes for rig controls. 
@@ -226,7 +229,7 @@
   - Build rig up to the skeletal mesh, then stop.
   - This includes importing model, skeleton and applying skin weights. 
 - *Build Rig*
-  - Buid entire rig from `/custom_rig_folder/rig_object_data.toml`.
+  - Build entire rig from `/custom_rig_folder/rig_object_data.toml`.
     - Saves rig module data, including what rig modules build on what joints.
     - See `/defaults/rig_object_data.toml` for more detail.  
   - Other config files, scripts, and Maya files that help build the the rig include:
@@ -281,7 +284,7 @@
 - *Save nCloth Settings*
   - Save settings for selected nCloth objects to files with suffix `*NClothShapeSettings.json`.
   - Supports having ramp attached to `inputAttractMap` attribute.
-  - Auto applys when rig built.
+  - Auto applies when rig built.
 - *Apply nCloth Settings*
   - Apply saved nCloth settings from `cloth_data/` folder.
 --------------------  
@@ -290,7 +293,7 @@
 - *Show Curve Attributes*
   - Show useful curve attributes in channel box. Double click to remove.
 - *Select Shapes Show Attributes*
-  - Selects tranform shapes then shows useful curve attributes.
+  - Selects transform shapes then shows useful curve attributes.
 - *Select All Controls*
   - Select all controls under rig group. Defaults to the "_rigGrp" if nothing selected.
 - *Reset All Controls*
