@@ -3,6 +3,7 @@ from importlib import reload
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
+from maya import cmds
 from nlol.core.general_utils import maya_undo
 from nlol.core.modeling_tools import scatter_objects
 from nlol.core.ui.dockable_maya_ui import DockableMayaUI
@@ -16,6 +17,20 @@ logger = get_logger()
 class ScatterToolUI(DockableMayaUI):
     """Maya object scatter tool with UI and functionality."""
 
+    def __init__(self, parent=None) -> None:
+        """Initialize UI class."""
+        # close script job if still open
+        for job in cmds.scriptJob(listJobs=True):
+            if "realtime_scatter_callback" in job:
+                try:
+                    job_id = int(job.split(":")[0])
+                    cmds.scriptJob(kill=job_id, force=True)
+                    logger.info(f"Cleaned up zombie scriptJob: {job_id}")
+                except Exception:
+                    continue
+
+        super().__init__(parent)
+
     def get_window_title(self) -> str:
         return "Scatter Tool UI"
 
@@ -28,6 +43,8 @@ class ScatterToolUI(DockableMayaUI):
             "super_rand_rot_checkbox": self.super_rand_rot_checkbox,
             "bb_normal_orient_checkbox": self.bb_normal_orient_checkbox,
             "bb_2d_checkbox": self.bb_2d_checkbox,
+            "rt_bb_normal_orient_checkbox": self.rt_bb_normal_orient_checkbox,
+            "rt_bb_2d_checkbox": self.rt_bb_2d_checkbox,
             "xminus_input": self.xminus_input,
             "xplus_input": self.xplus_input,
             "yminus_input": self.yminus_input,
@@ -232,6 +249,46 @@ class ScatterToolUI(DockableMayaUI):
         create_random_objs_btn.clicked.connect(self.create_random_objs)
         layout.addWidget(create_random_objs_btn)
 
+        # -------------------- REALTIME SCATTER --------------------
+        realtime_scatter_layout = QHBoxLayout()
+        self.scatter_instance = scatter_objects.ScatterObjects()
+
+        realtime_enable_btn = QPushButton("ENABLE Realtime Scatter")
+        realtime_enable_btn.setFixedWidth(160)
+        realtime_enable_btn.setStyleSheet("background-color: rgb(60, 80, 60);")
+        realtime_enable_btn.setToolTip(
+            "Scatters to last selected surface when bounding box size changes.",
+        )
+        realtime_enable_btn.clicked.connect(self.enable_scatter_realtime)
+        realtime_scatter_layout.addWidget(realtime_enable_btn)
+
+        realtime_disable_btn = QPushButton("DISABLE Realtime Scatter")
+        realtime_disable_btn.setFixedWidth(160)
+        realtime_disable_btn.setStyleSheet("background-color: rgb(80, 60, 60);")
+        realtime_disable_btn.setToolTip("Disable realtime scatter.")
+        realtime_disable_btn.clicked.connect(self.disable_scatter_realtime)
+        realtime_scatter_layout.addWidget(realtime_disable_btn)
+
+        self.rt_bb_2d_checkbox = QCheckBox("Surface\nSnap")
+        self.rt_bb_2d_checkbox.setFixedWidth(85)
+        self.rt_bb_2d_checkbox.setToolTip("Snap objects to surface after 3D bounding box scatter.")
+        realtime_scatter_layout.addWidget(self.rt_bb_2d_checkbox)
+
+        self.rt_bb_normal_orient_checkbox = QCheckBox("Normal\nOrient")
+        self.rt_bb_normal_orient_checkbox.setFixedWidth(85)
+        self.rt_bb_normal_orient_checkbox.setToolTip("Orient scattered objects to surface normals.")
+        realtime_scatter_layout.addWidget(self.rt_bb_normal_orient_checkbox)
+
+        realtime_force_btn = QPushButton("FORCE Scatter Update")
+        realtime_force_btn.setFixedWidth(160)
+        realtime_force_btn.setStyleSheet("background-color: rgb(60, 60, 80);")
+        realtime_force_btn.setToolTip("Force realtime scatter udpate.")
+        realtime_force_btn.clicked.connect(self.force_scatter_realtime)
+        realtime_scatter_layout.addWidget(realtime_force_btn)
+
+        realtime_scatter_layout.addStretch()
+        layout.addLayout(realtime_scatter_layout)
+
         # --------------------
         layout.setSpacing(4)
 
@@ -343,6 +400,39 @@ class ScatterToolUI(DockableMayaUI):
             return float(txt)
         except ValueError:
             return default_float
+
+    # -------------------- REALTIME SCATTER --------------------
+    @maya_undo
+    def enable_scatter_realtime(self) -> None:
+        """Scatters to last selected surface when bounding box size changes."""
+        rt_scatter_2d_bool = self.rt_bb_2d_checkbox.isChecked()
+        rt_normal_orient_bool = self.rt_bb_normal_orient_checkbox.isChecked()
+
+        self.scatter_instance.enable_realtime_scatter(
+            normal_orient=rt_normal_orient_bool,
+            scatter_2d=rt_scatter_2d_bool,
+        )
+
+        self.save_settings()
+
+    def force_scatter_realtime(self) -> None:
+        """Force realtime scatter update."""
+        self.scatter_instance.force_realtime_scatter()
+
+        self.save_settings()
+
+    def disable_scatter_realtime(self) -> None:
+        """Disable realtime scatter."""
+        self.scatter_instance.disable_realtime_scatter()
+
+        self.save_settings()
+
+    def hideEvent(self, event) -> None:
+        """Triggers when the tab is closed or hidden in Maya."""
+        if hasattr(self, "scatter_instance") and self.scatter_instance:
+            self.scatter_instance.disable_realtime_scatter()
+
+        super().hideEvent(event)
 
 
 # entry points

@@ -185,11 +185,12 @@
 - *Proxy View Mode*
   - Switch Arnold proxies between shaded, shaded polywire, and wireframe in viewport.
 - *Scatter Tool UI*
-  - Scatter objects on surface of last selected object based on vertices or bounding box.
+  - Scatter objects on surface of last selected based on vertices, bounding box, or surface area.
   - Apply random transform values to selected objects.
   - Orient scattered objects to surface normals, with random variation if needed.
   - Scatter objects in volume of last selected object based off bounding box.
   - Create random objects for test scattering.
+  - Scatter objects in realtime to any area of a mesh or nurbsSurface.
 - *Export Import Tool UI*
   - Export multiple objects to custom folder. Supports OBJ, FBX, MA, MB, and ASS.
   - Each object saved to its own file named after object.

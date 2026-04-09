@@ -1,5 +1,7 @@
+import bisect  # High-performance list searching
 import random
 
+from maya.api import OpenMaya as om
 from nlol.utilities.nlol_maya_logger import get_logger
 
 from maya import cmds
@@ -102,7 +104,13 @@ class ScatterObjects:
 
         cmds.select(selected)
 
-    def boundingbox_scatter(self, normal_orient: bool = True, scatter_2d: bool = True) -> None:
+    def boundingbox_scatter(
+        self,
+        scatter_objs: list = [],
+        scatter_surface: str = "",
+        normal_orient: bool = True,
+        scatter_2d: bool = True,
+    ) -> None:
         """Scatter selected objects to last selected object based on bounding box
         of last selected object. Then closest surface.
 
@@ -112,13 +120,15 @@ class ScatterObjects:
             scatter_2d: Whether to snap objects to 2D surface after scattering in 3D space.
 
         """
-        selected = cmds.ls(selection=True)
-        if not selected:
-            logger.info("Select objects...")
-            return
-
-        scatter_objs = selected[0:-1]  # selection without last object
-        scatter_surface = selected[-1]  # vertex placement object
+        reselect = False
+        if not scatter_objs:
+            selected = cmds.ls(selection=True)
+            if not selected:
+                logger.info("Select objects...")
+                return
+            scatter_objs = selected[0:-1]  # selection without last object
+            scatter_surface = selected[-1]  # vertex placement object
+            reselect = True
 
         # get bounding box points of scatter surface (order: xmin ymin zmin xmax ymax zmax)
         root_selection_box_bb = cmds.xform(scatter_surface, ws=True, bb=True, q=True)
@@ -143,9 +153,10 @@ class ScatterObjects:
                     )
                     cmds.delete(nrml_const)
 
-        # reselect to scatter multiple times
-        cmds.select(scatter_objs)
-        cmds.select(scatter_surface, add=True)
+        if reselect:
+            # reselect to scatter multiple times
+            cmds.select(scatter_objs)
+            cmds.select(scatter_surface, add=True)
 
     def random_rotate(
         self,
@@ -428,3 +439,320 @@ class ScatterObjects:
 
         cmds.select(clear=True)
         cmds.setFocus("MayaWindow")
+
+    # ----------------------------------------------------------
+    # -------------------- REALTIME SCATTER --------------------
+    # ----------------------------------------------------------
+    def enable_realtime_scatter(
+        self,
+        normal_orient: bool = True,
+        scatter_2d: bool = True,
+    ) -> None:
+        """Enable realtime scatter.
+
+        Select your objects to scatter + the poly plane (or any surface) LAST,
+        then call this once.
+
+        As you drag/extrude/scale/vertex-push the surface (e.g. growing a river),
+        it will automatically re-run universal_weighted_scatter or boundingbox_scatter
+        with new random positions every time you RELEASE the mouse and
+        the surface area changes.
+
+        Super simple, uses Maya's idleEvent (no tick/currentFrame needed).
+        Only triggers on actual size growth so it doesn't spam while you work.
+
+        Args:
+            normal_orient: Whether to orient scatter objects to normals of the surface.
+            scatter_2d: Whether to snap the scatter objects to the surface using
+                "universal_weighted_scatter" or leave as a bounding box volume scatter.
+
+        """
+        self.disable_realtime_scatter()  # kill any old jobs
+
+        logger.info("----- Realtime Scatter ENABLED -----")
+
+        selected = cmds.ls(selection=True)
+        if len(selected) < 2:
+            logger.info("Select scatter objects + surface last...")
+            return
+
+        self.realtime_scatter_objs = selected[:-1]
+        self.realtime_surface = selected[-1]
+        self.realtime_normal_orient = normal_orient
+        self.realtime_scatter_2d = scatter_2d
+
+        # kill any old job
+        if hasattr(self, "realtime_scatter_job") and self.realtime_scatter_job is not None:
+            try:
+                cmds.scriptJob(kill=self.realtime_scatter_job, force=True)
+            except Exception:
+                pass
+
+        self.realtime_scatter_job = cmds.scriptJob(
+            idleEvent=self.realtime_scatter_callback,
+            killWithScene=True,
+        )
+
+        logger.info(f"Realtime scatter ENABLED on surface: {self.realtime_surface}")
+        logger.info("-> Drag/extrude the surface -> release mouse = new random scatter")
+
+    def force_realtime_scatter(self) -> None:
+        """Force update for realtime scatter."""
+        self.force_scatter_update = True
+
+    def disable_realtime_scatter(self) -> None:
+        """Stop the realtime job."""
+        # kill by the stored ID if it exists
+        if hasattr(self, "realtime_scatter_job") and self.realtime_scatter_job is not None:
+            try:
+                cmds.scriptJob(kill=self.realtime_scatter_job, force=True)
+            except Exception:
+                pass
+            self.realtime_scatter_job = None
+
+        # cleanup: search and kill any "zombie" jobs by function name
+        # this catches jobs that stayed alive after UI reloads
+        search_string = "realtime_scatter_callback"
+        all_jobs = cmds.scriptJob(listJobs=True)
+        for job in all_jobs:
+            if search_string in job:
+                try:
+                    job_id = int(job.split(":")[0])
+                    cmds.scriptJob(kill=job_id, force=True)
+                    logger.info(f"Cleaned up zombie scriptJob: {job_id}")
+                except Exception:
+                    continue
+
+        self.realtime_scatter_objs = None
+        self.realtime_surface = None
+        logger.info("----- Realtime Scatter DISABLED -----")
+
+    def realtime_scatter_callback(self) -> None:
+        """Internal idle callback using surface area checks."""
+        if (
+            not hasattr(self, "realtime_surface")
+            or not self.realtime_surface
+            or not cmds.objExists(self.realtime_surface)
+        ):
+            return
+
+        try:
+            # check surface area (precise - catches internal vertex moves/extrusions)
+            current_area = self.get_surface_area(self.realtime_surface)
+            area_changed = False
+            if hasattr(self, "last_area") and self.last_area is not None:
+                # use a small epsilon for float comparison
+                if abs(current_area - self.last_area) > 0.001:
+                    area_changed = True
+            else:
+                area_changed = True
+
+            if area_changed or self.force_scatter_update:
+                try:
+                    if self.realtime_scatter_2d:
+                        self.universal_weighted_scatter(
+                            self.realtime_scatter_objs,
+                            self.realtime_surface,
+                            normal_orient=self.realtime_normal_orient,
+                        )
+                    else:
+                        self.boundingbox_scatter(
+                            self.realtime_scatter_objs,
+                            self.realtime_surface,
+                            normal_orient=self.realtime_normal_orient,
+                            scatter_2d=False,
+                        )
+                except Exception as e:
+                    logger.error(f"Realtime scatter failed: {e}")
+
+                self.last_area = current_area
+                self.force_scatter_update = False
+
+        except Exception:
+            return
+
+    def get_surface_area(self, node_name: str) -> float:
+        """Returns the world-space surface area for poly or nurbs.
+        Used for detecting a change in surface area.
+
+        Args:
+            node_name: Name of Maya node. In this case a polygonal or nurbs transform.
+
+        """
+        if not cmds.objExists(node_name):
+            return 0.0
+
+        # get the shape node
+        shapes = cmds.listRelatives(node_name, shapes=True, fullPath=True) or [node_name]
+        shape = shapes[0]
+        node_type = cmds.nodeType(shape)
+
+        try:
+            if node_type == "mesh":
+                area = cmds.polyEvaluate(shape, worldArea=True)
+                return area
+
+            if node_type == "nurbsSurface":
+                sel = om.MSelectionList()
+                sel.add(shape)
+                dag_path = sel.getDagPath(0)
+                nurbs_fn = om.MFnNurbsSurface(dag_path)
+                return nurbs_fn.area()
+
+        except Exception as e:
+            logger.warning(f"Could not calculate area for {node_name}: {e}")
+
+        return 0.0
+
+    def universal_weighted_scatter(
+        self,
+        scatter_objs: list = [],
+        scatter_surface: str = "",
+        normal_orient: bool = True,
+    ) -> None:
+        """Scatters objects evenly across any surface, regardless of face size or UVs.
+        Works for both poly and nurbs.
+
+        Args:
+            scatter_objs: Maya objects to scatter.
+            scatter_surface: What about to scatter on.
+            normal_orient: Whether to orient scatter objects to surface normals.
+
+        """
+        if not scatter_objs:
+            selected = cmds.ls(selection=True)
+            if not selected:
+                logger.info("Select objects...")
+                return
+            scatter_objs = selected[:-1]
+            scatter_surface = selected[-1]
+
+        shape = cmds.listRelatives(scatter_surface, shapes=True, fullPath=True)[0]
+        node_type = cmds.nodeType(shape)
+
+        # --- PRE-PROCESS PHASE (Calculate Weights) ---
+        face_weights = []
+        total_area = 0.0
+
+        if node_type == "mesh":
+            # get the total number of faces on the mesh to iterate through them
+            num_faces = cmds.polyEvaluate(shape, face=True)
+            for i in range(num_faces):
+                # calculate the area manually because polyEvaluate returns 0 on some meshes
+                # get the vertex indices for the current face (returns a string like 'FACE 0: 1 2 5 4')
+                info = cmds.polyInfo(f"{shape}.f[{i}]", faceToVertex=True)[0]
+                # parse the string to extract only the integer IDs of the vertices
+                v_indices = [int(v) for v in info.split(":")[1].split() if v.strip().isdigit()]
+                # get the world-space [x, y, z] position for every vertex in this face
+                pts = [
+                    cmds.xform(f"{shape}.vtx[{v}]", query=True, worldSpace=True, translation=True)
+                    for v in v_indices
+                ]
+
+                f_area = 0.0
+                # use a "triangle fan" to calculate area: anchor at pts[0] and create triangles
+                # from subsequent pairs of vertices. works for triangles, quads, and N-gons
+                for j in range(len(pts) - 2):
+                    # define the three corners of the current triangle slice
+                    p0, p1, p2 = pts[0], pts[j + 1], pts[j + 2]
+                    # create two vectors (edges) sharing the common point p0
+                    v1 = [p1[k] - p0[k] for k in range(3)]
+                    v2 = [p2[k] - p0[k] for k in range(3)]
+                    # calculate the cross product of v1 and v2
+                    # the resulting vectors magnitude equals the area of a parallelogram
+                    cp = [
+                        v1[1] * v2[2] - v1[2] * v2[1],
+                        v1[2] * v2[0] - v1[0] * v2[2],
+                        v1[0] * v2[1] - v1[1] * v2[0],
+                    ]
+                    # area of triangle = 0.5 * magnitude of cross product
+                    # magnitude is sqrt(x^2 + y^2 + z^2)
+                    f_area += 0.5 * (sum(x**2 for x in cp) ** 0.5)
+                # accumulate the total area of the mesh
+                total_area += f_area
+                # store the "running total" area. this is used later for importance sampling
+                # (randomly picking a face weighted by its size)
+                face_weights.append(total_area)
+
+        # --- SCATTER PHASE ---
+        for obj in scatter_objs:
+            pos = [0, 0, 0]
+
+            if node_type == "mesh" and total_area > 0:
+                # pick a face:
+                # Generate a random number between 0 and the total surface area
+                r = random.uniform(0, total_area)
+                # use binary search (bisect) to find which face corresponds to that 'r' value
+                # this ensures larger faces have a higher statistical chance of being picked
+                face_idx = bisect.bisect_left(face_weights, r)
+
+                # get face geometry:
+                # retrieve the vertices and their world positions for the chosen face
+                vtx_str = cmds.polyInfo(f"{shape}.f[{face_idx}]", faceToVertex=True)[0]
+                vtx_indices = [int(i) for i in vtx_str.split(":")[1].split() if i.strip().isdigit()]
+                pts = [
+                    cmds.xform(f"{shape}.vtx[{v}]", q=True, ws=True, t=True) for v in vtx_indices
+                ]
+
+                # triangulate the face (operates inside a single face):
+                # if the face is a quad or N-gon, we must pick a specific triangle within it
+                sub_tris, sub_weights, sub_total = [], [], 0.0
+                for i in range(len(pts) - 2):
+                    p0, p1, p2 = pts[0], pts[i + 1], pts[i + 2]
+                    v1, v2 = [p1[k] - p0[k] for k in range(3)], [p2[k] - p0[k] for k in range(3)]
+                    cp = [
+                        v1[1] * v2[2] - v1[2] * v2[1],
+                        v1[2] * v2[0] - v1[0] * v2[2],
+                        v1[0] * v2[1] - v1[1] * v2[0],
+                    ]
+                    # calculate sub-triangle area to keep the distribution uniform
+                    tri_a = 0.5 * (sum(x**2 for x in cp) ** 0.5)
+                    sub_total += tri_a
+                    sub_weights.append(sub_total)
+                    sub_tris.append((p0, p1, p2))
+
+                # pick a triangle:
+                # if the face was an N-gon, pick one of its triangle "slices" based on area
+                if sub_total > 0:
+                    tr = random.uniform(0, sub_total)
+                    tri_idx = bisect.bisect_left(sub_weights, tr)
+                    tp0, tp1, tp2 = sub_tris[tri_idx]
+                    # barycentric sampling:
+                    # pick a random point inside the chosen triangle
+                    u, v = random.random(), random.random()
+                    # if u + v > 1, the point is in the "other half" of the parallelogram
+                    # 'mirror' it back into the triangle
+                    if u + v > 1:
+                        u, v = 1 - u, 1 - v
+                    # w is the third weight (all three must add up to 1.0)
+                    w = 1 - u - v
+                    # calculate the final 3D position by mixing the positions of the 3 vertices
+                    pos = [(u * tp0[i] + v * tp1[i] + w * tp2[i]) for i in range(3)]
+
+            elif node_type == "nurbsSurface":
+                # nurbs are mathematically "smooth", so we use parametric (UV)
+                u_range = [
+                    cmds.getAttr(f"{shape}.minMaxRangeU.minValueU"),
+                    cmds.getAttr(f"{shape}.minMaxRangeU.maxValueU"),
+                ]
+                v_range = [
+                    cmds.getAttr(f"{shape}.minMaxRangeV.minValueV"),
+                    cmds.getAttr(f"{shape}.minMaxRangeV.maxValueV"),
+                ]
+
+                rand_u = random.uniform(u_range[0], u_range[1])
+                rand_v = random.uniform(v_range[0], v_range[1])
+                pos = cmds.pointOnSurface(shape, u=rand_u, v=rand_v, top=True, p=True)
+
+            # apply position
+            cmds.xform(obj, worldSpace=True, translation=pos)
+
+            # apply orientation
+            if normal_orient:
+                tmp = cmds.normalConstraint(
+                    scatter_surface,
+                    obj,
+                    aimVector=(0, 1, 0),
+                    # worldUpType=0,
+                )
+                cmds.delete(tmp)
