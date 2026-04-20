@@ -70,8 +70,8 @@ def reset_all_ctrls(all_keyable: bool = False) -> None:
         "lean",
         "tilt",
         "roll",
-        "softFalloff",
-        "soft",
+        #"softFalloff",
+        #"soft",
         "startTwistBlend",
         "stretch",
     )

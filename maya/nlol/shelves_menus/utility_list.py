@@ -181,6 +181,27 @@ def build_utility_list():
             "command": "from nlol.core.ui import space_matcher_ui\nspace_matcher_ui.reload_tool()",
             "sourceType": "python",
         },
+        {
+            "label": "Check Registry Data",
+            "image": "pythonFamily.png",
+            "annotation": "Check registry data. nLol global dictionary for Maya objects.",
+            "imageOverlayLabel": "ChkReg",
+            "backgroundColor": random_clrs[39],
+            "command": "from nlol.utilities import check_registry\n"
+            "from importlib import reload\nreload(check_registry)\n"
+            "check_registry.verify_registry()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Clear Registry Data",
+            "image": "pythonFamily.png",
+            "annotation": "Clear registry data.",
+            "imageOverlayLabel": "ClrReg",
+            "backgroundColor": random_clrs[38],
+            "command": "from nlol.utilities.nlol_maya_registry import get_registry\n"
+            "get_registry().clear_registry()",
+            "sourceType": "python",
+        },
         # {
         #     "label": "Example Standalone UI",
         #     "image": "pythonFamily.png",

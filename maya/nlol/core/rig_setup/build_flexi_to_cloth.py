@@ -4,9 +4,12 @@ from importlib import reload
 from maya import cmds, mel
 from nlol.core import general_utils
 from nlol.core.rig_components import create_control_groups, create_nurbs_curves
+from nlol.core.rig_setup import rig_variables
 from nlol.defaults import rig_folder_path
 from nlol.utilities.nlol_maya_logger import get_logger
+from nlol.utilities.nlol_maya_registry import get_registry
 
+reload(rig_variables)
 reload(rig_folder_path)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
@@ -19,12 +22,15 @@ collision_mesh_filepath = cloth_data_folderpath / "collision_meshes.json"
 
 
 class FlexiToCloth:
-    """Create nCloth blendshape setup for flexi/ribbon geometry.
+    """General nCloth setup.
+
+    Create nCloth blendshape setup for flexi/ribbon geometry.
     Create ctrl for toggling on/off.
     """
 
     def __init__(self):
         self.logger = get_logger()
+        self.registry = get_registry()
 
     def build(self):
         """Entry point. Run this method.
@@ -51,8 +57,10 @@ class FlexiToCloth:
 
     def build_top_grps(self):
         """Create top groups for organization."""
-        self.top_grp = cmds.group(empty=True, name="nClothMain_grp")
-        self.components_grp = cmds.group(empty=True, name="nClothComponents_grp")
+        top_grp_name = rig_variables.dynamics_main_grp
+        self.top_grp = cmds.group(empty=True, name=top_grp_name)
+        components_grp_name = rig_variables.dynamics_components_grp
+        self.components_grp = cmds.group(empty=True, name=components_grp_name)
 
         cmds.parent(self.components_grp, self.top_grp)
 
@@ -67,6 +75,10 @@ class FlexiToCloth:
                 cmds.setAttr(f"{grp}.rotate{axis}", lock=True)
                 cmds.setAttr(f"{grp}.scale{axis}", lock=True)
         cmds.setAttr(f"{self.components_grp}.visibility", 0)
+
+        # variables to global dict
+        self.registry.register_obj("dynamics_main_grp", self.top_grp)
+        self.registry.register_obj("dynamics_components_grp", self.components_grp)
 
     def build_main(self, apply_cloth_settings: bool = True) -> None:
         """Create nCloth setup for rigging. Constrains cloth mesh to attach meshes with
@@ -84,7 +96,6 @@ class FlexiToCloth:
             apply_cloth_settings: Use pre-saved nCloth settings in cloth_data folder.
 
         """
-        self.ncloth_attr_index = 0
         flexi_mesh_current = None
         nucleus_nd = None
         attach_mesh_datas = self.get_saved_vertex_ids()
@@ -232,6 +243,9 @@ class FlexiToCloth:
 
         # ----- extend playback timeline -----
         cmds.playbackOptions(minTime=0, maxTime=300)
+
+        # ----- variables to global dict -----
+        self.registry.register_obj("dynamics_nucleus_nd", nucleus_nd)
 
     def get_saved_vertex_ids(self) -> list[dict]:
         """Query json data for nCloth mesh vertex IDs, vertex mesh and attach mesh.
@@ -526,8 +540,9 @@ class FlexiToCloth:
 
     def build_aux_ctrl(self):
         """Create cloth auxiliary ctrl."""
+        aux_ctrl_name = rig_variables.dynamics_aux_ctrl
         self.aux_ctrl = create_nurbs_curves.CreateCurves(
-            name="nClothAux_ctrl",
+            name=aux_ctrl_name,
             size=1,
             color_rgb=(0.2, 0.1, 0.7),
         ).box_curve()
@@ -544,6 +559,9 @@ class FlexiToCloth:
         # top grp parenting
         cmds.parent(self.aux_ctrl_grp, self.top_grp)
 
+        # variables to global dict
+        self.registry.register_obj("dynamics_aux_ctrl", self.aux_ctrl)
+
     def aux_ctrl_nucleus_attrs(self, nucleus_nd) -> None:
         """Set up auxiliary ctrl attributes fot the nucleus node.
 
@@ -551,7 +569,8 @@ class FlexiToCloth:
             nucleus_nd: The nCloth nucleus node.
 
         """
-        add_divider_attribue(control_name=self.aux_ctrl, divider_amount=10)
+        add_divider_attribue(control_name=self.aux_ctrl)
+
         cmds.addAttr(
             self.aux_ctrl,
             longName="nucleusEnable",
@@ -578,6 +597,8 @@ class FlexiToCloth:
         )
         cmds.connectAttr(f"{self.aux_ctrl}.nucleusStartFrame", f"{nucleus_nd}.startFrame")
 
+        add_divider_attribue(control_name=self.aux_ctrl)
+
     def aux_ctrl_ncloth_attrs(self, ncloth_nd_shp, blendshape_nd, output_cloth_mesh_shp) -> None:
         """Set up auxiliary ctrl attributes fot nCloth components.
 
@@ -587,9 +608,9 @@ class FlexiToCloth:
             output_cloth_mesh_shp: Output cloth mesh shape.
 
         """
-        ncloth_end_nm = ncloth_nd_shp.split("_")[-1]
-        divider_attr_nm = ncloth_nd_shp.replace(ncloth_end_nm, "")
+        divider_attr_nm = ncloth_nd_shp
         if not cmds.objExists(f"{self.aux_ctrl}.{divider_attr_nm}"):
+            # ---------- divider attr ----------
             cmds.addAttr(
                 self.aux_ctrl,
                 longName=divider_attr_nm,
@@ -599,42 +620,62 @@ class FlexiToCloth:
             )
             cmds.setAttr(f"{self.aux_ctrl}.{divider_attr_nm}", channelBox=True)
 
+            # ---------- isDynamic attr ----------
+            isdynamic_attr_nm = f"{ncloth_nd_shp}__isDynamic"
             cmds.addAttr(
                 self.aux_ctrl,
-                longName=f"isDynamic{self.ncloth_attr_index}",
+                longName=isdynamic_attr_nm,
+                niceName=isdynamic_attr_nm,
                 attributeType="bool",
-                defaultValue=True,
+                defaultValue=False,
                 keyable=True,
             )
             cmds.connectAttr(
-                f"{self.aux_ctrl}.isDynamic{self.ncloth_attr_index}",
+                f"{self.aux_ctrl}.{isdynamic_attr_nm}",
                 f"{ncloth_nd_shp}.isDynamic",
             )
+            cmds.setAttr(f"{self.aux_ctrl}.{isdynamic_attr_nm}", False)
 
+            # ---------- inputMeshAttract attr ----------
+            meshattract_attr_nm = f"{ncloth_nd_shp}__inputMeshAttract"
             cmds.addAttr(
                 self.aux_ctrl,
-                longName=f"blendShape{self.ncloth_attr_index}",
-                attributeType="double",
-                defaultValue=0,
-                minValue=0,
-                maxValue=1,
-                keyable=True,
-            )
-            cmds.connectAttr(
-                f"{self.aux_ctrl}.blendShape{self.ncloth_attr_index}",
-                f"{blendshape_nd}.{output_cloth_mesh_shp}",
-            )
-
-            cmds.addAttr(
-                self.aux_ctrl,
-                longName=f"inputMeshAttract{self.ncloth_attr_index}",
+                longName=meshattract_attr_nm,
+                niceName=meshattract_attr_nm,
                 attributeType="double",
                 defaultValue=0.10,
                 keyable=True,
             )
             cmds.connectAttr(
-                f"{self.aux_ctrl}.inputMeshAttract{self.ncloth_attr_index}",
+                f"{self.aux_ctrl}.{meshattract_attr_nm}",
                 f"{ncloth_nd_shp}.inputMeshAttract",
             )
+        else:
+            # ---------- divider attr ----------
+            # create divider just for blendshape attr if nCloth node already exist
+            divider_attr_nm = output_cloth_mesh_shp
+            cmds.addAttr(
+                self.aux_ctrl,
+                longName=divider_attr_nm,
+                niceName=divider_attr_nm,
+                attributeType="enum",
+                enumName=divider_attr_nm,
+            )
+            cmds.setAttr(f"{self.aux_ctrl}.{divider_attr_nm}", channelBox=True)
 
-            self.ncloth_attr_index += 1  # index skips over non-ncloth iterations
+        # ---------- blendshape attr ----------
+        blendshape_attr_nm = f"{output_cloth_mesh_shp}__blendShape"
+        cmds.addAttr(
+            self.aux_ctrl,
+            longName=blendshape_attr_nm,
+            niceName=blendshape_attr_nm,
+            attributeType="double",
+            defaultValue=0,
+            minValue=0,
+            maxValue=1,
+            keyable=True,
+        )
+        cmds.connectAttr(
+            f"{self.aux_ctrl}.{blendshape_attr_nm}",
+            f"{blendshape_nd}.{output_cloth_mesh_shp}",
+        )

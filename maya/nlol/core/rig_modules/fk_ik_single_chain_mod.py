@@ -394,22 +394,23 @@ class FkIkSingleChainModule:
             ruler_start_object=self.ik_start_ctrl,
             ruler_end_object=self.ik_ctrl,
         )
-        makenegative_nd = cmds.shadingNode(
+        makenegative_nd = cmds.createNode(
             "multiplyDivide",
-            asUtility=True,
             name=f"{self.mod_name}MakeNegativeToggle{self.mirr_side}multiplyDivide",
         )
-        blendcolors_nd = cmds.shadingNode(
+        blendcolors_nd = cmds.createNode(
             "blendColors",
-            asUtility=True,
             name=f"{self.mod_name}{cap(stretch_attr)}{self.mirr_side}blendColors",
         )
-        scaleoffset_nd = cmds.shadingNode(
+        scaleoffset_nd = cmds.createNode(
             "multiplyDivide",
-            asUtility=True,
             name=f"{self.mod_name}ScaleOffset{self.mirr_side}multiplyDivide",
         )
         cmds.setAttr(f"{scaleoffset_nd}.operation", 2)  # divide
+        decomposematrix_nd = cmds.createNode(
+            "decomposeMatrix",
+            name=f"{self.mod_name}ScaleOffset{self.mirr_side}decomposeMatrix",
+        )
 
         negative_toggle_val = 1
         if self.down_chain_axis == "-x":
@@ -420,7 +421,11 @@ class FkIkSingleChainModule:
         cmds.connectAttr(f"{ruler_shape}.distance", f"{makenegative_nd}.input1X")
         cmds.setAttr(f"{makenegative_nd}.input2X", negative_toggle_val)
         cmds.connectAttr(f"{makenegative_nd}.outputX", f"{scaleoffset_nd}.input1X")
-        cmds.connectAttr(f"{self.ik_start_prntswtch_ctrl_grp}.scaleX", f"{scaleoffset_nd}.input2X")
+        cmds.connectAttr(
+            f"{self.ik_start_prntswtch_ctrl_grp}.worldMatrix[0]",
+            f"{decomposematrix_nd}.inputMatrix",
+        )
+        cmds.connectAttr(f"{decomposematrix_nd}.outputScaleX", f"{scaleoffset_nd}.input2X")
 
         cmds.connectAttr(f"{self.ik_ctrl}.{stretch_attr}", f"{blendcolors_nd}.blender")
         cmds.connectAttr(f"{scaleoffset_nd}.outputX", f"{blendcolors_nd}.color1R")

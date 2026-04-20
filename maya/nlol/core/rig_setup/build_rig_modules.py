@@ -28,6 +28,7 @@ from nlol.core.rig_modules import (
 )
 from nlol.core.rig_tools import select_multiple_joints
 from nlol.utilities.nlol_maya_logger import get_logger
+from nlol.utilities.nlol_maya_registry import get_registry
 
 reload(biped_leg_mod)
 reload(biped_limb_mod)
@@ -60,6 +61,7 @@ def build_modules(rig_data_filepath: str | Path):
 
     """
     logger = get_logger()
+    registry = get_registry()
 
     # ----- query rig module data -----
     with open(rig_data_filepath, "rb") as f:
@@ -101,38 +103,18 @@ def build_modules(rig_data_filepath: str | Path):
             aim_object = swap_side_str(mod_dict.get("aim_object", ""))
             ik_wrist_ctrl = swap_side_str(mod_dict.get("ik_wrist_ctrl", ""))
 
-            right_dict = {
+            right_dict = mod_dict.copy()  # copy original mod dict
+            right_dict_updates = {  # replace these values in mod dict with side string swaps
                 "rig_module": rig_module,
                 "rig_module_name": rig_module_name,
                 "joints": main_joints,
                 "mirror_direction": mirror_direction,
                 "joint_chains": joint_chains,
-                "constraint": mod_dict.get("constraint"),
-                "use_joint_names": mod_dict.get("use_joint_names"),
-                "blend_joints": mod_dict.get("blend_joints"),
-                "get_joint_chain": mod_dict.get("get_joint_chain"),
-                "flexi_surface": mod_dict.get("flexi_surface"),
                 "flexi_surface_main": flexi_surface_main,
                 "flexi_surface_offset": flexi_surface_offset,
-                "hide_end_ctrl": mod_dict.get("hide_end_ctrl"),
-                "hide_translate": mod_dict.get("hide_translate"),
-                "hide_rotate": mod_dict.get("hide_rotate"),
-                "hide_scale": mod_dict.get("hide_scale"),
-                "add_aux_grp": mod_dict.get("add_aux_grp"),
-                "display_layer": mod_dict.get("display_layer"),
                 "upper_twist_joints": upper_twist_joints,
                 "lower_twist_joints": lower_twist_joints,
-                "main_object_names": mod_dict.get("main_object_names", ""),
-                "upper_twist_name": mod_dict.get("upper_twist_name"),
-                "lower_twist_name": mod_dict.get("lower_twist_name"),
-                "polevector_ctrl_distance": mod_dict.get("polevector_ctrl_distance"),
                 "foot_locators": foot_locators,
-                "invert_toe_wiggle": mod_dict.get("invert_toe_wiggle"),
-                "invert_toe_spin": mod_dict.get("invert_toe_spin"),
-                "invert_foot_lean": mod_dict.get("invert_foot_lean"),
-                "invert_foot_tilt": mod_dict.get("invert_foot_tilt"),
-                "invert_foot_roll": mod_dict.get("invert_foot_roll"),
-                "flip_spring_solver": mod_dict.get("flip_spring_solver", False),
                 "origin_joint": origin_joint,
                 "mid_joints": mid_joints,
                 "top_joints": top_joints,
@@ -140,11 +122,12 @@ def build_modules(rig_data_filepath: str | Path):
                 "flexi_joints_main": flexi_joints_main,
                 "flexi_joints_offset": flexi_joints_offset,
                 "aim_object": aim_object,
-                "separate_flexi_ctrls": mod_dict.get("separate_flexi_ctrls"),
-                "enable_auto_clav": mod_dict.get("enable_auto_clav", False),
                 "ik_wrist_ctrl": ik_wrist_ctrl,
-                "use_flexi_ik_chain": mod_dict.get("use_flexi_ik_chain", False),
             }
+            right_dict.update(
+                {key: value for key, value in right_dict_updates.items() if key in mod_dict},
+            )
+
             right_modules.append(right_dict)
         elif mirror_right and (mirror_direction is None or "left" not in mirror_direction):
             error_msg = (
@@ -235,6 +218,8 @@ def build_modules(rig_data_filepath: str | Path):
             enable_auto_clav = mod_dict.get("enable_auto_clav", False)
             ik_wrist_ctrl = mod_dict.get("ik_wrist_ctrl", "")
             use_flexi_ik_chain = mod_dict.get("use_flexi_ik_chain", False)
+
+            curve_dynamics = mod_dict.get("curve_dynamics", False)
 
             match rig_module:
                 case "biped_limb_mod":
@@ -333,6 +318,7 @@ def build_modules(rig_data_filepath: str | Path):
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,
+                        curve_dynamics=curve_dynamics,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -460,17 +446,17 @@ def build_modules(rig_data_filepath: str | Path):
 
     # ---------- create top rig group ----------
     if rig_name:
-        main_rig_group = f"{rig_name}_rigGrp"
+        main_rig_grp = f"{rig_name}_rigGrp"
     else:
-        main_rig_group = "main_rigGrp"
-    if not cmds.objExists(main_rig_group):
-        main_rig_group = cmds.group(empty=True, name=main_rig_group)
+        main_rig_grp = "main_rigGrp"
+    if not cmds.objExists(main_rig_grp):
+        main_rig_grp = cmds.group(empty=True, name=main_rig_grp)
     for grp in top_groups:
         if grp and cmds.objExists(grp):
-            cmds.parent(grp, main_rig_group)
+            cmds.parent(grp, main_rig_grp)
 
     # ----- tag controls for parallel evaluation -----
-    rig_ctrls = cmds.listRelatives(main_rig_group, allDescendents=True) or []
+    rig_ctrls = cmds.listRelatives(main_rig_grp, allDescendents=True) or []
     rig_ctrls = [
         ctrl
         for ctrl in rig_ctrls
@@ -479,3 +465,6 @@ def build_modules(rig_data_filepath: str | Path):
         and not any(word in ctrl.lower() for word in ("switch", "swch"))
     ]
     cmds.controller(rig_ctrls)
+
+    # ----- variables to global dict -----
+    registry.register_obj("main_rig_grp", main_rig_grp)

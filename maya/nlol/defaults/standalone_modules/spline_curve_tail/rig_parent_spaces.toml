@@ -1,0 +1,16 @@
+# RIG PARENT SPACES
+# spline_curve_tail
+
+# ---------- base
+[[control]]
+control = "pelvis_ctrl"
+parents = "root_ctrl"
+
+# ---------- spline curve tail
+[[control]]
+control = "fkTail_01_ctrl, ikTailStart_ctrl"
+parents = "pelvis_ctrl"
+
+[[control]]
+control = "tailSwch_ctrl, nDynamicsAux_ctrl"
+parents = "root_ctrl"

@@ -40,13 +40,13 @@ class CommonBuildFunctions:
         self.get_rig_data()
         self.find_create_top_grp()
         if objects:
-            cmds.parent(objects, self.main_rig_group)
+            cmds.parent(objects, self.main_rig_grp)
 
     def find_create_top_grp(self):
         """Create main top group for rig components."""
         if self.rig_name:
-            self.main_rig_group = f"{self.rig_name}_rigGrp"
+            self.main_rig_grp = f"{self.rig_name}_rigGrp"
         else:
-            self.main_rig_group = "main_rigGrp"
-        if not cmds.objExists(self.main_rig_group):
-            self.main_rig_group = cmds.group(empty=True, name=self.main_rig_group)
+            self.main_rig_grp = "main_rigGrp"
+        if not cmds.objExists(self.main_rig_grp):
+            self.main_rig_grp = cmds.group(empty=True, name=self.main_rig_grp)

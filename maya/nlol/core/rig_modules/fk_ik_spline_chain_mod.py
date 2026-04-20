@@ -2,6 +2,7 @@ import math
 from importlib import reload
 
 from maya import cmds
+from nlol.core.general_utils import add_divider_attribue, cap
 from nlol.core.rig_components import (
     clean_constraints,
     create_control_groups,
@@ -10,12 +11,14 @@ from nlol.core.rig_components import (
     create_nurbs_curves,
     create_ruler,
 )
+from nlol.core.rig_setup import build_curve_dynamics
 from nlol.core.rig_tools import get_aligned_axis
 from nlol.utilities.nlol_maya_logger import get_logger
-from nlol.core.general_utils import add_divider_attribue, cap
 
 reload(create_ruler)
+reload(build_curve_dynamics)
 reload(get_aligned_axis)
+
 
 scale_constr = clean_constraints.scale_constr
 parent_constr = clean_constraints.parent_constr
@@ -25,13 +28,20 @@ query_main_axis = get_aligned_axis.query_main_axis
 
 
 class FkIkSplineChainModule:
-    def __init__(self, rig_module_name: str, mirror_direction: str, main_joints: list[str]):
+    def __init__(
+        self,
+        rig_module_name: str,
+        mirror_direction: str,
+        main_joints: list[str],
+        curve_dynamics: bool = False,
+    ):
         """Create fk ik blended ctrl chain. The ik chain uses "Ik Spline Handle" curve.
         Useful for a spline spine.
         """
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.main_joints = main_joints
+        self.curve_dynamics = curve_dynamics
 
         self.logger = get_logger()
 
@@ -48,6 +58,8 @@ class FkIkSplineChainModule:
         self.build_switch_ctrl()
         self.build_fk_ctrls()
         self.build_ik_ctrls()
+        if self.curve_dynamics:
+            self.build_spline_crv_dynamics()
 
         return self.mod_top_grp
 
@@ -178,9 +190,9 @@ class FkIkSplineChainModule:
             # control curve and group
             fk_ctrl = create_nurbs_curves.CreateCurves(
                 name=f"fk{cap(self.mod_name)}{self.mirr_side}{i + 1:02d}_ctrl",
-                size=1.0,
+                size=2.0,
                 color_rgb=(1, 0, 0),
-            ).box_curve()
+            ).dodecagon_curve()
             fk_ctrl_grp = create_ctrl_grps(fk_ctrl)[0]
 
             # snap ctrl group to joint
@@ -209,7 +221,7 @@ class FkIkSplineChainModule:
 
     def build_ik_ctrls(self):
         """Create ik controls. Create ik spline handle and curve.
-        Drive ik joints with spline curve. Create ik spline stretch 
+        Drive ik joints with spline curve. Create ik spline stretch
         and twist setup.
         """
         # -------------------------------------------------------
@@ -280,8 +292,8 @@ class FkIkSplineChainModule:
         # ---------- mid ctrl ----------
         ik_mid_ctrl = create_nurbs_curves.CreateCurves(
             name=f"ik{cap(self.mod_name)}Mid{self.mirr_side}ctrl",
-            size=1,
-            color_rgb=(0.1, 1.0, 0.0),
+            size=3,
+            color_rgb=(1.0, 0.8, 0.0),
         ).box_curve()
         ik_mid_ctrl_grp = create_ctrl_grps(ik_mid_ctrl)[0]  # grp ctrl
         # transform ik mid control between first and last ik joints
@@ -358,12 +370,12 @@ class FkIkSplineChainModule:
                 longName="startTwistBlend",
                 minValue=0.0,
                 maxValue=1.0,
-                defaultValue=0.0,
+                defaultValue=1.0,
                 keyable=True,
             )
             cmds.connectAttr(
                 f"{ik_start_ctrl}.startTwistBlend",
-                f"{start_parent_twist_const}.target[0].targetWeight",
+                f"{start_parent_twist_const}.target[1].targetWeight",
                 force=True,
             )
             start_twist_blend_reverse_nd = cmds.createNode(
@@ -377,16 +389,16 @@ class FkIkSplineChainModule:
             )
             cmds.connectAttr(
                 f"{start_twist_blend_reverse_nd}.outputX",
-                f"{start_parent_twist_const}.target[1].targetWeight",
+                f"{start_parent_twist_const}.target[0].targetWeight",
                 force=True,
             )
 
         # -------------------------------------------------
         # --------------- create ik stretch ---------------
         # stretch attr
-        add_divider_attribue(control_name=ik_start_ctrl, divider_amount=9)
+        add_divider_attribue(control_name=ik_end_ctrl, divider_amount=9)
         cmds.addAttr(
-            ik_start_ctrl,
+            ik_end_ctrl,
             longName="stretch",
             minValue=0.0,
             maxValue=1.0,
@@ -402,7 +414,7 @@ class FkIkSplineChainModule:
             include_stretch_nodes=True,
         )
         # stretch attr to blendColors stretch on/off toggle
-        cmds.connectAttr(f"{ik_start_ctrl}.stretch", f"{blendcolors_nd}.blender")
+        cmds.connectAttr(f"{ik_end_ctrl}.stretch", f"{blendcolors_nd}.blender")
         # connect ruler distance ratio to ik joints translateX
         for i, ik_jnt in enumerate(self.ik_jnts[1:]):
             multiplydivide_nd = cmds.createNode(
@@ -445,6 +457,9 @@ class FkIkSplineChainModule:
             cmds.parent(obj, self.ik_top_grp)
             cmds.setAttr(f"{obj}.visibility", 0)
         cmds.parent(ik_start_ctrl_grp, self.ik_top_grp)
+
+        # ----- instance variables -----
+        self.ik_spline_crv = ik_spline_crv
 
     def build_switch_ctrl(self):
         """Create fk ik switch ctrl."""
@@ -601,3 +616,9 @@ class FkIkSplineChainModule:
                 f"{spline_crv}.cv[{i}]",
                 transformValue=((start_jnt, 1.0 - weight), (end_jnt, weight)),
             )
+
+    def build_spline_crv_dynamics(self):
+        """Set up nHair dynamics on spline curve, with attributes on
+        global dynamics ctrl.
+        """
+        build_curve_dynamics.CurveDynamics().build(self.ik_spline_crv)

@@ -12,8 +12,14 @@ def main():
     # -----
     logger.info("Running finalize script...")
 
-    # neck to fk
+    # set default attributes
     cmds.setAttr("neckSwch_ctrl.fkIkBlend", 1)
+    for side in ["left", "right"]:
+        cmds.setAttr(f"ikEndArm_{side}_ctrl.soft", 0.035)
+        cmds.setAttr(f"ikAnkleLeg_{side}_ctrl.soft", 0.035)
+
+        cmds.setAttr(f"ikArmPoleVector_{side}_ctrl.parentSpaces", 5)  # spine_05
+        cmds.setAttr(f"ikEndArm_{side}_ctrl.parentSpaces", 4)  # spine_05
 
     # -----
     logger.info("Finalize script finished.")

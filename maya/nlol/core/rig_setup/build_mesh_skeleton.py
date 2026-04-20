@@ -7,10 +7,11 @@ from importlib import reload
 from pathlib import Path
 
 from maya import cmds
-from nlol.defaults import rig_folder_path
 from nlol.core.rig_components import create_display_layers
 from nlol.core.rig_tools import skin_export_import
+from nlol.defaults import rig_folder_path
 from nlol.utilities.nlol_maya_logger import get_logger
+from nlol.utilities.nlol_maya_registry import get_registry
 
 reload(rig_folder_path)
 reload(create_display_layers)
@@ -34,6 +35,7 @@ class BuildMeshSkeleton:
         self._rig_data = None
 
         self.logger = get_logger()
+        self.registry = get_registry()
 
     @property
     def rig_data(self) -> dict:
@@ -147,11 +149,11 @@ class BuildMeshSkeleton:
             cmds.setAttr(f"{skeletalmesh_grp}.rotateX", -90)
         # create top rig group
         if self.rig_name:
-            main_rig_group = f"{self.rig_name}_rigGrp"
+            main_rig_grp = f"{self.rig_name}_rigGrp"
         else:
-            main_rig_group = "main_rigGrp"
-        if not cmds.objExists(main_rig_group):
-            main_rig_group = cmds.group(empty=True, name=main_rig_group)
+            main_rig_grp = "main_rigGrp"
+        if not cmds.objExists(main_rig_grp):
+            main_rig_grp = cmds.group(empty=True, name=main_rig_grp)
 
         # parent meshes and skeletons to top groups. hide joints and flexi meshes.
         cmds.parent(skeleton_root, skeletalmesh_grp)
@@ -162,14 +164,14 @@ class BuildMeshSkeleton:
             hide=True,
         )
         if other_top_joints:
-            cmds.parent(other_top_joints, main_rig_group)
+            cmds.parent(other_top_joints, main_rig_grp)
             for top_jnts in other_top_joints:
                 cmds.setAttr(f"{top_jnts}.visibility", 0)
 
         main_meshes = []
         for mesh in meshes:
             if "flexiSurface" in mesh:
-                cmds.parent(mesh, main_rig_group)
+                cmds.parent(mesh, main_rig_grp)
                 cmds.setAttr(f"{mesh}.visibility", 0)
             else:
                 cmds.parent(mesh, skeletalmesh_grp)
@@ -191,3 +193,7 @@ class BuildMeshSkeleton:
 
         for jnt in all_rig_joints:
             cmds.setAttr(f"{jnt}.segmentScaleCompensate", 0)
+
+        # ---------- variables to global dict ----------
+        self.registry.register_obj("main_skeletalmesh_grp", skeletalmesh_grp)
+        self.registry.register_obj("main_rig_grp", main_rig_grp)

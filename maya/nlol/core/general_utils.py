@@ -59,6 +59,8 @@ def add_divider_attribue(
     Attribute appears as a line in the channel box.
     """
     divider_string = divider_amount * divider_symbol
+    while cmds.objExists(f"{control_name}.{divider_string}"):
+        divider_string = divider_string + "_"
     cmds.addAttr(
         control_name,
         longName=divider_string,
@@ -157,8 +159,7 @@ def swap_side_str(text_str, return_side: bool = False) -> str | tuple[str, str]:
 
     if return_side:
         return text_str, current_side
-    else:
-        return text_str
+    return text_str
 
 
 def invert_axis_string(text_str: str) -> str:

@@ -270,7 +270,8 @@ def update_scene_materials(
                 cmds.delete(obj)
         mel.eval("MLdeleteUnused;")
         # create SG, after deleting
-        name_comp = material.split("_")[0]
+        name_without_end = material.split("_")[:-1]
+        name_comp = "_".join(name_without_end)
         shading_group = cmds.sets(
             renderable=True,
             noSurfaceShader=True,
