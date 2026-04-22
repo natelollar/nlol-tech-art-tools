@@ -16,7 +16,8 @@
 - Launch rig build via menu/shelf button: `nLol Rigging < Build Rig`
 - Example rig setup: `maya/nlol/defaults/rig_unreal/`
 - Additional tools include animation retargeting, control mirroring, asset scattering, and more.  
-- Also, saving/loading of skin weights, control shapes, materials, cloth settings, and animations.
+- Also, saving/loading of skin weights, control shapes, materials, animations, and   
+  cloth and curve dynamics settings is supported.
 
 ### *Installation*
 1. Drag and drop `maya_install.py` into the Maya viewport.
@@ -80,7 +81,7 @@
   - Or manually apply to controls with `nLol Animation < Load Mirror Attributes`.
 - This allows rig controls to be mirrored across local X axis when animating.
 #### *Rig Cloth Setup:*  
-- Cloth data saves to `/custom_rig_folder/cloth_data/`.
+- Cloth data saves to `/custom_rig_folder/dynamics_data/`.
 - Use `nLol Animation < Save Attach Verts and Object` to export cloth data.
   - Select verts of cloth mesh and attach object, then run.
   - Saves to file with suffix `*DynamicConstraint.json`.
@@ -266,8 +267,8 @@
       - Contains skin weights for the rig.
     - `/materials`
       - Contains materials for the rig. Not required.
-    - `/cloth_data` 
-      - Contains cloth data for the rig. Not required.
+    - `/dynamics_data` 
+      - Contains cloth and curve dynamics data for the rig. Not required.
   - See example rig setup in `/defaults/rig_unreal/`.
 - *Save Control Curves*
   - Save control curve shapes to `/custom_rig_folder/rig_control_curves.json`.
@@ -277,7 +278,7 @@
 - *Setup nCloth Rig Components*
   - Sets up nCloth for rig. Make sure rig nCloth settings are saved first.
   - Usually run through rig build.
-  - Rig nCloth data in `/custom_rig_folder/cloth_data`.
+  - Rig nCloth data in `/custom_rig_folder/dynamics_data`.
 - *Save Attach Verts and Object*
   - Saves selected verts and selected object names to file with suffix `*DynamicConstraint.json`.
   - Selected verts will identify cloth mesh and what verts to attach.
@@ -290,7 +291,16 @@
   - Supports having ramp attached to `inputAttractMap` attribute.
   - Auto applies when rig built.
 - *Apply nCloth Settings*
-  - Apply saved nCloth settings from `cloth_data/` folder.
+  - Apply saved nCloth settings from `dynamics_data/` folder.   
+--------------------  
+- *Save hairSystem/follicle Settings*
+  - Save settings for selected hairSystem or follicle objects to `dynamics_data/` folder.   
+    - Saves to files with suffix `*HairSystemShapeSettings.json` or `*FollicleShapeSettings.json`.   
+  - Used for saving curve dynamics data.   
+    - For example, when curve dynamics are applied via the "fk_ik_spline_chain_mod" rig module.   
+  - Auto loads settings when rig is built.   
+- *Apply hairSystem/follicle Settings*
+  - Apply saved hairSystem and follicle settings from `dynamics_data/` folder.   
 --------------------  
 - *Select Object Shapes*
   - Select all transforms shapes. Useful for curve shape settings.
