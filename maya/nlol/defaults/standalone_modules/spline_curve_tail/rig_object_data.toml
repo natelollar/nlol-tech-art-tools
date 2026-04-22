@@ -18,7 +18,8 @@ rig_module = "fk_ik_spline_chain_mod"
 rig_module_name = "tail" 
 joints = "tail_01_jnt, tail_09_jnt"
 get_joint_chain = true
+add_ik_end_ctrl = true
+hide_fk_end_ctrl = true
 curve_dynamics = true
-
 
 

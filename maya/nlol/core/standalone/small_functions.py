@@ -70,8 +70,8 @@ def reset_all_ctrls(all_keyable: bool = False) -> None:
         "lean",
         "tilt",
         "roll",
-        #"softFalloff",
-        #"soft",
+        # "softFalloff",
+        # "soft",
         "startTwistBlend",
         "stretch",
     )
@@ -262,3 +262,54 @@ def multi_parent_const():
     for obj in selected:
         if obj != selected[-1]:
             cmds.parentConstraint(selected[-1], obj, maintainOffset=True, weight=1.0)
+
+
+def lock_and_hide_attrs(
+    objects: list[str] | str,
+    lock_attrs: bool = True,
+    hide_attrs: bool = True,
+    translate: bool = True,
+    rotate: bool = True,
+    scale: bool = True,
+    visibility: bool = False,
+    hide_objects: bool = False,
+) -> None:
+    """Lock and hide object and transform attributes.
+
+    Args:
+        objects: A list of maya objects, or single object name.
+        lock_attrs: Lock object attributes.
+        hide_attrs: Hide object attributes from channel box.
+        translate:  Translate attributes. XYZ
+        rotae: Rotate attributes. XYZ
+        scale: Scale attributes. XYZ
+        visibility: Visibility attribute.
+        hide_objects: Whether to set visibility to False/0 in order to hide the objects.
+
+    """
+    if not isinstance(objects, (list, set)):
+        objects = [objects]
+
+    lock_kwargs = {}
+    if lock_attrs:
+        lock_kwargs = {"lock": True}
+    hide_kwargs = {}
+    if hide_attrs:
+        hide_kwargs = {"keyable": False, "channelBox": False}
+    lock_hide_kwargs = lock_kwargs | hide_kwargs
+
+    for obj in objects:
+        if hide_objects:
+            vis_query = cmds.getAttr(f"{obj}.visibility", lock=True)
+            cmds.setAttr(f"{obj}.visibility", lock=False)  # unlock to hide
+            cmds.setAttr(f"{obj}.visibility", False)  # hide object
+            cmds.setAttr(f"{obj}.visibility", lock=vis_query) # set back to previous lock state
+        for axis in "XYZ":
+            if translate:
+                cmds.setAttr(f"{obj}.translate{axis}", **lock_hide_kwargs)
+            if rotate:
+                cmds.setAttr(f"{obj}.rotate{axis}", **lock_hide_kwargs)
+            if scale:
+                cmds.setAttr(f"{obj}.scale{axis}", **lock_hide_kwargs)
+        if visibility:
+            cmds.setAttr(f"{obj}.visibility", **lock_hide_kwargs)

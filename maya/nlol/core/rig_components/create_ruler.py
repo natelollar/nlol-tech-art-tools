@@ -66,13 +66,13 @@ def create_attached_ruler(
     # create stretch node setup
     blendcolors_nd = None
     global_scale_nd = None
+    multiplydivide_nd = None
     if include_stretch_nodes:
         multiplydivide_nd = cmds.createNode("multiplyDivide")
         cmds.setAttr(f"{multiplydivide_nd}.operation", 2)  # divide
         blendcolors_nd = cmds.createNode("blendColors")
         ruler_distance = cmds.getAttr(f"{ruler_shape}.distance")
         cmds.connectAttr(f"{ruler_shape}.distance", f"{multiplydivide_nd}.input1X")
-        #cmds.setAttr(f"{multiplydivide_nd}.input2X", ruler_distance)
         cmds.connectAttr(f"{multiplydivide_nd}.outputX", f"{blendcolors_nd}.color1R")
         cmds.setAttr(f"{blendcolors_nd}.color2R", 1.0)
         # global scale
@@ -95,5 +95,6 @@ def create_attached_ruler(
         ruler_loc_01_const,
         ruler_loc_02_const,
         blendcolors_nd,
-        global_scale_nd
+        global_scale_nd,
+        multiplydivide_nd,
     )

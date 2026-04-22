@@ -94,11 +94,10 @@ class MirrorAttrsExportImport:
     def apply_mirror_attrs(self) -> None:
         """Load in and apply mirror attribute data from json. No selection needed."""
         if not self.save_filepath.is_file():
-            msg = (
-                '"mirror_attributes.json" not in rig folder. Skipping mirror attributes setup.\n'
-                f'File not found: "{self.save_filepath}".'
-            )
+            msg = '"mirror_attributes.json" not in rig folder. Skipping mirror attrs setup...\n'
             self.logger.info(msg)
+            msg = f'File not found: "{self.save_filepath}".'
+            self.logger.debug(msg)
             return
 
         ctrls_mirror_attrs = self.load_mirror_attrs()

@@ -176,7 +176,7 @@ def build_modules(rig_data_filepath: str | Path):
             flexi_surface = mod_dict.get("flexi_surface")
             flexi_surface_main = mod_dict.get("flexi_surface_main", "")
             flexi_surface_offset = mod_dict.get("flexi_surface_offset", "")
-            hide_end_ctrl = mod_dict.get("hide_end_ctrl")
+            hide_end_ctrl = mod_dict.get("hide_end_ctrl", False)
             hide_translate = mod_dict.get("hide_translate")
             hide_rotate = mod_dict.get("hide_rotate")
             hide_scale = mod_dict.get("hide_scale")
@@ -219,6 +219,8 @@ def build_modules(rig_data_filepath: str | Path):
             ik_wrist_ctrl = mod_dict.get("ik_wrist_ctrl", "")
             use_flexi_ik_chain = mod_dict.get("use_flexi_ik_chain", False)
 
+            hide_fk_end_ctrl = mod_dict.get("hide_fk_end_ctrl", False)
+            add_ik_end_ctrl = mod_dict.get("add_ik_end_ctrl", False)
             curve_dynamics = mod_dict.get("curve_dynamics", False)
 
             match rig_module:
@@ -318,6 +320,8 @@ def build_modules(rig_data_filepath: str | Path):
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,
+                        hide_fk_end_ctrl=hide_fk_end_ctrl,
+                        add_ik_end_ctrl=add_ik_end_ctrl,
                         curve_dynamics=curve_dynamics,
                     )
                     module_top_group = module_instance.build()

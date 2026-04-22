@@ -42,11 +42,10 @@ class ParentSpacing:
         Get data from "rig_parent_spaces.toml" first.  Then setup parent spaces.
         """
         if not Path(self.rig_ps_filepath).is_file():
-            msg = (
-                '"rig_parent_spaces.toml" not in rig folder. Skipping parent space setup.\n'
-                f'File not found: "{self.rig_ps_filepath}".'
-            )
+            msg = '"rig_parent_spaces.toml" not in rig folder. Skipping parent space setup...\n'
             self.logger.info(msg)
+            msg = f"File not found: {self.rig_ps_filepath}"
+            self.logger.debug(msg)
             return
 
         # query parent space data

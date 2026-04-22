@@ -87,7 +87,8 @@ class EyeAimModule:
             )
 
         # eye joint parent
-        jnt_parent = cmds.listRelatives(self.main_joints[0], parent=True)[0]
+        jnt_parent = cmds.listRelatives(self.main_joints[0], parent=True)
+        jnt_parent = jnt_parent[0] if jnt_parent else None
         if not jnt_parent:
             self.logger.warning(
                 f'"{self.main_joints[0]}" is missing its parent joint: "{jnt_parent}"',

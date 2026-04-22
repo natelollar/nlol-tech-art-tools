@@ -1,7 +1,3 @@
-"""Import "model.ma", "skeleton.ma", and "rig_helpers.ma" from asset's rig folder.
-Also, setup skinning between skeleton and geo.
-"""
-
 import tomllib
 from importlib import reload
 from pathlib import Path
@@ -26,8 +22,8 @@ rig_helpers_filepath = rig_folderpath / "rig_helpers.ma"
 
 
 class BuildMeshSkeleton:
-    """Import mesh and skeleton, then build into skeletal mesh.
-    Also, import rig helpers file.
+    """Import "model.ma", "skeleton.ma", and "rig_helpers.ma" from custom rig folder.
+    Then build skeletal mesh; set up skinning between skeleton and geo.
     """
 
     def __init__(self, rig_data_filepath: str | Path | None = None):
@@ -72,6 +68,8 @@ class BuildMeshSkeleton:
         else:
             msg = '"rig_helpers.ma" not in rig folder. Skipping import...'
             self.logger.info(msg)
+            msg = f"File not found: {rig_helpers_filepath}"
+            self.logger.debug(msg)
 
         # remove leftover layers
         scene_display_lyrs = cmds.ls(type="displayLayer")
@@ -89,21 +87,18 @@ class BuildMeshSkeleton:
             return
 
         yes_string = "Yes"
-        no_string = "Use Current"
+        no_string = "No"
         dialog_result = cmds.confirmDialog(
             title="Confirm",
-            message="Create New Character Scene?",
+            message="Create new RIG scene?",
             button=[yes_string, no_string],
             defaultButton="Yes",
             cancelButton=no_string,
             dismissString=no_string,
-            icon="question",
             bgc=(0.2, 0.2, 0.2),
         )
         if dialog_result == no_string:
-            msg = 'Skipping import for "model.ma", "skeleton.ma" and "rig_helpers.ma".'
-            self.logger.info(msg)
-            return
+            raise InterruptedError("RIG BUILD CANCELLED...")
 
         # force open new maya file
         cmds.file(force=True, new=True)

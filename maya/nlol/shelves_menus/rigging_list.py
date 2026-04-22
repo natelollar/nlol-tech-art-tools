@@ -378,13 +378,13 @@ def build_rigging_list():
         {
             "label": "Setup nCloth Rig Components",
             "image": "pythonFamily.png",
-            "annotation": "Setup nCloth rig components. Reads data from cloth_data folder.",
+            "annotation": "Setup nCloth rig components. Reads data from dynamics_data folder.",
             "imageOverlayLabel": "ClthRg",
             "backgroundColor": random_clrs[29],
-            "command": "from nlol.core.rig_setup import build_flexi_to_cloth\n"
+            "command": "from nlol.core.rig_setup import build_cloth_dynamics\n"
             "from importlib import reload\n"
-            "reload(build_flexi_to_cloth)\n"
-            "build_flexi_to_cloth.FlexiToCloth().build()",
+            "reload(build_cloth_dynamics)\n"
+            "build_cloth_dynamics.ClothDynamics().build()",
             "sourceType": "python",
         },
         {
@@ -392,25 +392,25 @@ def build_rigging_list():
             "image": "pythonFamily.png",
             "annotation": "Select vertices from cloth mesh and attach object. "
             "Cloth mesh should not be initialized yet. "
-            "This just saves selection to json in cloth_data folder.",
+            "This just saves selection to json in dynamics_data folder.",
             "imageOverlayLabel": "SvVrtM",
             "backgroundColor": random_clrs[11],
-            "command": "from nlol.core.rig_setup import build_flexi_to_cloth\n"
+            "command": "from nlol.core.rig_setup import build_cloth_dynamics\n"
             "from importlib import reload\n"
-            "reload(build_flexi_to_cloth)\n"
-            "build_flexi_to_cloth.FlexiToCloth().save_vertex_ids()",
+            "reload(build_cloth_dynamics)\n"
+            "build_cloth_dynamics.ClothDynamics().save_vertex_ids()",
             "sourceType": "python",
         },
         {
             "label": "Save Collision Meshes",
             "image": "pythonFamily.png",
-            "annotation": "Save selected collision mesh names to cloth_data folder.",
+            "annotation": "Save selected collision mesh names to dynamics_data folder.",
             "imageOverlayLabel": "SvColl",
             "backgroundColor": random_clrs[12],
-            "command": "from nlol.core.rig_setup import build_flexi_to_cloth\n"
+            "command": "from nlol.core.rig_setup import build_cloth_dynamics\n"
             "from importlib import reload\n"
-            "reload(build_flexi_to_cloth)\n"
-            "build_flexi_to_cloth.FlexiToCloth().save_collision_meshes()",
+            "reload(build_cloth_dynamics)\n"
+            "build_cloth_dynamics.ClothDynamics().save_collision_meshes()",
             "sourceType": "python",
         },
         {
@@ -419,22 +419,49 @@ def build_rigging_list():
             "annotation": "Save settings for selected nCloth objects.",
             "imageOverlayLabel": "SvSet",
             "backgroundColor": random_clrs[13],
-            "command": "from nlol.core.rig_setup import build_flexi_to_cloth\n"
+            "command": "from nlol.core.rig_setup import build_cloth_dynamics\n"
             "from importlib import reload\n"
-            "reload(build_flexi_to_cloth)\n"
-            "build_flexi_to_cloth.FlexiToCloth().save_ncloth_settings()",
+            "reload(build_cloth_dynamics)\n"
+            "build_cloth_dynamics.ClothDynamics().save_ncloth_settings()",
             "sourceType": "python",
         },
         {
             "label": "Apply nCloth Settings",
             "image": "pythonFamily.png",
-            "annotation": "Apply saved nCloth settings from cloth_data folder.",
-            "imageOverlayLabel": "AplySet",
+            "annotation": "Apply saved nCloth settings from dynamics_data folder.",
+            "imageOverlayLabel": "AplSet",
             "backgroundColor": random_clrs[14],
-            "command": "from nlol.core.rig_setup import build_flexi_to_cloth\n"
+            "command": "from nlol.core.rig_setup import build_cloth_dynamics\n"
             "from importlib import reload\n"
-            "reload(build_flexi_to_cloth)\n"
-            "build_flexi_to_cloth.FlexiToCloth().apply_ncloth_settings()",
+            "reload(build_cloth_dynamics)\n"
+            "build_cloth_dynamics.ClothDynamics().apply_ncloth_settings()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Save hairSystem/follicle Settings",
+            "image": "pythonFamily.png",
+            "annotation": "Save settings for selected nhair systems and follicles.\n"
+            "Saves to dynamics_data folder in nLol rig folder.",
+            "imageOverlayLabel": "SvHar",
+            "backgroundColor": random_clrs[43],
+            "command": "from nlol.core.rig_setup import build_curve_dynamics\n"
+            "from importlib import reload\n"
+            "reload(build_curve_dynamics)\n"
+            "build_curve_dynamics.CurveDynamics().save_hair_settings()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Apply hairSystem/follicle Settings",
+            "image": "pythonFamily.png",
+            "annotation": "Apply hairSystem and follicle settings from dynamics_data folder."
+            "No selection required.  Object names stored in settings files.",
+            "imageOverlayLabel": "ApyHar",
+            "backgroundColor": random_clrs[45],
+            "command": "from nlol.core.rig_setup import build_curve_dynamics\n"
+            "from importlib import reload\n"
+            "reload(build_curve_dynamics)\n"
+            "build_curve_dynamics.CurveDynamics().apply_hair_settings()",
             "sourceType": "python",
         },
         shelf_separator,

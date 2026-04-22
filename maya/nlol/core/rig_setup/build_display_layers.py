@@ -31,10 +31,11 @@ class BuildDisplayLayers:
         """
         if not Path(self.display_lyrs_filepath).is_file():
             msg = (
-                '"display_lyrs_filepath.toml" not in rig folder. Skipping display layers setup.\n'
-                f'File not found: "{self.display_lyrs_filepath}".'
+                '"display_lyrs_filepath.toml" not in rig folder. Skipping display layers setup...\n'
             )
             self.logger.info(msg)
+            msg = f'File not found: {self.display_lyrs_filepath}'
+            self.logger.debug(msg)
             return
 
         # query rig display layer data

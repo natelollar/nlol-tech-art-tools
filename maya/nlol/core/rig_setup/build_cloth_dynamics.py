@@ -1,5 +1,6 @@
 import json
 from importlib import reload
+from pathlib import Path
 
 from maya import cmds, mel
 from nlol.core import general_utils
@@ -17,11 +18,11 @@ add_divider_attribue = general_utils.add_divider_attribue
 cap = general_utils.cap
 
 rig_folderpath = rig_folder_path.rig_folderpath
-cloth_data_folderpath = rig_folderpath / "cloth_data"
-collision_mesh_filepath = cloth_data_folderpath / "collision_meshes.json"
+dynamics_data_folderpath = rig_folderpath / "dynamics_data"
+collision_mesh_filepath = dynamics_data_folderpath / "collision_meshes.json"
 
 
-class FlexiToCloth:
+class ClothDynamics:
     """General nCloth setup.
 
     Create nCloth blendshape setup for flexi/ribbon geometry.
@@ -37,11 +38,11 @@ class FlexiToCloth:
         --------------------------------------------------
         """
         # check if cloth data in rig folder
-        cloth_verts_filepaths = list(cloth_data_folderpath.glob("*DynamicConstraint.json"))
+        cloth_verts_filepaths = list(dynamics_data_folderpath.glob("*DynamicConstraint.json"))
         if not list(cloth_verts_filepaths):
             msg = (
-                '"*DynamicConstraint.json" files not in rig "cloth_data" folder. '
-                "Skipping cloth setup."
+                '"*DynamicConstraint.json" files not in dynamics_data folder. '
+                "Skipping cloth setup..."
             )
             self.logger.info(msg)
             return
@@ -83,17 +84,17 @@ class FlexiToCloth:
     def build_main(self, apply_cloth_settings: bool = True) -> None:
         """Create nCloth setup for rigging. Constrains cloth mesh to attach meshes with
         "Point to Surface". Multiple cloth meshes and attach meshes allowed.
-        Save cloth data to cloth_data folder first. Save data with save_vertex_ids(),
+        Save cloth data to dynamics_data folder first. Save data with save_vertex_ids(),
         save_collision_meshes() if collision needed, and optionally save_ncloth_settings().
 
-        This will set up nCloth for each "*DynamicConstraint.json" in cloth_data folder.
+        This will set up nCloth for each "*DynamicConstraint.json" in dynamics_data folder.
         Each dictionary in list returned from get_saved_vertex_ids() contains
         vertex ids, vertex/cloth mesh, and constraint/attach mesh. Also, the "collision_meshes.json"
-        contains collision mesh names. And any "*Settings.json" in cloth_data folder contain
+        contains collision mesh names. And any "*Settings.json" in dynamics_data folder contain
         saved nCloth settings that are applied at the end.
 
         Args:
-            apply_cloth_settings: Use pre-saved nCloth settings in cloth_data folder.
+            apply_cloth_settings: Use pre-saved nCloth settings in dynamics_data folder.
 
         """
         flexi_mesh_current = None
@@ -233,7 +234,8 @@ class FlexiToCloth:
                     cmds.parent(obj, self.top_grp)
                 cmds.setAttr(f"{obj}.visibility", 0)
         else:
-            self.logger.info('No "collision_meshes.json" in cloth_data rig folder.')
+            msg = '"collision_meshes.json" not in dynamics_data folder. Skipping setup...'
+            self.logger.info(msg)
 
         # ----- aux ctrl attrs -----
         self.aux_ctrl_nucleus_attrs(nucleus_nd)
@@ -249,15 +251,15 @@ class FlexiToCloth:
 
     def get_saved_vertex_ids(self) -> list[dict]:
         """Query json data for nCloth mesh vertex IDs, vertex mesh and attach mesh.
-        Get this data for all the attach meshes in the cloth_data folder for this rig.
+        Get this data for all the attach meshes in the dynamics_data folder for this rig.
 
         Returns:
             Returns same data as save_vertex_ids() except for multiple attach meshes in a list.
 
         """
-        cloth_verts_filepaths = list(cloth_data_folderpath.glob("*DynamicConstraint.json"))
+        cloth_verts_filepaths = list(dynamics_data_folderpath.glob("*DynamicConstraint.json"))
         if not list(cloth_verts_filepaths):
-            msg = f'No json dynamicConstraint filepaths in: "{cloth_data_folderpath}"'
+            msg = f'No json dynamicConstraint filepaths in: "{dynamics_data_folderpath}"'
             self.logger.error(msg)
             raise ValueError(msg)
 
@@ -276,8 +278,8 @@ class FlexiToCloth:
         """
         attach_mesh_data = self.get_selected_vertex_ids()
         attach_mesh = attach_mesh_data["attach_mesh"]
-        cloth_data_folderpath.mkdir(exist_ok=True)
-        cloth_verts_filepath = cloth_data_folderpath / f"{attach_mesh}DynamicConstraint.json"
+        dynamics_data_folderpath.mkdir(exist_ok=True)
+        cloth_verts_filepath = dynamics_data_folderpath / f"{attach_mesh}DynamicConstraint.json"
 
         self.logger.debug(f"{cloth_verts_filepath = }")
         with open(cloth_verts_filepath, "w") as f:
@@ -325,7 +327,7 @@ class FlexiToCloth:
         return attach_mesh_data
 
     def get_saved_collision_meshes(self) -> dict[str, list[str]]:
-        """Query "collision_meshes.json" from cloth_data folder.
+        """Query "collision_meshes.json" from dynamics_data folder.
 
         Returns:
             Dict with list of collision mesh names.
@@ -347,7 +349,7 @@ class FlexiToCloth:
         They can be skinned to joints.
         """
         collision_mesh_data = self.get_selected_collision_meshes()
-        cloth_data_folderpath.mkdir(exist_ok=True)
+        dynamics_data_folderpath.mkdir(exist_ok=True)
 
         with open(collision_mesh_filepath, "w") as f:
             json.dump(collision_mesh_data, f, indent=4)
@@ -376,7 +378,8 @@ class FlexiToCloth:
         return collision_mesh_data
 
     def apply_ncloth_settings(self):
-        """Apply saved nCloth settings from "*Settings.json" files in cloth_data folder.
+        """Apply saved nCloth settings from "*Settings.json" files in dynamics_data folder.
+        Files must also contain string "nCloth", not case sensitive.
         Also, supports applying saved settings for a ramp connected to inputAttractMap
         that was saved previously.
         """
@@ -442,15 +445,23 @@ class FlexiToCloth:
 
     def get_saved_ncloth_settings(self) -> list[dict]:
         """Get saved nCloth settings for nCloth objects.
-        These settings will be in "*Settings.json" files in the cloth_data folder.
+        These settings will be in "*Settings.json" files in the dynamics_data folder.
 
         Returns:
             A list of saved settings for nCloth objects.
 
         """
-        ncloth_settings_filepaths = list(cloth_data_folderpath.glob("*Settings.json"))
+        ncloth_settings_filepaths = list(dynamics_data_folderpath.glob("*Settings.json"))
+        ncloth_settings_filepaths = [
+            pth
+            for pth in ncloth_settings_filepaths
+            if any(keyword in Path(pth).stem.lower() for keyword in ["ncloth"])
+        ]
         if not list(ncloth_settings_filepaths):
-            msg = f'No custom cloth settings in: "{cloth_data_folderpath}"'
+            msg = (
+                f'No custom cloth settings in: "{dynamics_data_folderpath}"\n'
+                'Try adding "nCloth" or "Settings" to file names if string missing.'
+            )
             self.logger.debug(msg)
 
         ncloth_settings = []
@@ -464,10 +475,10 @@ class FlexiToCloth:
     def save_ncloth_settings(self):
         """Save nCloth settings to a json file per nCloth object."""
         ncloth_settings = self.get_selected_cloth_settings()
-        cloth_data_folderpath.mkdir(exist_ok=True)
+        dynamics_data_folderpath.mkdir(exist_ok=True)
 
         for obj in ncloth_settings.keys():
-            ncloth_settings_filepath = cloth_data_folderpath / f"{obj}Settings.json"
+            ncloth_settings_filepath = dynamics_data_folderpath / f"{obj}Settings.json"
             with open(ncloth_settings_filepath, "w") as f:
                 json.dump(ncloth_settings[obj], f, indent=4)
 

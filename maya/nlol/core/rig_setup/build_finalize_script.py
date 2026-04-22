@@ -26,8 +26,7 @@ def run_finalize_script(finalize_script_filepath: str | Path = default_finalize_
         else:
             logger.warning(f"Missing main() function: {finalize_script_filepath}")
     else:
-        msg = (
-            '"finalize_script.py" not in rig folder. Skipping finalize script.\n'
-            f'File not found: "{finalize_script_filepath}".'
-        )
+        msg = '"finalize_script.py" not in rig folder. Skipping finalize script...\n'
         logger.info(msg)
+        msg = f'File not found: "{finalize_script_filepath}".'
+        logger.debug(msg)

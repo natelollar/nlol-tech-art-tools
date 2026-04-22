@@ -13,12 +13,13 @@ from nlol.core.rig_components import (
 )
 from nlol.core.rig_setup import build_curve_dynamics
 from nlol.core.rig_tools import get_aligned_axis
+from nlol.core.standalone import small_functions
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(create_ruler)
 reload(build_curve_dynamics)
 reload(get_aligned_axis)
-
+reload(small_functions)
 
 scale_constr = clean_constraints.scale_constr
 parent_constr = clean_constraints.parent_constr
@@ -33,19 +34,34 @@ class FkIkSplineChainModule:
         rig_module_name: str,
         mirror_direction: str,
         main_joints: list[str],
+        hide_fk_end_ctrl: bool = False,
+        add_ik_end_ctrl: bool = False,
         curve_dynamics: bool = False,
-    ):
+    ) -> None:
         """Create fk ik blended ctrl chain. The ik chain uses "Ik Spline Handle" curve.
         Useful for a spline spine.
+
+        Args:
+            rig_module_name: Custom name for rig module.
+            mirror_direction: String to describe side as in "left" or "right".
+            main_joints: Joint list to apply rig module to.
+            hide_fk_end_ctrl: Whether to hide the last fk ctrl in the chain.
+                For example, the last ctrl on a tail, which is just an end joint and not skinned.
+            add_ik_end_ctrl: Add end ctrl for ik spline. Allows fk movement on second to last joint.
+                Useful for offseting a tail/tentacle end.
+            curve_dynamics: Whether to apply nHair system to spline curve for simulation.
+
         """
         self.mod_name = rig_module_name
         self.mirr_side = f"_{mirror_direction}_" if mirror_direction else "_"
         self.main_joints = main_joints
         self.curve_dynamics = curve_dynamics
+        self.hide_fk_end_ctrl = hide_fk_end_ctrl
+        self.add_ik_end_ctrl = add_ik_end_ctrl
 
         self.logger = get_logger()
 
-    def build(self):
+    def build(self) -> str:
         """Entry point. Run method to build rig module.
         --------------------------------------------------
 
@@ -58,12 +74,14 @@ class FkIkSplineChainModule:
         self.build_switch_ctrl()
         self.build_fk_ctrls()
         self.build_ik_ctrls()
+        if self.add_ik_end_ctrl:
+            self.build_end_ik_ctrl()
         if self.curve_dynamics:
             self.build_spline_crv_dynamics()
 
         return self.mod_top_grp
 
-    def build_top_grps(self):
+    def build_top_grps(self) -> None:
         """Create top rig module groups for organization."""
         self.mod_top_grp = cmds.group(
             empty=True,
@@ -80,7 +98,7 @@ class FkIkSplineChainModule:
         cmds.parent(self.fk_top_grp, self.mod_top_grp)
         cmds.parent(self.ik_top_grp, self.mod_top_grp)
 
-    def build_fk_ik_jnts(self):
+    def build_fk_ik_jnts(self) -> None:
         """An fk ik blended joint chain.
         Create fk ik joint chains and blend with main joint chain.
         """
@@ -182,7 +200,7 @@ class FkIkSplineChainModule:
         self.translate_blend_nodes = translate_blend_nodes
         self.rotate_blend_nodes = rotate_blend_nodes
 
-    def build_fk_ctrls(self):
+    def build_fk_ctrls(self) -> None:
         """Create fk ctrl chain. Constrain fk joints to follow fk ctrls."""
         fk_ctrl_grps = []
         fk_ctrls = []
@@ -216,10 +234,18 @@ class FkIkSplineChainModule:
         # parent under main fk group
         cmds.parent(fk_ctrl_grps[0], self.fk_top_grp)
 
+        # lock and hide last fk ctrl
+        if self.hide_fk_end_ctrl:
+            small_functions.lock_and_hide_attrs(
+                objects=fk_ctrls[-1],
+                hide_attrs=False,
+                hide_objects=True,
+            )
+
         # assign instance variable
         self.fk_ctrls = fk_ctrls
 
-    def build_ik_ctrls(self):
+    def build_ik_ctrls(self) -> None:
         """Create ik controls. Create ik spline handle and curve.
         Drive ik joints with spline curve. Create ik spline stretch
         and twist setup.
@@ -406,12 +432,14 @@ class FkIkSplineChainModule:
             keyable=True,
         )
         # create and attach ruler to controls
-        *_, blendcolors_nd, global_scale_nd = create_attached_ruler(
-            name=f"ik{cap(self.mod_name)}Ruler{self.mirr_side}",
-            ruler_start_object=ik_start_ctrl,
-            ruler_end_object=ik_end_ctrl,
-            parent_hide_grp=self.ik_top_grp,
-            include_stretch_nodes=True,
+        ruler_shape, *_, blendcolors_nd, global_scale_nd, multiplydivide_stretch_nd = (
+            create_attached_ruler(
+                name=f"ik{cap(self.mod_name)}Ruler{self.mirr_side}",
+                ruler_start_object=ik_start_ctrl,
+                ruler_end_object=ik_end_ctrl,
+                parent_hide_grp=self.ik_top_grp,
+                include_stretch_nodes=True,
+            )
         )
         # stretch attr to blendColors stretch on/off toggle
         cmds.connectAttr(f"{ik_end_ctrl}.stretch", f"{blendcolors_nd}.blender")
@@ -434,6 +462,28 @@ class FkIkSplineChainModule:
         )
         cmds.connectAttr(f"{ik_start_ctrl}.worldMatrix[0]", f"{decomposematrix_nd}.inputMatrix")
         cmds.connectAttr(f"{decomposematrix_nd}.outputScaleX", f"{global_scale_nd}.input1X")
+
+        # ----------------------------------------------------
+        # --------------- create stretch scale ---------------
+        cmds.addAttr(
+            ik_end_ctrl,
+            longName="stretchScale",
+            minValue=0.01,
+            maxValue=1.00,
+            defaultValue=1.00,
+            keyable=True,
+        )
+        multiplydivide_stretchscale_nd = cmds.createNode(
+            "multiplyDivide",
+            name=f"ik{cap(self.mod_name)}StretchScale{self.mirr_side}multiplyDivide",
+        )
+        cmds.connectAttr(f"{ruler_shape}.distance", f"{multiplydivide_stretchscale_nd}.input1X")
+        cmds.connectAttr(f"{ik_end_ctrl}.stretchScale", f"{multiplydivide_stretchscale_nd}.input2X")
+        cmds.connectAttr(
+            f"{multiplydivide_stretchscale_nd}.outputX",
+            f"{multiplydivide_stretch_nd}.input1X",
+            force=True,
+        )
 
         # ---------------------------------------------------
         # ---------- lock/ hide attrs. visibility. ----------
@@ -461,7 +511,7 @@ class FkIkSplineChainModule:
         # ----- instance variables -----
         self.ik_spline_crv = ik_spline_crv
 
-    def build_switch_ctrl(self):
+    def build_switch_ctrl(self) -> None:
         """Create fk ik switch ctrl."""
         # ---------- create control crv and grp ----------
         switch_ctrl = create_nurbs_curves.CreateCurves(
@@ -617,8 +667,150 @@ class FkIkSplineChainModule:
                 transformValue=((start_jnt, 1.0 - weight), (end_jnt, weight)),
             )
 
-    def build_spline_crv_dynamics(self):
+    def build_spline_crv_dynamics(self) -> None:
         """Set up nHair dynamics on spline curve, with attributes on
         global dynamics ctrl.
         """
         build_curve_dynamics.CurveDynamics().build(self.ik_spline_crv)
+
+    def build_end_ik_ctrl(self) -> None:
+        """Add offset fk ctrl on second to last ik spline joint.
+        Useful for controling the end of a tail/tentacle while in ik spline mode.
+        """
+        # ----------
+        # duplicate last 3 jnts from ik jnt chain
+        ik_offset_jnts = []
+        for i, jnt in enumerate(self.ik_jnts[-3:], (len(self.ik_jnts) - 3)):
+            ik_offset_jnt = create_joint.single_joint(
+                name=f"ik{cap(self.mod_name)}Offset{self.mirr_side}{i + 1:02d}_jnt",
+                radius=8,
+                color_index=5,
+                parent_snap=jnt,
+            )
+            ik_offset_jnts.append(ik_offset_jnt)
+
+        # parent offset jnts into chain
+        for i, ik_offset_jnt in enumerate(ik_offset_jnts):
+            if ik_offset_jnt != ik_offset_jnts[0]:
+                cmds.parent(ik_offset_jnt, ik_offset_jnts[i - 1])
+
+        # ----------
+        # parent/scale constrain first offset jnt under corresponding ik jnt
+        parent_constr(self.ik_jnts[-3], ik_offset_jnts[0])
+        scale_constr(self.ik_jnts[-3], ik_offset_jnts[0])
+
+        # ----------
+        # parent under top grp
+        cmds.parent(ik_offset_jnts[0], self.ik_top_grp)
+        # hide
+        cmds.setAttr(f"{ik_offset_jnts[0]}.visibility", 0)
+
+        # ----------
+        # translate/rotate plusMinusAverage last 2 ik jnts to offset jnts
+        plusminusav_trans_nds = []
+        plusminusav_rot_nds = []
+        for ik_jnt, offs_jnt in zip(self.ik_jnts[-2:], ik_offset_jnts[-2:], strict=False):
+            plusminusav_trans_nd = (
+                f"ik{cap(self.mod_name)}OffsetTranslate{self.mirr_side}{i + 1:02d}_plusMinusAverage"
+            )
+            plusminusav_trans_nd = cmds.createNode("plusMinusAverage", name=plusminusav_trans_nd)
+            plusminusav_rot_nd = (
+                f"ik{cap(self.mod_name)}OffsetRotate{self.mirr_side}{i + 1:02d}_plusMinusAverage"
+            )
+            plusminusav_rot_nd = cmds.createNode("plusMinusAverage", name=plusminusav_rot_nd)
+
+            cmds.connectAttr(
+                f"{ik_jnt}.translate",
+                f"{plusminusav_trans_nd}.input3D[0]",
+                force=True,
+            )
+            cmds.connectAttr(
+                f"{plusminusav_trans_nd}.output3D",
+                f"{offs_jnt}.translate",
+                force=True,
+            )
+            cmds.connectAttr(f"{ik_jnt}.rotate", f"{plusminusav_rot_nd}.input3D[0]", force=True)
+            cmds.connectAttr(f"{plusminusav_rot_nd}.output3D", f"{offs_jnt}.rotate", force=True)
+
+            plusminusav_trans_nds.append(plusminusav_trans_nd)
+            plusminusav_rot_nds.append(plusminusav_rot_nd)
+
+        # ---------- ik offset ctrl ----------
+        # create ctrl at 2nd to last ik jnt
+        ik_offset_ctrl = create_nurbs_curves.CreateCurves(
+            name=f"ik{cap(self.mod_name)}Offset{self.mirr_side}ctrl",
+            size=2,
+            color_rgb=(1.0, 0.5, 0.0),
+        ).box_curve()
+        ik_offset_ctrl_grp, ik_offset_ctrl_prnt_grp, *_ = create_ctrl_grps(
+            ik_offset_ctrl,
+        )  # grp ctrl
+        cmds.matchTransform(ik_offset_ctrl_grp, self.ik_jnts[-2])  # snap ctrl group to jnt
+
+        # ----------
+        # parent/scale constrain offset ctrl under 2nd to last ik jnt
+        parent_constr(self.ik_jnts[-2], ik_offset_ctrl_prnt_grp)
+        scale_constr(self.ik_jnts[-2], ik_offset_ctrl_prnt_grp)
+
+        # ----------
+        # parent under top grp
+        cmds.parent(ik_offset_ctrl_grp, self.ik_top_grp)
+        # lock and hide attrs
+        cmds.setAttr(f"{ik_offset_ctrl}.visibility", lock=True, keyable=False, channelBox=False)
+
+        # ----------
+        # plug ctrl translate/rotate into 2nd to last offset jnts plusMinusAverage
+        cmds.connectAttr(
+            f"{ik_offset_ctrl}.translate",
+            f"{plusminusav_trans_nds[0]}.input3D[1]",
+            force=True,
+        )
+        cmds.connectAttr(
+            f"{ik_offset_ctrl}.rotate",
+            f"{plusminusav_rot_nds[0]}.input3D[1]",
+            force=True,
+        )
+        # plug ctrl scale into 2nd to last offset jnts scale
+        cmds.connectAttr(f"{ik_offset_ctrl}.scale", f"{ik_offset_jnts[-2]}.scale", force=True)
+
+        # ----------
+        # replace last two main jnts blendColors ik translate/rotate input with offset jnt
+        for main_jnt, offs_jnt in zip(self.main_joints[-2:], ik_offset_jnts[-2:], strict=False):
+            blendcolors_trans_nd = cmds.listConnections(
+                f"{main_jnt}.translate",
+                source=True,
+                destination=False,
+                type="blendColors",
+            )[0]
+            blendcolors_rot_nd = cmds.listConnections(
+                f"{main_jnt}.rotate",
+                source=True,
+                destination=False,
+                type="unitConversion",
+            )[0]
+            blendcolors_rot_nd = cmds.listConnections(
+                blendcolors_rot_nd,
+                source=True,
+                destination=False,
+                type="blendColors",
+            )[0]
+            constraint_scale_nd = cmds.listConnections(
+                f"{main_jnt}.scaleX",
+                source=True,
+                destination=False,
+                type="scaleConstraint",
+            )[0]
+
+            cmds.connectAttr(f"{offs_jnt}.translate", f"{blendcolors_trans_nd}.color2", force=True)
+            cmds.connectAttr(f"{offs_jnt}.rotate", f"{blendcolors_rot_nd}.color2", force=True)
+            # plug offset jnts into main joint blended scale constraint
+            cmds.connectAttr(
+                f"{offs_jnt}.scale",
+                f"{constraint_scale_nd}.target[1].targetScale",
+                force=True,
+            )
+            cmds.connectAttr(
+                f"{offs_jnt}.parentMatrix[0]",
+                f"{constraint_scale_nd}.target[1].targetParentMatrix",
+                force=True,
+            )

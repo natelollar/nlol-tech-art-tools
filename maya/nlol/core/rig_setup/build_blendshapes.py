@@ -65,11 +65,11 @@ class ConnectBlendShapes:
         be named same as original mesh.
         """
         if not Path(self.blendshapes_filepath).is_file():
-            msg = (
-                '"blendshapes.ma" not in rig folder. Skipping blendshape import.\n'
-                f'File not found: "{self.blendshapes_filepath}".'
-            )
+            msg = '"blendshapes.ma" not in rig folder. Skipping import...\n'
             self.logger.info(msg)
+            msg = f"File not found: {self.blendshapes_filepath}"
+            self.logger.debug(msg)
+
             return
 
         cmds.file(self.blendshapes_filepath, i=True)
@@ -159,10 +159,13 @@ class ConnectBlendShapes:
         if not Path(self.setdrivenkeys_filepath).is_file():
             msg = (
                 '"blendshape_setdrivenkeys.toml" not in rig folder. '
-                "Skipping blendshape setdrivenkey connections.\n"
-                f'File not found: "{self.setdrivenkeys_filepath}".'
+                "Skipping blendshape setdrivenkey setup..."
             )
             self.logger.info(msg)
+
+            msg = f"File not found: {self.setdrivenkeys_filepath}"
+            self.logger.debug(msg)
+
             return None
 
         with open(self.setdrivenkeys_filepath, "rb") as f:

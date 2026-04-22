@@ -100,11 +100,10 @@ class SaveControlCurves:
         Replace current control or create new ones if curve shape transforms don't exist.
         """
         if not Path(self.filepath).is_file():
-            msg = (
-                'Skipping curve shape load. Maybe "rig_control_curves.json" not in rig folder.\n'
-                f'File not found: "{self.filepath}".'
-            )
+            msg = '"rig_control_curves.json" not in rig folder. Skipping curve shape setup...'
             self.logger.info(msg)
+            msg = f"File not found: {self.filepath}"
+            self.logger.debug(msg)
             return
 
         old_curve_shapes = []

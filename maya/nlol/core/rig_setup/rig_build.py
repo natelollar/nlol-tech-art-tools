@@ -6,7 +6,7 @@ from nlol.core.rig_setup import (
     build_blendshapes,
     build_display_layers,
     build_finalize_script,
-    build_flexi_to_cloth,
+    build_cloth_dynamics,
     build_mesh_skeleton,
     build_rig_modules,
     parent_space_switching,
@@ -20,9 +20,8 @@ from nlol.utilities.nlol_maya_registry import get_registry
 reload(mirror_attrs_export_import)
 reload(build_blendshapes)
 reload(build_display_layers)
-reload(build_display_layers)
 reload(build_finalize_script)
-reload(build_flexi_to_cloth)
+reload(build_cloth_dynamics)
 reload(build_mesh_skeleton)
 reload(build_rig_modules)
 reload(check_registry)
@@ -46,25 +45,24 @@ logger = get_logger()
 
 def run_rig_build():
     """Build entire rig."""
+    logger.info("-------------------- START RIG BUILD... --------------------")
+
     # ----- clear registry data -----
     registry.clear_registry()
 
-    # code modules that import files and cannot be undone
-    # ----- skeletal mesh, import "rig_helpers.ma" -----
-    build_mesh_skeleton.BuildMeshSkeleton(rig_data_filepath).build_skeletalmesh()
-    # ----- import apply blendshapes -----
-    blendshapes_meshes = build_blendshapes.ConnectBlendShapes(blendshapes_filepath).build_import()
-    # clear undo after importing
-    cmds.select(clear=True)
-    cmds.flushUndo()
+    # ----- custom rig build folderpath -----
+    logger.info(f"Rig folder: {rig_folderpath}")
 
-    # ----------
-    # code module that can be undone
-    cmds.undoInfo(openChunk=True)  # easily undo up to the import
     try:
+        # ----- skeletal mesh, import "rig_helpers.ma" -----
+        build_mesh_skeleton.BuildMeshSkeleton(rig_data_filepath).build_skeletalmesh()
+        # ----- import apply blendshapes -----
+        blendshapes_meshes = build_blendshapes.ConnectBlendShapes(
+            blendshapes_filepath,
+        ).build_import()
         # ----- cloth -----
         # "*Settings.json", "collision_meshes.json"
-        build_flexi_to_cloth.FlexiToCloth().build()
+        build_cloth_dynamics.ClothDynamics().build()
         # ----- rig modules -----
         build_rig_modules.build_modules(rig_data_filepath)
         # ----- blendshape ctrl connections -----
@@ -83,12 +81,15 @@ def run_rig_build():
         build_display_layers.BuildDisplayLayers(display_lyrs_filepath).build()
         # ----- finalize script -----
         build_finalize_script.run_finalize_script(finalize_script_filepath)
-        
-    except Exception:
-        raise
-    finally:
-        cmds.undoInfo(closeChunk=True)
-        cmds.select(clear=True)
+    except InterruptedError as e:
+        logger.info(e)
+        return
+
+    # ------------------------------
+    cmds.select(clear=True)
+    cmds.flushUndo()
 
     # ----- check registry data -----
     check_registry.verify_registry()
+
+    logger.info("-------------------- END RIG BUILD. --------------------")

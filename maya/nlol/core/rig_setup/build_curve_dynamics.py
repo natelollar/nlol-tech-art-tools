@@ -1,15 +1,22 @@
+import json
 from importlib import reload
+from pathlib import Path
 
 from maya import cmds, mel
 from nlol.core.rig_setup import common_build_components
 from nlol.core.rig_tools import tools_skinning
+from nlol.defaults import rig_folder_path
 from nlol.utilities import nlol_maya_logger, nlol_maya_registry
 
 reload(common_build_components)
 reload(tools_skinning)
+reload(rig_folder_path)
 
 registry = nlol_maya_registry.get_registry()
 logger = nlol_maya_logger.get_logger()
+
+rig_folderpath = rig_folder_path.rig_folderpath
+dynamics_data_folderpath = rig_folderpath / "dynamics_data"
 
 
 class CurveDynamics:
@@ -29,6 +36,7 @@ class CurveDynamics:
             self.CommonBuildComponents.build_top_dynamics_grps()
             self.CommonBuildComponents.build_dynamics_aux_ctrl()
             self.build_dynamics_on_crvs(curves, hair_system)
+            self.apply_hair_settings()
         finally:
             cmds.undoInfo(closeChunk=True)
 
@@ -258,3 +266,143 @@ class CurveDynamics:
             f"{aux_ctrl}.{blendshape_attr_nm}",
             f"{blendshape_nd}.{dynamic_crv}",
         )
+
+    def apply_hair_settings(self) -> None:
+        """Apply saved hairSystem or follicle settings from "*Settings.json" files
+        in dynamics_data folder. Files must also contain string "hairSystem" or "follicle",
+        not case sensitive.
+        """
+        hair_settings = self.get_saved_hair_settings()
+        for settings in hair_settings:
+            # ----- apply main hair settings -----
+            for attr, value in settings["main"].items():
+                try:
+                    if isinstance(value, list) and any(isinstance(v, (list, tuple)) for v in value):
+                        value = value[0]
+                        if not value:
+                            continue
+                        cmds.setAttr(attr, *value)
+                    elif attr.split(".")[1] == "startCurveAttract":
+                        connections = cmds.listConnections(  # aux ctrl connection
+                            attr,
+                            source=True,
+                            destination=False,
+                            plugs=True,
+                        )
+                        if connections:
+                            cmds.setAttr(connections[0], value)
+                    else:
+                        cmds.setAttr(attr, value)
+
+                    msg = f"Settings applied: {attr}, {value}"
+                    logger.debug(msg)
+                except Exception:
+                    logger.debug(
+                        f"Failed to set hairSystem/follicle attr: {attr}, {value}",
+                    )
+
+    def get_saved_hair_settings(self) -> list[dict]:
+        """Get saved hairSystem or follicle settings.
+        These settings will be in "*Settings.json" files in the dynamics_data folder.
+        Files must also contain string "hairSystem" or "follicle", not case sensitive.
+
+        Returns:
+            A list of saved settings for hairSystem or follicle objects.
+
+        """
+        hair_settings_filepaths = list(dynamics_data_folderpath.glob("*Settings.json"))
+        hair_settings_filepaths = [
+            pth
+            for pth in hair_settings_filepaths
+            if any(keyword in Path(pth).stem.lower() for keyword in ["hairsystem", "follicle"])
+        ]
+        if not list(hair_settings_filepaths):
+            msg = (
+                f'No custom hairSystem or follicle settings in: "{dynamics_data_folderpath}"\n'
+                'Try adding "hairSystem", "follicle" or "Settings" to file names if string missing.'
+            )
+            logger.debug(msg)
+
+        hair_settings = []
+        for settings_file in hair_settings_filepaths:
+            with open(settings_file) as f:
+                settings = json.load(f)
+                hair_settings.append(settings)
+
+        return hair_settings
+
+    def save_hair_settings(self) -> None:
+        """Save nHair and follicle settings to a json file per object."""
+        nhair_settings, follicle_settings = self.get_selected_hair_settings()
+        dynamics_data_folderpath.mkdir(exist_ok=True)
+
+        obj_settings = nhair_settings | follicle_settings
+        if not obj_settings:
+            logger.info("Select hairSystems and/or follicles to save. Missing selection...")
+
+        for obj, settings in obj_settings.items():
+            obj_settings_filepath = dynamics_data_folderpath / f"{obj}Settings.json"
+            with open(obj_settings_filepath, "w") as f:
+                json.dump(settings, f, indent=4)
+
+    def get_selected_hair_settings(self) -> tuple[dict, dict]:
+        """Get hair system settings from selected nHair objects.
+        Also, get settings for selected follicles, such as ".pointLock".
+        Used for storing dynamic curve settings, contained in both hair systems
+        and follicles.
+
+        Returns:
+            Dictionaries with nHair and follicle settings for each selected.
+
+        """
+        selected = cmds.ls(selection=True)
+        sim_objs = {"hairSystem": [], "follicle": []}
+        for obj in selected:
+            shape = cmds.listRelatives(obj, shapes=True)[0]
+            shape_type = cmds.objectType(shape)
+            if shape_type in sim_objs:
+                sim_objs[shape_type].append(shape)
+
+        nhair_objs = sim_objs["hairSystem"]
+        follicle_objs = sim_objs["follicle"]
+
+        nhair_settings = self.get_hair_obj_settings(nhair_objs)
+        follicle_settings = self.get_hair_obj_settings(follicle_objs)
+
+        return nhair_settings, follicle_settings
+
+    def get_hair_obj_settings(self, objs: list[str]) -> dict[str, dict]:
+        """Get Maya object settings.
+
+        Args:
+            objs: hairSystem/follicle transforms to get attributes and values for.
+
+        """
+        hair_ramps = [
+            "attractionScale",
+            "stiffnessScale",
+            "clumpWidthScale",
+            "clumpCurl",
+            "clumpFlatness",
+            "hairWidthScale",
+            "displacementScale",
+        ]
+
+        settings = {}
+        for obj in objs:
+            settings[obj] = {"main": {}}
+            for attr in cmds.listAttr(obj, keyable=True, settable=True, visible=True) or []:
+                try:
+                    settings[obj]["main"][f"{obj}.{attr}"] = cmds.getAttr(f"{obj}.{attr}")
+                except Exception as e:
+                    logger.debug(f"Skipped {obj}.{attr}: {e}")
+
+            for ramp in hair_ramps:
+                if not cmds.objExists(f"{obj}.{ramp}"):
+                    continue
+                for i in range(cmds.getAttr(f"{obj}.{ramp}", size=True)):
+                    for sub_attr in ("Position", "FloatValue", "Interp"):
+                        key = f"{obj}.{ramp}[{i}].{ramp}_{sub_attr}"
+                        settings[obj]["main"][key] = cmds.getAttr(key)
+
+        return settings

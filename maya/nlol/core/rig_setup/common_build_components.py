@@ -20,6 +20,12 @@ class CommonBuildComponents:
 
     def build_top_dynamics_grps(self):
         """Create top groups for nDynamics organization."""
+        dynamics_main_grp_obj = registry.get_obj("dynamics_main_grp")
+        dynamics_components_grp_obj = registry.get_obj("dynamics_components_grp")
+        if dynamics_main_grp_obj and dynamics_components_grp_obj:
+            logger.debug(f"Dynamic groups exist: {dynamics_main_grp_obj}, {dynamics_main_grp_obj}")
+            return
+
         top_grp_name = rig_variables.dynamics_main_grp
         if not cmds.objExists(top_grp_name):
             self.top_grp = cmds.group(empty=True, name=top_grp_name)
@@ -32,12 +38,17 @@ class CommonBuildComponents:
         else:
             self.components_grp = components_grp_name
 
-        cmds.parent(self.components_grp, self.top_grp)
+        components_grp_parent = cmds.listRelatives(self.components_grp, parent=True)
+        if (not components_grp_parent) or (components_grp_parent[0] != self.top_grp):
+            cmds.parent(self.components_grp, self.top_grp)
 
         top_nodes = cmds.ls(assemblies=True)
         for obj in top_nodes:
             if "_rigGrp" in obj:
-                cmds.parent(self.top_grp, obj)  # parent to main rig group
+                top_grp_parent = cmds.listRelatives(self.top_grp, parent=True)
+                if (not top_grp_parent) or (top_grp_parent[0] != obj):
+                    cmds.parent(self.top_grp, obj)  # parent to main rig group
+                break
 
         for grp in [self.top_grp, self.components_grp]:
             for axis in "XYZ":
@@ -52,6 +63,11 @@ class CommonBuildComponents:
 
     def build_dynamics_aux_ctrl(self):
         """Create nDynamics auxiliary ctrl."""
+        dynamics_aux_ctrl_obj = registry.get_obj("dynamics_aux_ctrl")
+        if dynamics_aux_ctrl_obj:
+            logger.debug(f"Dynamic ctrl exists: {dynamics_aux_ctrl_obj}")
+            return
+
         aux_ctrl_name = rig_variables.dynamics_aux_ctrl
         if not cmds.objExists(aux_ctrl_name):
             aux_ctrl = create_nurbs_curves.CreateCurves(
@@ -74,7 +90,9 @@ class CommonBuildComponents:
 
         # top grp parenting
         dynamics_main_grp = rig_variables.dynamics_main_grp
-        cmds.parent(aux_ctrl_grp, dynamics_main_grp)
+        aux_ctrl_grp_parent = cmds.listRelatives(aux_ctrl_grp, parent=True)
+        if (not aux_ctrl_grp_parent) or (aux_ctrl_grp_parent[0] != dynamics_main_grp):
+            cmds.parent(aux_ctrl_grp, dynamics_main_grp)
 
         # variables to global dict
         registry.register_obj("dynamics_aux_ctrl", aux_ctrl)
