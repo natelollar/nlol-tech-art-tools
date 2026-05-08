@@ -26,13 +26,13 @@ class CommonBuildComponents:
             logger.debug(f"Dynamic groups exist: {dynamics_main_grp_obj}, {dynamics_main_grp_obj}")
             return
 
-        top_grp_name = rig_variables.dynamics_main_grp
+        top_grp_name = rig_variables.DYNAMICS_MAIN_GRP
         if not cmds.objExists(top_grp_name):
             self.top_grp = cmds.group(empty=True, name=top_grp_name)
         else:
             self.top_grp = top_grp_name
 
-        components_grp_name = rig_variables.dynamics_components_grp
+        components_grp_name = rig_variables.DYNAMICS_COMPONENTS_GRP
         if not cmds.objExists(components_grp_name):
             self.components_grp = cmds.group(empty=True, name=components_grp_name)
         else:
@@ -68,7 +68,7 @@ class CommonBuildComponents:
             logger.debug(f"Dynamic ctrl exists: {dynamics_aux_ctrl_obj}")
             return
 
-        aux_ctrl_name = rig_variables.dynamics_aux_ctrl
+        aux_ctrl_name = rig_variables.DYNAMICS_AUX_GRP
         if not cmds.objExists(aux_ctrl_name):
             aux_ctrl = create_nurbs_curves.CreateCurves(
                 name=aux_ctrl_name,
@@ -89,7 +89,7 @@ class CommonBuildComponents:
         cmds.setAttr(f"{aux_ctrl}.visibility", **lock_hide_kwargs)
 
         # top grp parenting
-        dynamics_main_grp = rig_variables.dynamics_main_grp
+        dynamics_main_grp = rig_variables.DYNAMICS_MAIN_GRP
         aux_ctrl_grp_parent = cmds.listRelatives(aux_ctrl_grp, parent=True)
         if (not aux_ctrl_grp_parent) or (aux_ctrl_grp_parent[0] != dynamics_main_grp):
             cmds.parent(aux_ctrl_grp, dynamics_main_grp)

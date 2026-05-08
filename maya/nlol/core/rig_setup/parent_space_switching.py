@@ -120,7 +120,7 @@ class ParentSpacing:
             for obj in parents or []:
                 if not cmds.objExists(obj):
                     error_msg = f"{obj}: Parent object does not exist in Maya scene."
-                    self.logger.warning(error_msg)
+                    self.logger.error(error_msg)
                     raise ValueError(error_msg)
 
             # ----- assign instance variables -----

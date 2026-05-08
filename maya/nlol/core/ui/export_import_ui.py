@@ -45,6 +45,7 @@ class ExportImportUI(DockableMayaUI):
             "folder_input": self.folder_input,
             "radio_group": self.radio_group,
             "auto_remove_ns_checkbox": self.auto_remove_ns_checkbox,
+            "remove_lod_checkbox": self.remove_lod_checkbox,
         }
 
     def build_ui(self, layout: QVBoxLayout) -> None:
@@ -82,10 +83,20 @@ class ExportImportUI(DockableMayaUI):
         layout.addLayout(radio_layout)
 
         # export button
+        export_layout = QHBoxLayout()
         export_btn = QPushButton("Export Selected ----->")
         export_btn.setFixedWidth(200)
         export_btn.clicked.connect(self.export_selected)
-        layout.addWidget(export_btn)
+        export_layout.addWidget(export_btn)
+
+        # "remove id" checkbox
+        self.remove_lod_checkbox = QCheckBox(" Remove LOD Name Comp...")
+        self.remove_lod_checkbox.setFixedWidth(200)
+        self.remove_lod_checkbox.setLayoutDirection(Qt.LeftToRight)
+        export_layout.addWidget(self.remove_lod_checkbox)
+
+        export_layout.addStretch()
+        layout.addLayout(export_layout)
 
         # ----- IMPORT SECTION -----
         layout.addWidget(QLabel("==================== IMPORT ===================="))
@@ -98,13 +109,13 @@ class ExportImportUI(DockableMayaUI):
 
         # auto remove ns checkbox
         import_utility_layout = QHBoxLayout()
-        self.auto_remove_ns_checkbox = QCheckBox("Auto Remove Namespace:  ")
+        self.auto_remove_ns_checkbox = QCheckBox(" Auto Remove Namespace...")
         self.auto_remove_ns_checkbox.setFixedWidth(200)
-        self.auto_remove_ns_checkbox.setLayoutDirection(Qt.RightToLeft)
+        self.auto_remove_ns_checkbox.setLayoutDirection(Qt.LeftToRight)
         import_utility_layout.addWidget(self.auto_remove_ns_checkbox)
 
         # delete ns button
-        delete_imp_ns_btn = QPushButton('Remove "ImportedNs:"')
+        delete_imp_ns_btn = QPushButton('Remove "ImportedNs:"...')
         delete_imp_ns_btn.setFixedWidth(200)
         delete_imp_ns_btn.clicked.connect(self.delete_import_namespace)
         import_utility_layout.addWidget(delete_imp_ns_btn)
@@ -153,10 +164,12 @@ class ExportImportUI(DockableMayaUI):
             logger.info("Select objects to export...")
             return
 
+        self.remove_lod_bool = self.remove_lod_checkbox.isChecked()
         ExportImportMultiple().export_multiple(
             folderpath=folder,
             object_type=object_type,
             objects=objects,
+            remove_lod_name_component=self.remove_lod_bool,
         )
         self.save_settings()
 

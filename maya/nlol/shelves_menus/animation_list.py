@@ -272,6 +272,29 @@ def build_animation_list():
             "command": "from nlol.core.ui import anim_saver_ui\nanim_saver_ui.reload_tool()",
             "sourceType": "python",
         },
+        shelf_separator,
+        {
+            "label": "Parent Space Match UI",
+            "image": "pythonFamily.png",
+            "annotation": "UI for Space switch matching. Keep ctrl transforms "
+            "when switching parent spaces.",
+            "imageOverlayLabel": "PrMcUI",
+            "backgroundColor": random_clrs[36],
+            "command": "from nlol.core.ui import space_matcher_ui\nspace_matcher_ui.reload_tool()",
+            "sourceType": "python",
+        },
+        # {
+        #     "label": "Space Matcher TMP",
+        #     "image": "pythonFamily.png",
+        #     "annotation": "Space switch matching TMP.",
+        #     "imageOverlayLabel": "SStmp",
+        #     "backgroundColor": random_clrs[37],
+        #     "command": "from nlol.core.animation_tools "
+        #     "import space_switch_match\n"
+        #     "from importlib import reload\nreload(space_switch_match)\n"
+        #     "space_switch_match.SpaceSwitchMatch().run()",
+        #     "sourceType": "python",
+        # },
     ]
 
     return animation_list

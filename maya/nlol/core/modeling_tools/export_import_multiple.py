@@ -1,9 +1,14 @@
+import re
 from pathlib import Path
 
+from nlol.core.rig_tools.name_components import NlolNameComponents
 from nlol.utilities.nlol_maya_logger import get_logger
 
 from maya import cmds
 
+nlol_name_components = NlolNameComponents()
+join_nm_comps = nlol_name_components.join_nm_comps
+find_name_comps = nlol_name_components.find_name_comps
 logger = get_logger()
 
 
@@ -23,6 +28,7 @@ class ExportImportMultiple:
         folderpath: Path | str,
         object_type: str,
         objects: list[str] | None = None,
+        remove_lod_name_component: bool = False,
     ):
         """Export multiple objects. Defaults to selected objects.
         Export to OBJ, FBX, MA, MB or ASS.
@@ -32,6 +38,8 @@ class ExportImportMultiple:
             object_type: Specific object type to export as.
             objects: A list of objects to export.
                 Or leave blank to export selected.
+            remove_lod_name_component: Leave LOD out from name string.
+                As in, "LOD0", "LOD2", etc.
 
         """
         if not objects:
@@ -62,10 +70,18 @@ class ExportImportMultiple:
                 raise ValueError(msg)
 
         for obj in objects:
+            obj_nm = obj
+            if remove_lod_name_component:
+                lod_str = re.search(r"_LOD(\d+)", obj)
+                if lod_str:
+                    lod_str = lod_str.group(0).strip("_")
+                    obj_nm = obj.replace(lod_str, "")
+                    obj_nm = re.sub(r"_+", "_", obj_nm)
+
             cmds.select(clear=True)
             cmds.select(obj)
             cmds.file(
-                Path(folderpath) / obj,
+                Path(folderpath) / obj_nm,
                 force=True,
                 options=export_options,
                 type=object_type,

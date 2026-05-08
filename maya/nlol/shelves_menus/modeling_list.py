@@ -108,6 +108,58 @@ def build_modeling_list():
             "arnold_material_setup.ArnoldMaterialSetup().arnold_basic_mat()",
             "sourceType": "python",
         },
+        {
+            "label": "Megascans Arnold Material",
+            "image": "pythonFamily.png",
+            "annotation": "Setup Arnold material based on selection of 3 input textures "
+            "(from a Megascans environment asset) and an empty Maya shading group. "
+            "Required selection: Albedo map, Roughness map, Normal map, Shading Group. "
+            '(3 "file" nodes and 1 "shadingEngine" node)',
+            "imageOverlayLabel": "MegMat",
+            "backgroundColor": random_clrs[47],
+            "command": "from nlol.core.modeling_tools import arnold_material_setup\n"
+            "from importlib import reload\nreload(arnold_material_setup)\n"
+            "arnold_material_setup.ArnoldMaterialSetup().arnold_basic_mat(megascans_material=True)",
+            "sourceType": "python",
+        },
+        {
+            "label": "Rename Megascans Object (Based Off SG)",
+            "image": "pythonFamily.png",
+            "annotation": "Rename selected Megascans environment objects based off "
+            'assigned material shading group. "_suffix" replace with "_geo". ',
+            "imageOverlayLabel": "RenMeg",
+            "backgroundColor": random_clrs[48],
+            "command": "from nlol.core.modeling_tools import arnold_material_setup\n"
+            "from importlib import reload\nreload(arnold_material_setup)\n"
+            "arnold_material_setup.ArnoldMaterialSetup().rename_megascans_obj()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Connect Files to OpenPBR (Megascans)",
+            "image": "pythonFamily.png",
+            "annotation": "Select file nodes and open pbr material (or shading group.) "
+            "Run to connect selected file nodes to open pbr material. "
+            "Rename after file texture path parent folder is on. Useful for Megascans assets.",
+            "imageOverlayLabel": "MegPBR",
+            "backgroundColor": random_clrs[47],
+            "command": "from nlol.core.modeling_tools import arnold_material_setup\n"
+            "from importlib import reload\nreload(arnold_material_setup)\n"
+            "arnold_material_setup.OpenPBRSetup().create(rename_after_folder=True)",
+            "sourceType": "python",
+        },
+        {
+            "label": "Connect Files to OpenPBR",
+            "image": "pythonFamily.png",
+            "annotation": "Select file nodes and open pbr material (or shading group.) "
+            "Run to connect selected file nodes to open pbr material. "
+            "Will use material or shading group for name components. ",
+            "imageOverlayLabel": "OpnPBR",
+            "backgroundColor": random_clrs[46],
+            "command": "from nlol.core.modeling_tools import arnold_material_setup\n"
+            "from importlib import reload\nreload(arnold_material_setup)\n"
+            "arnold_material_setup.OpenPBRSetup().create()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "file to aiImage",
@@ -212,6 +264,20 @@ def build_modeling_list():
             "imageOverlayLabel": "ExImUI",
             "backgroundColor": random_clrs[36],
             "command": "from nlol.core.ui import export_import_ui\nexport_import_ui.reload_tool()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Copy IFF Mask to Xgen Folder",
+            "image": "pythonFamily.png",
+            "annotation": "Save Xgen Core IFF mask from 3d Paint Tool for backup.  "
+            'Saves to bespoke folder path. "character_folder/rig/custom_rig_folder"  '
+            '"character_folder/xgen/collections/description/paintmaps/mask"',
+            "imageOverlayLabel": "CpyMsk",
+            "backgroundColor": random_clrs[37],
+            "command": "from nlol.core.standalone import xgen_utils\n"
+            "from importlib import reload\nreload(xgen_utils)\n"
+            "xgen_utils.copy_3d_paint_iff()",
             "sourceType": "python",
         },
     ]

@@ -173,15 +173,6 @@ def build_utility_list():
             "sourceType": "python",
         },
         {
-            "label": "Space Matcher",
-            "image": "pythonFamily.png",
-            "annotation": "Space switch matching. Keep ctrl position when switching parent spaces.",
-            "imageOverlayLabel": "SpSw",
-            "backgroundColor": random_clrs[36],
-            "command": "from nlol.core.ui import space_matcher_ui\nspace_matcher_ui.reload_tool()",
-            "sourceType": "python",
-        },
-        {
             "label": "Check Registry Data",
             "image": "pythonFamily.png",
             "annotation": "Check registry data. nLol global dictionary for Maya objects.",

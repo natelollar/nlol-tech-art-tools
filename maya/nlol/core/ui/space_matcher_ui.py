@@ -1,286 +1,273 @@
-"""
-Space Match System for Maya Rigs
-Switches control parent spaces while maintaining world position
-"""
-'''
-import maya.cmds as cmds
-import maya.api.OpenMaya as om2
-from nlol.core.general_utils import maya_undo
-from nlol.core.ui.dockable_maya_ui import DockableMayaUI
-from nlol.utilities.nlol_maya_logger import get_logger
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QComboBox,
+    QFormLayout,
     QHBoxLayout,
     QLabel,
-    QComboBox,
     QPushButton,
     QVBoxLayout,
+    QWidget,
 )
+
+from maya import cmds
+from nlol.core.animation_tools.space_switch_match import SpaceSwitchMatch
+from nlol.core.general_utils import maya_undo, swap_side_str
+from nlol.core.ui.dockable_maya_ui import DockableMayaUI
+from nlol.utilities.nlol_maya_logger import get_logger
 
 logger = get_logger()
 
+PARENT_SPACE_ATTRS = [
+    "parentSpaces",
+    "pointSpace",
+    "baseParent",
+    "translateSpace",
+    "rotateSpace",
+    "scaleSpace",
+]
 
-def match_space(control, new_parent):
-    """
-    Switch a control's parent while maintaining its world space position.
-    
-    Args:
-        control (str): The control to reparent
-        new_parent (str): The new parent object
-    
-    Returns:
-        bool: True if successful, False otherwise
-    """
-    
-    # Validate inputs
-    if not cmds.objExists(control):
-        logger.warning(f"Control '{control}' does not exist")
-        return False
-    
-    if not cmds.objExists(new_parent):
-        logger.warning(f"Parent '{new_parent}' does not exist")
-        return False
-    
+
+def get_enum_options(ctrl: str, attr: str) -> list[str] | None:
+    """Return list of enum label strings for ctrl.attr, or None if not an enum."""
+    full_attr = f"{ctrl}.{attr}"
+    if not cmds.objExists(full_attr):
+        return None
+    attr_type = cmds.getAttr(full_attr, type=True)
+    if attr_type != "enum":
+        return None
     try:
-        # Get current world space position and rotation
-        world_pos = cmds.xform(control, q=True, ws=True, t=True)
-        world_rot = cmds.xform(control, q=True, ws=True, ro=True)
-        
-        # Get current parent constraints (if any)
-        constraints = cmds.listRelatives(control, type='parentConstraint')
-        
-        # Create locator at control's current position
-        locator = cmds.spaceLocator(n=f"{control}_matchLocator")[0]
-        cmds.xform(locator, ws=True, t=world_pos)
-        cmds.xform(locator, ws=True, ro=world_rot)
-        
-        # Parent constrain control to locator to freeze position
-        cmds.parentConstraint(locator, control, mo=False)
-        
-        # Delete old parent constraint if it exists
-        if constraints:
-            for constraint in constraints:
-                cmds.delete(constraint)
-        
-        # Now constrain control to new parent
-        cmds.parentConstraint(new_parent, control, mo=True)
-        
-        # Delete locator
-        cmds.delete(locator)
-        
-        logger.info(f"Successfully matched {control} to {new_parent}")
-        return True
-    
-    except Exception as e:
-        logger.error(f"Error during space match: {str(e)}")
-        return False
+        enum_str = cmds.attributeQuery(attr, node=ctrl, listEnum=True)
+        if not enum_str:
+            return None
+        return enum_str[0].split(":")
+    except Exception:
+        return None
 
 
-def match_translate(control, new_parent):
-    """
-    Match only translation to new parent (keeps rotation offset).
-    
-    Args:
-        control (str): The control to reparent
-        new_parent (str): The new parent object
-    """
-    
-    if not cmds.objExists(control):
-        logger.warning(f"Control '{control}' does not exist")
-        return False
-    
-    if not cmds.objExists(new_parent):
-        logger.warning(f"Parent '{new_parent}' does not exist")
-        return False
-    
+def get_ctrl_space_data(ctrl: str) -> dict[str, list[str]]:
+    """Return {attr_name: [enum_labels]} for all present parent space attrs on ctrl."""
+    result = {}
+    for attr in PARENT_SPACE_ATTRS:
+        options = get_enum_options(ctrl, attr)
+        if options is not None:
+            result[attr] = options
+    return result
+
+
+def get_current_index(ctrl: str, attr: str) -> int:
+    """Return current integer value of a parent space attr."""
     try:
-        world_pos = cmds.xform(control, q=True, ws=True, t=True)
-        
-        # Create locator and constrain
-        locator = cmds.spaceLocator(n=f"{control}_matchLocator")[0]
-        cmds.xform(locator, ws=True, t=world_pos)
-        cmds.pointConstraint(locator, control, mo=False)
-        
-        # Delete old constraint
-        constraints = cmds.listRelatives(control, type='pointConstraint')
-        if constraints:
-            for constraint in constraints:
-                cmds.delete(constraint)
-        
-        # Apply new parent constraint
-        cmds.pointConstraint(new_parent, control, mo=True)
-        
-        cmds.delete(locator)
-        logger.info(f"Successfully matched translation for {control} to {new_parent}")
-        return True
-    
-    except Exception as e:
-        logger.error(f"Error during translate match: {str(e)}")
-        return False
+        return int(cmds.getAttr(f"{ctrl}.{attr}"))
+    except Exception:
+        return 0
 
 
-class SpaceMatcherUI(DockableMayaUI):
-    """Maya space matcher tool with PySide6 UI."""
+class SpaceSwitchMatchUI(DockableMayaUI):
+    """UI for switching parent spaces across multiple controls simultaneously."""
 
     def get_window_title(self) -> str:
-        return "Space Matcher"
+        return "Parent Space Match UI"
 
     def get_settings_keys(self) -> dict:
-        return {
-            "control_combo": self.control_combo,
-            "parent_combo": self.parent_combo,
-        }
+        return {}
 
     def build_ui(self, layout: QVBoxLayout) -> None:
-        """Build the space matcher UI."""
-        
-        # Control selection
-        control_layout = QHBoxLayout()
-        control_layout.addWidget(QLabel("Control:"))
-        self.control_combo = QComboBox()
-        self.control_combo.currentTextChanged.connect(self.on_control_changed)
-        control_layout.addWidget(self.control_combo)
-        
-        refresh_btn = QPushButton("Refresh")
-        refresh_btn.clicked.connect(self.refresh_controls)
-        control_layout.addWidget(refresh_btn)
-        layout.addLayout(control_layout)
-        
-        # Parent space selection
-        parent_layout = QHBoxLayout()
-        parent_layout.addWidget(QLabel("Parent Space:"))
-        self.parent_combo = QComboBox()
-        parent_layout.addWidget(self.parent_combo)
-        layout.addLayout(parent_layout)
-        
-        # Match buttons
-        match_btn = QPushButton("Match Space (T+R)")
-        match_btn.clicked.connect(self.on_match_space)
-        layout.addWidget(match_btn)
-        
-        translate_btn = QPushButton("Match Translate")
-        translate_btn.clicked.connect(self.on_match_translate)
-        layout.addWidget(translate_btn)
-        
-        # Populate controls on init
-        self.refresh_controls()
+        """Build the main UI."""
+        # ----- header --------------------
+        header_layout = QHBoxLayout()
 
-    def refresh_controls(self):
-        """Find all controls with parentSpaces attribute."""
-        self.control_combo.blockSignals(True)
-        self.control_combo.clear()
-        
-        # Find all transforms with parentSpaces attribute
-        all_transforms = cmds.ls(type='transform', long=True) or []
-        controls_with_spaces = []
-        
-        for obj in all_transforms:
-            if cmds.attributeQuery('parentSpaces', node=obj, exists=True):
-                controls_with_spaces.append(obj)
-        
-        # Populate combo with short names
-        for ctrl in sorted(controls_with_spaces):
-            short_name = ctrl.split("|")[-1]
-            self.control_combo.addItem(short_name, userData=ctrl)
-        
-        self.control_combo.blockSignals(False)
-        logger.info(f"Found {len(controls_with_spaces)} controls with parentSpaces attribute")
+        self.query_btn = QPushButton("Load Selection")
+        self.query_btn.setToolTip(
+            "Load currently selected Maya controls and check their parent spaces.",
+        )
+        self.query_btn.clicked.connect(self.query_selection)
+        header_layout.addWidget(self.query_btn)
 
-    def on_control_changed(self, control_name):
-        """Update parent spaces dropdown when control changes."""
-        self.parent_combo.blockSignals(True)
-        self.parent_combo.clear()
-        
-        if not control_name:
-            self.parent_combo.blockSignals(False)
+        self.status_label = QLabel("No controls loaded.")
+        self.status_label.setObjectName("statusLabel")
+        self.status_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        header_layout.addWidget(self.status_label, stretch=1)
+
+        layout.addLayout(header_layout)
+
+        # ----- loaded controls display --------------------
+        self.ctrls_label = QLabel("")
+        self.ctrls_label.setObjectName("ctrlsLabel")
+        self.ctrls_label.setWordWrap(True)
+        layout.addWidget(self.ctrls_label)
+
+        # ----- space dropdowns container --------------------
+        self.spaces_widget = QWidget()
+        self.spaces_layout = QFormLayout(self.spaces_widget)
+        self.spaces_layout.setLabelAlignment(Qt.AlignRight)
+        self.spaces_layout.setSpacing(6)
+        self.spaces_layout.setContentsMargins(0, 8, 0, 0)
+        layout.addWidget(self.spaces_widget)
+        self.spaces_widget.hide()
+
+        # internal state
+        self._ctrls: list[str] = []
+        self._space_combos: dict[str, QComboBox] = {}  # attr -> combo
+
+        # load any existing selection on launch
+        self.query_selection()
+
+    # ----- query & validate --------------------
+    def query_selection(self):
+        """Load selected rig ctrls and build the space switching UI."""
+        selected = cmds.ls(selection=True, type="transform") or []
+
+        while self.spaces_layout.rowCount():  # remove rows from the spaces form layout
+            self.spaces_layout.removeRow(0)
+        self._space_combos = {}
+
+        self._ctrls = []
+
+        if not selected:
+            self.status_label.setText("Nothing selected.")
+            self.ctrls_label.setText("")
+            self.spaces_widget.hide()
             return
-        
-        # Get full path from userData
-        control_index = self.control_combo.currentIndex()
-        if control_index >= 0:
-            control_path = self.control_combo.itemData(control_index)
-        else:
-            control_path = control_name
-        
-        try:
-            # Get parentSpaces attribute
-            if cmds.attributeQuery('parentSpaces', node=control_path, exists=True):
-                attr_type = cmds.attributeQuery('parentSpaces', node=control_path, attributeType=True)
-                
-                if attr_type == 'enum':
-                    # Enum type - get the field options
-                    enum_opts = cmds.attributeQuery('parentSpaces', node=control_path, listEnum=True)
-                    if enum_opts:
-                        spaces = enum_opts[0].split(':')
-                        for space in spaces:
-                            if space:  # Skip empty strings
-                                self.parent_combo.addItem(space)
-                else:
-                    # Try to read as string attribute
-                    spaces_str = cmds.getAttr(f"{control_path}.parentSpaces")
-                    if spaces_str:
-                        spaces = spaces_str.split()
-                        for space in spaces:
-                            self.parent_combo.addItem(space)
-                
-                logger.info(f"Loaded parent spaces for {control_name}")
-        
-        except Exception as e:
-            logger.error(f"Error reading parentSpaces: {str(e)}")
-        
-        self.parent_combo.blockSignals(False)
 
+        self._ctrls = selected
+
+        # show ctrl names
+        names_text = "  ·  ".join(selected)
+        self.ctrls_label.setText(names_text)
+
+        # gather space data per ctrl
+        all_data = {ctrl: get_ctrl_space_data(ctrl) for ctrl in selected}
+
+        if not self._validate_match(all_data):
+            return
+
+        # all match - build dropdowns
+        reference_data = all_data[selected[0]]
+        self._build_spaces_ui(reference_data)
+
+    def _validate_match(self, all_data: dict[str, dict[str, list[str]]]) -> bool:
+        """Check that all ctrls share the same parent space attrs and enum options."""
+        if not self._ctrls:
+            return False
+
+        reference = all_data[self._ctrls[0]]
+
+        for ctrl in self._ctrls[1:]:
+            ctrl_data = all_data[ctrl]
+
+            # same attr keys?
+            if set(ctrl_data.keys()) != set(reference.keys()):
+                self.status_label.setText(
+                    "Mismatch: controls have different parent space attributes.",
+                )
+                self.spaces_widget.hide()
+                return False
+
+            # same enum options per attr?
+            for attr, options in reference.items():
+                if (
+                    ctrl_data.get(attr) != options
+                    and [swap_side_str(at) for at in ctrl_data.get(attr)] != options
+                ):
+                    self.status_label.setText(
+                        f"Mismatch: '{attr}' enum options differ between controls.",
+                    )
+                    self.spaces_widget.hide()
+                    return False
+
+        if not reference:
+            self.status_label.setText(
+                "No parent space attributes found on selected controls.",
+            )
+            self.spaces_widget.hide()
+            return False
+
+        attr_names = ", ".join(reference.keys())
+        count = len(self._ctrls)
+        noun = "control" if count == 1 else "controls"
+        self.status_label.setText(
+            f"{count} {noun} match  ·  {attr_names}",
+        )
+        return True
+
+    # ----- build dropdowns --------------------
+    def _build_spaces_ui(self, space_data: dict[str, list[str]]):
+        """Create one labelled combo per parent space attr."""
+        self._space_combos = {}
+
+        for attr, options in space_data.items():
+            combo = QComboBox()
+            for i, label in enumerate(options):
+                combo.addItem(f"{label}  [{i}]", userData=i)
+
+            # set combo to the current value on the first ctrl (if single)
+            if len(self._ctrls) == 1:
+                current_idx = get_current_index(self._ctrls[0], attr)
+                combo.setCurrentIndex(current_idx)
+            else:
+                # check if all ctrls share the same current index
+                indices = [get_current_index(c, attr) for c in self._ctrls]
+                if len(set(indices)) == 1:
+                    combo.setCurrentIndex(indices[0])
+                # else leave at 0 — mixed state
+
+            label_widget = QLabel(f"{attr}:")
+            label_widget.setObjectName("attrLabel")
+
+            self.spaces_layout.addRow(label_widget, combo)
+            self._space_combos[attr] = combo
+
+            # connect AFTER setting initial index to avoid triggering switch
+            combo.currentIndexChanged.connect(
+                lambda idx, a=attr: self._on_space_changed(a, idx),
+            )
+
+        self.spaces_widget.show()
+
+    def _clear_spaces_ui(self):
+        """Remove all rows from the spaces form layout."""
+        while self.spaces_layout.rowCount():
+            self.spaces_layout.removeRow(0)
+        self._space_combos = {}
+
+    # ----- space switching --------------------
     @maya_undo
-    def on_match_space(self):
-        """Match full space (translation + rotation)."""
-        try:
-            control_index = self.control_combo.currentIndex()
-            if control_index < 0:
-                logger.warning("Select a control...")
-                return
-            
-            control = self.control_combo.itemData(control_index)
-            parent_space = self.parent_combo.currentText()
-            
-            if not parent_space:
-                logger.warning("Select a parent space...")
-                return
-            
-            match_space(control, parent_space)
-        finally:
-            self.save_settings()
+    def _on_space_changed(self, attr: str, combo_index: int):
+        """Called when user changes a parent space dropdown.
+        Runs SpaceSwitchMatch on all loaded controls for the changed attr.
+        """
+        if not self._ctrls:
+            return
 
-    @maya_undo
-    def on_match_translate(self):
-        """Match translation only."""
-        try:
-            control_index = self.control_combo.currentIndex()
-            if control_index < 0:
-                logger.warning("Select a control...")
-                return
-            
-            control = self.control_combo.itemData(control_index)
-            parent_space = self.parent_combo.currentText()
-            
-            if not parent_space:
-                logger.warning("Select a parent space...")
-                return
-            
-            match_translate(control, parent_space)
-        finally:
-            self.save_settings()
+        combo = self._space_combos.get(attr)
+        if combo is None:
+            return
+
+        space_value = combo.itemData(combo_index)
+        if space_value is None:
+            return
+
+        new_parentspaces = {attr: space_value}
+        switcher = SpaceSwitchMatch()
+
+        for ctrl in self._ctrls:
+            if not cmds.objExists(ctrl):
+                logger.warning(f"Control no longer exists: {ctrl}")
+                continue
+            switcher.switch_match(ctrl, new_parentspaces)
+
+        attr_display = f"{attr} -> {combo.currentText()}"
+        logger.info(
+            f"Space switched [{', '.join(self._ctrls)}]  {attr_display}",
+        )
 
 
-# Entry points
+# ----- entry points --------------------
 def show_tool():
-    """Launch and show tool UI window."""
-    SpaceMatcherUI().show_tool()
-'''
+    """Launch and show the Space Switch Match UI."""
+    SpaceSwitchMatchUI().show_tool()
+
 
 def reload_tool():
     """Force reload the tool."""
-    # SpaceMatcherUI().reload_tool()
-    print("WIP!!!")
-
-
-# get ui to change parent spaces with dop down, like normal
-# then just space match a locator when that ctrl changes
+    SpaceSwitchMatchUI().reload_tool()

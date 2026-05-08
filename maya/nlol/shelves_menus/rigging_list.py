@@ -302,6 +302,17 @@ def build_rigging_list():
             "sourceType": "python",
         },
         {
+            "label": "Print Name Components (nLol)",
+            "image": "pythonFamily.png",
+            "annotation": "Print Selected name components for nLol naming convention.",
+            "imageOverlayLabel": "NmComp",
+            "backgroundColor": random_clrs[48],
+            "command": "from nlol.core.rig_tools import name_components\n"
+            "from importlib import reload\nreload(name_components)\n"
+            "name_components.NlolNameComponents().print_name_comps()",
+            "sourceType": "python",
+        },
+        {
             "label": "Hide Rig Clutter",
             "image": "pythonFamily.png",
             "annotation": "Hide rig clutter after showing entire hierarchy.",
@@ -309,7 +320,7 @@ def build_rigging_list():
             "backgroundColor": random_clrs[3],
             "command": "from nlol.core.standalone import small_functions\n"
             "from importlib import reload\nreload(small_functions)\n"
-            "small_functions.hide_rig_clutter()",
+            "small_functions.NlolNameComponents().print_name_comps()",
             "sourceType": "python",
         },
         shelf_separator,

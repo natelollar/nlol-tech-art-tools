@@ -58,9 +58,9 @@ class ClothDynamics:
 
     def build_top_grps(self):
         """Create top groups for organization."""
-        top_grp_name = rig_variables.dynamics_main_grp
+        top_grp_name = rig_variables.DYNAMICS_MAIN_GRP
         self.top_grp = cmds.group(empty=True, name=top_grp_name)
-        components_grp_name = rig_variables.dynamics_components_grp
+        components_grp_name = rig_variables.DYNAMICS_COMPONENTS_GRP
         self.components_grp = cmds.group(empty=True, name=components_grp_name)
 
         cmds.parent(self.components_grp, self.top_grp)
@@ -551,7 +551,7 @@ class ClothDynamics:
 
     def build_aux_ctrl(self):
         """Create cloth auxiliary ctrl."""
-        aux_ctrl_name = rig_variables.dynamics_aux_ctrl
+        aux_ctrl_name = rig_variables.DYNAMICS_AUX_GRP
         self.aux_ctrl = create_nurbs_curves.CreateCurves(
             name=aux_ctrl_name,
             size=1,
