@@ -10,6 +10,7 @@ camera AA samples can also be adjusted.
 Certain layer overrides like AA samples or active AOVs can best be done in
 the Maya render layer manager "Render Setup editor".
 """
+# TODO: should add confirm start, to avoid mistake start...
 
 import os
 import re
@@ -24,16 +25,18 @@ try:
     current_folderpath = Path(__file__).resolve().parent
 except NameError:
     current_folderpath = Path(os.getcwd())
-ma_files = sorted(current_folderpath.glob("*.ma"))
-if not ma_files:
-    raise FileNotFoundError(f"No .ma files found in {current_folderpath}")
-maya_filepath = ma_files[0].as_posix()
+maya_files = sorted(
+    scene_file for ext in ("*.ma", "*.mb") for scene_file in current_folderpath.glob(ext)
+)
+if not maya_files:
+    raise FileNotFoundError(f"No .ma/.mb files found: {current_folderpath}")
+maya_filepath = maya_files[0].as_posix()
 
 # ----------
 scene = "myEpicScene_a1_shot"
 res_mult = 1.0  # resolution multiplier
-start_f, end_f = 1, 120
-camera = "camera1"
+start_f, end_f = 1, 240  # 1, 240
+camera = "camera2"
 # master render layer is called "defaultRenderLayer"
 render_layers = ["defaultRenderLayer", "character_renderLayer", "background_renderLayer"]
 
@@ -47,35 +50,51 @@ render_jobs = [
     },
     {
         "maya_fipath": maya_filepath,
-        "cam": "camera2",
+        "cam": "camera3",
         "start": start_f,
         "end": end_f,
         "layers": render_layers,
     },
     {
         "maya_fipath": maya_filepath,
-        "cam": "camera3",
+        "cam": "camera4",
         "start": 60,
         "end": 120,
         "layers": ["character_renderLayer", "background_renderLayer"],
     },
     {
         "maya_fipath": maya_filepath,
-        "cam": "camera4",
+        "cam": "camera5",
         "start": 60,
         "end": 120,
     },
 ]
 
-
 # ----------
 res_w, res_h = 2560, 1168
 res_w, res_h = int(res_w * res_mult), int(res_h * res_mult)
 render_device = 1  # 1 is GPU, 0 is CPU
-aa_samples = 6
+bucket_size = 64  # default = 64
+filter_type = "gaussian"  # default = "gaussian"; "blackman_harris"; "box"
+# samples
+aa_samples = 8
 aa_samples = int(aa_samples * res_mult)
+# lock sampling noise
 lock_sampling_noise = True
-aov32bit_driver = "aov32bit_aiAOVDriver"
+# adaptive sampling
+adaptive_sampling = False  # default = False
+aa_samples_max = 8  # default = 20
+aa_adaptive_threshold = 0.015  # default = 0.015; lower is slower
+# ray depth
+ray_depth_total = 10  # default = 10
+ray_depth_diffuse = 1  # default = 1
+ray_depth_specular = 1  # default = 1
+ray_depth_transmission = 8  # default = 8
+ray_depth_volume = 0  # default = 0
+ray_depth_transparency = 10  # default = 10
+# 32 bit driver
+enable_aov32bit_driver = True
+aov32bit_driver = "aov32bit_aiAOVDriver"  # custom driver = "aov32bit_aiAOVDriver"
 
 # --------------------------------------------------
 output_filename = f"{scene}.<Camera>.<RenderLayer>"
@@ -97,8 +116,24 @@ def run_batch() -> None:
         cmds.setAttr("defaultRenderGlobals.startFrame", job["start"])
         cmds.setAttr("defaultRenderGlobals.endFrame", job["end"])
         cmds.setAttr("defaultArnoldRenderOptions.renderDevice", render_device)
+        cmds.setAttr("defaultArnoldRenderOptions.bucketSize", bucket_size)
+        cmds.setAttr("defaultArnoldFilter.aiTranslator", filter_type, type="string")
+        # samples
         cmds.setAttr("defaultArnoldRenderOptions.AASamples", aa_samples)
+        # lock sampling noise
         cmds.setAttr("defaultArnoldRenderOptions.lock_sampling_noise", lock_sampling_noise)
+        # adaptive sampling
+        cmds.setAttr("defaultArnoldRenderOptions.enableAdaptiveSampling", adaptive_sampling)
+        cmds.setAttr("defaultArnoldRenderOptions.AASamplesMax", aa_samples_max)
+        cmds.setAttr("defaultArnoldRenderOptions.AAAdaptiveThreshold", aa_adaptive_threshold)
+        # ray depth
+        cmds.setAttr("defaultArnoldRenderOptions.GITotalDepth", ray_depth_total)
+        cmds.setAttr("defaultArnoldRenderOptions.GIDiffuseDepth", ray_depth_diffuse)
+        cmds.setAttr("defaultArnoldRenderOptions.GISpecularDepth", ray_depth_specular)
+        cmds.setAttr("defaultArnoldRenderOptions.GITransmissionDepth", ray_depth_transmission)
+        cmds.setAttr("defaultArnoldRenderOptions.GIVolumeDepth", ray_depth_volume)
+        cmds.setAttr("defaultArnoldRenderOptions.autoTransparencyDepth", ray_depth_transparency)
+        ##
         cmds.setAttr("defaultResolution.width", res_w)
         cmds.setAttr("defaultResolution.height", res_h)
         cmds.setAttr("defaultResolution.pixelAspect", 1.0)
@@ -109,6 +144,7 @@ def run_batch() -> None:
         cmds.setAttr("defaultArnoldDriver.multipart", True)
         cmds.setAttr("defaultArnoldDriver.mergeAOVs", True)
         cmds.setAttr("defaultArnoldDriver.halfPrecision", True)  # 16-bit main output
+        cmds.setAttr("defaultArnoldDriver.exrCompression", 8)  # 8 = dwaa
         cmds.setAttr("defaultArnoldRenderOptions.log_to_file", True)
         cmds.setAttr("defaultArnoldRenderOptions.log_verbosity", 2)  # 0-6, higher = more detail
 
@@ -118,10 +154,11 @@ def run_batch() -> None:
         print(f"--- OUTPUT: {output_filepath} ---")
 
         # 32-bit driver separate path (P, crypto)
-        if cmds.objExists(aov32bit_driver):
+        if enable_aov32bit_driver and cmds.objExists(aov32bit_driver):
             cmds.setAttr(f"{aov32bit_driver}.multipart", True)
             cmds.setAttr(f"{aov32bit_driver}.mergeAOVs", True)
             cmds.setAttr(f"{aov32bit_driver}.halfPrecision", False)  # 32-bit
+            cmds.setAttr(f"{aov32bit_driver}.exrCompression", 4)  # 4 = piz
             cmds.setAttr(f"{aov32bit_driver}.prefix", output_32bit_filepath, type="string")
             print(f"--- 32BIT OUTPUT: {output_32bit_filepath} ---")
 
@@ -154,7 +191,7 @@ def run_batch() -> None:
                 and not cmds.referenceQuery(lyr, isNodeReferenced=True)
             ]
 
-        for i, layer in enumerate(layers_to_render):
+        for layer in layers_to_render:
             print(
                 f"--- RENDERING: {job['cam']} | LAYER: {layer} (Frames {job['start']}-{job['end']}) ---",
             )

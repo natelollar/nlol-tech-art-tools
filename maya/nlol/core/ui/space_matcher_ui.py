@@ -192,7 +192,7 @@ class SpaceSwitchMatchUI(DockableMayaUI):
 
     # ----- build dropdowns --------------------
     def _build_spaces_ui(self, space_data: dict[str, list[str]]):
-        """Create one labelled combo per parent space attr."""
+        """Create one labeled combo per parent space attr."""
         self._space_combos = {}
 
         for attr, options in space_data.items():
@@ -260,6 +260,9 @@ class SpaceSwitchMatchUI(DockableMayaUI):
         logger.info(
             f"Space switched [{', '.join(self._ctrls)}]  {attr_display}",
         )
+
+        # reselect
+        cmds.select(self._ctrls)
 
 
 # ----- entry points --------------------

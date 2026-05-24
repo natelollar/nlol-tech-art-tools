@@ -24,6 +24,32 @@ def build_animation_list():
     animation_list = [
         shelf_separator,
         {
+            "label": "Select All Controls",
+            "image": "pythonFamily.png",
+            "annotation": "Select all controls under rig group. "
+            'Defaults to the "_rigGrp" if nothing selected.',
+            "imageOverlayLabel": "SlCtrl",
+            "backgroundColor": random_clrs[14],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.select_all_ctrls()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Reset All Controls",
+            "image": "pythonFamily.png",
+            "annotation": "Resets selected ctrls and their descendents or "
+            'all ctrls under groups containing string "_rigGrp" if nothing selected. '
+            "Resets translate, rotate, and scale.",
+            "imageOverlayLabel": "RstCtrl",
+            "backgroundColor": random_clrs[11],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.reset_all_ctrls()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
             "label": "Save Transforms for Selected",
             "image": "pythonFamily.png",
             "annotation": "Save translate/rotate/scale for selected objects to json file.",
@@ -35,14 +61,38 @@ def build_animation_list():
             "sourceType": "python",
         },
         {
-            "label": "Load Transforms for Selected",
+            "label": "Load Transforms (from save file)",
             "image": "pythonFamily.png",
-            "annotation": "Load translate/rotate/scale for selected objects from json file.",
+            "annotation": "Load translate/rotate/scale from json file. No selection required.",
             "imageOverlayLabel": "LdTrs",
             "backgroundColor": random_clrs[31],
             "command": "from nlol.core.standalone import transforms_save_load\n"
             "from importlib import reload\nreload(transforms_save_load)\n"
             "transforms_save_load.load_transforms()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Paste Transforms to Selected",
+            "image": "pythonFamily.png",
+            "annotation": "Load translate/rotate/scale for selected objects from json file.\n"
+            "Loads in same selection order as saved. Useful as a copy/paste transforms function.",
+            "imageOverlayLabel": "PstTrs",
+            "backgroundColor": random_clrs[45],
+            "command": "from nlol.core.standalone import transforms_save_load\n"
+            "from importlib import reload\nreload(transforms_save_load)\n"
+            "transforms_save_load.load_selected_transforms_same_order()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Select Hierarchy Transform Nodes",
+            "image": "menuIconSelect.png",
+            "annotation": "Select hieryarchy; transform nodes only.\n"
+            "Leave out initial selection; probably a group.",
+            "imageOverlayLabel": "SlHir",
+            "backgroundColor": random_clrs[34],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.select_hierarchy_transform_nodes()",
             "sourceType": "python",
         },
         shelf_separator,

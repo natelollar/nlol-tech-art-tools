@@ -15,8 +15,18 @@ save_filepath = default_folderpath / "other_control_transforms.json"
 
 logger = get_logger()
 
+AUX_ATTRS = (
+    "fkIkBlend",
+    "parentSpaces",
+    "pointSpace",
+    "baseParent",
+    "translateSpace",
+    "rotateSpace",
+    "scaleSpace",
+)
 
-def save_transforms():
+
+def save_transforms() -> None:
     """Save transforms of selected objects to json file."""
     selected = cmds.ls(selection=True)
     if not selected:
@@ -25,25 +35,53 @@ def save_transforms():
 
     data = {}
     for obj in selected:
-        data[obj] = {
-            "translateX": cmds.getAttr(f"{obj}.translateX"),
-            "translateY": cmds.getAttr(f"{obj}.translateY"),
-            "translateZ": cmds.getAttr(f"{obj}.translateZ"),
-            "rotateX": cmds.getAttr(f"{obj}.rotateX"),
-            "rotateY": cmds.getAttr(f"{obj}.rotateY"),
-            "rotateZ": cmds.getAttr(f"{obj}.rotateZ"),
-            "scaleX": cmds.getAttr(f"{obj}.scaleX"),
-            "scaleY": cmds.getAttr(f"{obj}.scaleY"),
-            "scaleZ": cmds.getAttr(f"{obj}.scaleZ"),
-        }
+        data[obj] = {}
+        for attr in AUX_ATTRS:
+            if cmds.objExists(f"{obj}.{attr}"):
+                data[obj][attr] = cmds.getAttr(f"{obj}.{attr}")
+        for attr in ("translate", "rotate", "scale"):
+            for axis in "XYZ":
+                if cmds.objExists(f"{obj}.{attr}{axis}"):
+                    data[obj][f"{attr}{axis}"] = cmds.getAttr(f"{obj}.{attr}{axis}")
 
     with open(save_filepath, "w") as f:
         json.dump(data, f, indent=4)
     logger.info(f"File saved to...  {save_filepath}")
 
 
-def load_transforms():
-    """Load transforms to selected objects (in save order)."""
+def load_transforms() -> None:
+    """Load transforms to selected objects. No selection required."""
+    if not save_filepath.exists():
+        cmds.warning(f"File not found: {save_filepath}")
+        return
+
+    with open(save_filepath, encoding="utf-8") as f:
+        data = json.load(f)
+
+    for obj, obj_transforms in data.items():
+        if not cmds.objExists(obj):
+            logger.info(f"Object not found in scene: {obj}")
+            continue
+        for attr in AUX_ATTRS:
+            if attr in obj_transforms:
+                cmds.setAttr(f"{obj}.{attr}", obj_transforms[attr])
+        for attr in ("translate", "rotate", "scale"):
+            for axis in "XYZ":
+                if f"{attr}{axis}" in obj_transforms:
+                    try:
+                        cmds.setAttr(f"{obj}.{attr}{axis}", obj_transforms[f"{attr}{axis}"])
+                    except Exception as e:
+                        logger.debug(f"Failed to set {obj}.{attr}{axis}: {e}")
+
+    logger.info(f"Transforms loaded from: {save_filepath}")
+
+
+def load_selected_transforms_same_order() -> None:
+    """Load transforms to selected objects (in save order).
+    Save order selection required.
+    Useful for copying transforms from one object to another,
+    as a copy and paste transforms function.
+    """
     if not save_filepath.exists():
         cmds.warning(f"File not found: {save_filepath}")
         return
@@ -62,23 +100,21 @@ def load_transforms():
         if i >= len(saved_objs):
             break  # more selected than saved, stop
 
-        saved_name = saved_objs[i]  # original name doesn't matter
+        saved_name = saved_objs[i]  # used as dict key only, not applied to scene
         d = data[saved_name]
 
-        try:
-            cmds.setAttr(f"{obj}.translateX", d["translateX"])
-            cmds.setAttr(f"{obj}.translateY", d["translateY"])
-            cmds.setAttr(f"{obj}.translateZ", d["translateZ"])
+        for attr in AUX_ATTRS:
+            if attr in d:
+                if cmds.objExists(f"{obj}.{attr}"):
+                    cmds.setAttr(f"{obj}.{attr}", d[attr])
 
-            cmds.setAttr(f"{obj}.rotateX", d["rotateX"])
-            cmds.setAttr(f"{obj}.rotateY", d["rotateY"])
-            cmds.setAttr(f"{obj}.rotateZ", d["rotateZ"])
+        for attr in ("translate", "rotate", "scale"):
+            for axis in "XYZ":
+                key = f"{attr}{axis}"
+                if key in d:
+                    try:
+                        cmds.setAttr(f"{obj}.{attr}{axis}", d[key])
+                    except Exception as e:
+                        logger.debug(f"Failed to set {obj}.{attr}{axis}: {e}")
 
-            cmds.setAttr(f"{obj}.scaleX", d["scaleX"])
-            cmds.setAttr(f"{obj}.scaleY", d["scaleY"])
-            cmds.setAttr(f"{obj}.scaleZ", d["scaleZ"])
-
-        except Exception as e:
-            print(f"Failed to set {obj}: {e}")
-
-    logger.debug(f"Transforms loaded from: {save_filepath}")
+    logger.info(f"Transforms loaded from: {save_filepath}")

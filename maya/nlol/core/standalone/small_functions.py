@@ -303,7 +303,7 @@ def lock_and_hide_attrs(
             vis_query = cmds.getAttr(f"{obj}.visibility", lock=True)
             cmds.setAttr(f"{obj}.visibility", lock=False)  # unlock to hide
             cmds.setAttr(f"{obj}.visibility", False)  # hide object
-            cmds.setAttr(f"{obj}.visibility", lock=vis_query) # set back to previous lock state
+            cmds.setAttr(f"{obj}.visibility", lock=vis_query)  # set back to previous lock state
         for axis in "XYZ":
             if translate:
                 cmds.setAttr(f"{obj}.translate{axis}", **lock_hide_kwargs)
@@ -313,3 +313,16 @@ def lock_and_hide_attrs(
                 cmds.setAttr(f"{obj}.scale{axis}", **lock_hide_kwargs)
         if visibility:
             cmds.setAttr(f"{obj}.visibility", **lock_hide_kwargs)
+
+
+def select_hierarchy_transform_nodes() -> None:
+    """Select hieryarchy; transform nodes only.
+    Leave out initial selection; probably a group.
+    """
+    children = cmds.listRelatives(allDescendents=True, type="transform", fullPath=True)
+    cmds.select(children)
+
+def create_display_layer() -> None:
+    """Create display layer without "makeCurrent" flag."""
+    layer = cmds.createDisplayLayer(name='layer', empty=True)
+    logger.info(f"Created: {layer}" )

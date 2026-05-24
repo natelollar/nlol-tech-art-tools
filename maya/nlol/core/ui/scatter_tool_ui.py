@@ -110,7 +110,9 @@ class ScatterToolUI(DockableMayaUI):
 
         self.bb_normal_orient_checkbox = QCheckBox("Normal\nOrient")
         self.bb_normal_orient_checkbox.setFixedWidth(85)
-        self.bb_normal_orient_checkbox.setToolTip("Orient scattered objects to surface normals.")
+        self.bb_normal_orient_checkbox.setToolTip(
+            'Orient scattered objects to surface normals; "y" up.',
+        )
         boundingbox_scatter_layout.addWidget(self.bb_normal_orient_checkbox)
 
         reset_translate_btn = QPushButton("Reset Translate")
@@ -257,7 +259,7 @@ class ScatterToolUI(DockableMayaUI):
         realtime_enable_btn.setFixedWidth(160)
         realtime_enable_btn.setStyleSheet("background-color: rgb(60, 80, 60);")
         realtime_enable_btn.setToolTip(
-            "Scatters to last selected surface when bounding box size changes.",
+            "Scatters to last selected object when surface area changes.",
         )
         realtime_enable_btn.clicked.connect(self.enable_scatter_realtime)
         realtime_scatter_layout.addWidget(realtime_enable_btn)
@@ -271,12 +273,16 @@ class ScatterToolUI(DockableMayaUI):
 
         self.rt_bb_2d_checkbox = QCheckBox("Surface\nSnap")
         self.rt_bb_2d_checkbox.setFixedWidth(85)
-        self.rt_bb_2d_checkbox.setToolTip("Snap objects to surface after 3D bounding box scatter.")
+        self.rt_bb_2d_checkbox.setToolTip(
+            "Snap objects to surface instead of 3D bounding box scatter.",
+        )
         realtime_scatter_layout.addWidget(self.rt_bb_2d_checkbox)
 
         self.rt_bb_normal_orient_checkbox = QCheckBox("Normal\nOrient")
         self.rt_bb_normal_orient_checkbox.setFixedWidth(85)
-        self.rt_bb_normal_orient_checkbox.setToolTip("Orient scattered objects to surface normals.")
+        self.rt_bb_normal_orient_checkbox.setToolTip(
+            'Orient scattered objects to surface normals; "y" up.',
+        )
         realtime_scatter_layout.addWidget(self.rt_bb_normal_orient_checkbox)
 
         realtime_force_btn = QPushButton("FORCE Scatter Update")

@@ -198,6 +198,21 @@ def build_modeling_list():
             "basic_layout.grid_layout()",
             "sourceType": "python",
         },
+        {
+            "label": "Duplicate Replace",
+            "image": "pythonFamily.png",
+            "annotation": "Duplicate Replace: Replace selected objects with first selected.  "
+            "Maintain target object tranforms.\n"
+            "delete_tartget_objs = True\n"
+            "instance_target_obs = True\n"
+            "source_as_first_new_target = True",
+            "imageOverlayLabel": "DupRep",
+            "backgroundColor": random_clrs[40],
+            "command": "from nlol.core.modeling_tools import basic_layout\n"
+            "from importlib import reload\nreload(basic_layout)\n"
+            "basic_layout.duplicate_replace()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Assign Random Proxy Color",

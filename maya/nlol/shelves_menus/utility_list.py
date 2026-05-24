@@ -24,6 +24,18 @@ def build_utility_list():
     utility_list = [
         shelf_separator,
         {
+            "label": "New Display Layer",
+            "image": "pythonFamily.png",
+            "annotation": 'Create display layer without "makeCurrent" flag.',
+            "imageOverlayLabel": "DspLyr",
+            "backgroundColor": random_clrs[8],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.create_display_layer()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
             "label": "Maya Debugger",
             "image": "pythonFamily.png",
             "annotation": "Configure debugpy python path for Maya and listen on port.",
