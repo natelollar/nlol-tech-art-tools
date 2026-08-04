@@ -322,6 +322,16 @@ def build_animation_list():
             "command": "from nlol.core.ui import anim_saver_ui\nanim_saver_ui.reload_tool()",
             "sourceType": "python",
         },
+        {
+            "label": "nLol Anim Picker",
+            "image": "pythonFamily.png",
+            "annotation": "Open the nLol anim picker.",
+            "imageOverlayLabel": "Pckr",
+            "backgroundColor": random_clrs[45],
+            "command": "from nlol.core.ui.anim_picker_tool import anim_picker_ui\n"
+            "anim_picker_ui.reload_tool()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Parent Space Match UI",

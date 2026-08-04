@@ -2,6 +2,7 @@ import inspect
 import threading
 from pathlib import Path
 
+from nlol.defaults import rig_folder_path
 from nlol.shelves_menus import reload_menus
 
 from maya import cmds, utils
@@ -19,8 +20,13 @@ def run_on_start():
     print("-" * 75)
     print("=" * 75)
 
-    # Create nlol mnu in maya
+    # create nlol menu in maya
     reload_menus.main_menu()
+
+    # initialize rig context environment variables and paths
+    rig_folder_path.set_environment_variables()
+    rig_folder_path.check_rig_context_file()
+    rig_folder_path.rig_folderpath_log()
 
 
 # don't run in batch mode

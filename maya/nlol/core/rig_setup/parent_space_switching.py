@@ -18,6 +18,7 @@ multi_point_const = multi_point_constraint.multi_point_const
 parent_constr = clean_constraints.parent_constr
 scale_constr = clean_constraints.scale_constr
 swap_side_str = general_utils.swap_side_str
+swap_both_side_str = general_utils.swap_both_side_str
 
 
 class ParentSpacing:
@@ -59,13 +60,13 @@ class ParentSpacing:
             if mirror_right and "left" in ps_dict["control"].lower():
                 control = swap_side_str(ps_dict["control"])
 
-                parents = ps_dict.get("parents")
+                parents = ps_dict.get("parents", "")
                 if parents:  # may be only base_parents exists
-                    parents = swap_side_str(parents)
+                    parents = swap_both_side_str(parents)
 
-                base_parents = ps_dict.get("base_parents")
+                base_parents = ps_dict.get("base_parents", "")
                 if base_parents:
-                    base_parents = swap_side_str(base_parents)
+                    base_parents = swap_both_side_str(base_parents)
 
                 right_dict = {
                     "control": control,
@@ -227,7 +228,7 @@ class ParentSpacing:
         # --------------- base_parents setup ---------------
         if self.base_parents and len(self.base_parents) == 1:
             parent_constr(self.base_parents[0], self.bp_grp, offset=True)
-            scale_constr(self.base_parents[0], self.bp_grp)
+            scale_constr(self.base_parents[0], self.bp_grp, offset=True)
         # ----- multiple base_parents setup -----
         elif self.base_parents and len(self.base_parents) > 1:
             self.setup_multiple_base_parents()
@@ -263,10 +264,8 @@ class ParentSpacing:
                 attributeType="enum",
                 keyable=ps_attr_visible,
             )
-            enum_name_str = ""
-            for i, obj in enumerate(self.parents):
-                enum_name_str = obj if i == 0 else f"{enum_name_str}:{obj}"
-                cmds.addAttr(f"{self.control}.parentSpaces", edit=True, enumName=enum_name_str)
+            enum_str = ":".join(obj.replace(":", ";;") for obj in self.parents)
+            cmds.addAttr(f"{self.control}.parentSpaces", edit=True, enumName=enum_str)
 
             # ----- set up parent and scale constraint -----
             for i, prnt_obj in enumerate(self.parents):
@@ -328,10 +327,8 @@ class ParentSpacing:
                     attributeType="enum",
                     keyable=ps_attr_visible,
                 )
-                enum_name_str = ""
-                for i, obj in enumerate(self.parents):
-                    enum_name_str = obj if i == 0 else f"{enum_name_str}:{obj}"
-                    cmds.addAttr(f"{self.control}.{attr}Space", edit=True, enumName=enum_name_str)
+                enum_str = ":".join(obj.replace(":", ";;") for obj in self.parents)
+                cmds.addAttr(f"{self.control}.{attr}Space", edit=True, enumName=enum_str)
 
             # --------------- set up constraints ---------------
             if not self.skip_translate:
@@ -356,7 +353,7 @@ class ParentSpacing:
             else:
                 rot_const = None
             if not self.skip_scale:
-                scl_const = scale_constr(self.parents, self.ps_grp)
+                scl_const = scale_constr(self.parents, self.ps_grp, offset=True)
             else:
                 scl_const = None
 
@@ -415,10 +412,8 @@ class ParentSpacing:
             attributeType="enum",
             keyable=True,
         )
-        enum_name_str = ""
-        for i, obj in enumerate(self.base_parents):
-            enum_name_str = obj if i == 0 else f"{enum_name_str}:{obj}"
-            cmds.addAttr(f"{self.control}.baseParent", edit=True, enumName=enum_name_str)
+        enum_str = ":".join(obj.replace(":", ";;") for obj in self.base_parents)
+        cmds.addAttr(f"{self.control}.baseParent", edit=True, enumName=enum_str)
 
         # ----- set up parent and scale constraint -----
         for i, prnt_obj in enumerate(self.base_parents):

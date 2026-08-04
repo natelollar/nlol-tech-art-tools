@@ -30,7 +30,8 @@
 - Generic save location for json files is the `/defaults` folder.
   - `.../nlol-tech-art-tools/maya/nlol/defaults/`.
   - The defaults folder also contains readmes for certain config files.
-- Custom **rig folder path** is defined in `/defaults/rig_folder_path.py`.
+- Active **rig folder path** is defined in `/defaults/rig_context.json`  
+  which is read by `/defaults/rig_folder_path.py` to resolve the path dynamically.
   - Must be adjusted to user custom rig folder.
   - Example: `D:/projects/fantasy_world/characters/dragon/rig/auto_rig/`
 
@@ -41,9 +42,8 @@
 - Readmes to aid in creating the toml configs can be found in the `/defaults` folder.
   - Example: `.../nlol-tech-art-tools/maya/nlol/defaults/readme_rig_object_data.md`
 ### *Basic Steps:*   
-1. Add custom rig folder path to `/defaults/rig_folder_path.py` using the `rig_folderpath` variable.
-   - Optionally, use the `NLOL_RIG_FOLDERPATH` environment variable.
-     - Enable environment variable first in "rig_folder_path.py".
+1. Add custom rig folder path to `/defaults/rig_context.json` using the `folderpath` parameter.
+   - Current rig folder is the `active` one, which can be changed while Maya is open.
 2. Create character model/s and save as `model.ma` in `/custom_rig_folder`.
 3. Create a skeleton for the model/s and save as `skeleton.ma` in `/custom_rig_folder`.
 4. Skin skeleton to model/s. Export weights to `/custom_rig_folder/skin_weights/`.
@@ -293,14 +293,14 @@
 - *Apply nCloth Settings*
   - Apply saved nCloth settings from `dynamics_data/` folder.   
 --------------------  
-- *Save hairSystem/follicle Settings*
-  - Save settings for selected hairSystem or follicle objects to `dynamics_data/` folder.   
-    - Saves to files with suffix `*HairSystemShapeSettings.json` or `*FollicleShapeSettings.json`.   
+- *Save hairSystem/follicle/nucleus Settings*
+  - Save settings for selected hairSystem, follicle, or nucleus objects to `dynamics_data/` folder.   
+    - Saves to files with suffix `*HairSystemShapeSettings.json`, `*FollicleShapeSettings.json`, or `*nucleusSettings.json`.   
   - Used for saving curve dynamics data.   
     - For example, when curve dynamics are applied via the "fk_ik_spline_chain_mod" rig module.   
   - Auto loads settings when rig is built.   
-- *Apply hairSystem/follicle Settings*
-  - Apply saved hairSystem and follicle settings from `dynamics_data/` folder.   
+- *Apply hairSystem/follicle/nucleus Settings*
+  - Apply saved hairSystem, follicle, or nucleus settings from `dynamics_data/` folder.   
 --------------------  
 - *Select Object Shapes*
   - Select all transforms shapes. Useful for curve shape settings.

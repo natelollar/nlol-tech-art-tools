@@ -1,20 +1,17 @@
 import shutil
-from importlib import reload
 from pathlib import Path
 
 from maya import cmds
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 
-reload(rig_folder_path)
-rig_folderpath = rig_folder_path.rig_folderpath
 logger = get_logger()
 
 
 def copy_3d_paint_iff() -> None:
     """Copy iff texture from 3d Paint Tool to xgen folder for mask backup."""
     logger.info("\n")
-    logger.info(f"rig_folderpath = {rig_folderpath!s}")
+    logger.info(f"rig_folderpath = {rig_folderpath()!s}")
 
     # get 3d paint tool iff folder path
     # get custom xgen folder path
@@ -23,7 +20,7 @@ def copy_3d_paint_iff() -> None:
     scene_name = (
         cmds.file(query=True, sceneName=True, shortName=True).replace(".ma", "").replace(".mb", "")
     )
-    character_dir = Path(rig_folderpath).parents[1]
+    character_dir = Path(rig_folderpath()).parents[1]
     collections_dir = character_dir / "xgen" / "collections"
     logger.info(f"character_dir = {character_dir!s}")
     logger.info(f"paint_dir = {paint_dir}")

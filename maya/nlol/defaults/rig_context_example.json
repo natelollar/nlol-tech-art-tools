@@ -1,0 +1,80 @@
+{
+    "environment_variables": [
+        {
+            "name": "",
+            "folderpath": ""
+        }
+    ],
+    "rigs": [
+        {
+            "name": "rig_unreal",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/rig_unreal",
+            "active": true
+        },
+        {
+            "name": "eye_aim_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/eye_aim_mod",
+            "active": false
+        },
+        {
+            "name": "fk_control_blend_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/fk_control_blend_mod",
+            "active": false
+        },
+        {
+            "name": "flexi_surface_fk_ctrl_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_fk_ctrl_mod",
+            "active": false
+        },
+        {
+            "name": "flexi_surface_fk_ctrl_mod_v2",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_fk_ctrl_mod_v2",
+            "active": false
+        },
+        {
+            "name": "flexi_surface_ik_chain_simple_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_ik_chain_simple_mod",
+            "active": false
+        },
+        {
+            "name": "fk_ik_spline_chain_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/fk_ik_spline_chain_mod",
+            "active": false
+        },
+        {
+            "name": "flexi_to_cloth_v1",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_to_cloth_v1",
+            "active": false
+        },
+        {
+            "name": "flexi_to_cloth_v2",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_to_cloth_v2",
+            "active": false
+        },
+        {
+            "name": "digitigrade_leg_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/digitigrade_leg_mod",
+            "active": false
+        },
+        {
+            "name": "wyvern_wing",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/wyvern_wing",
+            "active": false
+        },
+        {
+            "name": "tentacle_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/tentacle_mod",
+            "active": false
+        },
+        {
+            "name": "piston_mod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/piston_mod",
+            "active": false
+        },
+        {
+            "name": "spline_curve_tail",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/spline_curve_tail",
+            "active": false
+        }
+    ]
+}

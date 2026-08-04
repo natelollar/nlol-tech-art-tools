@@ -113,7 +113,8 @@ def build_rigging_list():
             "label": "Snap to Closest Axis",
             "image": "pythonFamily.png",
             "annotation": "Snap first selected (child objects) to last selected (parent object)"
-            " closest pointing axis. Zeros out all values except translate of closest pointing axis.",
+            " closest pointing axis. "
+            "Zeros out all values except translate of closest pointing axis.",
             "imageOverlayLabel": "SnpAx",
             "backgroundColor": random_clrs[0],
             "command": "from nlol.core.rig_tools import get_aligned_axis\n"
@@ -124,8 +125,9 @@ def build_rigging_list():
         {
             "label": "Snap to Closest Axis (Translate Only)",
             "image": "pythonFamily.png",
-            "annotation": "Snap first selected (child objects) to last selected (parent object)"
-            " closest pointing axis. Zeros out all values except translate of closest pointing axis."
+            "annotation": "Snap first selected (child objects) to last selected (parent object) "
+            "closest pointing axis.  "
+            "Zeros out all values except translate of closest pointing axis.  "
             " This version only zeros out translate values, not rotate.",
             "imageOverlayLabel": "SnpAxT",
             "backgroundColor": random_clrs[1],
@@ -188,7 +190,8 @@ def build_rigging_list():
         {
             "label": "Save Control Curves",
             "image": "pythonFamily.png",
-            "annotation": 'Save control curve shape attributes to "maya/nlol/default" folder location.',
+            "annotation": "Save control curve shape attributes to "
+            '"maya/nlol/default" folder location.',
             "imageOverlayLabel": "SvCrvs",
             "backgroundColor": random_clrs[2],
             "command": "from nlol.core.rig_setup import save_control_curves\n"
@@ -323,12 +326,24 @@ def build_rigging_list():
             "small_functions.NlolNameComponents().print_name_comps()",
             "sourceType": "python",
         },
+        {
+            "label": "Replace Node Connections",
+            "image": "pythonFamily.png",
+            "annotation": "Replace old node connections with new node connections. "
+            "First selected is new node, second selected is old node.",
+            "imageOverlayLabel": "RpNd",
+            "backgroundColor": random_clrs[4],
+            "command": "from nlol.core.rig_tools import rigging_functions\n"
+            "from importlib import reload\nreload(rigging_functions)\n"
+            "rigging_functions.replace_node_connections()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Build Skeletal Mesh Only",
             "image": "pythonFamily.png",
-            "annotation": 'Build only skeletal mesh from "maya/nlol/defaults/...".  '
-            'To change rig setup, change folder path in "rig_folder_path.py".',
+            "annotation": "Build only skeletal mesh. Stop before rig is built.  "
+            'To change rig setup, change active folder path in "rig_context.json".',
             "imageOverlayLabel": "SklMsh",
             "backgroundColor": random_clrs[6],
             "command": "from nlol.core.rig_setup import rig_build_mesh_skeleton\n"
@@ -339,8 +354,8 @@ def build_rigging_list():
         {
             "label": "Build Rig",
             "image": "pythonFamily.png",
-            "annotation": 'Build rig files from "maya/nlol/defaults/...".  '
-            'Change folder path in "rig_folder_path.py" to change rig setup.',
+            "annotation": "Build rig files from main rig folder.  "
+            'Change active folder path in "rig_context.json" to change rig setup.',
             "imageOverlayLabel": "BRig",
             "backgroundColor": random_clrs[7],
             "command": "from nlol.core.rig_setup import rig_build\n"
@@ -349,9 +364,48 @@ def build_rigging_list():
             "sourceType": "python",
         },
         {
+            "label": "Build Rig, Update Materials, and Save Files",
+            "image": "pythonFamily.png",
+            "annotation": "Build rig and skeletalMesh from active auto-rig folder. "
+            "Update materials and save out files too. "
+            'Change active auto-rig folderpath in "rig_context.json" or nlUtils < Rig Context UI.',
+            "imageOverlayLabel": "BSvRig",
+            "backgroundColor": random_clrs[47],
+            "command": "from nlol.core.rig_tools import rig_build_all\n"
+            "from importlib import reload\nreload(rig_build_all)\n"
+            "rig_build_all.RigBuildSaveAll().build_active_only()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Build All Rigs in Character Folder",
+            "image": "pythonFamily.png",
+            "annotation": "Build all auto-rig folders. "
+            "Including updating materials and saving files.\n"
+            'Main rig folder should be string "autorig", "auto-rig", or "auto_rig".\n'
+            "Other rig folders just need to contain the auto-rig string.\n"
+            'Note, "Character" folder is parent of current active rig folder.\n'
+            'Change active auto-rig folderpath in "rig_context.json" or nlUtils < Rig Context UI.',
+            "imageOverlayLabel": "BSvAll",
+            "backgroundColor": random_clrs[48],
+            "command": "from nlol.core.rig_tools import rig_build_all\n"
+            "from importlib import reload\nreload(rig_build_all)\n"
+            "rig_build_all.RigBuildSaveAll().build()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Rig Context UI",
+            "image": "pythonFamily.png",
+            "annotation": "Set active rig folder.",
+            "imageOverlayLabel": "RigUI",
+            "backgroundColor": random_clrs[42],
+            "command": "from nlol.core.ui import rig_context_ui\nrig_context_ui.reload_tool()",
+            "sourceType": "python",
+        },
+        {
             "label": "Save Rig Control Curves",
             "image": "pythonFamily.png",
-            "annotation": "Save control curve shape attributes to load back in when building the rig.",
+            "annotation": "Save control curve shape attributes to load back in "
+            "when building the rig.",
             "imageOverlayLabel": "SvCrvs",
             "backgroundColor": random_clrs[8],
             "command": "from nlol.core.rig_setup import save_control_curves\n"
@@ -450,9 +504,9 @@ def build_rigging_list():
         },
         shelf_separator,
         {
-            "label": "Save hairSystem/follicle Settings",
+            "label": "Save hairSystem/follicle/nucleus Settings",
             "image": "pythonFamily.png",
-            "annotation": "Save settings for selected nhair systems and follicles.\n"
+            "annotation": "Save settings for selected nhair systems, follicles, and nucleus'.\n"
             "Saves to dynamics_data folder in nLol rig folder.",
             "imageOverlayLabel": "SvHar",
             "backgroundColor": random_clrs[43],
@@ -463,10 +517,11 @@ def build_rigging_list():
             "sourceType": "python",
         },
         {
-            "label": "Apply hairSystem/follicle Settings",
+            "label": "Apply hairSystem/follicle/nucleus Settings",
             "image": "pythonFamily.png",
-            "annotation": "Apply hairSystem and follicle settings from dynamics_data folder."
-            "No selection required.  Object names stored in settings files.",
+            "annotation": "Apply hairSystem, follicle, and nucleus settings from "
+            "dynamics_data folder.  No selection required.  "
+            "Object names stored in settings files.",
             "imageOverlayLabel": "ApyHar",
             "backgroundColor": random_clrs[45],
             "command": "from nlol.core.rig_setup import build_curve_dynamics\n"

@@ -1,21 +1,24 @@
 from importlib import reload
 
 from maya import cmds
-from nlol.defaults import rig_folder_path
 from nlol.core.rig_setup import build_mesh_skeleton
+from nlol.defaults.rig_folder_path import rig_folderpath
 
 reload(build_mesh_skeleton)
-reload(rig_folder_path)
-
-rig_folderpath = rig_folder_path.rig_folderpath
-rig_data_filepath = rig_folderpath / "rig_object_data.toml"
 
 
-def run_mesh_skeleton_build():
-    """Build just the skeletal mesh, no rig."""
+def run_mesh_skeleton_build(show_confirmation: bool = True):
+    """Build just the skeletal mesh, no rig.
+
+    Args:
+        show_confirmation: Show confirmation window popup.
+
+    """
+    rig_data_filepath = rig_folderpath() / "rig_object_data.toml"
+
     # ----------
     # also imports "rig_helpers.ma"
-    build_mesh_skeleton.BuildMeshSkeleton(rig_data_filepath).build_skeletalmesh()
+    build_mesh_skeleton.BuildMeshSkeleton(rig_data_filepath, show_confirmation).build_skeletalmesh()
 
     # ----------
     cmds.select(clear=True)

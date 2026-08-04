@@ -47,6 +47,8 @@ class PistonModule:
         top_joints: The three skinned top joints controlling the top "three-axis gimbal".
             Also, first two joints used for placements and gimbal aiming.
             End joint used for end aim curve placement and top ik end joint placement.
+            Additionaly, add fourth joint as a piston stretch joint. Should be parented under
+            the first top joint.
         bot_joints: Same as top_joints except for the bottom.
         """
         self.mod_name = rig_module_name
@@ -71,6 +73,7 @@ class PistonModule:
         self.setup_ctrls()
         self.setup_aim_crvs()
         self.parenting_connections()
+        self.parenting_skin_support()
         self.setup_distance_node()
 
         return self.mod_top_grp
@@ -190,8 +193,8 @@ class PistonModule:
 
         # create main top and bottom ctrls
         jnt_region = {
-            "Top": (self.ikmain_end_jnt, self.top_joints[-1]),
-            "Bot": (self.ikmain_start_jnt, self.bot_joints[-1]),
+            "Top": (self.ikmain_end_jnt, self.top_joints[2]),
+            "Bot": (self.ikmain_start_jnt, self.bot_joints[2]),
         }
         self.ikmain_ctrls = []
         self.ikparent_ctrls = []
@@ -236,13 +239,13 @@ class PistonModule:
 
     def setup_aim_crvs(self):
         """Create locator shaped curves for gimbal axis aiming.
-        Curves centered at the top and bottom joints, straight up and down from 
-        the top and bot joints, and at the ends of the top and bot joint chains 
+        Curves centered at the top and bottom joints, straight up and down from
+        the top and bot joints, and at the ends of the top and bot joint chains
         for the gimbal axis to aim at.
         """
         jnt_region = {
-            "Top": (self.ikmain_end_jnt, self.top_joints[-1], 65, self.ikparent_ctrls[0]),
-            "Bot": (self.ikmain_start_jnt, self.bot_joints[-1], -65, self.ikparent_ctrls[1]),
+            "Top": (self.ikmain_end_jnt, self.top_joints[2], 65, self.ikparent_ctrls[0]),
+            "Bot": (self.ikmain_start_jnt, self.bot_joints[2], -65, self.ikparent_ctrls[1]),
         }
         self.aim_02_crvs = []
         self.aim_crv_grps = []
@@ -383,6 +386,20 @@ class PistonModule:
                 skip_y=True,
             )
 
+    def parenting_skin_support(self):
+        """Parenting of skinning support joints via constraints. These are less important
+        constraints, though help with final skinning of top and bottom connection geo.
+        Also, end piston joint helps with skinning the piston to a second joint if needed,
+        for a slightly stylized stretching of the center piston pipe geo.
+        """
+        # top end ctrl to top end joint
+        parent_constr(self.ikparent_ctrls[0], self.top_joints[2])
+        # bot end ctrl to bot end joint
+        parent_constr(self.ikparent_ctrls[1], self.bot_joints[2])
+        # point constrain piston stretch joint under first bot joint
+        if len(self.top_joints) == 4 and cmds.objExists(self.top_joints[3]):
+            point_constr(self.bot_joints[0], self.top_joints[3], offset=True)
+
     def setup_distance_node(self):
         """Set up distance stretch node for main vertical axis
         allowing the piston to move in and out.
@@ -441,6 +458,8 @@ class PistonModule:
         }
         if self.origin_joint:
             required_joints["origin_joint"] = 1
+        if len(self.top_joints) in {3, 4}:
+            required_joints["top_joints"] = len(self.top_joints)
 
         errors = []
         for jnt_var, required_count in required_joints.items():

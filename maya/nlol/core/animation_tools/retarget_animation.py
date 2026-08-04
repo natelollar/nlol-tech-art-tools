@@ -5,11 +5,9 @@ from pathlib import Path
 from maya import cmds
 from nlol import defaults
 from nlol.core.general_utils import swap_side_str
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 
-RIG_DATA_LOCATION = rig_folder_path.rig_folderpath
-RIG_RETARGET_LOCATION = RIG_DATA_LOCATION / "retarget_data.toml"
 DEFAULT_LOCATION = default_folderpath = Path(defaults.__file__).parent
 DEFAULT_RETARGET_LOCATION = DEFAULT_LOCATION / "retarget_data.toml"
 
@@ -30,8 +28,10 @@ class RetargetAnimation:
             retarget_data_filepath: Filepath to "retarget_data.toml".
 
         """
+        rig_retarget_location = rig_folderpath() / "retarget_data.toml"
+
         self.retarget_data_filepath = (
-            retarget_data_filepath or RIG_RETARGET_LOCATION or DEFAULT_RETARGET_LOCATION
+            retarget_data_filepath or rig_retarget_location or DEFAULT_RETARGET_LOCATION
         )
 
         self.read_retarget_data()

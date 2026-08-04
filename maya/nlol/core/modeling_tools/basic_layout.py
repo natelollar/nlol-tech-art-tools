@@ -27,7 +27,7 @@ def grid_layout(spread: float = 100) -> None:
 def duplicate_replace(
     delete_tartget_objs: bool = True,
     instance_target_obs: bool = True,
-    source_as_first_new_target: bool = True,
+    source_as_first_new_target: bool = False,
 ) -> None:
     """Replace selected objects with first selected.
     Maintain target object tranforms.
@@ -53,3 +53,25 @@ def duplicate_replace(
         cmds.matchTransform(new_source_obj, obj)
         if delete_tartget_objs:
             cmds.delete(obj)
+
+def instanced_to_objects() -> None:
+    """Duplicate and replace instanced objects with regular objects."""
+    selected = cmds.ls(selection=True)
+
+    for inst in selected:
+        new_obj = inst.split("|")[-1]
+        if "geoInst" in inst:
+            new_obj = new_obj.replace("geoInst", "geo")
+
+        inst_dup = cmds.duplicate(inst, name = "temp_duplicate_name")[0]
+        cmds.delete(inst)
+        inst_dup = cmds.rename(inst_dup, new_obj)
+
+        shapes = cmds.listRelatives(inst_dup, shapes=True, fullPath=True)
+        for i, shape in enumerate(shapes):
+            if i == 0:
+                new_shape = f"{new_obj}Shape"
+            else:
+                new_shape = f"{new_obj}Shape{i}"
+            cmds.rename(shape, new_shape)
+

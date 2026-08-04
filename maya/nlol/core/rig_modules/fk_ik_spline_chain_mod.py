@@ -24,7 +24,7 @@ reload(small_functions)
 scale_constr = clean_constraints.scale_constr
 parent_constr = clean_constraints.parent_constr
 create_ctrl_grps = create_control_groups.create_ctrl_grps
-create_attached_ruler = create_ruler.create_attached_ruler
+create_curve_ruler = create_ruler.create_curve_ruler
 query_main_axis = get_aligned_axis.query_main_axis
 
 
@@ -37,6 +37,9 @@ class FkIkSplineChainModule:
         hide_fk_end_ctrl: bool = False,
         add_ik_end_ctrl: bool = False,
         curve_dynamics: bool = False,
+        use_existing_hairsystem: bool = False,
+        hairsystem_name: str = "",
+        curve_easing_style: str = "",
     ) -> None:
         """Create fk ik blended ctrl chain. The ik chain uses "Ik Spline Handle" curve.
         Useful for a spline spine.
@@ -50,6 +53,13 @@ class FkIkSplineChainModule:
             add_ik_end_ctrl: Add end ctrl for ik spline. Allows fk movement on second to last joint.
                 Useful for offseting a tail/tentacle end.
             curve_dynamics: Whether to apply nHair system to spline curve for simulation.
+            use_existing_hairsystem: Use existing hair system in scene, for curve dynamics.
+                Does not need to be specified. Still creates initial hair system if needed.
+            hairsystem_name: Specify nHair system transform node for curve dynamics.
+                Use existing or will create first time with this name. Not required.
+            curve_easing_style: Curve skin weights easing style.
+                Options; smoothstep, smootherstep, smooth_sine, smooth_cubic, or linear
+
 
         """
         self.mod_name = rig_module_name
@@ -58,6 +68,9 @@ class FkIkSplineChainModule:
         self.curve_dynamics = curve_dynamics
         self.hide_fk_end_ctrl = hide_fk_end_ctrl
         self.add_ik_end_ctrl = add_ik_end_ctrl
+        self.use_existing_hairsystem = use_existing_hairsystem
+        self.hairsystem_name = hairsystem_name
+        self.curve_easing_style = curve_easing_style
 
         self.logger = get_logger()
 
@@ -295,10 +308,8 @@ class FkIkSplineChainModule:
             ik_spline_crv,
             start_spline_jnt,
             end_spline_jnt,
-            # smoothstep=True,
-            # smootherstep=True,
-            # smooth_sine=True,
-            smooth_cubic=True,
+            # smoothstep, smootherstep, smooth_sine, smooth_cubic, or linear
+            curve_easing_style=self.curve_easing_style,
         )
 
         # ------------------------------------------------------
@@ -431,14 +442,11 @@ class FkIkSplineChainModule:
             defaultValue=1.0,
             keyable=True,
         )
-        # create and attach ruler to controls
-        ruler_shape, *_, blendcolors_nd, global_scale_nd, multiplydivide_stretch_nd = (
-            create_attached_ruler(
-                name=f"ik{cap(self.mod_name)}Ruler{self.mirr_side}",
-                ruler_start_object=ik_start_ctrl,
-                ruler_end_object=ik_end_ctrl,
-                parent_hide_grp=self.ik_top_grp,
-                include_stretch_nodes=True,
+        # setup nodes for curve length.  create initial stretch nodes.
+        curveinfo_nd, blendcolors_nd, global_scale_nd, multiplydivide_stretch_nd = (
+            create_curve_ruler(
+                name=f"ik{cap(self.mod_name)}CrvRuler{self.mirr_side}",
+                curve=ik_spline_crv,
             )
         )
         # stretch attr to blendColors stretch on/off toggle
@@ -477,7 +485,7 @@ class FkIkSplineChainModule:
             "multiplyDivide",
             name=f"ik{cap(self.mod_name)}StretchScale{self.mirr_side}multiplyDivide",
         )
-        cmds.connectAttr(f"{ruler_shape}.distance", f"{multiplydivide_stretchscale_nd}.input1X")
+        cmds.connectAttr(f"{curveinfo_nd}.arcLength", f"{multiplydivide_stretchscale_nd}.input1X")
         cmds.connectAttr(f"{ik_end_ctrl}.stretchScale", f"{multiplydivide_stretchscale_nd}.input2X")
         cmds.connectAttr(
             f"{multiplydivide_stretchscale_nd}.outputX",
@@ -596,10 +604,7 @@ class FkIkSplineChainModule:
         spline_crv: str,
         start_jnt: str,
         end_jnt: str,
-        smoothstep: bool = False,
-        smootherstep: bool = False,
-        smooth_sine: bool = False,
-        smooth_cubic: bool = False,
+        curve_easing_style: str = "",
     ) -> None:
         """Smooth vertex skin weights for ik spline curve.
         Set smoothing per cv from start to end joint.
@@ -611,52 +616,63 @@ class FkIkSplineChainModule:
                 or any curve skinned between two joints.
             start_jnt: The first joint for the spline curve skinning.
             end_jnt: The second and last joint for the spline curve skinning.
-            smoothstep: Smooth ease in/out for curve weights instead of linear.
-            smootherstep: An even smoother ease in/out for curve weights.
-            smooth_sine: Curve smoothness inbetween smoothstep and smootherstep.
-            smooth_cubic: Sharp acceleration/deceleration smooth.
-                More dramatic. Slow start/end, rapid change in middle.
+            curve_easing_style:
+                "smoothstep"; Smooth ease in/out for curve weights instead of linear.
+                "smootherstep"; An even smoother ease in/out for curve weights.
+                "smooth_sine"; Curve smoothness inbetween smoothstep and smootherstep.
+                "smooth_cubic"; Sharp acceleration/deceleration smooth.
+                    More dramatic. Slow start/end, rapid change in middle.
 
         """
-        if sum([smoothstep, smootherstep, smooth_sine, smooth_cubic]) > 1:
-            msg = "Should only have one smoothing option for smooth_crv_weights()."
-            self.logger.error(msg)
-            raise ValueError(msg)
+        if not curve_easing_style:
+            curve_easing_style = "smooth_cubic"
 
         crv_verts = cmds.getAttr(f"{spline_crv}.cv[*]")
         crv_skin_cluster = cmds.ls(cmds.listHistory(spline_crv), type="skinCluster")[0]
 
         num_vrts = len(crv_verts)
         weights = []
-        if smoothstep:  # smoothstep ease in out curve weights
-            for i in range(num_vrts):
-                weight = i / (num_vrts - 1)  # normalize to 0-1 range
-                weight = 3 * weight**2 - 2 * weight**3
-                weights.append(weight)
-        elif smootherstep:  # even smoother
-            for i in range(num_vrts):
-                weight = i / (num_vrts - 1)
-                weight = 6 * weight**5 - 15 * weight**4 + 10 * weight**3
-                weights.append(weight)
-        elif smooth_sine:  # inbetween smoothstep and smootherstep
-            for i in range(num_vrts):
-                weight = i / (num_vrts - 1)
-                weight = (1 - math.cos(weight * math.pi)) / 2
-                weights.append(weight)
-        elif smooth_cubic:  # sharper acceleration/deceleration
-            for i in range(num_vrts):
-                weight = i / (num_vrts - 1)
-                if weight < 0.5:
-                    weight = 4 * weight**3
-                else:
-                    weight = 1 - (-2 * weight + 2) ** 3 / 2
-                weights.append(weight)
-        else:  # equally distributed linear curve weights
-            weight_increase = 1.0 / (num_vrts - 1)  # x verts means x-1 sections
-            weight = 0
-            for i in range(num_vrts):
-                weights.append(weight)
-                weight += weight_increase
+        match curve_easing_style.lower():
+            case "smoothstep":  # smoothstep ease in out curve weights
+                for i in range(num_vrts):
+                    weight = i / (num_vrts - 1)  # normalize to 0-1 range
+                    weight = 3 * weight**2 - 2 * weight**3
+                    weights.append(weight)
+            case "smootherstep":  # even smoother
+                for i in range(num_vrts):
+                    weight = i / (num_vrts - 1)
+                    weight = 6 * weight**5 - 15 * weight**4 + 10 * weight**3
+                    weights.append(weight)
+            case "smooth_sine":  # inbetween smoothstep and smootherstep
+                for i in range(num_vrts):
+                    weight = i / (num_vrts - 1)
+                    weight = (1 - math.cos(weight * math.pi)) / 2
+                    weights.append(weight)
+            case "smooth_cubic":  # sharper acceleration/deceleration
+                for i in range(num_vrts):
+                    weight = i / (num_vrts - 1)
+                    if weight < 0.5:
+                        weight = 4 * weight**3
+                    else:
+                        weight = 1 - (-2 * weight + 2) ** 3 / 2
+                    weights.append(weight)
+            case "linear":  # equally distributed linear curve weights
+                weight_increase = 1.0 / (num_vrts - 1)  # x verts means x-1 sections
+                weight = 0
+                for i in range(num_vrts):
+                    weights.append(weight)
+                    weight += weight_increase
+            case _:
+                curve_easing_style_options = (
+                    "smoothstep, smootherstep, smooth_sine, smooth_cubic, or linear"
+                )
+                msg = (
+                    f'Easing style not found: "{curve_easing_style}". '
+                    f"Easing style options: {curve_easing_style_options}"
+                )
+                self.logger.error(msg)
+                raise ValueError(msg)
+
         weights = [round(weight, 6) for weight in weights]
 
         # apply vertex weights to spline curve
@@ -671,7 +687,11 @@ class FkIkSplineChainModule:
         """Set up nHair dynamics on spline curve, with attributes on
         global dynamics ctrl.
         """
-        build_curve_dynamics.CurveDynamics().build(self.ik_spline_crv)
+        build_curve_dynamics.CurveDynamics().build(
+            curves=self.ik_spline_crv,
+            use_existing_hairsystem=self.use_existing_hairsystem,
+            hairsystem_name=self.hairsystem_name,
+        )
 
     def build_end_ik_ctrl(self) -> None:
         """Add offset fk ctrl on second to last ik spline joint.

@@ -98,6 +98,13 @@ class DockableMayaUI(MayaQWidgetDockableMixin, QWidget):
                 btn = widget.button(saved_id)
                 if btn:
                     btn.setChecked(True)
+            elif hasattr(widget, "setCurrentIndex") and hasattr(widget, "currentIndex"):
+                value = self.settings.value(key, 0, type=int)
+                if hasattr(widget, "count"):
+                    if 0 <= value < widget.count():
+                        widget.setCurrentIndex(value)
+                else:
+                    widget.setCurrentIndex(value)
             elif hasattr(widget, "setChecked"):
                 value = self.settings.value(key, False, bool)
                 widget.setChecked(value)
@@ -118,6 +125,8 @@ class DockableMayaUI(MayaQWidgetDockableMixin, QWidget):
         for key, widget in self.get_settings_keys().items():
             if hasattr(widget, "checkedId"):
                 self.settings.setValue(key, widget.checkedId())
+            elif hasattr(widget, "currentIndex") and hasattr(widget, "setCurrentIndex"):
+                self.settings.setValue(key, widget.currentIndex())
             elif hasattr(widget, "isChecked"):
                 self.settings.setValue(key, widget.isChecked())
             elif hasattr(widget, "text"):

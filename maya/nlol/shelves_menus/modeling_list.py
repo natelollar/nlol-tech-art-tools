@@ -188,6 +188,18 @@ def build_modeling_list():
         },
         shelf_separator,
         {
+            "label": "Reset Object Transforms",
+            "image": "pythonFamily.png",
+            "annotation": "Reset selected object transforms.",
+            "imageOverlayLabel": "RstObj",
+            "backgroundColor": random_clrs[42],
+            "command": "from nlol.core.standalone import small_functions\n"
+            "from importlib import reload\nreload(small_functions)\n"
+            "small_functions.reset_obj_attributes()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
             "label": "Grid Layout",
             "image": "pythonFamily.png",
             "annotation": "Lay objects out in a basic grid.",
@@ -199,18 +211,60 @@ def build_modeling_list():
             "sourceType": "python",
         },
         {
-            "label": "Duplicate Replace",
+            "label": "Duplicate Replace (Instanced)",
+            "image": "pythonFamily.png",
+            "annotation": "Duplicate Replace: Replace selected objects with first selected.  "
+            "Maintain target object tranforms.\n"
+            "delete_tartget_objs = True\n"
+            "instance_target_obs = True\n"
+            "source_as_first_new_target = False",
+            "imageOverlayLabel": "DupRp0",
+            "backgroundColor": random_clrs[40],
+            "command": "from nlol.core.modeling_tools import basic_layout\n"
+            "from importlib import reload\nreload(basic_layout)\n"
+            "basic_layout.duplicate_replace()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Duplicate Replace (Instanced. Source as First.)",
             "image": "pythonFamily.png",
             "annotation": "Duplicate Replace: Replace selected objects with first selected.  "
             "Maintain target object tranforms.\n"
             "delete_tartget_objs = True\n"
             "instance_target_obs = True\n"
             "source_as_first_new_target = True",
-            "imageOverlayLabel": "DupRep",
-            "backgroundColor": random_clrs[40],
+            "imageOverlayLabel": "DupRp1",
+            "backgroundColor": random_clrs[41],
             "command": "from nlol.core.modeling_tools import basic_layout\n"
             "from importlib import reload\nreload(basic_layout)\n"
-            "basic_layout.duplicate_replace()",
+            "basic_layout.duplicate_replace(source_as_first_new_target=True)",
+            "sourceType": "python",
+        },
+        {
+            "label": "Duplicate Replace (No Instance)",
+            "image": "pythonFamily.png",
+            "annotation": "Duplicate Replace: Replace selected objects with first selected.  "
+            "Maintain target object tranforms.\n"
+            "delete_tartget_objs = True\n"
+            "instance_target_obs = False\n"
+            "source_as_first_new_target = False",
+            "imageOverlayLabel": "DupRp2",
+            "backgroundColor": random_clrs[42],
+            "command": "from nlol.core.modeling_tools import basic_layout\n"
+            "from importlib import reload\nreload(basic_layout)\n"
+            "basic_layout.duplicate_replace"
+            "(instance_target_obs=False, source_as_first_new_target=False)",
+            "sourceType": "python",
+        },
+        {
+            "label": "Instance to Regular",
+            "image": "pythonFamily.png",
+            "annotation": "Duplicate and replace instanced objects with regular objects.",
+            "imageOverlayLabel": "InsReg",
+            "backgroundColor": random_clrs[43],
+            "command": "from nlol.core.modeling_tools import basic_layout\n"
+            "from importlib import reload\nreload(basic_layout)\n"
+            "basic_layout.instanced_to_objects()",
             "sourceType": "python",
         },
         shelf_separator,
@@ -293,6 +347,30 @@ def build_modeling_list():
             "command": "from nlol.core.standalone import xgen_utils\n"
             "from importlib import reload\nreload(xgen_utils)\n"
             "xgen_utils.copy_3d_paint_iff()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Vert Snapper",
+            "image": "pythonFamily.png",
+            "annotation": "Snap first selected object verts to closest second select object verts.",
+            "imageOverlayLabel": "VrtSnp",
+            "backgroundColor": random_clrs[38],
+            "command": "from nlol.core.modeling_tools import vert_snapper\n"
+            "from importlib import reload\nreload(vert_snapper)\n"
+            "vert_snapper.vert_snapper()",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Hard Edge UV Seams",
+            "image": "pythonFamily.png",
+            "annotation": "Snap first selected object verts to closest second select object verts.",
+            "imageOverlayLabel": "HrdSms",
+            "backgroundColor": random_clrs[39],
+            "command": "from nlol.core.modeling_tools import modeling_functions\n"
+            "from importlib import reload\nreload(modeling_functions)\n"
+            "modeling_functions.auto_seams_hard_edges()",
             "sourceType": "python",
         },
     ]

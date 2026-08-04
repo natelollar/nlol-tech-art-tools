@@ -6,20 +6,15 @@ from maya import cmds, mel
 from nlol.core import general_utils
 from nlol.core.rig_components import create_control_groups, create_nurbs_curves
 from nlol.core.rig_setup import rig_variables
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 from nlol.utilities.nlol_maya_registry import get_registry
 
 reload(rig_variables)
-reload(rig_folder_path)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
 add_divider_attribue = general_utils.add_divider_attribue
 cap = general_utils.cap
-
-rig_folderpath = rig_folder_path.rig_folderpath
-dynamics_data_folderpath = rig_folderpath / "dynamics_data"
-collision_mesh_filepath = dynamics_data_folderpath / "collision_meshes.json"
 
 
 class ClothDynamics:
@@ -30,6 +25,9 @@ class ClothDynamics:
     """
 
     def __init__(self):
+        self.dynamics_data_folderpath = rig_folderpath() / "dynamics_data"
+        self.collision_mesh_filepath = self.dynamics_data_folderpath / "collision_meshes.json"
+
         self.logger = get_logger()
         self.registry = get_registry()
 
@@ -38,7 +36,7 @@ class ClothDynamics:
         --------------------------------------------------
         """
         # check if cloth data in rig folder
-        cloth_verts_filepaths = list(dynamics_data_folderpath.glob("*DynamicConstraint.json"))
+        cloth_verts_filepaths = list(self.dynamics_data_folderpath.glob("*DynamicConstraint.json"))
         if not list(cloth_verts_filepaths):
             msg = (
                 '"*DynamicConstraint.json" files not in dynamics_data folder. '
@@ -215,7 +213,7 @@ class ClothDynamics:
             cmds.parent(dynamicconst_nd, self.components_grp)
 
         # ----- add collision meshes -----
-        if collision_mesh_filepath.is_file():
+        if self.collision_mesh_filepath.is_file():
             collision_mesh_data = self.get_saved_collision_meshes()
             collision_meshes = collision_mesh_data["collision_meshes"]
             self.logger.debug(f"{collision_meshes = }")
@@ -257,9 +255,9 @@ class ClothDynamics:
             Returns same data as save_vertex_ids() except for multiple attach meshes in a list.
 
         """
-        cloth_verts_filepaths = list(dynamics_data_folderpath.glob("*DynamicConstraint.json"))
+        cloth_verts_filepaths = list(self.dynamics_data_folderpath.glob("*DynamicConstraint.json"))
         if not list(cloth_verts_filepaths):
-            msg = f'No json dynamicConstraint filepaths in: "{dynamics_data_folderpath}"'
+            msg = f'No json dynamicConstraint filepaths in: "{self.dynamics_data_folderpath}"'
             self.logger.error(msg)
             raise ValueError(msg)
 
@@ -278,8 +276,10 @@ class ClothDynamics:
         """
         attach_mesh_data = self.get_selected_vertex_ids()
         attach_mesh = attach_mesh_data["attach_mesh"]
-        dynamics_data_folderpath.mkdir(exist_ok=True)
-        cloth_verts_filepath = dynamics_data_folderpath / f"{attach_mesh}DynamicConstraint.json"
+        self.dynamics_data_folderpath.mkdir(exist_ok=True)
+        cloth_verts_filepath = (
+            self.dynamics_data_folderpath / f"{attach_mesh}DynamicConstraint.json"
+        )
 
         self.logger.debug(f"{cloth_verts_filepath = }")
         with open(cloth_verts_filepath, "w") as f:
@@ -333,12 +333,12 @@ class ClothDynamics:
             Dict with list of collision mesh names.
 
         """
-        if not collision_mesh_filepath.is_file():
-            msg = f'No "collision_meshes.json" found: {collision_mesh_filepath}'
+        if not self.collision_mesh_filepath.is_file():
+            msg = f'No "collision_meshes.json" found: {self.collision_mesh_filepath}'
             self.logger.error(msg)
             raise ValueError(msg)
 
-        with open(collision_mesh_filepath) as f:
+        with open(self.collision_mesh_filepath) as f:
             collision_mesh_data = json.load(f)
 
         return collision_mesh_data
@@ -349,9 +349,9 @@ class ClothDynamics:
         They can be skinned to joints.
         """
         collision_mesh_data = self.get_selected_collision_meshes()
-        dynamics_data_folderpath.mkdir(exist_ok=True)
+        self.dynamics_data_folderpath.mkdir(exist_ok=True)
 
-        with open(collision_mesh_filepath, "w") as f:
+        with open(self.collision_mesh_filepath, "w") as f:
             json.dump(collision_mesh_data, f, indent=4)
 
     def get_selected_collision_meshes(self) -> dict[str, list[str]]:
@@ -451,7 +451,7 @@ class ClothDynamics:
             A list of saved settings for nCloth objects.
 
         """
-        ncloth_settings_filepaths = list(dynamics_data_folderpath.glob("*Settings.json"))
+        ncloth_settings_filepaths = list(self.dynamics_data_folderpath.glob("*Settings.json"))
         ncloth_settings_filepaths = [
             pth
             for pth in ncloth_settings_filepaths
@@ -459,7 +459,7 @@ class ClothDynamics:
         ]
         if not list(ncloth_settings_filepaths):
             msg = (
-                f'No custom cloth settings in: "{dynamics_data_folderpath}"\n'
+                f'No custom cloth settings in: "{self.dynamics_data_folderpath}"\n'
                 'Try adding "nCloth" or "Settings" to file names if string missing.'
             )
             self.logger.debug(msg)
@@ -475,10 +475,10 @@ class ClothDynamics:
     def save_ncloth_settings(self):
         """Save nCloth settings to a json file per nCloth object."""
         ncloth_settings = self.get_selected_cloth_settings()
-        dynamics_data_folderpath.mkdir(exist_ok=True)
+        self.dynamics_data_folderpath.mkdir(exist_ok=True)
 
         for obj in ncloth_settings.keys():
-            ncloth_settings_filepath = dynamics_data_folderpath / f"{obj}Settings.json"
+            ncloth_settings_filepath = self.dynamics_data_folderpath / f"{obj}Settings.json"
             with open(ncloth_settings_filepath, "w") as f:
                 json.dump(ncloth_settings[obj], f, indent=4)
 

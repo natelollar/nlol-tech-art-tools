@@ -3,13 +3,8 @@ from pathlib import Path
 
 from maya import cmds
 from nlol import defaults
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
-
-default_filepath = rig_folder_path.rig_folderpath / "mirror_attributes.json"
-
-default_folderpath = Path(defaults.__file__).parent
-generic_filepath = default_folderpath / "other_mirror_attributes.json"
 
 
 class MirrorAttrsExportImport:
@@ -29,6 +24,11 @@ class MirrorAttrsExportImport:
                 Example: "nlol/core/defaults/other_mirror_attributes.json"
 
         """
+        default_filepath = rig_folderpath() / "mirror_attributes.json"
+
+        default_folderpath = Path(defaults.__file__).parent
+        generic_filepath = default_folderpath / "other_mirror_attributes.json"
+
         if not save_filepath:
             if use_generic_filepath:
                 save_filepath = generic_filepath

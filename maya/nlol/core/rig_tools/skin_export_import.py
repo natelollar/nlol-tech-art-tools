@@ -1,15 +1,11 @@
 import re
 import xml.etree.ElementTree as ET
-from importlib import reload
 from pathlib import Path
 
 from maya import cmds, mel
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 
-reload(rig_folder_path)
-
-skinweights_folderpath = rig_folder_path.rig_folderpath / "skin_weights"
 logger = get_logger()
 
 
@@ -28,6 +24,7 @@ def export_skin_weights():
     """Export index values of multiple skin clusters to xml."""
     mesh_selection = cmds.ls(selection=True)
 
+    skinweights_folderpath = rig_folderpath() / "skin_weights"
     skinweights_folderpath.mkdir(exist_ok=True)
 
     for mesh in mesh_selection:
@@ -63,6 +60,7 @@ def import_skin_weights(selected_only: bool = False):
             logger.warning(f"Nothing selected for skin import: {my_sel}")
             return
 
+    skinweights_folderpath = rig_folderpath() / "skin_weights"
     skincluster_filepaths = list(skinweights_folderpath.glob("*.xml"))
     if not list(skincluster_filepaths):
         error_msg = (

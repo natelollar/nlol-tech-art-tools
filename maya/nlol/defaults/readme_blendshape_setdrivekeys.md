@@ -9,8 +9,14 @@ Include the blendshapes weighted to single meshes in "blendshapes.ma".
 - `blendshape_objs` (str): Mesh objects containing the blendshape nodes to be iterated over,  
     for connecting set driven keys to ctrls. String name or string list.  Not required if already  
     importing blendshapes automatically. Remembers the imported scene blendshapes.
-- `inTangentType, outTangentType` (str): Set driven key's "in/out tangent type"  
-    for animation curve. Defaults to "linear".  
+- `start_in_tangent_type, start_out_tangent_type` (str): Set driven key's "in/out tangent type"  
+    for animation curve start keyframe. Defaults to "linear".  
+    Optional.
+- `mid_in_tangent_type, mid_out_tangent_type` (str): Set driven key's "in/out tangent type"  
+    for animation curve mid keyframe. Defaults to "auto".  
+    Optional.
+- `end_in_tangent_type, end_out_tangent_type` (str): Set driven key's "in/out tangent type"  
+    for animation curve end keyframe. Defaults to "linear".  
     Optional.
 
 #### [[setdrivenkeys]] Parameters:
@@ -22,12 +28,17 @@ Include the blendshapes weighted to single meshes in "blendshapes.ma".
 - `transform_crv` (str): The name of the curve to drive the set driven key.
 - `crv_attr` (str): The name of the curve's attribute that drives the set driven key.  
     As in "translateX" or "rotateY".
-- `blendshape_start, blendshape_end` (float): The start/end blendshape value to be keyed.  
+- `transform_crv_attr` (str): Alternative to using "transform_crv" and "crv_attr".  
+    Driver curve for set driven key with attribute. 
+    Example: "clawOpenClose_ctrl.translateY"
+- `blendshape_start, blendshape_mid, blendshape_end` (float): The start/middle/end blendshape value to be keyed.  
     For the driven attribute; not necassarily a blendshape.  
-    Optional.  Defaults to 0.0/1.0.
-- `crv_start, crv_end` (float): The start/end transform curve value to be keyed. 
+    Optional.  Defaults to 0.0, None, and 1.0. 
+- `object_start, object_mid, object_end` (float): Use instead of "blendshape_start/mid/end". 
+    Same but with different names. Useful if no blendshapes and just creating set driven keys. 
+- `crv_start, crv_mid, crv_end` (float): The start/middle, end transform curve value to be keyed. 
     The driver attribute values. 
-    Optional.  Defaults to 0.0/1.0.
+    Optional.  Defaults to 0.0, None, and 1.0.
 - `mirror_right` (str): Mirror the parameters to the other side as well.
 - `mirror_right_invert` (str): Inverts just the "crv_end" parameter. As in, -1.0 to 1.0.
 - `blendshape_fix_attrs` (str): A string or string list.  The name of the corrective blendshapes  
@@ -40,10 +51,12 @@ Include the blendshapes weighted to single meshes in "blendshapes.ma".
 <br/> 
 <br/> 
 
-### *Example `blendshape_setdrivekeys.toml`*:
+### *Example A `blendshape_setdrivekeys.toml`*:
 ```
-inTangentType="linear"
-outTangentType="linear"
+start_in_tangent_type = "linear"
+start_out_tangent_type = "linear"
+end_in_tangent_type = "linear"
+end_out_tangent_type = "linear"
 
 [[setdrivenkeys]]
 blendshape_attr = "noseSneerLeft"
@@ -465,4 +478,54 @@ blendshape_end = 14.927
 crv_end = -1.0
 mirror_right = true
 
+```
+
+### *Example B `blendshape_setdrivekeys.toml`*:
+```
+start_in_tangent_type = "linear"
+start_out_tangent_type = "linear"
+#mid_in_tangent_type = "auto"
+#mid_out_tangent_type = "auto"
+end_in_tangent_type = "linear"
+end_out_tangent_type = "linear"
+
+# --------------------------------------------------
+# claw open close
+
+# --------------------
+# bend at base
+
+[[setdrivenkeys]]
+transform_crv_attr = "clawOpenClose_ctrl.translateZ"
+crv_start = 0.0
+#crv_mid = 30.0
+crv_end = 60.0
+object_attr = "clawFinger_a01_ctrlAuxOffsetGrp.rotateZ"
+object_start = 0.0
+#object_mid = 45.0
+object_end = 90
+
+[[setdrivenkeys]]
+transform_crv_attr = "clawOpenClose_ctrl.translateZ"
+crv_start = 0.0
+crv_end = 60.0
+object_attr = "clawFinger_b01_ctrlAuxOffsetGrp.rotateZ"
+object_start = 0.0
+object_end = 90
+
+[[setdrivenkeys]]
+transform_crv_attr = "clawOpenClose_ctrl.translateZ"
+crv_start = 0.0
+crv_end = 60.0
+object_attr = "clawFinger_c01_ctrlAuxOffsetGrp.rotateZ"
+object_start = 0.0
+object_end = 90
+
+[[setdrivenkeys]]
+transform_crv_attr = "clawOpenClose_ctrl.translateZ"
+crv_start = 0.0
+crv_end = 60.0
+object_attr = "clawFinger_d01_ctrlAuxOffsetGrp.rotateZ"
+object_start = 0.0
+object_end = 90
 ```

@@ -39,7 +39,7 @@ def axis_locator(
             color_rgb if color_rgb else (rd.uniform(0, 1.0), rd.uniform(0, 1.0), rd.uniform(0, 1.0))
         )
         if not original_locator_name:
-            current_locator_name = f"localAxis{cap(obj)}"
+            current_locator_name = f"localAxis{cap(obj)}Loc"
         elif len(objects) > 1:
             current_locator_name = f"{original_locator_name}{i}"
         else:
@@ -115,7 +115,8 @@ def locator_snap(
 
 def axis_locator_del():
     """Delete locators used for manual axis alignment."""
-    loc_shapes = cmds.ls("localAxis*", type="locator")
+    loc_keyword = "localAxis"
+    loc_shapes = cmds.ls(f"{loc_keyword}*", type="locator")
     loc_transforms = cmds.listRelatives(loc_shapes, parent=1) or []
     loc_groups = cmds.listRelatives(loc_transforms, parent=1) or []
 
@@ -123,8 +124,9 @@ def axis_locator_del():
         if cmds.objExists(loc):
             cmds.delete(loc)
     for grp in loc_groups:
-        if cmds.objExists(grp):
-            cmds.delete(grp)
+        if loc_keyword in grp:
+            if cmds.objExists(grp):
+                cmds.delete(grp)
 
 
 def locator_constrain_joints(

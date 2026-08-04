@@ -8,7 +8,7 @@ def create_attached_ruler(
     ruler_end_object: str,
     parent_hide_grp: str | None = None,
     include_stretch_nodes: bool = False,
-):
+) -> tuple[str]:
     """Create distance dimension node and point constrain start and end locators
     between two objects.  Useful for finding joint length for stretching.
 
@@ -29,7 +29,8 @@ def create_attached_ruler(
             global scale input = <globalscale_multiplyDivide>.input1X
 
     Returns:
-        Ruler shape, transform, locators, locator constraints, and blendColors stretch node.
+        Ruler shape, transform, locators, locator constraints; blendColors stretch,
+        multiplyDive global scale, and multiplyDive stretch nodes.
 
     """
     name = name.removesuffix("_")
@@ -81,9 +82,9 @@ def create_attached_ruler(
         cmds.setAttr(f"{global_scale_nd}.input2X", ruler_distance)
         cmds.connectAttr(f"{global_scale_nd}.outputX", f"{multiplydivide_nd}.input2X")
 
-        stretch_nd_name = name.replace(name_component, f"{name_component}Stretch")
-        multiplydivide_nd = cmds.rename(multiplydivide_nd, f"{stretch_nd_name}_multiplyDivide")
-        blendcolors_nd = cmds.rename(blendcolors_nd, f"{stretch_nd_name}_blendColors")
+        stretch_name = name.replace(name_component, f"{name_component}Stretch")
+        multiplydivide_nd = cmds.rename(multiplydivide_nd, f"{stretch_name}_multiplyDivide")
+        blendcolors_nd = cmds.rename(blendcolors_nd, f"{stretch_name}_blendColors")
         global_scale_nd_name = name.replace(name_component, f"{name_component}StretchGlobalScale")
         global_scale_nd = cmds.rename(global_scale_nd, f"{global_scale_nd_name}_multiplyDivide")
 
@@ -94,6 +95,60 @@ def create_attached_ruler(
         ruler_loc_02,
         ruler_loc_01_const,
         ruler_loc_02_const,
+        blendcolors_nd,
+        global_scale_nd,
+        multiplydivide_nd,
+    )
+
+
+def create_curve_ruler(
+    name: str,
+    curve: str,
+) -> tuple[str]:
+    """Create curve info node and attach to curve to get arc length.
+    Also, setup initial nodes for joint stretching based on curve length.
+    Useful if needing arc length instead of the linear ruler length from "create_attached_ruler".
+
+    Args:
+        name: Same as "create_attached_ruler" function.
+        curve: Main curve to connect curve info for arc length.
+
+    Returns:
+        Curve info, blendColors stretch, multiplyDive global scale, and multiplyDive stretch nodes.
+
+    """
+    name = name.removesuffix("_")
+    name_component = name.split("_")[0]
+    stretch_name = name.replace(name_component, f"{name_component}Stretch")
+
+    # curve info node for arc length
+    curveinfo_nd = cmds.createNode("curveInfo")
+    curveinfo_nd = cmds.rename(curveinfo_nd, f"{stretch_name}_curveInfo")
+    cmds.connectAttr(f"{curve}.local", f"{curveinfo_nd}.inputCurve")
+
+    # create stretch node setup
+    multiplydivide_nd = cmds.createNode("multiplyDivide")
+    cmds.setAttr(f"{multiplydivide_nd}.operation", 2)  # divide
+    blendcolors_nd = cmds.createNode("blendColors")
+    curve_distance = cmds.getAttr(f"{curveinfo_nd}.arcLength")
+    cmds.connectAttr(f"{curveinfo_nd}.arcLength", f"{multiplydivide_nd}.input1X")
+    cmds.connectAttr(f"{multiplydivide_nd}.outputX", f"{blendcolors_nd}.color1R")
+    cmds.setAttr(f"{blendcolors_nd}.color2R", 1.0)
+    # global scale
+    global_scale_nd = cmds.createNode("multiplyDivide")
+    cmds.setAttr(f"{global_scale_nd}.input1X", 1.0)
+    cmds.setAttr(f"{global_scale_nd}.input2X", curve_distance)
+    cmds.connectAttr(f"{global_scale_nd}.outputX", f"{multiplydivide_nd}.input2X")
+
+    # rename nodes
+    # leave mirror comp, replace main name comp
+    multiplydivide_nd = cmds.rename(multiplydivide_nd, f"{stretch_name}_multiplyDivide")
+    blendcolors_nd = cmds.rename(blendcolors_nd, f"{stretch_name}_blendColors")
+    global_scale_nd_name = name.replace(name_component, f"{name_component}StretchGlobalScale")
+    global_scale_nd = cmds.rename(global_scale_nd, f"{global_scale_nd_name}_multiplyDivide")
+
+    return (
+        curveinfo_nd,
         blendcolors_nd,
         global_scale_nd,
         multiplydivide_nd,

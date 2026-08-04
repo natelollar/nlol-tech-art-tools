@@ -4,30 +4,39 @@ from pathlib import Path
 
 from maya import cmds, mel
 from nlol.core.rig_setup import common_build_components
-from nlol.core.rig_tools import tools_skinning
-from nlol.defaults import rig_folder_path
+from nlol.core.rig_tools import rigging_functions, tools_skinning
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities import nlol_maya_logger, nlol_maya_registry
 
 reload(common_build_components)
+reload(rigging_functions)
 reload(tools_skinning)
-reload(rig_folder_path)
 
 registry = nlol_maya_registry.get_registry()
 logger = nlol_maya_logger.get_logger()
 
-rig_folderpath = rig_folder_path.rig_folderpath
-dynamics_data_folderpath = rig_folderpath / "dynamics_data"
-
 
 class CurveDynamics:
-    """General curve dynamics setup using Maya's nHair system."""
+    """General curve dynamics setup using Maya's nHair system.
+    Useful for tentacles or tubes.
+    """
 
     def __init__(self) -> None:
         """Initialize class."""
+        self.dynamics_data_folderpath = rig_folderpath() / "dynamics_data"
 
-    def build(self, curves: list[str] | str, hair_system: str = "") -> None:
+    def build(
+        self,
+        curves: list[str] | str,
+        use_existing_hairsystem: bool = False,
+        hairsystem_name: str = "",
+    ) -> None:
         """Entry point. Run this method.
         --------------------------------------------------
+
+        Args:
+            See following methods.
+
         """
         # run main methods
         cmds.undoInfo(openChunk=True)
@@ -35,7 +44,11 @@ class CurveDynamics:
             self.CommonBuildComponents = common_build_components.CommonBuildComponents()
             self.CommonBuildComponents.build_top_dynamics_grps()
             self.CommonBuildComponents.build_dynamics_aux_ctrl()
-            self.build_dynamics_on_crvs(curves, hair_system)
+            self.build_dynamics_on_crvs(
+                curves=curves,
+                use_existing_hairsystem=use_existing_hairsystem,
+                hairsystem_name=hairsystem_name,
+            )
             self.apply_hair_settings()
         finally:
             cmds.undoInfo(closeChunk=True)
@@ -43,17 +56,21 @@ class CurveDynamics:
     def build_dynamics_on_crvs(
         self,
         curves: list[str] | str,
-        hair_system: str = "",
         create_restpose_curves: bool = True,
+        use_existing_hairsystem: bool = False,
+        hairsystem_name: str = "",
     ) -> None:
         """Apply dynamics to curves via nHair system and blendshape. With attributes via
         dynamics aux ctrl.
 
         Args:
             curves: Curve/s to apply dynamics too.
-            hair_system: Maya nHair system node.
             create_restpose_curves: Whether to duplicate curve and copy skin weights
                 to avoid cycle warning from blendshape.
+            use_existing_hairsystem: Use existing hair system in scene.
+                Does not need to be specified.  Still creates initial hair system if needed.
+            hairsystem_name: Specify nHair system transform node.
+                Use existing or will create first time with this name. Not required.
 
         """
         if isinstance(curves, str):
@@ -63,20 +80,29 @@ class CurveDynamics:
             self.build_dynamics_on_crv(
                 curve=crv,
                 create_restpose_curve=create_restpose_curves,
-                hair_system=hair_system,
+                use_existing_hairsystem=use_existing_hairsystem,
+                hairsystem_name=hairsystem_name,
             )
 
     def build_dynamics_on_crv(
         self,
         curve: str,
         create_restpose_curve: bool = True,
-        hair_system: str = "",
+        use_existing_hairsystem: bool = False,
+        hairsystem_name: str = "",
     ) -> None:
         """Applying curve dynamics to single curve.
         Duplicate curve first if needed for separate rest pose curve.
         Copy skin weights from original curve if needed.
         Apply final dynamic curve to original curve as blendshape.
         Add attributes to global dynamics ctrl for rig.
+
+        "use_existing_hairsystem" will use previous hair system in scene.
+        Though, still creates hair system first and then deletes/ replaces
+        with initial hair system.
+        "hairsystem_name" uses specific previous hair system or initially creates
+        with name.  Will still create and delete hair systems, though will replace
+        with this specific one.
 
         Args:
             curve: Main curve which will end up with the blendshape
@@ -85,6 +111,10 @@ class CurveDynamics:
                 This new curve would be the restpose curve with same skin weights.
                 This helps avoid cycle error when connecting the dynamics curve as
                 a blendshape back to the original.
+            use_existing_hairsystem: Use existing hair system in scene.
+                Does not need to be specified. Still creates initial hair system if needed.
+            hairsystem_name: Maya nHair system node transform to use and create first
+                if doesn't exist.
 
         """
         nucleus_nd = registry.get_obj("dynamics_nucleus_nd")
@@ -102,13 +132,20 @@ class CurveDynamics:
             restpose_crv = curve
 
         cmds.select(restpose_crv)  # select curve to create dynamic curve from
-        if hair_system:
-            cmds.select(hair_system, add=True)  # will use same hair system
-        if nucleus_nd:
-            cmds.select(nucleus_nd, add=True)  # will use same nucleus node
 
         # nHair < Make Selected Curves Dynamic. Options: NURBS curves. Exact shape match.
         mel.eval('makeCurvesDynamic 2 { "0", "0", "1", "1", "0"};')
+
+        if nucleus_nd:
+            # reconnect main nucleus. fails to connect with nucleus selection for makeCurvesDynamic.
+            current_nucleus_nd = "nucleus1"  # consistently creates nucleus1
+            rigging_functions.replace_node_connections(
+                old_node=current_nucleus_nd,
+                new_node=nucleus_nd,
+                delete_old_node=True,
+                increment_input_dest_plug=True,
+                increment_output_src_plug=True,
+            )
 
         # ----- find, rename, set settings and parent dynamic components -----
         # hair follicle
@@ -121,18 +158,20 @@ class CurveDynamics:
         cmds.setAttr(f"{world_origin_follicle}.pointLock", 1)  # Base. So tip not attached.
         cmds.parent(world_origin_follicle, dynamics_components_grp)
         # hair system
-        if not hair_system:
-            hair_system = cmds.listConnections(
-                follicle_shp,
-                source=False,
-                destination=True,
-                type="hairSystem",
-            )[0]
+        hair_system = cmds.listConnections(
+            follicle_shp,
+            source=False,
+            destination=True,
+            type="hairSystem",
+        )[0]
+        if hairsystem_name and not cmds.objExists(hairsystem_name):
+            hair_system = cmds.rename(hair_system, hairsystem_name)
+        else:
             hair_system = cmds.rename(hair_system, f"{restpose_crv}HairSystem")
-            cmds.setAttr(f"{hair_system}.drag", 0.1)  # slows overall movement slightly
-            cmds.setAttr(f"{hair_system}.damp", 0.3)  # kills bounce
-            cmds.setAttr(f"{hair_system}.stretchDamp", 0.5)  # damping along the length
-            cmds.parent(hair_system, dynamics_components_grp)
+        cmds.setAttr(f"{hair_system}.drag", 0.1)  # slows overall movement slightly
+        cmds.setAttr(f"{hair_system}.damp", 0.3)  # kills bounce
+        cmds.setAttr(f"{hair_system}.stretchDamp", 0.5)  # damping along the length
+        cmds.parent(hair_system, dynamics_components_grp)
         hair_system_shp = cmds.listRelatives(hair_system, shapes=True)[0]
         # dynamic curve
         dynamic_crv = cmds.listConnections(
@@ -167,7 +206,30 @@ class CurveDynamics:
         blendshape_nd = f"{curve}BlendShape"
         cmds.blendShape(dynamic_crv, curve, name=blendshape_nd)
 
+        # replace current hair system w/ existing hair system
+        # or skip and use separate hair system for each curve
+        existing_hairsystem_shp = None
+        if use_existing_hairsystem:
+            hair_systems = cmds.ls(type="hairSystem")
+            if hair_systems:
+                existing_hairsystem_shp = hair_systems[0]  # hair system shape node
+        if hairsystem_name:
+            existing_hairsystem_shp = cmds.listRelatives(hairsystem_name, shapes=True)[0]
+        if use_existing_hairsystem or hairsystem_name:
+            if hair_system_shp != existing_hairsystem_shp:
+                rigging_functions.replace_node_connections(
+                    old_node=hair_system_shp,
+                    new_node=existing_hairsystem_shp,
+                    delete_old_node_parent=True,  # delete unused hair system transform
+                    increment_input_dest_plug=True,
+                    increment_output_src_plug=True,
+                    # avoid duplicate connections
+                    skipped_output_connections={"inputActive", "inputActiveStart"},
+                )
+
         # dynamic curve attributes
+        if existing_hairsystem_shp:
+            hair_system_shp = existing_hairsystem_shp
         self.aux_ctrl_nhair_attrs(hair_system_shp, blendshape_nd, dynamic_crv)
 
     def aux_ctrl_nhair_attrs(self, hair_system_shp, blendshape_nd, dynamic_crv) -> None:
@@ -268,9 +330,9 @@ class CurveDynamics:
         )
 
     def apply_hair_settings(self) -> None:
-        """Apply saved hairSystem or follicle settings from "*Settings.json" files
-        in dynamics_data folder. Files must also contain string "hairSystem" or "follicle",
-        not case sensitive.
+        """Apply saved hairSystem, follicle, or nucleus settings from "*Settings.json"
+        files in dynamics_data folder. Files must also contain string
+        "hairSystem", "follicle", or "nucleus"; not case sensitive.
         """
         hair_settings = self.get_saved_hair_settings()
         for settings in hair_settings:
@@ -282,7 +344,7 @@ class CurveDynamics:
                         if not value:
                             continue
                         cmds.setAttr(attr, *value)
-                    elif attr.split(".")[1] == "startCurveAttract":
+                    elif attr.split(".")[1] in {"startCurveAttract", "startFrame"}:
                         connections = cmds.listConnections(  # aux ctrl connection
                             attr,
                             source=True,
@@ -291,6 +353,8 @@ class CurveDynamics:
                         )
                         if connections:
                             cmds.setAttr(connections[0], value)
+                        else:
+                            cmds.setAttr(attr, value)
                     else:
                         cmds.setAttr(attr, value)
 
@@ -298,28 +362,33 @@ class CurveDynamics:
                     logger.debug(msg)
                 except Exception:
                     logger.debug(
-                        f"Failed to set hairSystem/follicle attr: {attr}, {value}",
+                        f"Failed to set hairSystem/follicle/nucleus attr: {attr}, {value}",
                     )
 
     def get_saved_hair_settings(self) -> list[dict]:
-        """Get saved hairSystem or follicle settings.
+        """Get saved hairSystem, follicle, or nucleus settings.
         These settings will be in "*Settings.json" files in the dynamics_data folder.
-        Files must also contain string "hairSystem" or "follicle", not case sensitive.
+        Files must also contain string "hairSystem", "follicle", or "nucleus", not case sensitive.
 
         Returns:
-            A list of saved settings for hairSystem or follicle objects.
+            A list of saved settings for hairSystem, follicle, or nucleus objects.
 
         """
-        hair_settings_filepaths = list(dynamics_data_folderpath.glob("*Settings.json"))
+        hair_settings_filepaths = list(self.dynamics_data_folderpath.glob("*Settings.json"))
         hair_settings_filepaths = [
             pth
             for pth in hair_settings_filepaths
-            if any(keyword in Path(pth).stem.lower() for keyword in ["hairsystem", "follicle"])
+            if any(
+                keyword in Path(pth).stem.lower()
+                for keyword in ["hairsystem", "follicle", "nucleus"]
+            )
         ]
         if not list(hair_settings_filepaths):
             msg = (
-                f'No custom hairSystem or follicle settings in: "{dynamics_data_folderpath}"\n'
-                'Try adding "hairSystem", "follicle" or "Settings" to file names if string missing.'
+                "No custom hairSystem, follicle, or nucleus "
+                f'settings in: "{self.dynamics_data_folderpath}"\n'
+                'Try adding "hairSystem", "follicle", "nucleus" or "Settings" string '
+                "to file names if string missing. "
             )
             logger.debug(msg)
 
@@ -332,50 +401,62 @@ class CurveDynamics:
         return hair_settings
 
     def save_hair_settings(self) -> None:
-        """Save nHair and follicle settings to a json file per object."""
-        nhair_settings, follicle_settings = self.get_selected_hair_settings()
-        dynamics_data_folderpath.mkdir(exist_ok=True)
+        """Save nHair, follicle, or nucleus settings to a json file per object."""
+        nhair_settings, follicle_settings, nucleus_settings = self.get_selected_hair_settings()
+        self.dynamics_data_folderpath.mkdir(exist_ok=True)
 
-        obj_settings = nhair_settings | follicle_settings
+        obj_settings = nhair_settings | follicle_settings | nucleus_settings
         if not obj_settings:
-            logger.info("Select hairSystems and/or follicles to save. Missing selection...")
+            logger.info(
+                "Select hairSystems, follicles, and/or nucleus' to save. Missing selection...",
+            )
 
         for obj, settings in obj_settings.items():
-            obj_settings_filepath = dynamics_data_folderpath / f"{obj}Settings.json"
+            obj_settings_filepath = self.dynamics_data_folderpath / f"{obj}Settings.json"
             with open(obj_settings_filepath, "w") as f:
                 json.dump(settings, f, indent=4)
+                msg = f"Settings saved: {obj_settings_filepath}"
+                logger.info(msg)
 
     def get_selected_hair_settings(self) -> tuple[dict, dict]:
         """Get hair system settings from selected nHair objects.
         Also, get settings for selected follicles, such as ".pointLock".
         Used for storing dynamic curve settings, contained in both hair systems
-        and follicles.
+        and follicles. In addition, saves selected nucleus settings too.
 
         Returns:
-            Dictionaries with nHair and follicle settings for each selected.
+            Dictionaries with nHair, follicle, and nucleus settings for each selected.
 
         """
         selected = cmds.ls(selection=True)
-        sim_objs = {"hairSystem": [], "follicle": []}
+        sim_objs = {"hairSystem": [], "follicle": [], "nucleus": []}
         for obj in selected:
-            shape = cmds.listRelatives(obj, shapes=True)[0]
-            shape_type = cmds.objectType(shape)
-            if shape_type in sim_objs:
-                sim_objs[shape_type].append(shape)
+            shapes = cmds.listRelatives(obj, shapes=True)
+            shape = shapes[0] if shapes else None
+            if shape:
+                shape_type = cmds.objectType(shape)
+                if shape_type in sim_objs:
+                    sim_objs[shape_type].append(shape)
+            else:
+                node_type = cmds.objectType(obj)
+                if node_type in sim_objs:
+                    sim_objs[node_type].append(obj)
 
         nhair_objs = sim_objs["hairSystem"]
         follicle_objs = sim_objs["follicle"]
+        nucleus_objs = sim_objs["nucleus"]
 
         nhair_settings = self.get_hair_obj_settings(nhair_objs)
         follicle_settings = self.get_hair_obj_settings(follicle_objs)
+        nucleus_settings = self.get_hair_obj_settings(nucleus_objs)
 
-        return nhair_settings, follicle_settings
+        return nhair_settings, follicle_settings, nucleus_settings
 
     def get_hair_obj_settings(self, objs: list[str]) -> dict[str, dict]:
         """Get Maya object settings.
 
         Args:
-            objs: hairSystem/follicle transforms to get attributes and values for.
+            objs: hairSystem/follicle transforms (or nucleus) to get attributes and values for.
 
         """
         hair_ramps = [

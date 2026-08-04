@@ -1,21 +1,18 @@
-from importlib import reload, util
+from importlib import util
 from pathlib import Path
 
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
-
-reload(rig_folder_path)
-
-rig_folderpath = rig_folder_path.rig_folderpath
-default_finalize_script = rig_folderpath / "finalize_script.py"
 
 logger = get_logger()
 
 
-def run_finalize_script(finalize_script_filepath: str | Path = default_finalize_script) -> None:
+def run_finalize_script(finalize_script_filepath: str | Path | None = None) -> None:
     """Run "finalize_script.py" from rig folder at the end of the rig build.
     For cleanup and adding final touches to rig.
     """
+    finalize_script_filepath = finalize_script_filepath or (rig_folderpath() / "finalize_script.py")
+
     if Path(finalize_script_filepath).is_file():
         spec = util.spec_from_file_location("finalize_script", finalize_script_filepath)
         finalize_script_module = util.module_from_spec(spec)

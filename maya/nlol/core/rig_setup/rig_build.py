@@ -4,15 +4,16 @@ from maya import cmds
 from nlol.core.animation_tools import mirror_attrs_export_import
 from nlol.core.rig_setup import (
     build_blendshapes,
+    build_cloth_dynamics,
     build_display_layers,
     build_finalize_script,
-    build_cloth_dynamics,
     build_mesh_skeleton,
     build_rig_modules,
+    check_data,
     parent_space_switching,
     save_control_curves,
 )
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities import check_registry
 from nlol.utilities.nlol_maya_logger import get_logger
 from nlol.utilities.nlol_maya_registry import get_registry
@@ -24,38 +25,50 @@ reload(build_finalize_script)
 reload(build_cloth_dynamics)
 reload(build_mesh_skeleton)
 reload(build_rig_modules)
-reload(check_registry)
+reload(check_data)
 reload(parent_space_switching)
 reload(save_control_curves)
-reload(rig_folder_path)
+reload(check_registry)
 
-rig_folderpath = rig_folder_path.rig_folderpath
-rig_data_filepath = rig_folderpath / "rig_object_data.toml"
-blendshapes_filepath = rig_folderpath / "blendshapes.ma"
-setdrivenkeys_filepath = rig_folderpath / "blendshape_setdrivenkeys.toml"
-rig_ps_filepath = rig_folderpath / "rig_parent_spaces.toml"
-rig_ctrl_crvs_filepath = rig_folderpath / "rig_control_curves.json"
-mirror_attrs_filepath = rig_folderpath / "mirror_attributes.json"
-display_lyrs_filepath = rig_folderpath / "rig_display_layers.toml"
-finalize_script_filepath = rig_folderpath / "finalize_script.py"
 
 registry = get_registry()
 logger = get_logger()
 
 
-def run_rig_build():
-    """Build entire rig."""
+def run_rig_build(show_confirmation: bool = True):
+    """Build entire rig.
+
+    Args:
+        show_confirmation: Whether to show confirmation popup or
+            start rig build immediately.
+
+    """
+    # -----
+    rig_data_filepath = rig_folderpath() / "rig_object_data.toml"
+    blendshapes_filepath = rig_folderpath() / "blendshapes.ma"
+    setdrivenkeys_filepath = rig_folderpath() / "blendshape_setdrivenkeys.toml"
+    rig_ps_filepath = rig_folderpath() / "rig_parent_spaces.toml"
+    rig_ctrl_crvs_filepath = rig_folderpath() / "rig_control_curves.json"
+    mirror_attrs_filepath = rig_folderpath() / "mirror_attributes.json"
+    display_lyrs_filepath = rig_folderpath() / "rig_display_layers.toml"
+    finalize_script_filepath = rig_folderpath() / "finalize_script.py"
+
+    # -----
     logger.info("-------------------- START RIG BUILD... --------------------")
 
     # ----- clear registry data -----
     registry.clear_registry()
 
     # ----- custom rig build folderpath -----
-    logger.info(f"Rig folder: {rig_folderpath}")
+    logger.info(f"Rig folder: {rig_folderpath()}")
 
     try:
         # ----- skeletal mesh, import "rig_helpers.ma" -----
-        build_mesh_skeleton.BuildMeshSkeleton(rig_data_filepath).build_skeletalmesh()
+        build_mesh_skeleton.BuildMeshSkeleton(
+            rig_data_filepath,
+            show_confirmation,
+            full_rig_build=True,
+        ).build_skeletalmesh()
         # ----- import apply blendshapes -----
         blendshapes_meshes = build_blendshapes.ConnectBlendShapes(
             blendshapes_filepath,
@@ -89,7 +102,8 @@ def run_rig_build():
     cmds.select(clear=True)
     cmds.flushUndo()
 
-    # ----- check registry data -----
+    # ----- check data -----
     check_registry.verify_registry()
+    check_data.verify_data()
 
     logger.info("-------------------- END RIG BUILD. --------------------")

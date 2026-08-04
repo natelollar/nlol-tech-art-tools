@@ -103,17 +103,18 @@ def select_shapes():
     cmds.select(selection_shapes)
 
 
-def select_shapes_show_attrs():
-    """Select curve shapes and show useful curve shape attributes."""
-    selection = cmds.ls(selection=True)
+def select_shapes_show_attrs(show_attrs: bool = True) -> None:
+    """Select curve shapes and show or hide useful curve shape attributes."""
+    selection = cmds.ls(selection=True) or []
 
     selection_shapes = []
     for obj in selection:
-        shps = cmds.listRelatives(obj, shapes=True)
+        shps = cmds.listRelatives(obj, shapes=True) or []
         selection_shapes.extend(shps)
 
-    cmds.select(selection_shapes)
-    show_attributes.ShowAttributes().show_curve_attrs()
+    if selection_shapes:
+        cmds.select(selection_shapes)
+    show_attributes.ShowAttributes(show_attrs=show_attrs).show_curve_attrs()
 
 
 def get_selection_type():
@@ -322,7 +323,339 @@ def select_hierarchy_transform_nodes() -> None:
     children = cmds.listRelatives(allDescendents=True, type="transform", fullPath=True)
     cmds.select(children)
 
+
 def create_display_layer() -> None:
     """Create display layer without "makeCurrent" flag."""
-    layer = cmds.createDisplayLayer(name='layer', empty=True)
-    logger.info(f"Created: {layer}" )
+    layer = cmds.createDisplayLayer(name="layer", empty=True)
+    logger.info(f"Created: {layer}")
+
+
+def reset_obj_attributes() -> None:
+    """Reset transforms of selected objects.
+    Others attributes may be added to this function.
+    """
+    selected = cmds.ls(selection=True)
+
+    attrs = [
+        "translateX",
+        "translateY",
+        "translateZ",
+        "rotateX",
+        "rotateY",
+        "rotateZ",
+        "scaleX",
+        "scaleY",
+        "scaleZ",
+    ]
+
+    for obj in selected:
+        for attr in attrs:
+            default_value = cmds.attributeQuery(attr, node=obj, listDefault=True)
+            if default_value and cmds.getAttr(f"{obj}.{attr}", settable=True):
+                cmds.setAttr(f"{obj}.{attr}", *default_value)
+            else:
+                logger.info(f"Skipped resetting: {obj}.{attr}")
+
+
+def set_display_local_axis(enabled: bool = True) -> None:
+    """Turn displayLocalAxis on or off for the current selection."""
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for displayLocalAxis.")
+        return
+
+    for obj in selected:
+        if cmds.attributeQuery("displayLocalAxis", node=obj, exists=True):
+            cmds.setAttr(f"{obj}.displayLocalAxis", enabled)
+        else:
+            logger.debug(f"Skipped (no displayLocalAxis): {obj}")
+
+
+def select_hierarchy() -> None:
+    """Select hierarchy of the current selection."""
+    cmds.select(hierarchy=True)
+
+
+def set_shape_visibility(visible: bool = True) -> None:
+    """Set visibility on shapes under selected transforms."""
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for shape visibility.")
+        return
+
+    for obj in selected:
+        for shp in cmds.listRelatives(obj, shapes=True, fullPath=True) or []:
+            if cmds.getAttr(f"{shp}.visibility", settable=True):
+                cmds.setAttr(f"{shp}.visibility", visible)
+
+
+def set_ctrl_shapes_reference(enabled: bool = True) -> None:
+    """Set selected control shapes to reference (unselectable) or normal.
+
+    Args:
+        enabled: True for reference display type, False for normal.
+
+    """
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for shape reference display.")
+        return
+
+    display_type = 2 if enabled else 0  # 0=Normal, 2=Reference
+    for obj in selected:
+        for shp in cmds.listRelatives(obj, shapes=True, fullPath=True) or []:
+            if not cmds.attributeQuery("overrideEnabled", node=shp, exists=True):
+                continue
+            cmds.setAttr(f"{shp}.overrideEnabled", 1)
+            cmds.setAttr(f"{shp}.overrideDisplayType", display_type)
+
+
+# Preset RGB colors for Color tab sliders. Index 0 = off / default.
+COLOR_PRESETS: list[tuple[float, float, float]] = [
+    (0.5, 0.5, 0.5),
+    (0.8, 0.0, 0.9),
+    (1.0, 0.2, 0.0),
+    (1.0, 1.0, 0.0),
+    (0.6, 0.0, 0.15),
+    (0.0, 0.7, 0.0),
+    (1.0, 0.0, 0.0),
+    (0.0, 1.0, 0.0),
+    (0.0, 0.0, 1.0),
+    (0.0, 1.0, 1.0),
+    (1.0, 0.0, 1.0),
+    (0.5, 0.0, 1.0),
+    (0.5, 1.0, 0.0),
+    (0.0, 0.5, 1.0),
+    (0.0, 0.25, 1.0),
+]
+
+
+def get_color_preset(index: int) -> tuple[float, float, float]:
+    """Return RGB preset clamped to COLOR_PRESETS range."""
+    if not COLOR_PRESETS:
+        return (0.5, 0.5, 0.5)
+    return COLOR_PRESETS[max(0, min(index, len(COLOR_PRESETS) - 1))]
+
+
+def set_selection_override_color(index: int, *, on_shapes: bool = True) -> None:
+    """Set drawing override RGB color on selected shapes or transforms.
+
+    Index 0 disables override. Other indexes use COLOR_PRESETS.
+
+    Args:
+        index: Color preset index.
+        on_shapes: True for shape nodes, False for transform nodes.
+
+    """
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for override color.")
+        return
+
+    rgb = get_color_preset(index)
+    enabled = index > 0
+
+    targets: list[str] = []
+    if on_shapes:
+        for obj in selected:
+            targets.extend(cmds.listRelatives(obj, shapes=True, fullPath=True) or [])
+    else:
+        targets = selected
+
+    for node in targets:
+        if not cmds.attributeQuery("overrideEnabled", node=node, exists=True):
+            continue
+        cmds.setAttr(f"{node}.overrideEnabled", int(enabled))
+        cmds.setAttr(f"{node}.overrideRGBColors", 1 if enabled else 0)
+        if cmds.attributeQuery("overrideColorRGB", node=node, exists=True):
+            cmds.setAttr(f"{node}.overrideColorRGB", *rgb)
+
+
+def set_selection_wire_color(index: int, *, on_shapes: bool = True) -> None:
+    """Set wireColorRGB on selected shapes or transforms.
+
+    Index 0 disables custom wire color (useObjectColor=0).
+    Other indexes set useObjectColor=2 (RGB) and COLOR_PRESETS.
+
+    Args:
+        index: Color preset index.
+        on_shapes: True for shape nodes, False for transform nodes.
+
+    """
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for wire color.")
+        return
+
+    rgb = get_color_preset(index)
+    use_rgb = index > 0
+
+    targets: list[str] = []
+    if on_shapes:
+        for obj in selected:
+            targets.extend(cmds.listRelatives(obj, shapes=True, fullPath=True) or [])
+    else:
+        targets = selected
+
+    for node in targets:
+        if not cmds.attributeQuery("useObjectColor", node=node, exists=True):
+            continue
+        cmds.setAttr(f"{node}.useObjectColor", 2 if use_rgb else 0)
+        if cmds.attributeQuery("wireColorRGB", node=node, exists=True):
+            cmds.setAttr(f"{node}.wireColorRGB", *(rgb if use_rgb else (0.0, 0.0, 0.0)))
+
+
+def set_selection_outliner_color(index: int) -> None:
+    """Set outliner color on selected transforms.
+
+    Index 0 disables outliner color. Other indexes use COLOR_PRESETS.
+
+    Args:
+        index: Color preset index.
+
+    """
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for outliner color.")
+        return
+
+    rgb = get_color_preset(index)
+    enabled = index > 0
+
+    for node in selected:
+        if not cmds.attributeQuery("useOutlinerColor", node=node, exists=True):
+            continue
+        cmds.setAttr(f"{node}.useOutlinerColor", int(enabled))
+        if cmds.attributeQuery("outlinerColor", node=node, exists=True):
+            cmds.setAttr(f"{node}.outlinerColor", *(rgb if enabled else (0.0, 0.0, 0.0)))
+
+
+def set_selection_curve_width(index: int) -> None:
+    """Set nurbsCurve lineWidth on shapes under selection.
+
+    Index 0 sets lineWidth to -1 (Maya default). Indexes 1+ set that width.
+
+    Args:
+        index: Curve width index.
+
+    """
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for curve width.")
+        return
+
+    width = -1.0 if index <= 0 else float(index)
+    for obj in selected:
+        for shp in cmds.listRelatives(obj, shapes=True, fullPath=True) or []:
+            if not cmds.attributeQuery("lineWidth", node=shp, exists=True):
+                continue
+            cmds.setAttr(f"{shp}.lineWidth", width)
+
+
+def print_maya_python_info() -> None:
+    """Print Maya / Python / Qt / OS version info to the script editor."""
+    import sys
+
+    import PySide6
+    from PySide6 import QtCore
+
+    lines = [
+        "",
+        "_____________________",
+        f"Maya Major:  {cmds.about(majorVersion=True)}",
+        f"Maya Minor:  {cmds.about(minorVersion=True)}",
+        f"Maya API:  {cmds.about(apiVersion=True)}",
+        "_____________________",
+        f"Python:  {sys.version}",
+        "_____________________",
+        f"QtCore:  {QtCore.__version__}",
+        "_____________________",
+        f"PySide6:  {PySide6.__version__}",
+        "_____________________",
+        f"OS:  {cmds.about(operatingSystemVersion=True)}",
+        "_____________________",
+    ]
+    for line in lines:
+        print(line)
+        logger.info(line)
+
+
+def print_curve_cv_positions() -> None:
+    """Print selected curve CV world positions formatted for cmds.curve()."""
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for curve CV positions.")
+        return
+
+    shapes = cmds.listRelatives(selected, shapes=True, fullPath=True) or []
+    if not shapes:
+        logger.warning("No shapes found under selection for curve CV positions.")
+        return
+
+    print("\n___________________________________________________________________")
+    for shape in shapes:
+        print("___________________________________________________________________")
+        print(shape)
+        indices = cmds.getAttr(f"{shape}.controlPoints", multiIndices=True) or []
+        print(indices)
+        for idx in indices:
+            vert_loc = cmds.xform(
+                f"{shape}.cv[{idx}]",
+                query=True,
+                translation=True,
+                worldSpace=True,
+            )
+            rounded = [round(v, 3) for v in vert_loc]
+            print(str(rounded).replace("[", "(").replace("]", "),"))
+
+
+def print_object_xform_info() -> None:
+    """Print selected object names with rounded world translate/rotate."""
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for object info.")
+        return
+
+    print("")
+    for obj in selected:
+        pos = cmds.xform(obj, query=True, worldSpace=True, translation=True)
+        rot = cmds.xform(obj, query=True, worldSpace=True, rotation=True)
+        pos_txt = str([round(v, 3) for v in pos]).replace("[", "(").replace("]", ")")
+        rot_txt = str([round(v, 3) for v in rot]).replace("[", "(").replace("]", ")")
+        print("___________________________________________________________________")
+        print(obj)
+        print(f"Translation: {pos_txt}")
+        print(f"Rotation: {rot_txt}")
+
+
+def outliner_reorder(relative: int) -> None:
+    """Reorder selected objects in the outliner by a relative offset.
+
+    Args:
+        relative: Positive moves down, negative moves up.
+
+    """
+    selected = cmds.ls(selection=True) or []
+    if not selected:
+        logger.warning("Nothing selected for outliner reorder.")
+        return
+
+    for obj in selected:
+        cmds.reorder(obj, relative=relative)
+
+
+def set_segment_scale_compensate(enabled: bool) -> None:
+    """Set segmentScaleCompensate on selected joints.
+
+    Args:
+        enabled: True to enable, False to disable.
+
+    """
+    joints = cmds.ls(selection=True, type="joint") or []
+    if not joints:
+        logger.warning("No joints selected for segmentScaleCompensate.")
+        return
+
+    for jnt in joints:
+        if cmds.getAttr(f"{jnt}.segmentScaleCompensate", settable=True):
+            cmds.setAttr(f"{jnt}.segmentScaleCompensate", int(enabled))

@@ -10,14 +10,8 @@ from pathlib import Path
 
 from maya import cmds
 from nlol import defaults
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
-
-rig_folderpath = rig_folder_path.rig_folderpath
-rig_ctrl_crvs_filepath = rig_folderpath / "rig_control_curves.json"
-
-default_folderpath = Path(defaults.__file__).parent
-generic_filepath = default_folderpath / "other_control_curves.json"
 
 
 class SaveControlCurves:
@@ -29,13 +23,20 @@ class SaveControlCurves:
 
     def __init__(
         self,
-        filepath: str | Path = rig_ctrl_crvs_filepath,
+        filepath: str | Path | None = None,
         use_generic_filepath: bool = False,
     ):
+        """Args:
+        filepath: Custom file location for saving control curve shapes.
+            Without, defaults to json file in main rig folder.
+        use_generic_filepath: Generic file location for saving control curve shapes,
+            in the nLol "defaults" folder.
+
+        """
         if use_generic_filepath:
-            self.filepath = generic_filepath
+            self.filepath = Path(defaults.__file__).parent / "other_control_curves.json"
         else:
-            self.filepath = filepath
+            self.filepath = filepath or (rig_folderpath() / "rig_control_curves.json")
 
         self.logger = get_logger()
 

@@ -22,6 +22,7 @@ from nlol.core.rig_modules import (
     flexi_surface_fk_ctrl_mod,
     flexi_surface_ik_chain_mod,
     flexi_surface_ik_chain_simple_mod,
+    import_rig_mod,
     piston_mod,
     tentacle_mod,
     world_control_mod,
@@ -42,6 +43,7 @@ reload(fk_ik_spline_chain_mod)
 reload(flexi_surface_ik_chain_mod)
 reload(flexi_surface_ik_chain_simple_mod)
 reload(flexi_surface_fk_ctrl_mod)
+reload(import_rig_mod)
 reload(piston_mod)
 reload(tentacle_mod)
 reload(world_control_mod)
@@ -103,6 +105,9 @@ def build_modules(rig_data_filepath: str | Path):
             aim_object = swap_side_str(mod_dict.get("aim_object", ""))
             ik_wrist_ctrl = swap_side_str(mod_dict.get("ik_wrist_ctrl", ""))
 
+            locators = swap_side_str(mod_dict.get("locators", ""))
+            controls = swap_side_str(mod_dict.get("controls", ""))
+
             right_dict = mod_dict.copy()  # copy original mod dict
             right_dict_updates = {  # replace these values in mod dict with side string swaps
                 "rig_module": rig_module,
@@ -123,6 +128,8 @@ def build_modules(rig_data_filepath: str | Path):
                 "flexi_joints_offset": flexi_joints_offset,
                 "aim_object": aim_object,
                 "ik_wrist_ctrl": ik_wrist_ctrl,
+                "locators": locators,
+                "controls": controls,
             }
             right_dict.update(
                 {key: value for key, value in right_dict_updates.items() if key in mod_dict},
@@ -146,6 +153,8 @@ def build_modules(rig_data_filepath: str | Path):
             rig_module = mod_dict["rig_module"]
             rig_module_name = mod_dict["rig_module_name"]
             mirror_direction = mod_dict.get("mirror_direction")
+            iteration_id = mod_dict.get("iteration_id", "")
+            aux_offset_grp = mod_dict.get("aux_offset_grp", False)
 
             main_joints = mod_dict.get("joints")
             if main_joints:
@@ -222,6 +231,19 @@ def build_modules(rig_data_filepath: str | Path):
             hide_fk_end_ctrl = mod_dict.get("hide_fk_end_ctrl", False)
             add_ik_end_ctrl = mod_dict.get("add_ik_end_ctrl", False)
             curve_dynamics = mod_dict.get("curve_dynamics", False)
+            use_existing_hairsystem = mod_dict.get("use_existing_hairsystem", False)
+            hairsystem_name = mod_dict.get("hairsystem_name", "")
+            curve_easing_style = mod_dict.get("curve_easing_style", "")
+
+            locators = mod_dict.get("locators", "").split(",")
+            locators = [txt.strip() for txt in locators if txt.strip()]
+            controls = mod_dict.get("controls", "").split(",")
+            controls = [txt.strip() for txt in controls if txt.strip()]
+            remove_namespace = mod_dict.get("remove_namespace", False)
+            reference = mod_dict.get("reference", False)
+            custom_rig_filepath = mod_dict.get("custom_rig_filepath", "")
+            custom_rig_folderpath = mod_dict.get("custom_rig_folderpath", "")
+            custom_rig_filename = mod_dict.get("custom_rig_filename", "")
 
             match rig_module:
                 case "biped_limb_mod":
@@ -298,6 +320,8 @@ def build_modules(rig_data_filepath: str | Path):
                         rig_module_name=rig_module_name,
                         mirror_direction=mirror_direction,
                         main_joints=main_joints,
+                        iteration_id=iteration_id,
+                        aux_offset_grp=aux_offset_grp,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -323,6 +347,9 @@ def build_modules(rig_data_filepath: str | Path):
                         hide_fk_end_ctrl=hide_fk_end_ctrl,
                         add_ik_end_ctrl=add_ik_end_ctrl,
                         curve_dynamics=curve_dynamics,
+                        use_existing_hairsystem=use_existing_hairsystem,
+                        hairsystem_name=hairsystem_name,
+                        curve_easing_style=curve_easing_style,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -439,6 +466,22 @@ def build_modules(rig_data_filepath: str | Path):
                     top_groups.append(module_top_group)
                     display_layer and objects_display_lyr(module_top_group)
 
+                case "import_rig_mod":
+                    module_instance = import_rig_mod.ImportRigModule(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        locators=locators,
+                        controls=controls,
+                        remove_namespace=remove_namespace,
+                        reference=reference,
+                        custom_rig_filepath=custom_rig_filepath,
+                        custom_rig_filename=custom_rig_filename,
+                        custom_rig_folderpath=custom_rig_folderpath,
+                    )
+                    module_top_group = module_instance.build()
+                    top_groups.append(module_top_group)
+                    display_layer and objects_display_lyr(module_top_group)
+
                 case _:
                     logger.warning(f"Unknown rig module: {rig_module}")
 
@@ -457,7 +500,8 @@ def build_modules(rig_data_filepath: str | Path):
         main_rig_grp = cmds.group(empty=True, name=main_rig_grp)
     for grp in top_groups:
         if grp and cmds.objExists(grp):
-            cmds.parent(grp, main_rig_grp)
+            if cmds.listRelatives(grp, parent=True) != [main_rig_grp]:
+                cmds.parent(grp, main_rig_grp)
 
     # ----- tag controls for parallel evaluation -----
     rig_ctrls = cmds.listRelatives(main_rig_grp, allDescendents=True) or []

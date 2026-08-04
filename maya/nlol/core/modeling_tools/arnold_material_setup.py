@@ -70,9 +70,23 @@ class ArnoldMaterialSetup:
             mixmap_str = "mixmap"
             normal_str = "normal"
 
-        albedo_file_nd = [obj for obj in selected if albedo_str.lower() in obj.lower()][0]
-        mixmap_file_nd = [obj for obj in selected if mixmap_str.lower() in obj.lower()][0]
-        normal_file_nd = [obj for obj in selected if normal_str.lower() in obj.lower()][0]
+        msg = []
+        try:
+            albedo_file_nd = [obj for obj in selected if albedo_str.lower() in obj.lower()][0]
+        except Exception:
+            msg.append(f'Cannot find node with string: "{albedo_file_nd}".')
+        try:
+            mixmap_file_nd = [obj for obj in selected if mixmap_str.lower() in obj.lower()][0]
+        except Exception:
+            msg.append(f'Cannot find node with string: "{mixmap_file_nd}".')
+        try:
+            normal_file_nd = [obj for obj in selected if normal_str.lower() in obj.lower()][0]
+        except Exception:
+            msg.append(f'Cannot find node with string: "{normal_file_nd}".')
+        if msg:
+            msg = "\n".join(msg)
+            logger.error(msg)
+            raise ValueError(msg)
 
         udims_fild_nds = []
         for file_nd in file_nds:

@@ -162,6 +162,27 @@ def swap_side_str(text_str, return_side: bool = False) -> str | tuple[str, str]:
     return text_str
 
 
+def swap_both_side_str(text_str: str) -> str:
+    """Flip text string list individual names, regardless of side (right or left).
+
+    Args:
+        Text string list separated by commas.
+
+    Returns:
+        Keep as text string list. Separated by commas. Rather than converting to list.
+
+    """
+    if not text_str:
+        return ""
+
+    text_str = text_str.split(",")
+    text_lst = [txt.strip() for txt in text_str if txt.strip()]
+    text_lst = [swap_side_str(txt) for txt in text_lst]
+    text_str = ", ".join(text_lst)
+
+    return text_str
+
+
 def invert_axis_string(text_str: str) -> str:
     """Invert axis "x", "y", or "z" to negative,
         or make negative axis positive.

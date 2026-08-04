@@ -6,30 +6,43 @@ from pathlib import Path
 from maya import cmds, mel
 from nlol.core import general_utils
 from nlol.core.rig_setup import common_build_functions
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(general_utils)
 reload(common_build_functions)
-reload(rig_folder_path)
 
 swap_side_str = general_utils.swap_side_str
 get_top_parent = general_utils.get_top_parent
 CommonBuildFunctions = common_build_functions.CommonBuildFunctions
 
-rig_folderpath = rig_folder_path.rig_folderpath
-default_blendshapes_filepath = rig_folderpath / "blendshapes.ma"
-default_setdrivenkeys_filepath = rig_folderpath / "blendshape_setdrivenkeys.toml"
-
 
 class ConnectBlendShapes:
+    """Connect mesh blendshapes and/or rig controls via set driven keys.
+    Drive with other rig controls/ attributes.
+    Set up connections via toml config file; "blendshape_setdrivenkeys.toml".
+    Store blendshapes under single meshes in "blendshapes.ma".
+    Default file location is in main nLol rig folder.
+    """
+
     def __init__(
         self,
-        blendshapes_filepath: Path = default_blendshapes_filepath,
-        setdrivenkeys_filepath: Path = default_setdrivenkeys_filepath,
+        blendshapes_filepath: Path | None = None,
+        setdrivenkeys_filepath: Path | None = None,
     ):
-        self.blendshapes_filepath = blendshapes_filepath
-        self.setdrivenkeys_filepath = setdrivenkeys_filepath
+        """Initialize class.
+
+        Args:
+            blendshapes_filepath: Custom filepath location for maya file containing blendshapes.
+                Otherwise uses default.
+            setdrivenkeys_filepath: Custom filepath location for set drive key config file.
+                Otherwise uses default location.
+
+        """
+        self.blendshapes_filepath = blendshapes_filepath or (rig_folderpath() / "blendshapes.ma")
+        self.setdrivenkeys_filepath = setdrivenkeys_filepath or (
+            rig_folderpath() / "blendshape_setdrivenkeys.toml"
+        )
 
         self.logger = get_logger()
 
@@ -52,7 +65,7 @@ class ConnectBlendShapes:
         connect to ctrls built from a rig module.
 
         Args:
-            Scene mesh transforms that have a connected blendshape node.
+            meshes_with_blendshapes: Scene mesh transforms that have a connected blendshape node.
 
         """
         top_ctrl_grps = self.setdrivenkey_connections(meshes_with_blendshapes)
@@ -148,9 +161,12 @@ class ConnectBlendShapes:
         blendshape_nd_name = f"{target_mesh}BlendShape"
         cmds.rename(target_blendshape_nd, blendshape_nd_name)
 
-    def setdrivenkey_connections(self, meshes_with_blendshapes) -> str:
+    def setdrivenkey_connections(self, meshes_with_blendshapes: list[str]) -> str:
         """Connect blendshapes or other object attributes to transform ctrls
         via set driven keys.
+
+        Args:
+            meshes_with_blendshapes: Scene mesh transforms that have a connected blendshape node.
 
         Returns:
             Scene top grp for setdrivenkey ctrls.
@@ -186,8 +202,12 @@ class ConnectBlendShapes:
                 blendshape_nds.extend(blendshape_nd)
         blendshape_nds = list(set(blendshape_nds))
         # set driven key in/out tangents
-        in_tangent_type = toml_data.get("inTangentType", "linear")
-        out_tangent_type = toml_data.get("outTangentType", "linear")
+        start_in_tangent_type = toml_data.get("start_in_tangent_type", "linear")
+        start_out_tangent_type = toml_data.get("start_out_tangent_type", "linear")
+        mid_in_tangent_type = toml_data.get("mid_in_tangent_type", "auto")
+        mid_out_tangent_type = toml_data.get("mid_out_tangent_type", "auto")
+        end_in_tangent_type = toml_data.get("end_in_tangent_type", "linear")
+        end_out_tangent_type = toml_data.get("end_out_tangent_type", "linear")
 
         # data list
         setdrivenkeys_data = toml_data["setdrivenkeys"]
@@ -199,8 +219,9 @@ class ConnectBlendShapes:
             mirror_right_invert = data.get("mirror_right_invert")
             if mirror_right:
                 blendshape_attr = swap_side_str(data.get("blendshape_attr", ""))
-                object_attr = swap_side_str(data.get("object_attr"))
-                transform_crv = swap_side_str(data["transform_crv"])
+                object_attr = swap_side_str(data.get("object_attr", ""))
+                transform_crv = swap_side_str(data.get("transform_crv", ""))
+                transform_crv_attr = swap_side_str(data.get("transform_crv_attr", ""))
 
                 crv_end = data.get("crv_end")
                 crv_end = crv_end or 1.0
@@ -209,18 +230,19 @@ class ConnectBlendShapes:
 
                 blendshape_fix_attrs = swap_side_str(data.get("blendshape_fix_attrs", ""))
 
-                data_dict = {
+                right_dict = data.copy()  # copy original mod dict
+                right_dict_updates = {
                     "blendshape_attr": blendshape_attr,
                     "object_attr": object_attr,
                     "transform_crv": transform_crv,
-                    "crv_attr": data["crv_attr"],
-                    "blendshape_start": data.get("blendshape_start"),
-                    "blendshape_end": data.get("blendshape_end"),
-                    "crv_start": data.get("crv_start"),
                     "crv_end": crv_end,
                     "blendshape_fix_attrs": blendshape_fix_attrs,
                 }
-                right_setdrivenkeys_data.append(data_dict)
+                right_dict.update(
+                    {key: value for key, value in right_dict_updates.items() if key in data},
+                )
+
+                right_setdrivenkeys_data.append(right_dict)
         setdrivenkeys_data.extend(right_setdrivenkeys_data)
 
         # ----- iterate through "setdrivenkeys" -----
@@ -229,24 +251,60 @@ class ConnectBlendShapes:
         for data in setdrivenkeys_data:
             blendshape_attr = data.get("blendshape_attr", "")
             object_attr = data.get("object_attr", "")
-            transform_crv = data["transform_crv"]
-            crv_attr = data["crv_attr"]
+            transform_crv = data.get("transform_crv", "")
+            crv_attr = data.get("crv_attr", "")
+            transform_crv_attr = data.get("transform_crv_attr", "")
+
             blendshape_start = data.get("blendshape_start")
+            blendshape_mid = data.get("blendshape_mid")
             blendshape_end = data.get("blendshape_end")
+            object_start = data.get("object_start")
+            object_mid = data.get("object_mid")
+            object_end = data.get("object_end")
             crv_start = data.get("crv_start")
+            crv_mid = data.get("crv_mid")
             crv_end = data.get("crv_end")
             blendshape_fix_attrs = data.get("blendshape_fix_attrs", "").split(",")
             blendshape_fix_attrs = [txt.strip() for txt in blendshape_fix_attrs if txt.strip()]
 
-            blendshape_start = blendshape_start or 0.0
-            blendshape_end = blendshape_end or 1.0
+            if (transform_crv_attr and transform_crv) or (transform_crv_attr and crv_attr):
+                msg = (
+                    '"Check file: "blenshape_setdrivenkeys.toml"\n'
+                    'Cannot have "transform_crv_attr" with "transform_crv"/"crv_attr" parameters.\n'
+                    f"{transform_crv_attr = }\n"
+                    f"{transform_crv = }\n"
+                    f"{crv_attr = }\n"
+                )
+                self.logger.error(msg)
+                raise ValueError(msg)
+            if transform_crv_attr:
+                transform_crv_attr_split = transform_crv_attr.split(".")
+                transform_crv = transform_crv_attr_split[0]
+                crv_attr = ".".join(transform_crv_attr_split[1:])
+
+            if (blendshape_start and object_start) or (blendshape_end and object_end):
+                msg = (
+                    '"Check file: "blendshape_setdrivenkeys.toml"\n'
+                    'Cannot have "blendshape_start/end" and "object_start/end" parameters.\n'
+                    f"{blendshape_start = }\n"
+                    f"{blendshape_end = }\n"
+                    f"{object_start = }\n"
+                    f"{object_end = }"
+                )
+                self.logger.error(msg)
+                raise ValueError(msg)
+            blendshape_start = blendshape_start or object_start or 0.0
+            blendshape_mid = blendshape_mid or object_mid or None
+            blendshape_end = blendshape_end or object_end or 1.0
             crv_start = crv_start or 0.0
+            crv_mid = crv_mid or None
             crv_end = crv_end or 1.0
 
             if object_attr and blendshape_attr:
                 msg = (
-                    'Cannot have "object_attr" and "blendshape_attr" paremeters together. '
-                    f"{object_attr = } "
+                    '"Check file: "blenshape_setdrivenkeys.toml"\n'
+                    'Cannot have "object_attr" and "blendshape_attr" paremeters together.\n'
+                    f"{object_attr = }\n"
                     f"{blendshape_attr = }"
                 )
                 self.logger.error(msg)
@@ -255,21 +313,30 @@ class ConnectBlendShapes:
             # key object transform based on crv positions
             if object_attr:  # example: "mouthCorner_left_ctrl.translateY"
                 if cmds.objExists(object_attr):
-                    cmds.setDrivenKeyframe(  # start
+                    cmds.setDrivenKeyframe(  # start key
                         object_attr,
                         currentDriver=f"{transform_crv}.{crv_attr}",
                         value=blendshape_start,
                         driverValue=crv_start,
-                        inTangentType=in_tangent_type,
-                        outTangentType=out_tangent_type,
+                        inTangentType=start_in_tangent_type,
+                        outTangentType=start_out_tangent_type,
                     )
-                    cmds.setDrivenKeyframe(  # end
+                    if blendshape_mid:
+                        cmds.setDrivenKeyframe(  # middle key
+                            object_attr,
+                            currentDriver=f"{transform_crv}.{crv_attr}",
+                            value=blendshape_mid,
+                            driverValue=crv_mid,
+                            inTangentType=mid_in_tangent_type,
+                            outTangentType=mid_out_tangent_type,
+                        )
+                    cmds.setDrivenKeyframe(  # end key
                         object_attr,
                         currentDriver=f"{transform_crv}.{crv_attr}",
                         value=blendshape_end,
                         driverValue=crv_end,
-                        inTangentType=in_tangent_type,
-                        outTangentType=out_tangent_type,
+                        inTangentType=end_in_tangent_type,
+                        outTangentType=end_out_tangent_type,
                     )
                     active_transform_values.setdefault(f"{transform_crv}.{crv_attr}", []).extend(
                         [crv_start, crv_end],
@@ -283,21 +350,30 @@ class ConnectBlendShapes:
             # key blendshape weights based on crv positions
             for blendshape_nd in blendshape_nds:
                 if cmds.objExists(f"{blendshape_nd}.{blendshape_attr}"):
-                    cmds.setDrivenKeyframe(  # start
+                    cmds.setDrivenKeyframe(  # start key
                         f"{blendshape_nd}.{blendshape_attr}",
                         currentDriver=f"{transform_crv}.{crv_attr}",
                         value=blendshape_start,
                         driverValue=crv_start,
-                        inTangentType=in_tangent_type,
-                        outTangentType=out_tangent_type,
+                        inTangentType=start_in_tangent_type,
+                        outTangentType=start_out_tangent_type,
                     )
-                    cmds.setDrivenKeyframe(  # end
+                    if blendshape_mid:
+                        cmds.setDrivenKeyframe(  # middle key
+                            f"{blendshape_nd}.{blendshape_attr}",
+                            currentDriver=f"{transform_crv}.{crv_attr}",
+                            value=blendshape_mid,
+                            driverValue=crv_mid,
+                            inTangentType=mid_in_tangent_type,
+                            outTangentType=mid_out_tangent_type,
+                        )
+                    cmds.setDrivenKeyframe(  # end key
                         f"{blendshape_nd}.{blendshape_attr}",
                         currentDriver=f"{transform_crv}.{crv_attr}",
                         value=blendshape_end,
                         driverValue=crv_end,
-                        inTangentType=in_tangent_type,
-                        outTangentType=out_tangent_type,
+                        inTangentType=end_in_tangent_type,
+                        outTangentType=end_out_tangent_type,
                     )
                     active_transform_values.setdefault(f"{transform_crv}.{crv_attr}", []).extend(
                         [crv_start, crv_end],

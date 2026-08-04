@@ -1,14 +1,10 @@
-from importlib import reload
 from pathlib import Path
 
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 
 from maya import cmds, mel
 
-reload(rig_folder_path)
-
-materials_folderpath = rig_folder_path.rig_folderpath / "materials"
 logger = get_logger()
 
 
@@ -54,6 +50,7 @@ def export_materials() -> None:
         cmds.warning("Nothing selected. Select mesh transforms with assigned materials to export.")
         return
 
+    materials_folderpath = rig_folderpath() / "materials"
     materials_folderpath.mkdir(exist_ok=True)
 
     for mesh in mesh_selection:
@@ -114,6 +111,7 @@ def import_materials_to_selected(
         return
 
     # get previously exported material filepaths
+    materials_folderpath = rig_folderpath() / "materials"
     material_filepaths = list(materials_folderpath.glob("*.ma"))
     if not list(material_filepaths) or not Path(materials_folderpath).exists():
         error_msg = (
@@ -200,8 +198,9 @@ def import_materials_to_selected(
                     f"{shading_group}.aiSurfaceShader",
                 )
         # assign material to mesh transform
-        cmds.select(mesh)
-        cmds.hyperShade(assign=matching_material)
+        # cmds.select(mesh)
+        # cmds.hyperShade(assign=matching_material)
+        cmds.sets(mesh, edit=True, forceElement=shading_group)
 
 
 def update_scene_materials(
@@ -223,6 +222,7 @@ def update_scene_materials(
     mesh_selection = [obj for obj in selected if cmds.listRelatives(obj, shapes=True, type="mesh")]
 
     # get previously exported material filepaths
+    materials_folderpath = rig_folderpath() / "materials"
     material_filepaths = list(materials_folderpath.glob("*.ma"))
     if not list(material_filepaths) or not Path(materials_folderpath).exists():
         error_msg = (
@@ -304,9 +304,9 @@ def update_scene_materials(
 
         # assign material to mesh transform
         for face_set in face_sets:
-            cmds.select(face_set)
             logger.debug(f"{face_set = }")
             logger.debug(f"{matching_material = }")
-            cmds.hyperShade(assign=matching_material)
-
+            # cmds.select(face_set)
+            # cmds.hyperShade(assign=matching_material)
+            cmds.sets(face_set, edit=True, forceElement=shading_group)
         cmds.select(clear=True)

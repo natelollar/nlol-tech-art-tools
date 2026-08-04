@@ -5,20 +5,14 @@ from pathlib import Path
 from maya import cmds
 from nlol.core.rig_components import create_display_layers
 from nlol.core.rig_tools import skin_export_import
-from nlol.defaults import rig_folder_path
+from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 from nlol.utilities.nlol_maya_registry import get_registry
 
-reload(rig_folder_path)
 reload(create_display_layers)
 reload(skin_export_import)
 
 objects_display_lyr = create_display_layers.objects_display_lyr
-
-rig_folderpath = rig_folder_path.rig_folderpath
-mesh_filepath = rig_folderpath / "model.ma"
-skeleton_filepath = rig_folderpath / "skeleton.ma"
-rig_helpers_filepath = rig_folderpath / "rig_helpers.ma"
 
 
 class BuildMeshSkeleton:
@@ -26,9 +20,31 @@ class BuildMeshSkeleton:
     Then build skeletal mesh; set up skinning between skeleton and geo.
     """
 
-    def __init__(self, rig_data_filepath: str | Path | None = None):
+    def __init__(
+        self,
+        rig_data_filepath: str | Path | None = None,
+        show_confirmation: bool = True,
+        full_rig_build: bool = False,
+    ):
+        """Initialize class.
+
+        Args:
+            rig_data_filepath: "rig_object_data.toml". For getting rig parameters.
+                In this case, setting rotation offset to skeletal mesh group for Unreal rig.
+            show_confirmation: Show confirmation window before opening a new maya scene.
+            full_rig_build: Let popup dialog know full rig is building, not just skeletal mesh.
+
+        """
         self.rig_data_filepath = rig_data_filepath
         self._rig_data = None
+
+        self.show_confirmation = show_confirmation
+        self.full_rig_build = full_rig_build
+
+        self.active_rig_folderpath = rig_folderpath()
+        self.mesh_filepath = self.active_rig_folderpath / "model.ma"
+        self.skeleton_filepath = self.active_rig_folderpath / "skeleton.ma"
+        self.rig_helpers_filepath = self.active_rig_folderpath / "rig_helpers.ma"
 
         self.logger = get_logger()
         self.registry = get_registry()
@@ -60,15 +76,15 @@ class BuildMeshSkeleton:
         """Import model geometry and skeleton into new Maya scene.
         Also, import rig helpers file. Containing foot locators, flexi surface, etc.
         """
-        cmds.file(mesh_filepath, i=True)
-        cmds.file(skeleton_filepath, i=True)
+        cmds.file(self.mesh_filepath, i=True)
+        cmds.file(self.skeleton_filepath, i=True)
 
-        if rig_helpers_filepath.is_file():
-            cmds.file(rig_helpers_filepath, i=True)
+        if self.rig_helpers_filepath.is_file():
+            cmds.file(self.rig_helpers_filepath, i=True)
         else:
             msg = '"rig_helpers.ma" not in rig folder. Skipping import...'
             self.logger.info(msg)
-            msg = f"File not found: {rig_helpers_filepath}"
+            msg = f"File not found: {self.rig_helpers_filepath}"
             self.logger.debug(msg)
 
         # remove leftover layers
@@ -81,24 +97,32 @@ class BuildMeshSkeleton:
         """Skin the model geometry to the skeleton.
         Create parent group for this new skeletal mesh.
         """
-        if not mesh_filepath.is_file() or not skeleton_filepath.is_file():
+        if not self.mesh_filepath.is_file() or not self.skeleton_filepath.is_file():
             msg = '"model.ma", and/or "skeleton.ma" not in rig folder. Skipping import..."'
             self.logger.info(msg)
             return
 
-        yes_string = "Yes"
-        no_string = "No"
-        dialog_result = cmds.confirmDialog(
-            title="Confirm",
-            message="Create new RIG scene?",
-            button=[yes_string, no_string],
-            defaultButton="Yes",
-            cancelButton=no_string,
-            dismissString=no_string,
-            bgc=(0.2, 0.2, 0.2),
-        )
-        if dialog_result == no_string:
-            raise InterruptedError("RIG BUILD CANCELLED...")
+        if self.show_confirmation:
+            if self.full_rig_build:
+                build_type = "RIG"
+            else:
+                build_type = "SKELETAL MESH"
+            dialog_msg = (
+                f'Create new {build_type} scene? >>> {self.active_rig_folderpath.name} <<<'
+            )
+            yes_string = "Yes"
+            no_string = "No"
+            dialog_result = cmds.confirmDialog(
+                title="Confirm",
+                message=dialog_msg,
+                button=[yes_string, no_string],
+                defaultButton="Yes",
+                cancelButton=no_string,
+                dismissString=no_string,
+                bgc=(0.2, 0.2, 0.2),
+            )
+            if dialog_result == no_string:
+                raise InterruptedError("RIG BUILD CANCELLED...")
 
         # force open new maya file
         cmds.file(force=True, new=True)

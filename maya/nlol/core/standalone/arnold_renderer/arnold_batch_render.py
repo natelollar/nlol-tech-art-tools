@@ -92,15 +92,22 @@ ray_depth_specular = 1  # default = 1
 ray_depth_transmission = 8  # default = 8
 ray_depth_volume = 0  # default = 0
 ray_depth_transparency = 10  # default = 10
+# motion blur
+motion_blur = False
+instantaneous_shutter = False  # enable for motion vector pass
 # 32 bit driver
 enable_aov32bit_driver = True
+enable_painterid_driver = True
 aov32bit_driver = "aov32bit_aiAOVDriver"  # custom driver = "aov32bit_aiAOVDriver"
+painterid_driver = "painterID_aiAOVDriver"  # custom driver = "substanceID_aiAOVDriver"
 
 # --------------------------------------------------
 output_filename = f"{scene}.<Camera>.<RenderLayer>"
 output_filepath = Path(current_folderpath / output_filename).as_posix()
 output_32bit = f"{scene}.<Camera>.<RenderLayer>.32bit"
 output_32bit_filepath = Path(current_folderpath / output_32bit).as_posix()
+output_painterid = f"{scene}.<Camera>.<RenderLayer>.painterID"
+output_painterid_filepath = Path(current_folderpath / output_painterid).as_posix()
 
 
 def run_batch() -> None:
@@ -133,6 +140,9 @@ def run_batch() -> None:
         cmds.setAttr("defaultArnoldRenderOptions.GITransmissionDepth", ray_depth_transmission)
         cmds.setAttr("defaultArnoldRenderOptions.GIVolumeDepth", ray_depth_volume)
         cmds.setAttr("defaultArnoldRenderOptions.autoTransparencyDepth", ray_depth_transparency)
+        # motion blur
+        cmds.setAttr("defaultArnoldRenderOptions.motion_blur_enable", motion_blur)
+        cmds.setAttr("defaultArnoldRenderOptions.ignoreMotionBlur", instantaneous_shutter)
         ##
         cmds.setAttr("defaultResolution.width", res_w)
         cmds.setAttr("defaultResolution.height", res_h)
@@ -161,6 +171,14 @@ def run_batch() -> None:
             cmds.setAttr(f"{aov32bit_driver}.exrCompression", 4)  # 4 = piz
             cmds.setAttr(f"{aov32bit_driver}.prefix", output_32bit_filepath, type="string")
             print(f"--- 32BIT OUTPUT: {output_32bit_filepath} ---")
+        # substance painter id pass. use w/ custom filter set to "closest". dwaa caused pixel blending.
+        if enable_painterid_driver and cmds.objExists(painterid_driver):
+            cmds.setAttr(f"{painterid_driver}.multipart", True)
+            cmds.setAttr(f"{painterid_driver}.mergeAOVs", True)
+            cmds.setAttr(f"{painterid_driver}.halfPrecision", True)  # 16-bit
+            cmds.setAttr(f"{painterid_driver}.exrCompression", 3)  # 3 = zip
+            cmds.setAttr(f"{painterid_driver}.prefix", output_painterid_filepath, type="string")
+            print(f"--- PAINTER ID OUTPUT: {output_painterid_filepath} ---")
 
         # render the specific camera
         print(f"--- RENDERING: {job['cam']} (Frames {job['start']}-{job['end']}) ---")
