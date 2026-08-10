@@ -11,16 +11,14 @@ other_control_keyframes.json
 other_animation_data.json
 other_control_transforms.json
 other_mirror_attributes.json
-other_anim_picker.json
-maya/nlol/defaults/rig_human/model.ma
-maya/nlol/defaults/rig_human/skeleton.ma
-maya/nlol/defaults/rig_human/skin_weights.xml
 incrementalSave/
 tmp/
 .mayaSwatches/
 old/
 nlol-tech-art-tools.code-workspace
 rig_context.json
+maya/nlol/defaults/*.ma
+maya/nlol/defaults/standalone_modules/*.ma
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
