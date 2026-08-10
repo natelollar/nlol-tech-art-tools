@@ -371,7 +371,7 @@ def build_rigging_list():
             'Change active auto-rig folderpath in "rig_context.json" or nlUtils < Rig Context UI.',
             "imageOverlayLabel": "BSvRig",
             "backgroundColor": random_clrs[47],
-            "command": "from nlol.core.rig_tools import rig_build_all\n"
+            "command": "from nlol.core.rig_setup import rig_build_all\n"
             "from importlib import reload\nreload(rig_build_all)\n"
             "rig_build_all.RigBuildSaveAll().build_active_only()",
             "sourceType": "python",
@@ -387,7 +387,7 @@ def build_rigging_list():
             'Change active auto-rig folderpath in "rig_context.json" or nlUtils < Rig Context UI.',
             "imageOverlayLabel": "BSvAll",
             "backgroundColor": random_clrs[48],
-            "command": "from nlol.core.rig_tools import rig_build_all\n"
+            "command": "from nlol.core.rig_setup import rig_build_all\n"
             "from importlib import reload\nreload(rig_build_all)\n"
             "rig_build_all.RigBuildSaveAll().build()",
             "sourceType": "python",

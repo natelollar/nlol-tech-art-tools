@@ -1,6 +1,6 @@
 {
-    "nClothAux_ctrlShape": {
-        "curve": "nClothAux_ctrl",
+    "nDynamicsAux_ctrlShape": {
+        "curve": "nDynamicsAux_ctrl",
         "useObjectColor": 1,
         "objectColor": 6,
         "wireColorRGB": "(0.0, 0.0, 0.0)",

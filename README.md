@@ -35,7 +35,7 @@
       - Updates `Maya.env` with `MAYA_MODULE_PATH` pointing to `.../nlol-tech-art-tools/maya/`.  
     - Points to wherever user has placed folder.  
     - Allows nLol Tools in Maya to locate `nlol_env.mod`.  
-2. Restart Maya after install.  
+2. Restart Maya after install.
 
 ### Locations
 - Generic save location for json files is the `/defaults` folder.

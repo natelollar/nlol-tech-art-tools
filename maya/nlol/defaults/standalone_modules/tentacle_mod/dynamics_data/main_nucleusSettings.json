@@ -1,0 +1,72 @@
+{
+    "main": {
+        "main_nucleus.visibility": true,
+        "main_nucleus.translateX": 0.0,
+        "main_nucleus.translateY": 0.0,
+        "main_nucleus.translateZ": 0.0,
+        "main_nucleus.rotateX": 0.0,
+        "main_nucleus.rotateY": 0.0,
+        "main_nucleus.rotateZ": 0.0,
+        "main_nucleus.scaleX": 1.0,
+        "main_nucleus.scaleY": 1.0,
+        "main_nucleus.scaleZ": 1.0,
+        "main_nucleus.currentTime": 0.0,
+        "main_nucleus.startFrame": 1.0,
+        "main_nucleus.frameJumpLimit": 1,
+        "main_nucleus.enable": true,
+        "main_nucleus.useTransform": true,
+        "main_nucleus.gravity": 9.800000190734863,
+        "main_nucleus.gravityDirection": [
+            [
+                0.0,
+                -1.0,
+                0.0
+            ]
+        ],
+        "main_nucleus.gravityDirectionX": 0.0,
+        "main_nucleus.gravityDirectionY": -1.0,
+        "main_nucleus.gravityDirectionZ": 0.0,
+        "main_nucleus.airDensity": 1.0,
+        "main_nucleus.windSpeed": 0.0,
+        "main_nucleus.windDirection": [
+            [
+                1.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "main_nucleus.windDirectionX": 1.0,
+        "main_nucleus.windDirectionY": 0.0,
+        "main_nucleus.windDirectionZ": 0.0,
+        "main_nucleus.windNoise": 0.0,
+        "main_nucleus.collisionLayerRange": 4.0,
+        "main_nucleus.usePlane": true,
+        "main_nucleus.planeOrigin": [
+            [
+                0.0,
+                0.0,
+                0.0
+            ]
+        ],
+        "main_nucleus.planeOriginX": 0.0,
+        "main_nucleus.planeOriginY": 0.0,
+        "main_nucleus.planeOriginZ": 0.0,
+        "main_nucleus.planeNormal": [
+            [
+                0.0,
+                1.0,
+                0.0
+            ]
+        ],
+        "main_nucleus.planeNormalX": 0.0,
+        "main_nucleus.planeNormalY": 1.0,
+        "main_nucleus.planeNormalZ": 0.0,
+        "main_nucleus.planeBounce": 0.0,
+        "main_nucleus.planeFriction": 0.10000000149011612,
+        "main_nucleus.planeStickiness": 0.0,
+        "main_nucleus.subSteps": 3,
+        "main_nucleus.maxCollisionIterations": 4,
+        "main_nucleus.timeScale": 1.0,
+        "main_nucleus.spaceScale": 0.009999999776482582
+    }
+}

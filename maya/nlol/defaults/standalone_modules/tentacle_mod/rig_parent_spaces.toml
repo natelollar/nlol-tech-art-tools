@@ -11,7 +11,7 @@ control = "tailSwch_ctrl"
 parents = "root_ctrl"
 
 [[control]]
-control = "nClothAux_ctrl"
+control = "nDynamicsAux_ctrl"
 parents = "root_ctrl"
 
 #----------

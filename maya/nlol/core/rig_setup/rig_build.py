@@ -92,6 +92,7 @@ def run_rig_build(show_confirmation: bool = True):
         ).apply_mirror_attrs()
         # ----- display layers -----
         build_display_layers.BuildDisplayLayers(display_lyrs_filepath).build()
+        build_display_layers.collapse_display_layers()
         # ----- finalize script -----
         build_finalize_script.run_finalize_script(finalize_script_filepath)
     except InterruptedError as e:

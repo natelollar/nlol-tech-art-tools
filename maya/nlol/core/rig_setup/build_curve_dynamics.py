@@ -136,17 +136,6 @@ class CurveDynamics:
         # nHair < Make Selected Curves Dynamic. Options: NURBS curves. Exact shape match.
         mel.eval('makeCurvesDynamic 2 { "0", "0", "1", "1", "0"};')
 
-        if nucleus_nd:
-            # reconnect main nucleus. fails to connect with nucleus selection for makeCurvesDynamic.
-            current_nucleus_nd = "nucleus1"  # consistently creates nucleus1
-            rigging_functions.replace_node_connections(
-                old_node=current_nucleus_nd,
-                new_node=nucleus_nd,
-                delete_old_node=True,
-                increment_input_dest_plug=True,
-                increment_output_src_plug=True,
-            )
-
         # ----- find, rename, set settings and parent dynamic components -----
         # hair follicle
         world_origin_follicle = cmds.listRelatives(restpose_crv, parent=True)[0]
@@ -173,6 +162,20 @@ class CurveDynamics:
         cmds.setAttr(f"{hair_system}.stretchDamp", 0.5)  # damping along the length
         cmds.parent(hair_system, dynamics_components_grp)
         hair_system_shp = cmds.listRelatives(hair_system, shapes=True)[0]
+
+        # ----- reconnect main nucleus.
+        # fails to connect with nucleus selection for makeCurvesDynamic.
+        current_nucleus_nd = cmds.listConnections(hair_system_shp, type="nucleus")[0]
+        if nucleus_nd and current_nucleus_nd != nucleus_nd:
+            rigging_functions.replace_node_connections(
+                old_node=current_nucleus_nd,
+                new_node=nucleus_nd,
+                delete_old_node=True,
+                increment_input_dest_plug=True,
+                increment_output_src_plug=True,
+            )
+
+        # -----
         # dynamic curve
         dynamic_crv = cmds.listConnections(
             follicle_shp,
@@ -336,6 +339,13 @@ class CurveDynamics:
         """
         hair_settings = self.get_saved_hair_settings()
         for settings in hair_settings:
+            # ----- check if hair/dynamics object exists yet
+            dynamics_obj = next(iter(settings["main"].keys()), None)
+            if not dynamics_obj:  # skip if dict empty
+                continue
+            dynamics_obj = dynamics_obj.split(".")[0]
+            if not cmds.objExists(dynamics_obj):
+                continue
             # ----- apply main hair settings -----
             for attr, value in settings["main"].items():
                 try:

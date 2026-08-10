@@ -34,6 +34,19 @@ def build_utility_list():
             "small_functions.create_display_layer()",
             "sourceType": "python",
         },
+        {
+            "label": "Collapse Display Layers",
+            "image": "pythonFamily.png",
+            "annotation": "Clear empty layerManager id slots and reset current/base id. "
+            "For Maya 2026 layer-create errors; save and re-open if the Layer Editor "
+            "new-layer button still fails.",
+            "imageOverlayLabel": "ClpLyr",
+            "backgroundColor": random_clrs[9],
+            "command": "from nlol.core.rig_setup import build_display_layers\n"
+            "from importlib import reload\nreload(build_display_layers)\n"
+            "build_display_layers.collapse_display_layers()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Maya Debugger",

@@ -5,11 +5,12 @@ from pathlib import Path
 from maya import cmds, mel
 from nlol.core import general_utils
 from nlol.core.rig_components import create_control_groups, create_nurbs_curves
-from nlol.core.rig_setup import rig_variables
+from nlol.core.rig_setup import build_curve_dynamics, rig_variables
 from nlol.defaults.rig_folder_path import rig_folderpath
 from nlol.utilities.nlol_maya_logger import get_logger
 from nlol.utilities.nlol_maya_registry import get_registry
 
+reload(build_curve_dynamics)
 reload(rig_variables)
 
 create_ctrl_grps = create_control_groups.create_ctrl_grps
@@ -238,8 +239,10 @@ class ClothDynamics:
         # ----- aux ctrl attrs -----
         self.aux_ctrl_nucleus_attrs(nucleus_nd)
 
-        # ----- apply saved nCloth settings -----
+        # ----- apply saved nCloth/dynamics settings -----
         self.apply_ncloth_settings()
+        # apply nucleus settings
+        build_curve_dynamics.CurveDynamics().apply_hair_settings()
 
         # ----- extend playback timeline -----
         cmds.playbackOptions(minTime=0, maxTime=300)
@@ -665,28 +668,30 @@ class ClothDynamics:
             # ---------- divider attr ----------
             # create divider just for blendshape attr if nCloth node already exist
             divider_attr_nm = output_cloth_mesh_shp
-            cmds.addAttr(
-                self.aux_ctrl,
-                longName=divider_attr_nm,
-                niceName=divider_attr_nm,
-                attributeType="enum",
-                enumName=divider_attr_nm,
-            )
-            cmds.setAttr(f"{self.aux_ctrl}.{divider_attr_nm}", channelBox=True)
+            if not cmds.objExists(f"{self.aux_ctrl}.{divider_attr_nm}"):
+                cmds.addAttr(
+                    self.aux_ctrl,
+                    longName=divider_attr_nm,
+                    niceName=divider_attr_nm,
+                    attributeType="enum",
+                    enumName=divider_attr_nm,
+                )
+                cmds.setAttr(f"{self.aux_ctrl}.{divider_attr_nm}", channelBox=True)
 
         # ---------- blendshape attr ----------
         blendshape_attr_nm = f"{output_cloth_mesh_shp}__blendShape"
-        cmds.addAttr(
-            self.aux_ctrl,
-            longName=blendshape_attr_nm,
-            niceName=blendshape_attr_nm,
-            attributeType="double",
-            defaultValue=0,
-            minValue=0,
-            maxValue=1,
-            keyable=True,
-        )
-        cmds.connectAttr(
-            f"{self.aux_ctrl}.{blendshape_attr_nm}",
-            f"{blendshape_nd}.{output_cloth_mesh_shp}",
-        )
+        if not cmds.objExists(f"{self.aux_ctrl}.{divider_attr_nm}"):
+            cmds.addAttr(
+                self.aux_ctrl,
+                longName=blendshape_attr_nm,
+                niceName=blendshape_attr_nm,
+                attributeType="double",
+                defaultValue=0,
+                minValue=0,
+                maxValue=1,
+                keyable=True,
+            )
+            cmds.connectAttr(
+                f"{self.aux_ctrl}.{blendshape_attr_nm}",
+                f"{blendshape_nd}.{output_cloth_mesh_shp}",
+            )

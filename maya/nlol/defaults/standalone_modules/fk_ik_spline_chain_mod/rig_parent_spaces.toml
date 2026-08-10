@@ -11,5 +11,5 @@ control = "ikSpineStart_ctrl"
 parents = "pelvis_ctrl"
 
 [[control]]
-control = "spineSwchAux_ctrl"
+control = "spineSwch_ctrl"
 parents = "root_ctrl"

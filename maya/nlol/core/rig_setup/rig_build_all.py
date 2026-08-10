@@ -75,6 +75,7 @@ class RigBuildSaveAll:
         main_autorig_folderpath = None
         if len(autorig_folderpaths) == 1:
             main_autorig_folderpath = autorig_folderpaths[0]
+            autorig_folderpaths.remove(main_autorig_folderpath)
         else:
             # main auto-rig group must be named equal to autorig_txt
             main_autorig_folderpath = [

@@ -12,16 +12,6 @@
             "active": true
         },
         {
-            "name": "eye_aim_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/eye_aim_mod",
-            "active": false
-        },
-        {
-            "name": "fk_control_blend_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/fk_control_blend_mod",
-            "active": false
-        },
-        {
             "name": "flexi_surface_fk_ctrl_mod",
             "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_fk_ctrl_mod",
             "active": false

@@ -985,14 +985,14 @@ class MultiToolUI(DockableMayaUI):
 
     def on_build_save_active(self) -> None:
         """Build active rig. Update materials. Save files."""
-        from nlol.core.rig_tools import rig_build_all
+        from nlol.core.rig_setup import rig_build_all
 
         reload(rig_build_all)
         rig_build_all.RigBuildSaveAll().build_active_only()
 
     def on_build_save_all(self) -> None:
         """Build and save all auto-rigs in Character folder."""
-        from nlol.core.rig_tools import rig_build_all
+        from nlol.core.rig_setup import rig_build_all
 
         reload(rig_build_all)
         rig_build_all.RigBuildSaveAll().build()

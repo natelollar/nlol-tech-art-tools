@@ -12,6 +12,8 @@ reload(create_display_layers)
 swap_side_str = general_utils.swap_side_str
 objects_display_lyr = create_display_layers.objects_display_lyr
 
+logger = get_logger()
+
 
 class BuildDisplayLayers:
     """Set up display layers for the rig."""
@@ -22,8 +24,6 @@ class BuildDisplayLayers:
         """
         self.display_lyrs_filepath = display_lyrs_filepath
 
-        self.logger = get_logger()
-
     def build(self):
         """Build process entry point for BuildDisplayLayers class.
         --------------------------------------------------
@@ -33,9 +33,9 @@ class BuildDisplayLayers:
             msg = (
                 '"display_lyrs_filepath.toml" not in rig folder. Skipping display layers setup...\n'
             )
-            self.logger.info(msg)
-            msg = f'File not found: {self.display_lyrs_filepath}'
-            self.logger.debug(msg)
+            logger.info(msg)
+            msg = f"File not found: {self.display_lyrs_filepath}"
+            logger.debug(msg)
             return
 
         # query rig display layer data
@@ -115,3 +115,21 @@ class BuildDisplayLayers:
                 reference=reference,
                 hide=hide,
             )
+
+
+def collapse_display_layers() -> None:
+    """Drop empty layerManager id slots; reset current/base id (Maya 2026)."""
+    id_plug = "layerManager.displayLayerId"
+    if not cmds.objExists("layerManager"):
+        return
+    for i in sorted(cmds.getAttr(id_plug, multiIndices=True) or [], reverse=True):
+        if i and not cmds.listConnections(f"{id_plug}[{i}]", type="displayLayer"):
+            try:
+                cmds.removeMultiInstance(f"{id_plug}[{i}]", b=True)
+            except Exception:
+                pass
+    cmds.setAttr("layerManager.currentDisplayLayer", 0)
+    try:
+        cmds.editDisplayLayerGlobals(baseId=1, currentDisplayLayer="defaultLayer")
+    except Exception:
+        pass

@@ -208,7 +208,7 @@ class RigContextUI(DockableMayaUI):
         """Build active rig. Update materials. Save files."""
         from importlib import reload
 
-        from nlol.core.rig_tools import rig_build_all
+        from nlol.core.rig_setup import rig_build_all
 
         reload(rig_build_all)
         rig_build_all.RigBuildSaveAll().build_active_only()
@@ -219,7 +219,7 @@ class RigContextUI(DockableMayaUI):
         """
         from importlib import reload
 
-        from nlol.core.rig_tools import rig_build_all
+        from nlol.core.rig_setup import rig_build_all
 
         reload(rig_build_all)
         rig_build_all.RigBuildSaveAll().build()
