@@ -1,69 +1,69 @@
 {
     "environment_variables": [
         {
-            "name": "",
-            "folderpath": ""
+            "name": "EXAMPLE_PROJECT_FOLDERPATH",
+            "folderpath": "~/Documents/exampleProjectName"
         }
     ],
     "rigs": [
         {
-            "name": "rig_unreal",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/rig_unreal",
+            "name": "unrealRigExample",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/unrealRigExample/autoRig",
             "active": true
         },
         {
-            "name": "flexi_surface_fk_ctrl_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_fk_ctrl_mod",
+            "name": "digitigradeLegMod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/digitigradeLegMod_autoRig",
             "active": false
         },
         {
-            "name": "flexi_surface_fk_ctrl_mod_v2",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_fk_ctrl_mod_v2",
+            "name": "fkIkSplineChainMod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/fkIkSplineChainMod_autoRig",
             "active": false
         },
         {
-            "name": "flexi_surface_ik_chain_simple_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_surface_ik_chain_simple_mod",
+            "name": "flexiSurfaceFkCtrlMod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/flexiSurfaceFkCtrlMod_autoRig",
             "active": false
         },
         {
-            "name": "fk_ik_spline_chain_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/fk_ik_spline_chain_mod",
+            "name": "flexiSurfaceFkCtrlModV2",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/flexiSurfaceFkCtrlModV2_autoRig",
             "active": false
         },
         {
-            "name": "flexi_to_cloth_v1",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_to_cloth_v1",
+            "name": "flexiSurfaceIkChainSimpleMod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/flexiSurfaceIkChainSimpleMod_autoRig",
             "active": false
         },
         {
-            "name": "flexi_to_cloth_v2",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/flexi_to_cloth_v2",
+            "name": "flexiToClothV1",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/flexiToClothV1_autoRig",
             "active": false
         },
         {
-            "name": "digitigrade_leg_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/digitigrade_leg_mod",
+            "name": "flexiToClothV2",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/flexiToClothV2_autoRig",
             "active": false
         },
         {
-            "name": "wyvern_wing",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/wyvern_wing",
+            "name": "pistonMod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/pistonMod_autoRig",
             "active": false
         },
         {
-            "name": "tentacle_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/tentacle_mod",
+            "name": "splineCurveTail",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/splineCurveTail_autoRig",
             "active": false
         },
         {
-            "name": "piston_mod",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/piston_mod",
+            "name": "tentacleMod",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/tentacleMod_autoRig",
             "active": false
         },
         {
-            "name": "spline_curve_tail",
-            "folderpath": "${MAYA_NLOL_FOLDERPATH}/nlol/defaults/standalone_modules/spline_curve_tail",
+            "name": "wyvernWing",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/wyvernWing_autoRig",
             "active": false
         }
     ]

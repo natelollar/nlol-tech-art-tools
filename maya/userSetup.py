@@ -24,8 +24,8 @@ def run_on_start():
     reload_menus.main_menu()
 
     # initialize rig context environment variables and paths
-    rig_folder_path.set_environment_variables()
     rig_folder_path.check_rig_context_file()
+    rig_folder_path.set_environment_variables()
     rig_folder_path.rig_folderpath_log()
 
 

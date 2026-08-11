@@ -17,8 +17,8 @@ tmp/
 old/
 nlol-tech-art-tools.code-workspace
 rig_context.json
-maya/nlol/defaults/*.ma
-maya/nlol/defaults/standalone_modules/*.ma
+maya/nlol/defaults/unrealRigExample/*.ma
+maya/nlol/defaults/otherRigExamples/*.ma
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

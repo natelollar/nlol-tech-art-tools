@@ -83,9 +83,11 @@ class RigBuildSaveAll:
                 for fp in autorig_folderpaths
                 if any(fp.name.lower() == txt for txt in autorig_txt)
             ]
+            main_autorig_folderpath = (
+                main_autorig_folderpath[0] if main_autorig_folderpath else None
+            )
             if main_autorig_folderpath:
-                main_autorig_folderpath = main_autorig_folderpath[0]
-            autorig_folderpaths.remove(main_autorig_folderpath)
+                autorig_folderpaths.remove(main_autorig_folderpath)
 
         # ----- variable instances
         self.autorig_folderpaths = autorig_folderpaths
@@ -101,8 +103,9 @@ class RigBuildSaveAll:
             self.build_save_rig()
 
         # build main auto-rig folder
-        self.set_active_rig(self.main_autorig_folderpath)
-        self.build_save_rig()
+        if self.main_autorig_folderpath:
+            self.set_active_rig(self.main_autorig_folderpath)
+            self.build_save_rig()
 
     def build_save_rig(
         self,
@@ -163,9 +166,20 @@ class RigBuildSaveAll:
         Materials in model file will only be updated if they have a matching
         material in the "materials" folder.
         """
+        logger.info("-------------------- UPDATING MATERIALS... --------------------")
+
+        # -----
+        materials_folderpath = rig_folderpath() / "materials"
+        if not materials_folderpath.is_dir() or not (  # check if materials exist
+            list(materials_folderpath.glob(".ma") + list(materials_folderpath.glob(".mb")))
+        ):
+            msg = f'Skipping materials update; no materials folder/files: "{materials_folderpath}"'
+            logger.info(msg)
+            return
+
+        # ----- open model file
         model_filepath = rig_folderpath() / "model.ma"
         model_filepath = (model_filepath).as_posix()  # convert to string
-        # ----- open model file
         cmds.file(model_filepath, open=True, force=True, ignoreVersion=True, options="v=0;")
 
         # ----- update materials

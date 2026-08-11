@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
 from maya import cmds, mel
 from nlol import defaults
 from nlol.core.ui.dockable_maya_ui import DockableMayaUI
+from nlol.defaults import rig_folder_path
 from nlol.utilities.nlol_maya_logger import get_logger
 
 logger = get_logger()
@@ -252,8 +253,7 @@ class MultiToolUI(DockableMayaUI):
         open_row.addWidget(
             self._make_button(
                 "Open Rig File",
-                "Open the active character's saved *_rig.ma file "
-                "(next to the auto-rig folder).",
+                "Open the active character's saved *_rig.ma file (next to the auto-rig folder).",
                 self.on_open_active_rig_file,
             ),
         )
@@ -498,9 +498,21 @@ class MultiToolUI(DockableMayaUI):
         # ----- control curves -----
         tab_layout.addWidget(self._section_label("Control Curves"))
         for labels in (
-            (("Box Curve", "box_curve"), ("Circle Curve", "circle_curve"), ("Sphere Curve", "sphere_curve")),
-            (("Tri Circle", "tri_circle_curve"), ("Pyramid", "pyramid_curve"), ("Cylinder", "cylinder_curve")),
-            (("Arrow Twist", "arrow_twist_curve"), ("Four Arrow", "four_arrow_curve"), ("Global", "global_curve")),
+            (
+                ("Box Curve", "box_curve"),
+                ("Circle Curve", "circle_curve"),
+                ("Sphere Curve", "sphere_curve"),
+            ),
+            (
+                ("Tri Circle", "tri_circle_curve"),
+                ("Pyramid", "pyramid_curve"),
+                ("Cylinder", "cylinder_curve"),
+            ),
+            (
+                ("Arrow Twist", "arrow_twist_curve"),
+                ("Four Arrow", "four_arrow_curve"),
+                ("Global", "global_curve"),
+            ),
         ):
             row = QHBoxLayout()
             for label, method in labels:
@@ -679,7 +691,7 @@ class MultiToolUI(DockableMayaUI):
         mirror_row.addWidget(
             self._make_button(
                 "Mirror Opposite Ctrl",
-                'Mirror selected ctrl/s left/right. Opposite ctrl receives the values.',
+                "Mirror selected ctrl/s left/right. Opposite ctrl receives the values.",
                 lambda: self.on_mirror_selected_ctrls(True),
                 rgb=CLR_ACCENT,
             ),
@@ -687,7 +699,7 @@ class MultiToolUI(DockableMayaUI):
         mirror_row.addWidget(
             self._make_button(
                 "Mirror Selected Ctrl",
-                'Mirror selected ctrl/s left/right. Selected ctrl receives the values.',
+                "Mirror selected ctrl/s left/right. Selected ctrl receives the values.",
                 lambda: self.on_mirror_selected_ctrls(False),
             ),
         )
@@ -836,8 +848,7 @@ class MultiToolUI(DockableMayaUI):
         retarget_row.addWidget(
             self._make_button(
                 "Source Target Connect",
-                "Connect source/target ctrls for anim retarget "
-                '(uses "retarget_data.toml").',
+                'Connect source/target ctrls for anim retarget (uses "retarget_data.toml").',
                 self.on_retarget_connect,
             ),
         )
@@ -865,6 +876,7 @@ class MultiToolUI(DockableMayaUI):
     def get_active_rig_info(self) -> tuple[str, str]:
         """Return (name, folderpath) for the active rig in rig_context.json."""
         try:
+            rig_folder_path.check_rig_context_file()  # copy example file if json missing
             with open(RIG_CONTEXT_JSON) as f:
                 data = json.load(f)
         except (OSError, json.JSONDecodeError) as e:
@@ -1826,8 +1838,7 @@ class MultiToolUI(DockableMayaUI):
         attr_row.addWidget(
             self._make_button(
                 "Show Joint Attributes",
-                "Show useful joint attributes in channel box "
-                "(including wire/color related attrs).",
+                "Show useful joint attributes in channel box (including wire/color related attrs).",
                 lambda: self.on_show_joint_attrs(True),
             ),
         )

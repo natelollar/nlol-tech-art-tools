@@ -33,9 +33,11 @@ def onMayaDroppedPythonFile(*args) -> None:
 
     from importlib import reload
 
+    from nlol.defaults import rig_folder_path
     from nlol.shelves_menus import reload_menus, reload_shelves
     from nlol.utilities import install_utils
 
+    reload(rig_folder_path)
     reload(reload_shelves)
     reload(reload_menus)
     reload(install_utils)
@@ -45,6 +47,11 @@ def onMayaDroppedPythonFile(*args) -> None:
 
     # load menus
     reload_menus.main_menu()
+
+    # create rig context file
+    rig_folder_path.check_rig_context_file()
+    # set session environment variables
+    rig_folder_path.set_environment_variables()
 
     # add project directory path to MAYA_MODULE_PATH Maya.env
     install_utils.update_project_env_path(project_path=nlol_path, install=True)

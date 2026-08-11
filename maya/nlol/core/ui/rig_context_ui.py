@@ -520,6 +520,7 @@ class RigContextUI(DockableMayaUI):
 
     def load_rig_context(self) -> dict:
         """Load rig_context.json contents."""
+        rig_folder_path.check_rig_context_file()  # copy example file if json missing
         with open(RIG_CONTEXT_JSON) as f:
             return json.load(f)
 

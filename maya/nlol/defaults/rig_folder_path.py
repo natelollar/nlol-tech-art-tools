@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import stat
 from pathlib import Path
 
 import nlol
@@ -17,6 +18,10 @@ def check_rig_context_file() -> None:
     if not rig_context_json.exists():
         src = Path(defaults.__file__).parent / "rig_context_example.json"
         shutil.copy2(src, rig_context_json)
+        # remove read-only when copied
+        mode = rig_context_json.stat().st_mode
+        rig_context_json.chmod(mode | stat.S_IWUSR)
+
         logger.info(f'Created "rig_context.json": {rig_context_json}')
 
 
@@ -44,6 +49,11 @@ def set_environment_variables(force: bool = False) -> None:
     with open(rig_context_json) as f:
         data = json.load(f)
 
+    # ----- set default env vars
+    nlol_folderpath = Path(nlol.__file__).parents[0]
+    set_single_env_var("MAYA_NLOL_FOLDERPATH", nlol_folderpath)
+
+    # ----- set custom env vars
     environment_variables = data.get("environment_variables", "")
     if environment_variables:
         for env_var in environment_variables:
@@ -51,16 +61,14 @@ def set_environment_variables(force: bool = False) -> None:
             if not name:
                 continue
 
-            folderpath = Path(env_var["folderpath"]).as_posix()
+            folderpath = Path(
+                os.path.expanduser(os.path.expandvars(env_var["folderpath"])),
+            ).as_posix()
             env_var_exists = os.environ.get(name, "")
 
             if force or (not env_var_exists):
                 os.environ[name] = folderpath
                 logger.info(f'Set environment variable "{name}": {folderpath}')
-
-    # ----- set other default env vars
-    nlol_folderpath = Path(nlol.__file__).parents[0]
-    set_single_env_var("MAYA_NLOL_FOLDERPATH", nlol_folderpath)
 
 
 def rig_folderpath() -> Path | str:
