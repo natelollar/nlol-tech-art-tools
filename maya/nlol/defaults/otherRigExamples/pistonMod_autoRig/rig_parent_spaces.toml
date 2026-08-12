@@ -1,7 +1,0 @@
-[[control]]
-control = "hydroPistonikParentTop_ctrl"
-parents = "exampleTop_ctrlGeo"
-
-[[control]]
-control = "hydroPistonikParentBot_ctrl"
-parents = "exampleBot_ctrlGeo"

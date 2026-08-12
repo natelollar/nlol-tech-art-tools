@@ -1,6 +1,5 @@
-from nlol.core import general_utils
-
 from maya import cmds
+from nlol.core import general_utils
 
 swap_side_str = general_utils.swap_side_str
 
@@ -21,7 +20,7 @@ def mirror_selected_ctrls(to_other_side: bool = False):
     """
     selected = cmds.ls(selection=True)
 
-    new_transform_data = {} # get data in current state before transforming
+    new_transform_data = {}  # get data in current state before transforming
     for sel_ctrl in selected:
         for attr_prefix in ["mirrorTranslate", "mirrorRotate"]:
             for axis in "XYZ":
@@ -31,7 +30,11 @@ def mirror_selected_ctrls(to_other_side: bool = False):
 
                 opposite_ctrl = swap_side_str(sel_ctrl)
 
-                if to_other_side: # get values for opposite side
+                mirr_node = opposite_ctrl if to_other_side else sel_ctrl
+                if not cmds.attributeQuery(mirr_attr, node=mirr_node, exists=True):
+                    continue  # skip if mirr attr not exist
+
+                if to_other_side:  # get values for opposite side
                     mirr_mult_val = cmds.getAttr(f"{opposite_ctrl}.{mirr_attr}")
                     if mirr_mult_val == 0:  # skip
                         continue
@@ -56,4 +59,6 @@ def mirror_selected_ctrls(to_other_side: bool = False):
 
     # apply transform changes
     for ctrl_attr, val in new_transform_data.items():
+        if cmds.getAttr(ctrl_attr, lock=True):
+            continue  # skip if locked
         cmds.setAttr(ctrl_attr, val)

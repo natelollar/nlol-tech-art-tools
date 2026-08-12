@@ -162,3 +162,25 @@ class MirrorAttrsExportImport:
                         cmds.setAttr(f"{obj}.{attr}", channelBox=show_attrs)
                     except Exception:
                         self.logger.info(f"Failed to show/ hide: {obj}.{attr}")
+
+    def remove_mirror_attrs(self, ctrls: str | list | None = None) -> None:
+        """Remove mirror attributes from selected (or given) objects.
+
+        Args:
+            ctrls: Ctrl object/s to remove mirror attrs from.
+                Defaults to selection.
+
+        """
+        if ctrls is None:
+            ctrls = cmds.ls(selection=True)
+        if not isinstance(ctrls, (list, tuple)):
+            ctrls = [ctrls]
+        for ctrl in ctrls:
+            for attr_prefix in ["mirrorTranslate", "mirrorRotate"]:
+                for axis in "XYZ":
+                    attr = f"{attr_prefix}{axis}"
+                    if cmds.attributeQuery(attr, node=ctrl, exists=True):
+                        try:
+                            cmds.deleteAttr(f"{ctrl}.{attr}")
+                        except Exception:
+                            self.logger.info(f"Failed to remove: {ctrl}.{attr}")

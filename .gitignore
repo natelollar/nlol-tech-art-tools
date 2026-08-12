@@ -17,7 +17,8 @@ tmp/
 old/
 nlol-tech-art-tools.code-workspace
 rig_context.json
-maya/nlol/defaults/unrealRigExample/*.ma
+maya/nlol/defaults/unrealRigExample/propExample_skeletalMesh.ma
+maya/nlol/defaults/unrealRigExample/unrealRigExample_skeletalMesh.ma
 maya/nlol/defaults/otherRigExamples/*.ma
 
 # Byte-compiled / optimized / DLL files

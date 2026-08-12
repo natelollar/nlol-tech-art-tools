@@ -104,3 +104,9 @@ mirror_direction = "left"
 joints = "pinky_metacarpal_l"
 get_joint_chain = true
 mirror_right = true
+
+# --------------- prop ---------------
+[[rig_module]]
+rig_module = "import_rig_mod" 
+rig_module_name = "propExample"
+custom_rig_filename = "propExample_rig.ma"

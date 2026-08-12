@@ -140,3 +140,18 @@ cog_ctrl,
 pelvis_ctrl, 
 world_ctrl
 """
+
+# --------------- prop ---------------
+[[control]]
+control = "propExample_rig:prop_ctrl"
+parents = """
+cog_ctrl, 
+root_ctrl, 
+global_ctrl, 
+world_ctrl, 
+hand_l, 
+hand_r, 
+pelvis_ctrl, 
+spine_01, 
+spine_02,
+"""

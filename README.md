@@ -22,9 +22,9 @@
   - Set up display layers via `rig_display_layers.toml`.
 - Rig build entry point: `.../nlol-tech-art-tools/maya/nlol/core/rig_setup/rig_build.py`
 - Launch rig build via menu/shelf button: `nLol Rigging < Build Rig`
-- Switch the active rig folder via `Rig Context UI` (shelf/menu or `/defaults/rig_context.json`).
+- Switch the active rig folder via `Rig Context UI` (or `/defaults/rig_context.json`).
 - Build and save the active rig, or batch-build all auto-rig folders under a character.
-- Example rig setup: `maya/nlol/defaults/rig_unreal/`
+- Example rig setup: `maya/nlol/defaults/unrealRigExample/`
 - Additional tools include animation retargeting, anim picker, control mirroring, asset scattering, and more.
 - Also, saving/loading of skin weights, control shapes, materials, animations, and  
   cloth and curve dynamics settings is supported.
@@ -48,9 +48,9 @@
   - Example: `D:/projects/fantasy_world/characters/dragon/rig/auto_rig/`
 
 ## Modular Auto Rigger
-- For rig building example, see custom rig folder `/defaults/rig_unreal/`.
+- For rig building example, see custom rig folder `/defaults/unrealRigExample/`.
   - Set custom rig folder here to test rig building.
-  - Or set to custom rig folders in `/defaults/standalone_modules/` for additional testing.
+  - Or set to custom rig folders in `/defaults/otherRigExamples/` for additional testing.
 - Readmes to aid in creating the toml configs can be found in the `/defaults` folder.
   - Example: `.../nlol-tech-art-tools/maya/nlol/defaults/readme_rig_object_data.md`
 ### Basic Steps
@@ -362,7 +362,7 @@
       - Contains materials for the rig. Not required.
     - `/dynamics_data` 
       - Contains cloth and curve dynamics data for the rig. Not required.
-  - See example rig setup in `/defaults/rig_unreal/`.
+  - See example rig setup in `/defaults/unrealRigExample/`.
 - **Build Rig, Update Materials, and Save Files**
   - Build the active auto-rig folder, update materials, and save out files.
   - Change active folder via `rig_context.json` or `Rig Context UI`.

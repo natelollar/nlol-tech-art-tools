@@ -1,0 +1,834 @@
+{
+    "global_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": -1
+    },
+    "root_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": -1
+    },
+    "cog_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": -1
+    },
+    "pelvis_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "fkSpine_04_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "fkSpine_03_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "fkSpine_02_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "fkSpine_01_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "ikSpineEnd_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "ikSpineMid_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "ikSpineStart_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "spineSwch_ctrl": {},
+    "fkNeck_03_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "fkNeck_02_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "fkNeck_01_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "ikNeckEnd_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "ikNeckMid_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "ikNeckStart_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": -1,
+        "mirrorRotateY": -1,
+        "mirrorRotateZ": 1
+    },
+    "neckSwch_ctrl": {},
+    "fkToeLeg_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkAnkleLeg_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkLowerLeg_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkUpperLeg_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikAnkleLeg_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikUpperLeg_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "ikLegPoleVector_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "legFootAnkle_left_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootToe_left_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootToeEnd_left_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootHeel_left_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootLateral_left_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootMedial_left_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootToeWiggle_left_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legSwch_left_ctrl": {},
+    "fkShoulder_left_02_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkShoulder_left_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikShoulder_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "ikShoulderStart_left_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "shoulderSwch_left_ctrl": {},
+    "fkEndArm_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkLowerArm_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkUpperArm_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikEndArm_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikUpperArm_left_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "ikArmPoleVector_left_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "armSwch_left_ctrl": {},
+    "thumb_left_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "thumb_left_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "thumb_left_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_left_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_left_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_left_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_left_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_left_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_left_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_left_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_left_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_left_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_left_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_left_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_left_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_left_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_left_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_left_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_left_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkToeLeg_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkAnkleLeg_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkLowerLeg_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkUpperLeg_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikAnkleLeg_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikUpperLeg_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "ikLegPoleVector_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "legFootAnkle_right_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootToe_right_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootToeEnd_right_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootHeel_right_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootLateral_right_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootMedial_right_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legFootToeWiggle_right_ctrl": {
+        "mirrorTranslateX": 0,
+        "mirrorTranslateY": 0,
+        "mirrorTranslateZ": 0,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "legSwch_right_ctrl": {},
+    "fkShoulder_right_02_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkShoulder_right_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikShoulder_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "ikShoulderStart_right_ctrl": {
+        "mirrorTranslateX": 1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "shoulderSwch_right_ctrl": {},
+    "fkEndArm_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkLowerArm_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "fkUpperArm_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikEndArm_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ikUpperArm_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "ikArmPoleVector_right_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": 1,
+        "mirrorTranslateZ": 1,
+        "mirrorRotateX": 0,
+        "mirrorRotateY": 0,
+        "mirrorRotateZ": 0
+    },
+    "armSwch_right_ctrl": {},
+    "thumb_right_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "thumb_right_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "thumb_right_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_right_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_right_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_right_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "indexFinger_right_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_right_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_right_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_right_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "middleFinger_right_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_right_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_right_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_right_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "ringFinger_right_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_right_04_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_right_03_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_right_02_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    },
+    "pinkFinger_right_01_ctrl": {
+        "mirrorTranslateX": -1,
+        "mirrorTranslateY": -1,
+        "mirrorTranslateZ": -1,
+        "mirrorRotateX": 1,
+        "mirrorRotateY": 1,
+        "mirrorRotateZ": 1
+    }
+}

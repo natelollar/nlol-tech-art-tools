@@ -12,6 +12,11 @@
             "active": true
         },
         {
+            "name": "propExample",
+            "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/unrealRigExample/propExample_autoRig",
+            "active": false
+        },
+        {
             "name": "digitigradeLegMod",
             "folderpath": "${MAYA_NLOL_FOLDERPATH}/defaults/otherRigExamples/digitigradeLegMod_autoRig",
             "active": false

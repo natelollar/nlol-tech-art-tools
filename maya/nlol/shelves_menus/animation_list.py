@@ -192,6 +192,18 @@ def build_animation_list():
             "sourceType": "python",
         },
         {
+            "label": "Remove Mirror Attributes",
+            "image": "pythonFamily.png",
+            "annotation": "Remove mirror attributes to selected objects. "
+            'Example: ".mirrorTranslateX"',
+            "imageOverlayLabel": "RemMir",
+            "backgroundColor": random_clrs[21],
+            "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport().remove_mirror_attrs()",
+            "sourceType": "python",
+        },
+        {
             "label": "Save Mirror Attributes (Generic)",
             "image": "pythonFamily.png",
             "annotation": "Save mirror attributes for selected ctrls to generic defaults folder. "
