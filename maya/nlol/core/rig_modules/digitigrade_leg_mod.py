@@ -41,6 +41,7 @@ class DigitigradeLegModule:
         invert_foot_lean: bool = False,
         invert_foot_tilt: bool = False,
         invert_foot_roll: bool = False,
+        ankle_x_forward: bool = False,
         flip_spring_solver: bool = False,
     ):
         """Initialize rig module.
@@ -58,6 +59,8 @@ class DigitigradeLegModule:
                 Or use the pre-determined locator names and skip the arg.
             invert_toe_wiggle, invert_toe_spin, invert_foot_lean, invert_foot_tilt,
                 invert_foot_roll: Invert direction of specific reverse foot ctrl.
+            ankle_x_forward: Ankle X is world flat (forward or back) instead of world
+                up/down. Swaps spin/lean/tilt rotate axes on the reverse foot aux ctrls.
             flip_spring_solver: Flip the ikHandle twist attribute 180 degreees if needed,
                 for the driver joints ik spring solver. Length or bend of driver joints
                 may throw off original driver joints direction, and thus require a flip.
@@ -90,6 +93,7 @@ class DigitigradeLegModule:
         self.invert_foot_lean = invert_foot_lean
         self.invert_foot_tilt = invert_foot_tilt
         self.invert_foot_roll = invert_foot_roll
+        self.ankle_x_forward = ankle_x_forward
         self.flip_spring_solver = flip_spring_solver
 
     def build(self):
@@ -1220,6 +1224,7 @@ class DigitigradeLegModule:
                 f"{self.toe_wiggle_aux_ctrl_grp}.rotateZ",
             )
         # --------------- top spin ---------------
+        toespin_axis = "Y" if self.ankle_x_forward else "X"
         if self.invert_toe_spin:
             toespin_multiply_nd = cmds.createNode(
                 "multiply",
@@ -1232,14 +1237,15 @@ class DigitigradeLegModule:
             )
             cmds.connectAttr(
                 f"{toespin_multiply_nd}.output",
-                f"{self.foot_aux_ctrl_grps[2]}.rotateX",
+                f"{self.foot_aux_ctrl_grps[2]}.rotate{toespin_axis}",
             )
         else:
             cmds.connectAttr(
                 f"{self.ik_ctrl}.toeSpin",
-                f"{self.foot_aux_ctrl_grps[2]}.rotateX",
+                f"{self.foot_aux_ctrl_grps[2]}.rotate{toespin_axis}",
             )
         # --------------- lean ---------------
+        lean_axis = "X" if self.ankle_x_forward else "Y"
         if self.invert_foot_lean:
             lean_multiply_nd = cmds.createNode(
                 "multiply",
@@ -1252,15 +1258,16 @@ class DigitigradeLegModule:
             )
             cmds.connectAttr(
                 f"{lean_multiply_nd}.output",
-                f"{self.foot_aux_ctrl_grps[1]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[1]}.rotate{lean_axis}",
             )
         else:
             cmds.connectAttr(
                 f"{self.ik_ctrl}.lean",
-                f"{self.foot_aux_ctrl_grps[1]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[1]}.rotate{lean_axis}",
             )
         # ----------------------------------------------
         # -------------------- tilt --------------------
+        tilt_axis = "X" if self.ankle_x_forward else "Y"
         tilt_clamp_nd = cmds.createNode(
             "clamp",
             name=f"{self.mod_name}FootTilt{self.mirr_side}clamp",
@@ -1282,7 +1289,7 @@ class DigitigradeLegModule:
             )
             cmds.connectAttr(
                 f"{tilt_multiplydivid_nd}.outputX",
-                f"{self.foot_aux_ctrl_grps[4]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[4]}.rotate{tilt_axis}",
             )
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputG",
@@ -1290,16 +1297,16 @@ class DigitigradeLegModule:
             )
             cmds.connectAttr(
                 f"{tilt_multiplydivid_nd}.outputY",
-                f"{self.foot_aux_ctrl_grps[5]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[5]}.rotate{tilt_axis}",
             )
         else:
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputR",
-                f"{self.foot_aux_ctrl_grps[4]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[4]}.rotate{tilt_axis}",
             )
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputG",
-                f"{self.foot_aux_ctrl_grps[5]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[5]}.rotate{tilt_axis}",
             )
         # ----------------------------------------------
         # -------------------- roll --------------------

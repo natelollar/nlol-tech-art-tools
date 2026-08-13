@@ -20,6 +20,7 @@
   - Set up rig modules via `rig_object_data.toml`.
   - Set up parent spaces via `rig_parent_spaces.toml`.
   - Set up display layers via `rig_display_layers.toml`.
+  - Set up blendshape set driven keys via `blendshape_setdrivenkeys.toml`.
 - Rig build entry point: `.../nlol-tech-art-tools/maya/nlol/core/rig_setup/rig_build.py`
 - Launch rig build via menu/shelf button: `nLol Rigging < Build Rig`
 - Switch the active rig folder via `Rig Context UI` (or `/defaults/rig_context.json`).
@@ -30,12 +31,14 @@
   cloth and curve dynamics settings is supported.
 
 ### Installation
-1. Drag and drop `maya_install.py` into the Maya viewport.
-    - Creates Maya menu and shelves automatically.  
-      - Updates `Maya.env` with `MAYA_MODULE_PATH` pointing to `.../nlol-tech-art-tools/maya/`.  
-    - Points to wherever user has placed folder.  
-    - Allows nLol Tools in Maya to locate `nlol_env.mod`.  
-2. Restart Maya after install.
+- Drag and drop `maya_install.py` into the Maya viewport.
+  - Creates Maya menu and shelves automatically.  
+    - Updates `Maya.env` with `MAYA_MODULE_PATH` pointing to `.../nlol-tech-art-tools/maya/`.  
+  - Points to wherever user has placed folder.  
+  - Allows nLol Tools in Maya to locate `nlol_env.mod`.  
+- To uninstall, drag and drop `maya_uninstall.py` into Maya viewport.
+  - Will remove shelves/menu and folder path from `Maya.env`.
+  - Restart Maya.
 
 ### Locations
 - Generic save location for json files is the `/defaults` folder.
@@ -46,6 +49,8 @@
   - Must be adjusted to user custom rig folder.
   - Can also be switched in-session with `Rig Context UI`.
   - Example: `D:/projects/fantasy_world/characters/dragon/rig/auto_rig/`
+- "Custom rig folder", "auto-rig folder", and "rig folder" are used interchangeably.
+  - This is the folder containing `rig_object_data.toml` and the other build files.
 
 ## Modular Auto Rigger
 - For rig building example, see custom rig folder `/defaults/unrealRigExample/`.
@@ -81,6 +86,7 @@
 13. Build the rig again and make sure everything works. 
     - Save the rig file now. Reference in for animation.
     - Or use `nLol Rigging < Build Rig, Update Materials, and Save Files` to build, update materials, and save in one step.
+      - Saves `{name}_skeletalMesh.ma` and `{name}_rig.ma` next to the auto-rig folder.
 #### Rig Materials
 - Currently, materials need to be manually updated in `model.ma`.
   - Thankfully, this can be quickly done with `nLol Modeling < Update Materials`.
@@ -126,7 +132,7 @@
 - Configure setup for blendshapes and controls in `/custom_rig_folder/blendshape_setdrivenkeys.toml`.
   - This config file needs to be manually created.
   - Contains data for connecting rig controls to blendshapes via set driven keys.
-- See `/defaults/readme_blendshape_setdrivekeys.md` for more details on toml setup.
+- See `/defaults/readme_blendshape_setdrivenkeys.md` for more details on toml setup.
 
 ## Animation Shelf / Menu
 *Transforms, keyframes, mirroring, retargeting, and animation UIs.*
@@ -134,12 +140,13 @@
 - **Select All Controls**
   - Select all controls under rig group. Defaults to the "_rigGrp" if nothing selected.
 - **Reset All Controls**
-  - Resets selected ctrls and their descendents, or all ctrls under groups containing string "_rigGrp" if nothing selected.
+  - Resets selected ctrls and their descendants, or all ctrls under groups containing string "_rigGrp" if nothing selected.
   - Resets translate, rotate, and scale.
 
 - **Save/Load Transforms for Selected**
   - Saves "translate", "rotate", "scale" for selected objects.
-  - Saves to `/defaults/other_control_transforms.json`.  
+  - Saves to `/defaults/other_control_transforms.json`.
+  - Load applies to the saved object names (no selection required).
 - **Paste Transforms to Selected**
   - Load transforms onto selected objects in the same selection order as saved.
   - Useful as a copy/paste transforms function.
@@ -161,6 +168,8 @@
 - **Add Mirror Attributes**
   - Add mirror attributes to rig controls via `nLol Animation < Add Mirror Attributes`.
   - Example: ".mirrorTranslateX", ".mirrorRotateX"
+- **Remove Mirror Attributes**
+  - Remove mirror attributes from selected controls.
 - **Save/Load Mirror Attributes**
   - Save mirror attributes for selected controls.
   - Loads in mirror data to saved control names. No selection required for loading.
@@ -187,7 +196,7 @@
     - Copy/bake keyframes between source/target controls.
     - Keys target on same frames and attributes as source.
     - Supports copying in/out tangent types (auto, linear, stepped, etc).
-    - Supports copying tangents weights and angles.
+    - Supports copying tangent weights and angles.
     - Useful if trying to preserve animation data instead of baking every keyframe.
   - Loads data from `/custom_rig_folder/retarget_data.toml`.  
   - See `/defaults/readme_retarget_data.md` for more detail.  
@@ -199,6 +208,8 @@
   - Select controls and click save.
 - **nLol Anim Picker**
   - Open the nLol animation picker UI for selecting and working with rig controls.
+  - Saves to and loads from `/custom_rig_folder/anim_picker/anim_picker.json`.
+  - Add jpg/png files to `anim_picker` folder for use.
 - **Parent Space Match UI**
   - UI for space switch matching. Keeps ctrl transforms when switching parent spaces.
 
@@ -313,7 +324,7 @@
 
 - **Interactive Playback / Hierarchy / Backface Culling / Go to Bind Pose**
   - Quick Maya convenience buttons for common viewport and skinning workflow actions.
-- **Print Object Type / Print Selected List**
+- **Print Object Type / Print Selected List / Print Selected String List**
   - Print selected object type, or a Python/string list of selected objects.
 - **Print Name Components (nLol)**
   - Print selected name components using the nLol naming convention.
@@ -330,17 +341,17 @@
   - Build entire rig from `/custom_rig_folder/rig_object_data.toml`.
     - Saves rig module data, including what rig modules build on what joints.
     - See `/defaults/readme_rig_object_data.md` for more detail.  
-  - Other config files, scripts, and Maya files that help build the the rig include:
+  - Other config files, scripts, and Maya files that help build the rig include:
     - These files are placed in the root `/custom_rig_folder`. Not all are required.
     - `rig_parent_spaces.toml` 
       - Set up parent spaces for the rig.
       - See `readme_rig_parent_spaces.md`.
     - `rig_display_layers.toml`.
       - Set up additional display layers for the rig.
-      - See `readme_display_layers.md`.
+      - See `readme_rig_display_layers.md`.
     - `blendshape_setdrivenkeys.toml`. 
       - Set up blendshape connections to rig controls with set driven keys.
-      - See `readme_blendshape_setdrivekeys.md`.
+      - See `readme_blendshape_setdrivenkeys.md`.
     - `rig_control_curves.json`
       - Saves control curve shapes for the rig.
     - `mirror_attributes.json`
@@ -365,11 +376,14 @@
   - See example rig setup in `/defaults/unrealRigExample/`.
 - **Build Rig, Update Materials, and Save Files**
   - Build the active auto-rig folder, update materials, and save out files.
+  - Updates materials in `model.ma` and re-saves it.
+  - Saves `{name}_skeletalMesh.ma` and `{name}_rig.ma` next to the auto-rig folder.
+    - `{name}` is the `name` from `rig_context.json`.
   - Change active folder via `rig_context.json` or `Rig Context UI`.
 - **Build All Rigs in Character Folder**
   - Build all auto-rig folders under the character (parent of the active rig folder).
-  - Updates materials and saves files for each.
-  - Main rig folder should contain string `autorig`, `auto-rig`, or `auto_rig`.
+  - Updates materials and saves `{name}_skeletalMesh.ma` and `{name}_rig.ma` for each.
+  - Main rig folder should contain string `autorig`, `auto-rig`, or `auto_rig`, case-insensitive.
 - **Rig Context UI**
   - Set/switch the active rig folder.
 - **Save Rig Control Curves**
@@ -414,7 +428,7 @@
   - Select all controls under rig group. Defaults to the "_rigGrp" if nothing selected.
 - **Reset All Controls**
   - Resets all ctrls under groups containing string "_rigGrp" if nothing selected.
-    - Or resets selected ctrls and their descendents. 
+    - Or resets selected ctrls and their descendants. 
   - Resets transforms and other basic attributes.
 - **Reset All Controls (Keyable Attrs)**
   - Same as "Reset All Controls" except resets all keyable attributes.
@@ -452,7 +466,7 @@
    - Rig controls connect to set driven keys which drive the blendshapes.
    - Runs when rig is built.
    - Connection data saved in `/custom_rig_folder/blendshape_setdrivenkeys.toml`.
-   - See `/defaults/readme_blendshape_setdrivekeys.md` for more detail. 
+   - See `/defaults/readme_blendshape_setdrivenkeys.md` for more detail. 
  - **Copy Blendshapes (No Selection)**
    - Copy BlendShapes from source to target mesh. Deletes source mesh.
    - Source mesh name is same as target except contains string "BlendShapes".
@@ -463,6 +477,8 @@
 
 - **New Display Layer**
   - Create a display layer without the "makeCurrent" flag.
+- **Collapse Display Layers**
+  - Clear empty Layer Editor id slots (Maya 2026). Save and re-open if New Layer still fails.
 - **Maya Debugger**
   - Start python debugger for Maya.
   - Assumes "debugpy" folder already setup in Maya "scripts" folder.
@@ -504,6 +520,8 @@
   - PySide UI with useful tools laid out in tabs.
 - **nLol Anim Picker**
   - Open the nLol animation picker.
+  - Saves to and loads from `/custom_rig_folder/anim_picker/anim_picker.json`.
+  - Add jpg/png files to `anim_picker` folder for use.
 - **Renamer Tool UI**
   - Helpful tool for quickly renaming objects in Maya. 
 - **Check / Clear Registry Data**

@@ -39,7 +39,7 @@ def replace_crv_shps():
             cmds.delete(new_curve_duplicate)
 
     except Exception:
-        logger.exception("An error occured replacing the curves.")
+        logger.exception("An error occurred replacing the curves.")
     finally:
         cmds.undoInfo(closeChunk=True)
         cmds.select(clear=True)

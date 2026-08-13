@@ -1,7 +1,7 @@
 from importlib import reload
 
-from nlol.core.rig_modules import biped_foot_submod, biped_limb_mod
 from nlol.core import general_utils
+from nlol.core.rig_modules import biped_foot_submod, biped_limb_mod
 
 reload(biped_limb_mod)
 reload(biped_foot_submod)
@@ -31,6 +31,7 @@ class BipedLegModule(BipedLimbModule):
         invert_foot_lean: bool = False,
         invert_foot_tilt: bool = False,
         invert_foot_roll: bool = False,
+        ankle_x_forward: bool = False,
     ):
         """Initialize leg rig module.
 
@@ -47,6 +48,10 @@ class BipedLegModule(BipedLimbModule):
                 Requires 4 locators; toe end, heel, lateral foot side and medial foot side,
                 listed in that order. Or use the pre-determined locator names and skip the arg,
                 if character just has the bipedal left and right leg.
+            invert_toe_wiggle, invert_toe_spin, invert_foot_lean, invert_foot_tilt,
+                invert_foot_roll: Invert rotation direction of that reverse foot attribute.
+            ankle_x_forward: Ankle X is world flat (forward or back) instead of world
+                up/down. Swaps spin/lean/tilt rotate axes on the reverse foot aux ctrls.
 
         """
         self.foot_locators = foot_locators
@@ -55,6 +60,7 @@ class BipedLegModule(BipedLimbModule):
         self.invert_foot_lean = invert_foot_lean
         self.invert_foot_tilt = invert_foot_tilt
         self.invert_foot_roll = invert_foot_roll
+        self.ankle_x_forward = ankle_x_forward
 
         mod_name = rig_module_name
         mirr_side = mirror_direction
@@ -107,6 +113,7 @@ class BipedLegModule(BipedLimbModule):
                 invert_foot_lean=self.invert_foot_lean,
                 invert_foot_tilt=self.invert_foot_tilt,
                 invert_foot_roll=self.invert_foot_roll,
+                ankle_x_forward=self.ankle_x_forward,
             )
             self.foot_module.build()
 

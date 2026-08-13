@@ -235,6 +235,7 @@ class ConnectBlendShapes:
                     "blendshape_attr": blendshape_attr,
                     "object_attr": object_attr,
                     "transform_crv": transform_crv,
+                    "transform_crv_attr": transform_crv_attr,
                     "crv_end": crv_end,
                     "blendshape_fix_attrs": blendshape_fix_attrs,
                 }
@@ -269,7 +270,7 @@ class ConnectBlendShapes:
 
             if (transform_crv_attr and transform_crv) or (transform_crv_attr and crv_attr):
                 msg = (
-                    '"Check file: "blenshape_setdrivenkeys.toml"\n'
+                    '"Check file: "blendshape_setdrivenkeys.toml"\n'
                     'Cannot have "transform_crv_attr" with "transform_crv"/"crv_attr" parameters.\n'
                     f"{transform_crv_attr = }\n"
                     f"{transform_crv = }\n"
@@ -302,7 +303,7 @@ class ConnectBlendShapes:
 
             if object_attr and blendshape_attr:
                 msg = (
-                    '"Check file: "blenshape_setdrivenkeys.toml"\n'
+                    '"Check file: "blendshape_setdrivenkeys.toml"\n'
                     'Cannot have "object_attr" and "blendshape_attr" paremeters together.\n'
                     f"{object_attr = }\n"
                     f"{blendshape_attr = }"

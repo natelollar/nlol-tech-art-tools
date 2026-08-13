@@ -158,7 +158,7 @@ def pivot_to_mouse():
             y2 = inter[1]
             z2 = inter[2]
 
-            # part of following equation.  seperated for readability
+            # part of following equation.  separated for readability
             equation_x = (x2 - x1) ** 2  # squared
             equation_y = (y2 - y1) ** 2
             equation_z = (z2 - z1) ** 2

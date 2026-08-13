@@ -1,0 +1,62 @@
+# RIG PARENT SPACES: Biped Leg Example
+
+# --------------- main ---------------
+[[control]]
+control = "global_ctrl"
+parents = "world_ctrl"
+
+[[control]]
+control = "root_ctrl"
+parents = "global_ctrl"
+
+[[control]]
+control = "cog_ctrl"
+parents = "root_ctrl"
+
+[[control]]
+control = "pelvis_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl"
+
+
+# --------------- legs ---------------
+
+[[control]]
+control = "ikUpperLeg_left_ctrl"
+parents = "pelvis_ctrl"
+mirror_right = true
+
+[[control]]
+control = "fkUpperLeg_left_ctrl"
+parents = "pelvis_ctrl, cog_ctrl, root_ctrl, global_ctrl, world_ctrl" 
+separate_transforms = true
+skip_translate = true
+skip_scale = true
+base_parent = true
+mirror_right = true
+
+[[control]]
+control = "ikLegPoleVector_left_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikAnkleLeg_left_ctrl, pelvis_ctrl"
+separate_transforms = true
+skip_rotate = true
+skip_scale = true
+use_point_constraint = true
+base_parent = true
+mirror_right = true
+
+[[control]]
+control = "ikAnkleLeg_left_ctrl"
+parents = "cog_ctrl, root_ctrl, global_ctrl, world_ctrl, ikUpperLeg_left_ctrl, pelvis_ctrl"
+mirror_right = true
+
+# --------------- switch controls ---------------
+[[control]]
+control = "legSwch_left_ctrl"
+parents = """
+global_ctrl, 
+root_ctrl, 
+cog_ctrl, 
+pelvis_ctrl, 
+world_ctrl
+"""
+mirror_right = true

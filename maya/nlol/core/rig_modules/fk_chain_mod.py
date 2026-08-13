@@ -19,7 +19,7 @@ scale_constr = clean_constraints.scale_constr
 
 
 class FkChainModule:
-    """For building a basic fk contrl chain setup as a rig module."""
+    """For building a basic fk control chain setup as a rig module."""
 
     def __init__(
         self,

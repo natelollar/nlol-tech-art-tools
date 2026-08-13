@@ -161,7 +161,7 @@ class FlexiSurfaceIkChainModule:
                 ).build()
             )
 
-            # hide and lock last fk contrl
+            # hide and lock last fk control
             if self.hide_end_ctrl: 
                 for axis in "XYZ":  # lock last fk control attributes
                     cmds.setAttr(f"{fkctrls[-1]}.translate{axis}", lock=True)

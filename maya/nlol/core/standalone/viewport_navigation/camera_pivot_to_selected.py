@@ -40,7 +40,7 @@ def set_camera_pivot_to_selected():
             # xyz position of intersection
             obj_x, obj_y, obj_z = sel_pivot_pos
 
-            # part of following equation.  seperated for readability
+            # part of following equation.  separated for readability
             equation_x = (obj_x - cam_x) ** 2  # squared
             equation_y = (obj_y - cam_y) ** 2
             equation_z = (obj_z - cam_z) ** 2

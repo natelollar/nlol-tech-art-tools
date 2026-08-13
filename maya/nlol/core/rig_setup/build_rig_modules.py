@@ -203,11 +203,12 @@ def build_modules(rig_data_filepath: str | Path):
             polevector_ctrl_distance = mod_dict.get("polevector_ctrl_distance")
             foot_locators = mod_dict.get("foot_locators", "").split(",")
             foot_locators = [txt.strip() for txt in foot_locators if txt.strip()]
-            invert_toe_wiggle = mod_dict.get("invert_toe_wiggle")
-            invert_toe_spin = mod_dict.get("invert_toe_spin")
-            invert_foot_lean = mod_dict.get("invert_foot_lean")
-            invert_foot_tilt = mod_dict.get("invert_foot_tilt")
-            invert_foot_roll = mod_dict.get("invert_foot_roll")
+            invert_toe_wiggle = mod_dict.get("invert_toe_wiggle", False)
+            invert_toe_spin = mod_dict.get("invert_toe_spin", False)
+            invert_foot_lean = mod_dict.get("invert_foot_lean", False)
+            invert_foot_tilt = mod_dict.get("invert_foot_tilt", False)
+            invert_foot_roll = mod_dict.get("invert_foot_roll", False)
+            ankle_x_forward = mod_dict.get("ankle_x_forward", False)
             flip_spring_solver = mod_dict.get("flip_spring_solver", False)
             origin_joint = mod_dict.get("origin_joint", "").split(",")
             origin_joint = [txt.strip() for txt in origin_joint if txt.strip()]
@@ -278,6 +279,7 @@ def build_modules(rig_data_filepath: str | Path):
                         invert_foot_lean=invert_foot_lean,
                         invert_foot_tilt=invert_foot_tilt,
                         invert_foot_roll=invert_foot_roll,
+                        ankle_x_forward=ankle_x_forward,
                     )
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
@@ -430,6 +432,7 @@ def build_modules(rig_data_filepath: str | Path):
                         invert_foot_lean=invert_foot_lean,
                         invert_foot_tilt=invert_foot_tilt,
                         invert_foot_roll=invert_foot_roll,
+                        ankle_x_forward=ankle_x_forward,
                         flip_spring_solver=flip_spring_solver,
                     )
                     module_top_group = module_instance.build()

@@ -1,6 +1,7 @@
 from importlib import reload
 
 from maya import cmds
+from nlol.core import general_utils
 from nlol.core.rig_components import (
     clean_constraints,
     create_control_groups,
@@ -9,7 +10,6 @@ from nlol.core.rig_components import (
     create_nurbs_curves,
 )
 from nlol.core.rig_modules.biped_limb_mod import BipedLimbModule
-from nlol.core import general_utils
 from nlol.utilities.nlol_maya_logger import get_logger
 
 reload(general_utils)
@@ -40,6 +40,7 @@ class BipedFootModule:
         invert_foot_lean: bool = False,
         invert_foot_tilt: bool = False,
         invert_foot_roll: bool = False,
+        ankle_x_forward: bool = False,
     ) -> None:
         """Initialize foot module.
 
@@ -51,6 +52,10 @@ class BipedFootModule:
                 just that they are listed in the correct order.
                 Or use the pre-determined locator names and skip the arg,
                 if character just has the bipedal left and right leg.
+            invert_toe_wiggle, invert_toe_spin, invert_foot_lean, invert_foot_tilt,
+                invert_foot_roll: Invert rotation direction of that reverse foot attribute.
+            ankle_x_forward: Ankle X is world flat (forward or back) instead of world
+                up/down. Swaps spin/lean/tilt rotate axes on the reverse foot aux ctrls.
 
         """
         self.limb_mod = limb_module
@@ -62,6 +67,7 @@ class BipedFootModule:
         self.invert_foot_lean = invert_foot_lean
         self.invert_foot_tilt = invert_foot_tilt
         self.invert_foot_roll = invert_foot_roll
+        self.ankle_x_forward = ankle_x_forward
         self.logger = get_logger()
 
     def build(self, base_foot_aim: bool = True, reverse_foot_attrs: bool = True):
@@ -297,7 +303,7 @@ class BipedFootModule:
         # constrain second joint segment under first. rotate done by ikHandle
         point_constr(foot_aim_jnts_a[1], foot_aim_jnts_b[0])
         scale_constr(foot_aim_jnts_a[1], foot_aim_jnts_b[0])
-        
+
         # ----- ik handles with single-chain solver -----
         aim_ik_handle_a01 = cmds.ikHandle(
             name=f"{self.mod_name}Aim{self.mirr_side}a01_ikHandle",
@@ -401,7 +407,8 @@ class BipedFootModule:
                 f"{self.limb_mod.ik_ctrl}.toeWiggle",
                 f"{self.toe_wiggle_aux_ctrl_grp}.rotateZ",
             )
-        # --------------- top spin ---------------
+        # --------------- toe spin ---------------
+        toespin_axis = "Y" if self.ankle_x_forward else "X"
         if self.invert_toe_spin:
             toespin_multiply_nd = cmds.createNode(
                 "multiply",
@@ -414,14 +421,15 @@ class BipedFootModule:
             )
             cmds.connectAttr(
                 f"{toespin_multiply_nd}.output",
-                f"{self.foot_aux_ctrl_grps[2]}.rotateX",
+                f"{self.foot_aux_ctrl_grps[2]}.rotate{toespin_axis}",
             )
         else:
             cmds.connectAttr(
                 f"{self.limb_mod.ik_ctrl}.toeSpin",
-                f"{self.foot_aux_ctrl_grps[2]}.rotateX",
+                f"{self.foot_aux_ctrl_grps[2]}.rotate{toespin_axis}",
             )
         # --------------- lean ---------------
+        lean_axis = "X" if self.ankle_x_forward else "Y"
         if self.invert_foot_lean:
             lean_multiply_nd = cmds.createNode(
                 "multiply",
@@ -434,15 +442,16 @@ class BipedFootModule:
             )
             cmds.connectAttr(
                 f"{lean_multiply_nd}.output",
-                f"{self.foot_aux_ctrl_grps[1]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[1]}.rotate{lean_axis}",
             )
         else:
             cmds.connectAttr(
                 f"{self.limb_mod.ik_ctrl}.lean",
-                f"{self.foot_aux_ctrl_grps[1]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[1]}.rotate{lean_axis}",
             )
         # ----------------------------------------------
         # -------------------- tilt --------------------
+        tilt_axis = "X" if self.ankle_x_forward else "Y"
         tilt_clamp_nd = cmds.createNode(
             "clamp",
             name=f"{self.mod_name}Tilt{self.mirr_side}clamp",
@@ -464,7 +473,7 @@ class BipedFootModule:
             )
             cmds.connectAttr(
                 f"{tilt_multiplydivid_nd}.outputX",
-                f"{self.foot_aux_ctrl_grps[4]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[4]}.rotate{tilt_axis}",
             )
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputG",
@@ -472,16 +481,16 @@ class BipedFootModule:
             )
             cmds.connectAttr(
                 f"{tilt_multiplydivid_nd}.outputY",
-                f"{self.foot_aux_ctrl_grps[5]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[5]}.rotate{tilt_axis}",
             )
         else:
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputR",
-                f"{self.foot_aux_ctrl_grps[4]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[4]}.rotate{tilt_axis}",
             )
             cmds.connectAttr(
                 f"{tilt_clamp_nd}.outputG",
-                f"{self.foot_aux_ctrl_grps[5]}.rotateY",
+                f"{self.foot_aux_ctrl_grps[5]}.rotate{tilt_axis}",
             )
         # ----------------------------------------------
         # -------------------- roll --------------------
