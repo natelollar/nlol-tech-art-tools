@@ -37,7 +37,7 @@
   - Points to wherever user has placed folder.  
   - Allows nLol Tools in Maya to locate `nlol_env.mod`.  
 - To uninstall, drag and drop `maya_uninstall.py` into Maya viewport.
-  - Will remove shelves/menu and folder path from `Maya.env`.
+  - Removes shelves/menus and folder path from `Maya.env`.
   - Restart Maya.
 
 ### Locations
@@ -88,8 +88,8 @@
     - Or use `nLol Rigging < Build Rig, Update Materials, and Save Files` to build, update materials, and save in one step.
       - Saves `{name}_skeletalMesh.ma` and `{name}_rig.ma` next to the auto-rig folder.
 #### Rig Materials
-- Currently, materials need to be manually updated in `model.ma`.
-  - Thankfully, this can be quickly done with `nLol Modeling < Update Materials`.
+- Materials should be manually updated in `model.ma` or via "Build Save Active/All" rig feature.
+  - In the model file materials can be updated via `nLol Modeling < Update Materials`.
   - Make sure materials have been previously exported to `/custom_rig_folder/materials`.
 - Export materials from raw working file with `nLol Modeling < Export Materials`.
 #### Rig Mirror Attributes
