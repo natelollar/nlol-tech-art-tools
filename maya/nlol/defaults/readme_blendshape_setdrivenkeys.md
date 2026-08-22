@@ -4,10 +4,16 @@ Connect blendshapes or other object attributes to transform ctrls via set driven
 For a face ctrl setup, for example, include the ctrls in "rig_helpers.ma".
 Include the blendshapes weighted to single meshes in "blendshapes.ma".
 ```
+- Set driven key connections live in "../autoRig/blendshape_setdrivenkeys.toml".  
+- Blendshape models live in "../autoRig/blendshapes.ma".
+    - Blendshapes weighted to single models.  
+        - "headBlendShapes_geo" should be a single model with blendshapes already added.  
+    - Model names should have the string "blendshape/s" added.  
+        - "headBlendShapes_geo" original file would have been "head_geo".  
+- Extra ctrls go in "../autoRig/rig_helpers.ma".  
+- Build Rig imports the blendshapes Maya file, then connects from the toml.  
+
 #### Root Level Parameters:
-- `blendshape_objs` (str): Mesh objects containing the blendshape nodes to be iterated over,  
-    for connecting set driven keys to ctrls. String name or string list.  Not required if already  
-    importing blendshapes automatically. Remembers the imported scene blendshapes.
 - `start_in_tangent_type, start_out_tangent_type` (str): Set driven key's "in/out tangent type"  
     for animation curve start keyframe. Defaults to "linear".  
     Optional.
@@ -62,13 +68,11 @@ Include the blendshapes weighted to single meshes in "blendshapes.ma".
 ### *Examples `blendshape_setdrivenkeys.toml`*:
 
 #### Root
-Optional: `blendshape_objs`, `start_in_tangent_type`, `start_out_tangent_type`, `mid_in_tangent_type`, `mid_out_tangent_type`, `end_in_tangent_type`, `end_out_tangent_type`.  
+Optional: `start_in_tangent_type`, `start_out_tangent_type`, `mid_in_tangent_type`, `mid_out_tangent_type`, `end_in_tangent_type`, `end_out_tangent_type`.  
 Notes:  
-`blendshape_objs` — meshes that have the blendshape nodes. Skip if blendshapes were already imported.  
 `start_*` / `mid_*` / `end_*` — in/out tangent types for the start, mid, and end driven keys.  
 
 ```toml
-#blendshape_objs = "head_lowGeo, eye_lowGeo"
 start_in_tangent_type = "linear"
 start_out_tangent_type = "linear"
 #mid_in_tangent_type = "auto"

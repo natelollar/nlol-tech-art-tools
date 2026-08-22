@@ -107,7 +107,7 @@ class MirrorAttrsExportImport:
                 try:
                     cmds.setAttr(f"{ctrl}.{attr}", value)
                 except Exception:
-                    self.logger.info(f'"{ctrl}.{attr}" failed to set!')
+                    self.logger.debug(f'"{ctrl}.{attr}" failed to set!')
 
     def show_hide_mirror_attrs(
         self,

@@ -2,21 +2,26 @@
 # Ctrls would be saved in the "rig_helpers.ma" file.
 #
 # - Blendshape start and end will be 0 and 1 unless specified.
-#   - blendshape_start = 0.0, blendshape_end = 1.0
+#       Can also name the variables Object start and end instead 
+#       if using only set driven keys and not blendshapes.
+#   - blendshape_start = 0.0, blendshape_mid = None, blendshape_end = 1.0
+#   - object_start = 0.0, object_mid = None, object_end = 1.0
 # - Transform curve start and end will be 0 and 1 unless specified.
-#   - curve_start = 0.0, crv_end = 1.0
+#   - crv_start = 0.0, crv_mid = None, crv_end = 1.0
+# - "transform_crv_attr" and "transform_crv"/"crv_attr" represent 
+#       the same parameters.
 
-# blendshape_objs = """
-# bodyOriginal_lowGeo,
-# eye_lowGeo,
-# eyeGlass_lowGeo,
-# tongue_lowGeo,
-# teeth_lowGeo
-# """
+# --------------------------------------------------
+# --------------------------------------------------
+start_in_tangent_type = "linear"  # default
+start_out_tangent_type = "linear"  # default
+mid_in_tangent_type = "auto"  # default
+mid_out_tangent_type = "auto"  # default
+end_in_tangent_type = "linear"  # default
+end_out_tangent_type = "linear"  # default
 
-inTangentType="linear"
-outTangentType="linear"
-
+# --------------------------------------------------
+# --------------------------------------------------
 [[setdrivenkeys]]
 blendshape_attr = "noseSneerLeft"
 transform_crv = "noseSneerLeft_ctrl"
@@ -242,4 +247,190 @@ mirror_right = true
 blendshape_attr = "mouthUpperUpLeft"
 transform_crv = "mouthUpperUpLeft_ctrl"
 crv_attr = "translateY"
+mirror_right = true
+
+# ------------------------------------------------------
+# -------------------- squishy face --------------------
+[[setdrivenkeys]]
+blendshape_attr = "mouthCornerOut_left_target"
+transform_crv = "mouthCorner_left_ctrl"
+crv_attr = "translateX"
+crv_end = 2.0
+mirror_right = true
+mirror_right_invert = true
+blendshape_fix_attrs = "mouthCornerUpOut_left_fixTarget, mouthCornerDownOut_left_fixTarget"
+
+[[setdrivenkeys]]
+blendshape_attr = "mouthCornerIn_left_target"
+transform_crv = "mouthCorner_left_ctrl"
+crv_attr = "translateX"
+crv_end = -1.15
+mirror_right = true
+mirror_right_invert = true
+blendshape_fix_attrs = "mouthCornerDownIn_left_fixTarget, mouthCornerUpIn_left_fixTarget"
+
+[[setdrivenkeys]]
+blendshape_attr = "mouthCornerUp_left_target"
+transform_crv = "mouthCorner_left_ctrl"
+crv_attr = "translateY"
+crv_end = 1.75
+mirror_right = true
+blendshape_fix_attrs = "mouthCornerUpOut_left_fixTarget, mouthCornerUpIn_left_fixTarget"
+
+[[setdrivenkeys]]
+blendshape_attr = "mouthCornerDown_left_target"
+transform_crv = "mouthCorner_left_ctrl"
+crv_attr = "translateY"
+crv_end = -1.5
+mirror_right = true
+blendshape_fix_attrs = "mouthCornerDownOut_left_fixTarget, mouthCornerDownIn_left_fixTarget"
+
+[[setdrivenkeys]]
+blendshape_attr = "cheekPuff_left_target"
+transform_crv = "cheekSquishy_left_ctrl"
+crv_attr = "translateX"
+crv_end = 1.5
+mirror_right = true
+mirror_right_invert = true
+
+[[setdrivenkeys]]
+blendshape_attr = "cheekSuckIn_left_target"
+transform_crv = "cheekSquishy_left_ctrl"
+crv_attr = "translateX"
+crv_end = -1.5
+mirror_right = true
+mirror_right_invert = true
+
+[[setdrivenkeys]]
+blendshape_attr = "cheeksUp_left_target"
+transform_crv = "cheekSquishy_left_ctrl"
+crv_attr = "translateY"
+crv_end = 1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "cheeksDown_left_target"
+transform_crv = "cheekSquishy_left_ctrl"
+crv_attr = "translateY"
+crv_end = -1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "browInnerUp_left_target"
+transform_crv = "browInner_left_ctrl"
+crv_attr = "translateY"
+crv_end = 1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "browInnerDown_left_target"
+transform_crv = "browInner_left_ctrl"
+crv_attr = "translateY"
+crv_end = -1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "browOuterUp_left_target"
+transform_crv = "browOuter_left_ctrl"
+crv_attr = "translateY"
+crv_end = 1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "browOuterDown_left_target"
+transform_crv = "browOuter_left_ctrl"
+crv_attr = "translateY"
+crv_end = -1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "noseUp_target"
+transform_crv = "noseSquishy_ctrl"
+crv_attr = "translateY"
+crv_end = 1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "noseDown_target"
+transform_crv = "noseSquishy_ctrl"
+crv_attr = "translateY"
+crv_end = -1.5
+mirror_right = true
+
+[[setdrivenkeys]]
+blendshape_attr = "noseMove_left_target"
+transform_crv = "noseSquishy_ctrl"
+crv_attr = "translateX"
+crv_end = 1.5
+
+[[setdrivenkeys]]
+blendshape_attr = "noseMove_right_target"
+transform_crv = "noseSquishy_ctrl"
+crv_attr = "translateX"
+crv_end = -1.5
+
+[[setdrivenkeys]]
+blendshape_attr = "lipsPucker_target"
+transform_crv = "lipsInOut_ctrl"
+crv_attr = "translateZ"
+crv_end = 1.0
+
+[[setdrivenkeys]]
+blendshape_attr = "lipsSuckIn_target"
+transform_crv = "lipsInOut_ctrl"
+crv_attr = "translateZ"
+crv_end = -1.0
+
+[[setdrivenkeys]]
+blendshape_attr = "chinPuff_target"
+transform_crv = "chinInOut_ctrl"
+crv_attr = "translateZ"
+crv_end = 1.0
+
+[[setdrivenkeys]]
+blendshape_attr = "chinIn_target"
+transform_crv = "chinInOut_ctrl"
+crv_attr = "translateZ"
+crv_end = -1.0
+
+# --------------------------------------------------
+# --------------------------------------------------
+# ----- eyes w/ blendshapes set driven keys -----
+# right horizontal movement
+[[setdrivenkeys]]
+object_attr = "fkEyes_left_ctrlAux02OffsetGrp.rotateY"
+transform_crv_attr = "eyeLook_left_ctrl.translateX"
+object_end = 38.511
+
+[[setdrivenkeys]]
+object_attr = "fkEyes_right_ctrlAux02OffsetGrp.rotateY"
+transform_crv_attr = "eyeLook_right_ctrl.translateX"
+object_end = 31.057
+
+# left horizontal movement
+[[setdrivenkeys]]
+object_attr = "fkEyes_left_ctrlAux02OffsetGrp.rotateY"
+transform_crv_attr = "eyeLook_left_ctrl.translateX"
+object_end = -31.057
+crv_end = -1.0
+
+[[setdrivenkeys]]
+object_attr = "fkEyes_right_ctrlAux02OffsetGrp.rotateY"
+transform_crv_attr = "eyeLook_right_ctrl.translateX"
+object_end = -38.511
+crv_end = -1.0
+
+# up vertical movement
+[[setdrivenkeys]]
+object_attr = "fkEyes_left_ctrlAux02OffsetGrp.rotateX"
+transform_crv_attr = "eyeLook_left_ctrl.translateY"
+object_end = -18.656
+mirror_right = true
+
+# down vertical movement
+[[setdrivenkeys]]
+object_attr = "fkEyes_left_ctrlAux02OffsetGrp.rotateX"
+transform_crv_attr = "eyeLook_left_ctrl.translateY"
+object_end = 14.927
+crv_end = -1.0
 mirror_right = true

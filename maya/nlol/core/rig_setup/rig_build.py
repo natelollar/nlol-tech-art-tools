@@ -71,7 +71,7 @@ def run_rig_build(show_confirmation: bool = True):
         ).build_skeletalmesh()
         # ----- import apply blendshapes -----
         blendshapes_meshes = build_blendshapes.ConnectBlendShapes(
-            blendshapes_filepath,
+            blendshapes_filepath=blendshapes_filepath,
         ).build_import()
         # ----- cloth -----
         # "*Settings.json", "collision_meshes.json"
@@ -79,7 +79,9 @@ def run_rig_build(show_confirmation: bool = True):
         # ----- rig modules -----
         build_rig_modules.build_modules(rig_data_filepath)
         # ----- blendshape ctrl connections -----
-        build_blendshapes.ConnectBlendShapes(setdrivenkeys_filepath).build_connect(
+        build_blendshapes.ConnectBlendShapes(
+            setdrivenkeys_filepath=setdrivenkeys_filepath,
+        ).build_connect(
             blendshapes_meshes,
         )
         # ----- ctrl shapes -----

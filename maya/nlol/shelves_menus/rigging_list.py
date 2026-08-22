@@ -323,7 +323,7 @@ def build_rigging_list():
             "backgroundColor": random_clrs[3],
             "command": "from nlol.core.standalone import small_functions\n"
             "from importlib import reload\nreload(small_functions)\n"
-            "small_functions.NlolNameComponents().print_name_comps()",
+            "small_functions.hide_rig_clutter()",
             "sourceType": "python",
         },
         {
@@ -729,7 +729,7 @@ def build_rigging_list():
         {
             "label": "Connect Blendshapes",
             "image": "pythonFamily.png",
-            "annotation": "Connect blendshapes to ctrl setup.",
+            "annotation": "Connect blendshapes to ctrl setup from blendshape_setdrivenkeys.toml.",
             "imageOverlayLabel": "CnBlnd",
             "backgroundColor": random_clrs[29],
             "command": "from nlol.core.rig_setup import build_blendshapes\n"

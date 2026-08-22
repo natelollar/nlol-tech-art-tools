@@ -133,6 +133,7 @@
   - This config file needs to be manually created.
   - Contains data for connecting rig controls to blendshapes via set driven keys.
 - See `/defaults/readme_blendshape_setdrivenkeys.md` for more details on toml setup.
+- Blendshapes Setup Example video: https://youtu.be/MA-lKeGN0cE
 
 ## Animation Shelf / Menu
 *Transforms, keyframes, mirroring, retargeting, and animation UIs.*
@@ -200,6 +201,7 @@
     - Useful if trying to preserve animation data instead of baking every keyframe.
   - Loads data from `/custom_rig_folder/retarget_data.toml`.  
   - See `/defaults/readme_retarget_data.md` for more detail.  
+  - Retarget Rig Example video: https://youtu.be/1C10Owaer6w
 
 - **Animation Save Load UI**
   - Supports namespaces.

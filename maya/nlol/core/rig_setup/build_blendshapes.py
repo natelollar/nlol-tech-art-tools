@@ -58,7 +58,7 @@ class ConnectBlendShapes:
 
         return meshes_with_blendshapes
 
-    def build_connect(self, meshes_with_blendshapes: list[str]):
+    def build_connect(self, meshes_with_blendshapes: list[str] | None = None):
         """Finish setup for rig blendshapes.
         --------------------------------------------------
         Connects blendshapes to ctrls from "rig_helpers.ma" or
@@ -161,12 +161,13 @@ class ConnectBlendShapes:
         blendshape_nd_name = f"{target_mesh}BlendShape"
         cmds.rename(target_blendshape_nd, blendshape_nd_name)
 
-    def setdrivenkey_connections(self, meshes_with_blendshapes: list[str]) -> str:
+    def setdrivenkey_connections(self, meshes_with_blendshapes: list[str] | None = None) -> str:
         """Connect blendshapes or other object attributes to transform ctrls
         via set driven keys.
 
         Args:
             meshes_with_blendshapes: Scene mesh transforms that have a connected blendshape node.
+                Optional. If omitted, use all scene blendshape nodes.
 
         Returns:
             Scene top grp for setdrivenkey ctrls.
@@ -186,21 +187,21 @@ class ConnectBlendShapes:
 
         with open(self.setdrivenkeys_filepath, "rb") as f:
             toml_data = tomllib.load(f)
-        # ----- base values -----
-        # get blendshape nodes from meshes
-        try:
-            blendshape_objs = meshes_with_blendshapes  # get mesh names from already imported
-        except Exception:
-            blendshape_objs = toml_data.get("blendshape_objs", "")  # get mesh names from toml
-            blendshape_objs = blendshape_objs.split(",")
-            blendshape_objs = [txt.strip() for txt in blendshape_objs if txt.strip()]
+
+        # get blendshape nodes from imported meshes, or all scene blendshape nodes
         blendshape_nds = []
-        if blendshape_objs:
-            for obj in blendshape_objs:
+        if meshes_with_blendshapes:
+            for obj in meshes_with_blendshapes:
+                if not cmds.objExists(obj):
+                    self.logger.warning(f'Blendshape mesh does not exist: "{obj}". Skipping')
+                    continue
                 obj_shp = cmds.listRelatives(obj, shapes=True)
-                blendshape_nd = cmds.listConnections(obj_shp, type="blendShape")
+                blendshape_nd = cmds.listConnections(obj_shp, type="blendShape") or []
                 blendshape_nds.extend(blendshape_nd)
+        else:
+            blendshape_nds = cmds.ls(type="blendShape") or []
         blendshape_nds = list(set(blendshape_nds))
+
         # set driven key in/out tangents
         start_in_tangent_type = toml_data.get("start_in_tangent_type", "linear")
         start_out_tangent_type = toml_data.get("start_out_tangent_type", "linear")
@@ -224,7 +225,7 @@ class ConnectBlendShapes:
                 transform_crv_attr = swap_side_str(data.get("transform_crv_attr", ""))
 
                 crv_end = data.get("crv_end")
-                crv_end = crv_end or 1.0
+                crv_end = 1.0 if crv_end is None else crv_end
                 if mirror_right_invert:
                     crv_end = -crv_end  # invert float
 
@@ -242,6 +243,8 @@ class ConnectBlendShapes:
                 right_dict.update(
                     {key: value for key, value in right_dict_updates.items() if key in data},
                 )
+                if mirror_right_invert:  # adds inverted default key if omitted
+                    right_dict["crv_end"] = crv_end
 
                 right_setdrivenkeys_data.append(right_dict)
         setdrivenkeys_data.extend(right_setdrivenkeys_data)
@@ -294,13 +297,24 @@ class ConnectBlendShapes:
                 )
                 self.logger.error(msg)
                 raise ValueError(msg)
-            blendshape_start = blendshape_start or object_start or 0.0
-            blendshape_mid = blendshape_mid or object_mid or None
-            blendshape_end = blendshape_end or object_end or 1.0
-            crv_start = crv_start or 0.0
-            crv_mid = crv_mid or None
-            crv_end = crv_end or 1.0
 
+            # set default start (0.0), mid (None), end (1.0) blendshape/crv values
+            # guard against 0.0 input being falsy
+            blendshape_start = (
+                blendshape_start
+                if blendshape_start is not None
+                else (object_start if object_start is not None else 0.0)
+            )
+            blendshape_mid = blendshape_mid if blendshape_mid is not None else object_mid
+            blendshape_end = (
+                blendshape_end
+                if blendshape_end is not None
+                else (object_end if object_end is not None else 1.0)
+            )
+            crv_start = 0.0 if crv_start is None else crv_start
+            crv_end = 1.0 if crv_end is None else crv_end
+
+            # -----
             if object_attr and blendshape_attr:
                 msg = (
                     '"Check file: "blendshape_setdrivenkeys.toml"\n'

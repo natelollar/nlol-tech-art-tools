@@ -96,6 +96,8 @@ class RetargetAnimation:
                         scale_source_ctrl = scale_source_ctrl or source_ctrl
                         if not scale_locked:
                             self.scale_constr(scale_source_ctrl, ctrl, offset)
+        msg = f"----- Retarget constraints created: {self.retarget_data_filepath}"
+        logger.info(msg)
 
     def parent_constr(self, source_ctrl: str, target_ctrl: str, offset: bool) -> None:
         """Apply custom parent constraint.
@@ -169,10 +171,11 @@ class RetargetAnimation:
         constraints = (
             parent_constraints + point_constraints + orient_constraints + scale_constraints
         )
-
         retarget_constraints = [cn for cn in constraints if re.search(r"Retarget\w+Constraint", cn)]
 
         cmds.delete(retarget_constraints)
+
+        logger.info("----- Retarget constraints deleted. -----")
 
     def read_retarget_data(self) -> None:
         """Import retarget data from toml. Defaults to "retarget_data.toml" in nLol rig folder
@@ -214,6 +217,9 @@ class RetargetAnimation:
         Transfer in/out tangent types; auto, linear, stepped, etc.
         Optionally, transfer tangent angles/weights too.
         """
+        msg = f"----- Baking keyframes from source to target: {self.retarget_data_filepath}"
+        logger.info(msg)
+
         for data in self.retarget_data:
             source_ctrls = data["source_ctrls"].split(",")
             source_ctrls = [txt.strip() for txt in source_ctrls if txt.strip()]
@@ -436,3 +442,5 @@ class RetargetAnimation:
                         except Exception as e:
                             msg = f"keyTangent failed: {frame}; {ctrl}.{keyed_attr}\n{e}"
                             logger.debug(msg)
+
+        logger.info("----- Keyframe bake finished. -----")
