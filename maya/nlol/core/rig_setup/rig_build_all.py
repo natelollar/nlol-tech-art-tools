@@ -171,7 +171,7 @@ class RigBuildSaveAll:
         # -----
         materials_folderpath = rig_folderpath() / "materials"
         if not materials_folderpath.is_dir() or not (  # check if materials exist
-            list(materials_folderpath.glob(".ma") + list(materials_folderpath.glob(".mb")))
+            any(materials_folderpath.glob("*.ma")) or any(materials_folderpath.glob("*.mb"))
         ):
             msg = f'Skipping materials update; no materials folder/files: "{materials_folderpath}"'
             logger.info(msg)

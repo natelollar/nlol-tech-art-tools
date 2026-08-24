@@ -680,7 +680,7 @@ class ClothDynamics:
 
         # ---------- blendshape attr ----------
         blendshape_attr_nm = f"{output_cloth_mesh_shp}__blendShape"
-        if not cmds.objExists(f"{self.aux_ctrl}.{divider_attr_nm}"):
+        if not cmds.objExists(f"{self.aux_ctrl}.{blendshape_attr_nm}"):
             cmds.addAttr(
                 self.aux_ctrl,
                 longName=blendshape_attr_nm,
