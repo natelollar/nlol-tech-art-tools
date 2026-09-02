@@ -636,7 +636,7 @@ class MultiToolUI(DockableMayaUI):
         pivot_row.addWidget(
             self._make_button(
                 "Temp Locator",
-                "Create temporary locator at world origin. "
+                "Create temporary locator at world origin or selected. "
                 "Useful for a temp pivot with multi parent constraint.",
                 self.on_temp_locator,
             ),
@@ -841,6 +841,21 @@ class MultiToolUI(DockableMayaUI):
             ),
         )
         tab_layout.addLayout(key_all_row)
+
+        # ----- bookmarks -----
+        tab_layout.addWidget(self._section_label("Bookmarks"))
+        bookmark_row = QHBoxLayout()
+        bookmark_row.addWidget(
+            self._make_button(
+                "Anim Bookmarks UI",
+                "Offset timeslider bookmarks. Uses timeslider selection, "
+                "or the playback range if none.",
+                self.on_open_anim_bookmarks_ui,
+                rgb=CLR_UI,
+            ),
+        )
+        bookmark_row.addStretch()
+        tab_layout.addLayout(bookmark_row)
 
         # ----- retarget -----
         tab_layout.addWidget(self._section_label("Retarget"))
@@ -1204,7 +1219,7 @@ class MultiToolUI(DockableMayaUI):
         small_functions.reset_all_ctrls(all_keyable=True)
 
     def on_temp_locator(self) -> None:
-        """Create a temporary world-origin locator."""
+        """Create a temporary world-origin locator. Or position at selected."""
         from nlol.core.rig_components import create_locators
 
         reload(create_locators)
@@ -1344,6 +1359,12 @@ class MultiToolUI(DockableMayaUI):
         from nlol.core.ui.anim_picker_tool import anim_picker_ui
 
         anim_picker_ui.reload_tool()
+
+    def on_open_anim_bookmarks_ui(self) -> None:
+        """Open Anim Bookmarks UI."""
+        from nlol.core.ui.anim_bookmarks_tool import anim_bookmarks_ui
+
+        anim_bookmarks_ui.reload_tool()
 
     def on_retarget_connect(self) -> None:
         """Connect source/target controls for anim retarget."""

@@ -616,7 +616,6 @@ def print_object_xform_info() -> None:
         logger.warning("Nothing selected for object info.")
         return
 
-    print("")
     for obj in selected:
         pos = cmds.xform(obj, query=True, worldSpace=True, translation=True)
         rot = cmds.xform(obj, query=True, worldSpace=True, rotation=True)
@@ -659,3 +658,18 @@ def set_segment_scale_compensate(enabled: bool) -> None:
     for jnt in joints:
         if cmds.getAttr(f"{jnt}.segmentScaleCompensate", settable=True):
             cmds.setAttr(f"{jnt}.segmentScaleCompensate", int(enabled))
+
+
+def offset_all_bookmarks(offset: int) -> None:
+    """Offset all animation bookmarks in timeline by same amount."""
+    bookmarks = cmds.ls(type="timeSliderBookmark") or []
+
+    for mark in bookmarks:
+        rangestart = cmds.getAttr(f"{mark}.timeRangeStart")
+        rangestop = cmds.getAttr(f"{mark}.timeRangeStop")
+        logger.debug(mark)
+        logger.debug(f"{rangestart = }")
+        logger.debug(f"{rangestop = }")
+
+        cmds.setAttr(f"{mark}.timeRangeStart", rangestart + offset)
+        cmds.setAttr(f"{mark}.timeRangeStop", rangestop + offset)

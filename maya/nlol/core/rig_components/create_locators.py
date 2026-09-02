@@ -165,6 +165,7 @@ def temp_locator(
     locator_name: str | None = None,
     local_scale: tuple[float, float, float] = (15, 15, 15),
     color_rgb: tuple[float, float, float] = (1.0, 0, 0),
+    selected_position: bool = True,
 ) -> tuple[list[str], list[str]]:
     """Create temporary locator at world origin.
 
@@ -173,11 +174,16 @@ def temp_locator(
         local_scale: Optional base name for the locators.
         local_scale: Visuale scale in viewport.
         color_rgb: Tuple with 0-1.0 "r, g, b" values.
+        selected_position: If object selected, position at that instead.
 
     Returns:
         Locator name.
 
     """
+    # -----
+    selected = cmds.ls(selection=True)
+
+    # -----
     r, g, b = color_rgb if color_rgb else (1.0, 0, 0)  # red
     if not locator_name:
         locator_name = "temp_locator"
@@ -188,5 +194,11 @@ def temp_locator(
     cmds.setAttr(f"{locator_shape}.useObjectColor", 2)
     cmds.setAttr(f"{locator_shape}.wireColorRGB", r, g, b)
     ShowAttributes(target_objects=locator_shape).show_curve_attrs()
+
+    # -----
+    if selected:
+        selected = selected[0]
+        position = cmds.xform(selected, query=True, worldSpace=True, translation=True)
+        cmds.setAttr(f"{locator}.translate", *position)
 
     return locator_name

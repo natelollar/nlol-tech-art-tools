@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from maya import cmds
+from maya import cmds, mel
 from nlol.core.animation_tools.space_switch_match import SpaceSwitchMatch
 from nlol.core.general_utils import maya_undo, swap_side_str
 from nlol.core.ui.dockable_maya_ui import DockableMayaUI
@@ -105,6 +105,37 @@ class SpaceSwitchMatchUI(DockableMayaUI):
         layout.addWidget(self.spaces_widget)
         self.spaces_widget.hide()
 
+        # ----- action buttons --------------------
+        self.actions_widget = QWidget()
+        actions_layout = QHBoxLayout(self.actions_widget)
+        actions_layout.setContentsMargins(0, 8, 0, 0)
+        actions_layout.setSpacing(6)
+
+        self.force_current_btn = QPushButton("Force Current")
+        self.force_current_btn.setToolTip(
+            "Force-apply the current dropdown parent spaces to loaded controls "
+            "at the current time. Keys only if Maya auto-key is on.",
+        )
+        self.force_current_btn.clicked.connect(self.on_force_current)
+        actions_layout.addWidget(self.force_current_btn)
+
+        self.force_keyframes_btn = QPushButton("Force Keyframes")
+        self.force_keyframes_btn.setToolTip(
+            "Force-apply the current dropdown parent spaces on keyframes "
+            "in the time-slider selection, or the playback range if none. "
+            "Requires Maya auto-key to be on.",
+        )
+        self.force_keyframes_btn.clicked.connect(self.on_force_keyframes)
+        actions_layout.addWidget(self.force_keyframes_btn)
+
+        self.auto_key_btn = QPushButton("Auto Key Toggle")
+        self.auto_key_btn.setToolTip("Toggle Maya auto-keyframe on/off.")
+        self.auto_key_btn.clicked.connect(self.on_toggle_auto_key)
+        actions_layout.addWidget(self.auto_key_btn)
+
+        layout.addWidget(self.actions_widget)
+        self.actions_widget.hide()
+
         # internal state
         self._ctrls: list[str] = []
         self._space_combos: dict[str, QComboBox] = {}  # attr -> combo
@@ -127,6 +158,7 @@ class SpaceSwitchMatchUI(DockableMayaUI):
             self.status_label.setText("Nothing selected.")
             self.ctrls_label.setText("")
             self.spaces_widget.hide()
+            self.actions_widget.hide()
             return
 
         self._ctrls = selected
@@ -161,6 +193,7 @@ class SpaceSwitchMatchUI(DockableMayaUI):
                     "Mismatch: controls have different parent space attributes.",
                 )
                 self.spaces_widget.hide()
+                self.actions_widget.hide()
                 return False
 
             # same enum options per attr?
@@ -173,6 +206,7 @@ class SpaceSwitchMatchUI(DockableMayaUI):
                         f"Mismatch: '{attr}' enum options differ between controls.",
                     )
                     self.spaces_widget.hide()
+                    self.actions_widget.hide()
                     return False
 
         if not reference:
@@ -180,6 +214,7 @@ class SpaceSwitchMatchUI(DockableMayaUI):
                 "No parent space attributes found on selected controls.",
             )
             self.spaces_widget.hide()
+            self.actions_widget.hide()
             return False
 
         attr_names = ", ".join(reference.keys())
@@ -223,6 +258,7 @@ class SpaceSwitchMatchUI(DockableMayaUI):
             )
 
         self.spaces_widget.show()
+        self.actions_widget.show()
 
     def _clear_spaces_ui(self):
         """Remove all rows from the spaces form layout."""
@@ -263,6 +299,114 @@ class SpaceSwitchMatchUI(DockableMayaUI):
 
         # reselect
         cmds.select(self._ctrls)
+
+    def _current_ui_spaces(self) -> dict[str, int]:
+        """Return {attr: space_index} from the current dropdown values."""
+        spaces = {}
+        for attr, combo in self._space_combos.items():
+            value = combo.itemData(combo.currentIndex())
+            if value is not None:
+                spaces[attr] = value
+        return spaces
+
+    def _apply_ui_spaces(self, new_parentspaces: dict[str, int]) -> None:
+        """Force-apply parent spaces to loaded ctrls at the current time."""
+        switcher = SpaceSwitchMatch()
+        for ctrl in self._ctrls:
+            if not cmds.objExists(ctrl):
+                logger.warning(f"Control no longer exists: {ctrl}")
+                continue
+            switcher.switch_match(ctrl, new_parentspaces)
+
+    def _active_time_range(self) -> tuple[float, float]:
+        """Return the time-slider selection, or playback range if none."""
+        slider = mel.eval("$tmp=$gPlayBackSlider")
+        if cmds.timeControl(slider, query=True, rangeVisible=True):
+            start, end = cmds.timeControl(slider, query=True, rangeArray=True)
+            return start, end - 1  # rangeArray end is exclusive
+        return (
+            cmds.playbackOptions(query=True, minTime=True),
+            cmds.playbackOptions(query=True, maxTime=True),
+        )
+
+    @maya_undo
+    def on_force_keyframes(self):
+        """Force-apply current UI parent spaces on keyframes in the active time range."""
+        if not self._ctrls:
+            return
+        if not cmds.autoKeyframe(query=True, state=True):
+            logger.warning("Auto keyframe is off. Force Keyframes did nothing.")
+            return
+
+        new_parentspaces = self._current_ui_spaces()
+        if not new_parentspaces:
+            logger.warning("No parent space dropdown values to apply.")
+            return
+
+        start, end = self._active_time_range()
+        existing = [ctrl for ctrl in self._ctrls if cmds.objExists(ctrl)]
+        if not existing:
+            logger.warning("Loaded controls no longer exist.")
+            return
+
+        key_times = (
+            cmds.keyframe(
+                existing,
+                query=True,
+                time=(start, end),
+                timeChange=True,
+            )
+            or []
+        )
+        unique_times = sorted(set(key_times))
+        if not unique_times:
+            logger.warning("No keyframes in the current time range.")
+            return
+
+        current_time = cmds.currentTime(query=True)
+        try:
+            for key_time in unique_times:
+                cmds.currentTime(key_time)
+                self._apply_ui_spaces(new_parentspaces)
+        finally:
+            cmds.currentTime(current_time)
+            cmds.select(self._ctrls)
+
+        logger.info(
+            f"Space force-updated on {len(unique_times)} keyframes "
+            f"[{', '.join(self._ctrls)}]  {new_parentspaces}",
+        )
+
+    @maya_undo
+    def on_force_current(self):
+        """Force-apply current UI parent spaces to loaded ctrls at the current time.
+
+        Does not add extra keys. If Maya auto-key is on, the attr/transform
+        changes key on this frame like any other edit.
+        """
+        if not self._ctrls:
+            return
+
+        new_parentspaces = self._current_ui_spaces()
+        if not new_parentspaces:
+            logger.warning("No parent space dropdown values to apply.")
+            return
+
+        self._apply_ui_spaces(new_parentspaces)
+
+        logger.info(
+            f"Space force-updated at current frame "
+            f"[{', '.join(self._ctrls)}]  {new_parentspaces}",
+        )
+        cmds.select(self._ctrls)
+
+    def on_toggle_auto_key(self):
+        """Toggle Maya auto-keyframe and sync the range-slider checkbox."""
+        new_state = not cmds.autoKeyframe(query=True, state=True)
+        cmds.autoKeyframe(state=new_state)
+        if cmds.symbolCheckBox("symbolCheckBox2", exists=True):
+            cmds.symbolCheckBox("symbolCheckBox2", edit=True, value=new_state)
+        logger.info(f"Auto keyframe {'on' if new_state else 'off'}")
 
 
 # ----- entry points --------------------

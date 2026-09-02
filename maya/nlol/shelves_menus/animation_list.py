@@ -266,7 +266,7 @@ def build_animation_list():
         {
             "label": "Temp Locator",
             "image": "pythonFamily.png",
-            "annotation": "Create temporary locator at world origin. "
+            "annotation": "Create temporary locator at world origin or selected. "
             "Useful for creating temp pivot with multi parent constraint.",
             "imageOverlayLabel": "TmpLoc",
             "backgroundColor": random_clrs[25],
@@ -355,18 +355,17 @@ def build_animation_list():
             "command": "from nlol.core.ui import space_matcher_ui\nspace_matcher_ui.reload_tool()",
             "sourceType": "python",
         },
-        # {
-        #     "label": "Space Matcher TMP",
-        #     "image": "pythonFamily.png",
-        #     "annotation": "Space switch matching TMP.",
-        #     "imageOverlayLabel": "SStmp",
-        #     "backgroundColor": random_clrs[37],
-        #     "command": "from nlol.core.animation_tools "
-        #     "import space_switch_match\n"
-        #     "from importlib import reload\nreload(space_switch_match)\n"
-        #     "space_switch_match.SpaceSwitchMatch().run()",
-        #     "sourceType": "python",
-        # },
+        {
+            "label": "Anim Bookmarks UI",
+            "image": "pythonFamily.png",
+            "annotation": "Offset timeslider bookmarks. Uses timeslider selection, "
+            "or the playback range if none.",
+            "imageOverlayLabel": "BkmkUI",
+            "backgroundColor": random_clrs[38],
+            "command": "from nlol.core.ui.anim_bookmarks_tool import anim_bookmarks_ui\n"
+            "anim_bookmarks_ui.reload_tool()",
+            "sourceType": "python",
+        },
     ]
 
     return animation_list
