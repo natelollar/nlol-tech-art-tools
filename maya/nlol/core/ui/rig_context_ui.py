@@ -1,4 +1,6 @@
 import json
+import os
+import subprocess
 from importlib import reload
 from pathlib import Path
 
@@ -16,6 +18,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from maya import cmds
 from nlol import defaults
 from nlol.core.ui.dockable_maya_ui import DockableMayaUI
 from nlol.defaults import rig_folder_path
@@ -41,6 +44,8 @@ RIGS_TAB_INDEX = 0
 ENV_VARS_TAB_INDEX = 1
 # NOTE: tabs must be added in this order (see build_ui) for these indices to be correct
 
+BTN_SPACING = 2
+
 logger = get_logger()
 
 
@@ -55,6 +60,7 @@ class RigContextUI(DockableMayaUI):
     def build_ui(self, layout: QVBoxLayout) -> None:
         """Main Qt UI code setup."""
         button_row = QHBoxLayout()
+        button_row.setSpacing(BTN_SPACING)
 
         self.build_skeletal_mesh_btn = QPushButton("Build Skeletal Mesh")
         self.build_skeletal_mesh_btn.setToolTip(
@@ -94,16 +100,51 @@ class RigContextUI(DockableMayaUI):
         self.env_table = self.build_env_vars_tab()
 
         refresh_row = QHBoxLayout()
+        refresh_row.setSpacing(BTN_SPACING)
 
         self.refresh_btn = QPushButton("Refresh")
         self.refresh_btn.setToolTip("Reload the current tab from rig_context.json.")
         self.refresh_btn.clicked.connect(lambda: self.on_refresh_clicked())
         refresh_row.addWidget(self.refresh_btn)
 
+        self.show_json_btn = QPushButton("Show JSON")
+        self.show_json_btn.setToolTip(
+            "Print the rig_context.json path and select the file in Explorer.",
+        )
+        self.show_json_btn.clicked.connect(self.on_show_json_clicked)
+        refresh_row.addWidget(self.show_json_btn)
+
         refresh_row.addStretch()
 
+        self.open_rig_file_btn = QPushButton("Open Rig File")
+        self.open_rig_file_btn.setToolTip(
+            "Open the active character's saved *_rig.ma file (next to the auto-rig folder).",
+        )
+        self.open_rig_file_btn.clicked.connect(self.on_open_active_rig_file)
+        refresh_row.addWidget(self.open_rig_file_btn)
+
+        self.open_skeletal_mesh_btn = QPushButton("Open Skeletal Mesh")
+        self.open_skeletal_mesh_btn.setToolTip(
+            "Open the active character's saved *_skeletalMesh.ma file "
+            "(next to the auto-rig folder).",
+        )
+        self.open_skeletal_mesh_btn.clicked.connect(self.on_open_active_skeletal_mesh_file)
+        refresh_row.addWidget(self.open_skeletal_mesh_btn)
+
+        refresh_row.addStretch()
+
+        self.move_up_btn = QPushButton("/\\")  # /\
+        self.move_up_btn.setToolTip("Move the selected entry up.")
+        self.move_up_btn.clicked.connect(lambda: self.on_move_clicked(-1))
+        refresh_row.addWidget(self.move_up_btn)
+
+        self.move_down_btn = QPushButton("\\/")  # \/
+        self.move_down_btn.setToolTip("Move the selected entry down.")
+        self.move_down_btn.clicked.connect(lambda: self.on_move_clicked(1))
+        refresh_row.addWidget(self.move_down_btn)
+
         self.add_btn = QPushButton("+")
-        self.add_btn.setToolTip("Add a new entry to the current tab.")
+        self.add_btn.setToolTip("Add a new entry below the selection, or at the end.")
         self.add_btn.clicked.connect(lambda: self.on_add_clicked())
         refresh_row.addWidget(self.add_btn)
 
@@ -166,6 +207,8 @@ class RigContextUI(DockableMayaUI):
         tab_layout.addWidget(table)
 
         apply_row = QHBoxLayout()
+        apply_row.setSpacing(BTN_SPACING)
+
         self.apply_env_vars_btn = QPushButton("Apply Env Vars")
         self.apply_env_vars_btn.setToolTip(
             "Apply these environment variables to the current Maya session,\n"
@@ -173,6 +216,14 @@ class RigContextUI(DockableMayaUI):
         )
         self.apply_env_vars_btn.clicked.connect(lambda: self.on_apply_env_vars())
         apply_row.addWidget(self.apply_env_vars_btn)
+
+        self.query_env_var_btn = QPushButton("Query")
+        self.query_env_var_btn.setToolTip(
+            "Check if the selected environment variable is set in this Maya session.",
+        )
+        self.query_env_var_btn.clicked.connect(self.on_query_env_var)
+        apply_row.addWidget(self.query_env_var_btn)
+
         apply_row.addStretch()
         tab_layout.addLayout(apply_row)
 
@@ -185,6 +236,69 @@ class RigContextUI(DockableMayaUI):
         table.resizeColumnToContents(col)
         padding = table.fontMetrics().horizontalAdvance("MM")
         table.setColumnWidth(col, table.columnWidth(col) + padding)
+
+    def get_active_build_filepath(self, file_suffix: str) -> Path | None:
+        """Return the saved Maya file next to the active auto-rig folder.
+
+        Example: file_suffix "rig" -> ``{name}_rig.ma``
+        """
+        for rig in self.load_rig_context().get(RIGS_KEY, []):
+            if not rig.get("active"):
+                continue
+
+            name = rig.get("name", "")
+            folderpath = rig.get("folderpath", "")
+            if not name or not folderpath:
+                logger.warning("Active rig is missing a name or folderpath.")
+                return None
+
+            resolved = Path(os.path.expandvars(folderpath))
+            if "$" in str(resolved):
+                logger.warning(f"Unresolved environment variable in path: {resolved}")
+                return None
+
+            return resolved.parent / f"{name}_{file_suffix}.ma"
+
+        logger.warning("No active rig set.")
+        return None
+
+    def open_maya_file(self, filepath: Path | None) -> None:
+        """Confirm, then open a Maya file. Replaces the current scene."""
+        if filepath is None:
+            return
+        if not filepath.is_file():
+            logger.warning(f"File not found: {filepath}")
+            return
+
+        result = cmds.confirmDialog(
+            title="Confirm",
+            message=f"Open file? This will replace the current scene.\n\n{filepath.name}",
+            button=["Yes", "No"],
+            defaultButton="Yes",
+            cancelButton="No",
+            dismissString="No",
+            bgc=(0.2, 0.2, 0.2),
+        )
+        if result != "Yes":
+            logger.info("Open file cancelled.")
+            return
+
+        cmds.file(
+            filepath.as_posix(),
+            open=True,
+            force=True,
+            ignoreVersion=True,
+            options="v=0;",
+        )
+        logger.info(f"Opened: {filepath}")
+
+    def on_open_active_rig_file(self) -> None:
+        """Open the active character's saved *_rig.ma file."""
+        self.open_maya_file(self.get_active_build_filepath("rig"))
+
+    def on_open_active_skeletal_mesh_file(self) -> None:
+        """Open the active character's saved *_skeletalMesh.ma file."""
+        self.open_maya_file(self.get_active_build_filepath("skeletalMesh"))
 
     def on_build_skeletal_mesh(self) -> None:
         """Build only skeletal mesh. Stop before rig is built."""
@@ -224,7 +338,7 @@ class RigContextUI(DockableMayaUI):
         reload(rig_build_all)
         rig_build_all.RigBuildSaveAll().build()
 
-    # ----- shared refresh / add / remove, dispatched by current tab -----
+    # ----- shared refresh / add / remove / move, dispatched by current tab -----
     def refresh_all_tabs(self) -> None:
         """Refresh all tabs from json.
         Useful for updating active rig radio button from outside class.
@@ -239,6 +353,15 @@ class RigContextUI(DockableMayaUI):
         else:
             self.populate_env_vars()
 
+    def on_show_json_clicked(self) -> None:
+        """Print rig_context.json path and select it in Windows Explorer."""
+        filepath = RIG_CONTEXT_JSON.resolve()
+        logger.info(f"rig_context.json: {filepath}")
+        if not filepath.is_file():
+            logger.warning(f"File not found: {filepath}")
+            return
+        subprocess.Popen(["explorer", "/select,", str(filepath)])
+
     def on_add_clicked(self) -> None:
         """Add a new entry to whichever tab is currently active."""
         if self.tab_widget.currentIndex() == RIGS_TAB_INDEX:
@@ -252,6 +375,62 @@ class RigContextUI(DockableMayaUI):
             self.on_remove_rig()
         else:
             self.on_remove_env_var()
+
+    def on_move_clicked(self, direction: int) -> None:
+        """Move the selected row up (-1) or down (+1) in the current tab and json."""
+        if self.tab_widget.currentIndex() == RIGS_TAB_INDEX:
+            self.move_selected_row(RIGS_KEY, self.rigs_table, self.populate_rigs, direction)
+        else:
+            self.move_selected_row(ENV_VARS_KEY, self.env_table, self.populate_env_vars, direction)
+
+    def json_index_for_row(self, entries: list, row: int) -> int | None:
+        """Map a table row to its json list index.
+
+        The table only shows named entries, so row numbers can differ from json indices.
+        Returns None if the row is invalid.
+        """
+        named_indices = [i for i, entry in enumerate(entries) if entry.get("name", "")]
+        if row < 0 or row >= len(named_indices):
+            return None
+        return named_indices[row]
+
+    def move_selected_row(
+        self,
+        json_key: str,
+        table: QTableWidget,
+        refresh_table,
+        direction: int,
+    ) -> None:
+        """Swap the selected row with its neighbor in the table and json."""
+        row = table.currentRow()
+        new_row = row + direction
+        if new_row < 0 or new_row >= table.rowCount():
+            return
+
+        data = self.load_rig_context()
+        entries = data.get(json_key, [])
+        i = self.json_index_for_row(entries, row)
+        j = self.json_index_for_row(entries, new_row)
+        if i is None or j is None:
+            return
+
+        name = entries[i].get("name", "")
+        entries[i], entries[j] = entries[j], entries[i]
+
+        if self.write_context(data):
+            refresh_table()
+            table.selectRow(new_row)
+            moved = "up" if direction < 0 else "down"
+            logger.info(f'Moved "{name}" {moved}')
+
+    def select_row_after_add(self, table: QTableWidget, selected_row: int) -> None:
+        """Select the new row (below the old selection, or last if none)."""
+        if table.rowCount() <= 0:
+            return
+        if selected_row >= 0:
+            table.selectRow(min(selected_row + 1, table.rowCount() - 1))
+        else:
+            table.selectRow(table.rowCount() - 1)
 
     # ----- rigs tab -----
 
@@ -337,7 +516,7 @@ class RigContextUI(DockableMayaUI):
             logger.info(f'Updated rig "{old_name}"')
 
     def on_add_rig(self) -> None:
-        """Add a new rig entry with a generic name/folderpath, not active."""
+        """Add a new rig below the selection, or at the end of the list."""
         data = self.load_rig_context()
         rigs = data.setdefault(RIGS_KEY, [])
 
@@ -348,10 +527,17 @@ class RigContextUI(DockableMayaUI):
             new_name = f"new_rig_{i}"
             i += 1
 
-        rigs.append({"name": new_name, "folderpath": "", "active": False})
+        selected_row = self.rigs_table.currentRow()
+        json_index = self.json_index_for_row(rigs, selected_row)
+        new_rig = {"name": new_name, "folderpath": "", "active": False}
+        if json_index is None:
+            rigs.append(new_rig)
+        else:
+            rigs.insert(json_index + 1, new_rig)
 
         if self.write_context(data):
             self.populate_rigs()
+            self.select_row_after_add(self.rigs_table, selected_row)
             logger.info(f'Added rig: "{new_name}"')
 
     def on_remove_rig(self) -> None:
@@ -450,8 +636,23 @@ class RigContextUI(DockableMayaUI):
             "Restart Maya to remove old variables.",
         )
 
+    def on_query_env_var(self) -> None:
+        """Print the selected env var's current Maya-session value."""
+        row = self.env_table.currentRow()
+        if row < 0 or row >= len(self.row_env_names):
+            logger.warning("Select an environment variable to query.")
+            return
+
+        name = self.row_env_names[row]
+        value = os.environ.get(name)
+        if value is None:
+            logger.warning(f'"{name}" is not set in this Maya session.')
+            return
+
+        logger.info(f'"{name}": {value}')
+
     def on_add_env_var(self) -> None:
-        """Add a new environment variable entry with a generic name/folderpath."""
+        """Add a new environment variable below the selection, or at the end of the list."""
         data = self.load_rig_context()
         env_vars = data.setdefault(ENV_VARS_KEY, [])
 
@@ -462,10 +663,17 @@ class RigContextUI(DockableMayaUI):
             new_name = f"NEW_ENV_VAR_{i}"
             i += 1
 
-        env_vars.append({"name": new_name, "folderpath": ""})
+        selected_row = self.env_table.currentRow()
+        json_index = self.json_index_for_row(env_vars, selected_row)
+        new_env_var = {"name": new_name, "folderpath": ""}
+        if json_index is None:
+            env_vars.append(new_env_var)
+        else:
+            env_vars.insert(json_index + 1, new_env_var)
 
         if self.write_context(data):
             self.populate_env_vars()
+            self.select_row_after_add(self.env_table, selected_row)
             logger.info(f'Added environment variable: "{new_name}"')
 
     def on_remove_env_var(self) -> None:

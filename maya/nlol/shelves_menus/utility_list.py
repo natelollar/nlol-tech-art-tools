@@ -215,6 +215,17 @@ def build_utility_list():
             "anim_picker_ui.reload_tool()",
             "sourceType": "python",
         },
+        {
+            "label": "USD Tool UI",
+            "image": "pythonFamily.png",
+            "annotation": "UI for custom Open USD tools."
+            "back to its source .mtlx file.",
+            "imageOverlayLabel": "UsdTl",
+            "backgroundColor": random_clrs[39],
+            "command": "from nlol.core.ui.usd_tool import usd_tool_ui\n"
+            "usd_tool_ui.reload_tool()",
+            "sourceType": "python",
+        },
         shelf_separator,
         {
             "label": "Renamer Tool",
