@@ -752,6 +752,13 @@ class MultiToolUI(DockableMayaUI):
                 self.on_save_mirror_attrs_generic,
             ),
         )
+        mirror_vis_row.addWidget(
+            self._make_button(
+                "Paste Mirror Attrs to Selected",
+                "Paste the first saved ctrl's mirror attributes onto all selected ctrls.",
+                self.on_paste_mirror_attrs_generic,
+            ),
+        )
         tab_layout.addLayout(mirror_vis_row)
 
         # ----- transforms -----
@@ -1268,6 +1275,15 @@ class MultiToolUI(DockableMayaUI):
         mirror_attrs_export_import.MirrorAttrsExportImport(
             use_generic_filepath=True,
         ).get_save_mirror_attrs()
+
+    def on_paste_mirror_attrs_generic(self) -> None:
+        """Paste the first saved ctrl's mirror attributes onto all selected ctrls."""
+        from nlol.core.animation_tools import mirror_attrs_export_import
+
+        reload(mirror_attrs_export_import)
+        mirror_attrs_export_import.MirrorAttrsExportImport(
+            use_generic_filepath=True,
+        ).paste_first_mirror_attrs_to_selected()
 
     def on_load_mirror_attrs(self) -> None:
         """Load mirror attributes from active rig folder."""

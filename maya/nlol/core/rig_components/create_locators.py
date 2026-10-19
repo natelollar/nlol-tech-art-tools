@@ -198,7 +198,9 @@ def temp_locator(
     # -----
     if selected:
         selected = selected[0]
-        position = cmds.xform(selected, query=True, worldSpace=True, translation=True)
-        cmds.setAttr(f"{locator}.translate", *position)
+        translation = cmds.xform(selected, query=True, worldSpace=True, translation=True)
+        rotation = cmds.xform(selected, query=True, worldSpace=True, rotation=True)
+        cmds.setAttr(f"{locator}.translate", *translation)
+        cmds.setAttr(f"{locator}.rotate", *rotation)
 
     return locator_name

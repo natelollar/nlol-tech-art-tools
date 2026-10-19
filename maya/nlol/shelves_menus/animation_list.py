@@ -197,23 +197,10 @@ def build_animation_list():
             "annotation": "Remove mirror attributes to selected objects. "
             'Example: ".mirrorTranslateX"',
             "imageOverlayLabel": "RemMir",
-            "backgroundColor": random_clrs[21],
-            "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
-            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
-            "mirror_attrs_export_import.MirrorAttrsExportImport().remove_mirror_attrs()",
-            "sourceType": "python",
-        },
-        {
-            "label": "Save Mirror Attributes (Generic)",
-            "image": "pythonFamily.png",
-            "annotation": "Save mirror attributes for selected ctrls to generic defaults folder. "
-            '"nlol/core/defaults/". '
-            "Select all objects when saving. Saving is not additive.",
-            "imageOverlayLabel": "SvMrGn",
             "backgroundColor": random_clrs[40],
             "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
             "from importlib import reload\nreload(mirror_attrs_export_import)\n"
-            "mirror_attrs_export_import.MirrorAttrsExportImport(use_generic_filepath=True).get_save_mirror_attrs()",
+            "mirror_attrs_export_import.MirrorAttrsExportImport().remove_mirror_attrs()",
             "sourceType": "python",
         },
         shelf_separator,
@@ -256,10 +243,47 @@ def build_animation_list():
             "image": "pythonFamily.png",
             "annotation": "Hide mirror attributes in channel box for selected ctrls.",
             "imageOverlayLabel": "HidMrr",
-            "backgroundColor": random_clrs[24],
+            "backgroundColor": random_clrs[32],
             "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
             "from importlib import reload\nreload(mirror_attrs_export_import)\n"
             "mirror_attrs_export_import.MirrorAttrsExportImport().show_hide_mirror_attrs(show_attrs=False)",
+            "sourceType": "python",
+        },
+        shelf_separator,
+        {
+            "label": "Save Mirror Attributes (Generic Path)",
+            "image": "pythonFamily.png",
+            "annotation": "Save mirror attributes for selected ctrls to generic file path "
+            '".../defaults/other_mirror_attributes.json"',
+            "imageOverlayLabel": "SavMir",
+            "backgroundColor": random_clrs[49],
+            "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport(use_generic_filepath=True).get_save_mirror_attrs()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Load Mirror Attributes (Generic Path)",
+            "image": "pythonFamily.png",
+            "annotation": 'Load mirror attrs from ".../defaults/other_mirror_attributes.json"',
+            "imageOverlayLabel": "LodMrr",
+            "backgroundColor": random_clrs[48],
+            "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport(use_generic_filepath=True).apply_mirror_attrs()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Paste Mirror Attributes to Selected (Generic Path)",
+            "image": "pythonFamily.png",
+            "annotation": "Paste the first saved ctrl's mirror attributes onto all selected ctrls "
+            'from ".../defaults/other_mirror_attributes.json".',
+            "imageOverlayLabel": "PstMir",
+            "backgroundColor": random_clrs[45],
+            "command": "from nlol.core.animation_tools import mirror_attrs_export_import\n"
+            "from importlib import reload\nreload(mirror_attrs_export_import)\n"
+            "mirror_attrs_export_import.MirrorAttrsExportImport(use_generic_filepath=True)"
+            ".paste_first_mirror_attrs_to_selected()",
             "sourceType": "python",
         },
         shelf_separator,

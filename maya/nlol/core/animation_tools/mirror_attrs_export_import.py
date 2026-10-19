@@ -24,16 +24,16 @@ class MirrorAttrsExportImport:
                 Example: "nlol/core/defaults/other_mirror_attributes.json"
 
         """
-        default_filepath = rig_folderpath() / "mirror_attributes.json"
+        rig_filepath = rig_folderpath() / "mirror_attributes.json"
 
-        default_folderpath = Path(defaults.__file__).parent
-        generic_filepath = default_folderpath / "other_mirror_attributes.json"
+        defaults_folderpath = Path(defaults.__file__).parent
+        generic_filepath = defaults_folderpath / "other_mirror_attributes.json"
 
         if not save_filepath:
             if use_generic_filepath:
                 save_filepath = generic_filepath
             else:
-                save_filepath = default_filepath
+                save_filepath = rig_filepath
 
         self.save_filepath = save_filepath
 
@@ -88,7 +88,7 @@ class MirrorAttrsExportImport:
         """
         with open(self.save_filepath) as f:
             data = json.load(f)
-        self.logger.debug(f"File read from...  {self.save_filepath}")
+        self.logger.info(f"File read from...  {self.save_filepath}")
         return data
 
     def apply_mirror_attrs(self) -> None:
@@ -184,3 +184,41 @@ class MirrorAttrsExportImport:
                             cmds.deleteAttr(f"{ctrl}.{attr}")
                         except Exception:
                             self.logger.info(f"Failed to remove: {ctrl}.{attr}")
+
+    def paste_first_mirror_attrs_to_selected(self) -> None:
+        """Paste the first saved ctrl's mirror attributes onto all selected ctrls.
+
+        Save can still store many ctrls. Paste uses only the first one.
+        """
+        if not self.save_filepath.is_file():
+            cmds.warning(f"File not found: {self.save_filepath}")
+            return
+
+        with open(self.save_filepath, encoding="utf-8") as f:
+            data = json.load(f)
+
+        if not data:
+            cmds.warning(f"No mirror attributes in: {self.save_filepath}")
+            return
+
+        selected = cmds.ls(selection=True)
+        if not selected:
+            cmds.warning("Nothing selected! Select controls to paste onto.")
+            return
+
+        saved_name = next(iter(data))
+        saved_attrs = data[saved_name]
+        if not saved_attrs:
+            cmds.warning(f'"{saved_name}" has no mirror attributes to paste.')
+            return
+
+        for obj in selected:
+            for attr, value in saved_attrs.items():
+                try:
+                    cmds.setAttr(f"{obj}.{attr}", value)
+                except Exception as e:
+                    self.logger.debug(f"Failed to set {obj}.{attr}: {e}")
+
+        self.logger.info(
+            f"Pasted mirror attributes from {saved_name} onto: {', '.join(selected)}",
+        )

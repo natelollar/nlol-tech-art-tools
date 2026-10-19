@@ -216,14 +216,25 @@ def build_utility_list():
             "sourceType": "python",
         },
         {
-            "label": "USD Tool UI",
+            "label": "USD MaterialX Tool UI",
             "image": "pythonFamily.png",
-            "annotation": "UI for custom Open USD tools."
-            "back to its source .mtlx file.",
-            "imageOverlayLabel": "UsdTl",
+            "annotation": "Save MaterialX edits, refresh USD viewports, "
+            "and duplicate a USD Xform onto Maya objects.",
+            "imageOverlayLabel": "UsdMx",
             "backgroundColor": random_clrs[39],
-            "command": "from nlol.core.ui.usd_tool import usd_tool_ui\n"
-            "usd_tool_ui.reload_tool()",
+            "command": "from nlol.core.ui.usd_materialx_tool import usd_materialx_tool_ui\n"
+            "usd_materialx_tool_ui.reload_tool()",
+            "sourceType": "python",
+        },
+        {
+            "label": "Replace Object UI",
+            "image": "pythonFamily.png",
+            "annotation": "List .ass versions from the first selected Arnold standin, "
+            "then replace the current selection.",
+            "imageOverlayLabel": "RplObj",
+            "backgroundColor": random_clrs[33],
+            "command": "from nlol.core.ui.replace_obj_tool import replace_obj_tool_ui\n"
+            "replace_obj_tool_ui.reload_tool()",
             "sourceType": "python",
         },
         shelf_separator,

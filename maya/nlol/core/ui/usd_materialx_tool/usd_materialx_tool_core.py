@@ -1,4 +1,4 @@
-"""USD tool actions: save MaterialX, refresh viewports, and duplicate onto Maya objects."""
+"""USD MaterialX tool actions: save MaterialX, refresh viewports, and duplicate onto Maya objects."""
 
 from __future__ import annotations
 

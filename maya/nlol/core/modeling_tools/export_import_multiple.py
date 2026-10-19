@@ -93,14 +93,18 @@ class ExportImportMultiple:
         self,
         filepaths: list[Path] | list[str],
         auto_remove_ns: bool = False,
+        replace_existing: bool = True,
     ):
         """Import multiple objects. Works with OBJ, FBX, MA, MB or ASS.
 
         Args:
             filepaths: A list of object filepaths.
             auto_remove_ns: Automatically remove the added "importedNs" namespace.
+            replace_existing: Whether to update an existing arnold proxy when name exists
+                or create a new object and increment it regardless.
 
         """
+        standins = []
         filepaths = [Path(filepath) for filepath in filepaths]
         for i, filepath in enumerate(filepaths):
             object_ext = filepath.suffix
@@ -149,7 +153,7 @@ class ExportImportMultiple:
 
             elif object_ext == ".ass":  # import arnold proxy files differently
                 standin_name = f"{object_name}AiStandIn"
-                if cmds.objExists(standin_name):
+                if replace_existing and cmds.objExists(standin_name):
                     logger.info(f'Already exists: "{standin_name}". Reloading filepath...')
                     standin_shape = cmds.listRelatives(standin_name, shapes=True)[0]
                     cmds.setAttr(f"{standin_shape}.dso", filepath, type="string")
@@ -157,18 +161,32 @@ class ExportImportMultiple:
                     if i == len(filepaths) - 1:
                         logger.info("Refreshing scene...")
                         cmds.refresh(force=True)
+                    standins.append(standin_name)
                 else:
+                    unique_name = self.unique_standin_name(standin_name)
                     standin_shape = cmds.createNode(
                         "aiStandIn",
-                        name=f"{standin_name}Shape",
+                        name=f"{unique_name}Shape",
                     )
                     standin_transform = cmds.listRelatives(standin_shape, parent=True)[0]
-                    cmds.rename(standin_transform, f"{standin_name}")
+                    standin_transform = cmds.rename(standin_transform, unique_name)
                     cmds.setAttr(f"{standin_shape}.dso", filepath, type="string")
                     cmds.setAttr(f"{standin_shape}.mode", 3)
+                    standins.append(standin_transform)
 
         if auto_remove_ns:
             try:
                 cmds.namespace(removeNamespace="importedNs", mergeNamespaceWithRoot=True)
             except Exception:
                 logger.info('Namespace already removed: "importedNs"')
+
+        return standins
+
+    def unique_standin_name(self, standin_name: str) -> str:
+        """Return standin_name, or the next free name when it is already in the scene."""
+        unique_name = standin_name
+        index = 1
+        while cmds.objExists(unique_name) or cmds.objExists(f"{unique_name}Shape"):
+            unique_name = f"{standin_name}{index}"
+            index += 1
+        return unique_name

@@ -43,6 +43,11 @@ def cap(text: str) -> str:
     return text[0].upper() + text[1:] if text else text
 
 
+def uncap(text: str) -> str:
+    """Lowercase only first letter in a string."""
+    return text[0].lower() + text[1:] if text else text
+
+
 def snake_to_camel(text: str) -> str:
     """Converts snake_case to camelCase."""
     components = text.split("_")

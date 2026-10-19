@@ -12,6 +12,7 @@ from nlol.core.rig_components import create_display_layers
 from nlol.core.rig_modules import (
     biped_leg_mod,
     biped_limb_mod,
+    blend_matrix_mod,
     digitigrade_leg_mod,
     eye_aim_mod,
     fk_aim_mod,
@@ -33,6 +34,7 @@ from nlol.utilities.nlol_maya_registry import get_registry
 
 reload(biped_leg_mod)
 reload(biped_limb_mod)
+reload(blend_matrix_mod)
 reload(eye_aim_mod)
 reload(digitigrade_leg_mod)
 reload(fk_aim_mod)
@@ -108,6 +110,10 @@ def build_modules(rig_data_filepath: str | Path):
             locators = swap_side_str(mod_dict.get("locators", ""))
             controls = swap_side_str(mod_dict.get("controls", ""))
 
+            main_object = swap_side_str(mod_dict.get("main_object", ""))
+            blend_objects = swap_side_str(mod_dict.get("blend_objects", ""))
+            switch_attr = swap_side_str(mod_dict.get("switch_attr", ""))
+
             right_dict = mod_dict.copy()  # copy original mod dict
             right_dict_updates = {  # replace these values in mod dict with side string swaps
                 "rig_module": rig_module,
@@ -130,6 +136,9 @@ def build_modules(rig_data_filepath: str | Path):
                 "ik_wrist_ctrl": ik_wrist_ctrl,
                 "locators": locators,
                 "controls": controls,
+                "main_object": main_object,
+                "blend_objects": blend_objects,
+                "switch_attr": switch_attr,
             }
             right_dict.update(
                 {key: value for key, value in right_dict_updates.items() if key in mod_dict},
@@ -245,6 +254,11 @@ def build_modules(rig_data_filepath: str | Path):
             custom_rig_filepath = mod_dict.get("custom_rig_filepath", "")
             custom_rig_folderpath = mod_dict.get("custom_rig_folderpath", "")
             custom_rig_filename = mod_dict.get("custom_rig_filename", "")
+
+            main_object = mod_dict.get("main_object", "")
+            blend_objects = mod_dict.get("blend_objects", "").split(",")
+            blend_objects = [txt.strip() for txt in blend_objects if txt.strip()]
+            switch_attr = mod_dict.get("switch_attr", "")
 
             match rig_module:
                 case "biped_limb_mod":
@@ -454,6 +468,16 @@ def build_modules(rig_data_filepath: str | Path):
                     module_top_group = module_instance.build()
                     top_groups.append(module_top_group)
                     display_layer and objects_display_lyr(module_top_group)
+
+                case "blend_matrix_mod":
+                    module_instance = blend_matrix_mod.BlendMatrixModule(
+                        rig_module_name=rig_module_name,
+                        mirror_direction=mirror_direction,
+                        main_object=main_object,
+                        blend_objects=blend_objects,
+                        switch_attr=switch_attr,
+                    )
+                    module_instance.build()
 
                 case "fk_aim_mod":
                     module_instance = fk_aim_mod.FkAimModule(

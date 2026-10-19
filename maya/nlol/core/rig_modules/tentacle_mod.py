@@ -159,7 +159,6 @@ class TentacleModule:
         """
         fk_jnts = []
         flexi_jnts = []
-        fk_flexi_scale_consts = []
         for i, jnt in enumerate(self.flexi_joints_main):
             # -------------------------------------------------------------
             # -------------------- create fk flexi chains --------------------
@@ -178,12 +177,8 @@ class TentacleModule:
             # scale compensate off to avoid double scaling when global scaling
             cmds.setAttr(f"{jnt}.segmentScaleCompensate", 0)
 
-            # better scaling with constraint instead of blendColors scale
-            fk_flexi_scale_const = scale_constr((fk_jnt, flexi_jnt), jnt)
-
             fk_jnts.append(fk_jnt)
             flexi_jnts.append(flexi_jnt)
-            fk_flexi_scale_consts.append(fk_flexi_scale_const)
 
         # parent fk flexi joints into chains
         for i, jnt in enumerate(fk_jnts):
@@ -197,6 +192,7 @@ class TentacleModule:
         # -------------------- blend joint chains together --------------------
         translate_blend_nodes = []
         rotate_blend_nodes = []
+        scale_blend_nodes = []
         for i, (fk_jnt, flexi_jnt, jnt) in enumerate(
             zip(
                 fk_jnts,
@@ -214,6 +210,10 @@ class TentacleModule:
                 "blendColors",
                 name=f"{self.mod_name}Rot{self.mirr_side}{i + 1:02d}_blendColors",
             )
+            scl_blend_node = cmds.createNode(
+                "blendColors",
+                name=f"{self.mod_name}Scl{self.mirr_side}{i + 1:02d}_blendColors",
+            )
             # translate blend
             cmds.connectAttr(f"{fk_jnt}.translate", f"{tran_blend_node}.color1")
             cmds.connectAttr(f"{flexi_jnt}.translate", f"{tran_blend_node}.color2")
@@ -222,9 +222,14 @@ class TentacleModule:
             cmds.connectAttr(f"{fk_jnt}.rotate", f"{rot_blend_node}.color1")
             cmds.connectAttr(f"{flexi_jnt}.rotate", f"{rot_blend_node}.color2")
             cmds.connectAttr(f"{rot_blend_node}.output", f"{jnt}.rotate")
+            # scale blend
+            cmds.connectAttr(f"{fk_jnt}.scale", f"{scl_blend_node}.color1")
+            cmds.connectAttr(f"{flexi_jnt}.scale", f"{scl_blend_node}.color2")
+            cmds.connectAttr(f"{scl_blend_node}.output", f"{jnt}.scale")
 
             translate_blend_nodes.append(tran_blend_node)
             rotate_blend_nodes.append(rot_blend_node)
+            scale_blend_nodes.append(scl_blend_node)
 
         # parent top fk flexi joints to locator constrained to main_joints parent
         # accounts for needed blendColor node transform offset
@@ -239,6 +244,7 @@ class TentacleModule:
             cmds.parent(fk_jnts[0], parent_loc)
             cmds.parent(flexi_jnts[0], parent_loc)
             cmds.parent(self.flexi_joints_main[0], parent_loc)
+            cmds.parent(self.flexi_joints_offset[0], parent_loc)
 
             # parent and hide joint locator and joints
             cmds.parent(parent_loc, self.mod_top_grp)
@@ -251,9 +257,9 @@ class TentacleModule:
         # assign instance variables
         self.fk_jnts = fk_jnts
         self.flexi_jnts = flexi_jnts
-        self.fk_flexi_scale_consts = fk_flexi_scale_consts
         self.translate_blend_nodes = translate_blend_nodes
         self.rotate_blend_nodes = rotate_blend_nodes
+        self.scale_blend_nodes = scale_blend_nodes
         self.parent_loc = parent_loc
 
     def setup_switch_ctrl(self):
@@ -278,9 +284,10 @@ class TentacleModule:
         )
 
         # ----- connect switch control to blend nodes -----
-        for node_translate, node_rotate in zip(
+        for node_translate, node_rotate, node_scale in zip(
             self.translate_blend_nodes,
             self.rotate_blend_nodes,
+            self.scale_blend_nodes,
             strict=False,
         ):
             cmds.connectAttr(
@@ -291,6 +298,11 @@ class TentacleModule:
             cmds.connectAttr(
                 f"{switch_ctrl}.fkFlexiBlend",
                 f"{node_rotate}.blender",
+                force=True,
+            )
+            cmds.connectAttr(
+                f"{switch_ctrl}.fkFlexiBlend",
+                f"{node_scale}.blender",
                 force=True,
             )
 
@@ -306,24 +318,6 @@ class TentacleModule:
             cmds.connectAttr(
                 f"{swch_reverse_nd}.outputX",
                 f"{self.flexi_offset_mod.fk_ctrl_top_grp}.visibility",
-            )
-
-        # ----- connect switch control scale constraints -----
-        for fk_jnt, flexi_jnt, scale_const in zip(
-            self.fk_jnts,
-            self.flexi_jnts,
-            self.fk_flexi_scale_consts,
-            strict=False,
-        ):
-            cmds.connectAttr(
-                f"{switch_ctrl}.fkFlexiBlend",
-                f"{scale_const}.target[0].targetWeight",
-                force=True,
-            )
-            cmds.connectAttr(
-                f"{swch_reverse_nd}.outputX",
-                f"{scale_const}.target[1].targetWeight",
-                force=True,
             )
 
         # ---------- visibility, parenting, other ----------
@@ -391,7 +385,6 @@ class TentacleModule:
 
             # constrain fk joints to follow ctrls
             parent_constr(fk_ctrl, jnt)
-            scale_constr(fk_ctrl, jnt)
 
             # lock and hide attributes
             lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}
@@ -430,7 +423,6 @@ class TentacleModule:
 
             # constrain flexi joints to follow ctrls
             parent_constr(flexi_ctrl, jnt)
-            scale_constr(flexi_ctrl, jnt)
 
             # lock and hide attributes
             lock_hide_kwargs = {"lock": True, "keyable": False, "channelBox": False}

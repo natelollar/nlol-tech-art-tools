@@ -261,8 +261,30 @@ def multi_parent_const():
     """
     selected = cmds.ls(sl=True)
     for obj in selected:
+        trans_settable = cmds.getAttr(f"{obj}.translate", settable=True)
+        rot_settable = cmds.getAttr(f"{obj}.rotate", settable=True)
         if obj != selected[-1]:
-            cmds.parentConstraint(selected[-1], obj, maintainOffset=True, weight=1.0)
+            if trans_settable and rot_settable:
+                cmds.parentConstraint(selected[-1], obj, maintainOffset=True, weight=1.0)
+            elif trans_settable:
+                cmds.parentConstraint(
+                    selected[-1],
+                    obj,
+                    maintainOffset=True,
+                    skipRotate=["x", "y", "z"],
+                    weight=1.0,
+                )
+            elif rot_settable:
+                cmds.parentConstraint(
+                    selected[-1],
+                    obj,
+                    maintainOffset=True,
+                    skipTranslate=["x", "y", "z"],
+                    weight=1.0,
+                )
+            else:
+                msg = f"{obj = }: {trans_settable = }, {rot_settable = }"
+                logger.info(msg)
 
 
 def lock_and_hide_attrs(

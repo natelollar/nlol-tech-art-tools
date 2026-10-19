@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from nlol.core.general_utils import cap
+from nlol.core.general_utils import cap, uncap
 from nlol.core.rig_tools.name_components import NlolNameComponents
 from nlol.utilities.nlol_maya_logger import get_logger
 
@@ -542,7 +542,7 @@ class OpenPBRSetup:
             name_comp_no_wspace = re.sub(r"\s+", "", name_comp)
             name_comp_split = name_comp_no_wspace.split("_")
             name_comp_split = [cap(txt) for txt in name_comp_split]
-            name_comp = "".join(name_comp_split)
+            name_comp = uncap("".join(name_comp_split))  # to camelCase w/ uncap
 
         texture_stings_dict = {
             "baseColor": {
@@ -558,8 +558,9 @@ class OpenPBRSetup:
             },
             "roughness": {
                 "keywords": {"roughness", "rough"},
-                "file_nd_output": "outColor",
+                "file_nd_output": "outAlpha",
                 "material_input": "specularRoughness",
+                "alphaIsLuminance": True,
                 "colorSpace": "Raw",
             },
             "gloss": {
